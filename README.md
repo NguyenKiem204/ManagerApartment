@@ -1,2 +1,0 @@
-# ManagerApartment
-Group 4 
