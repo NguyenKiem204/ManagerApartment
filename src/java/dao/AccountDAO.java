@@ -22,21 +22,22 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
     @Override
     public int insert(Account account) {
         int row = 0;
-        String sqlInsert = "INSERT INTO Account (Mail, Password, Status, Sex, CCCD, FullName, PhoneNumber, RoleId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlInsert = "INSERT INTO Account (Mail, Password, Status, Sex, CCCD, FullName, PhoneNumber, ImageURL, RoleId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         System.out.println(sqlInsert);
 
-        try (Connection connection = DBContext.getConnection(); PreparedStatement psInsert = connection.prepareStatement(sqlInsert)) {
-            psInsert.setString(1, account.getMail());
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlInsert)) {
+            ps.setString(1, account.getMail());
             String password = passwordEncode.hashPassword(account.getPassword());
-            psInsert.setString(2, password);
-            psInsert.setString(3, account.getStatus());
-            psInsert.setString(4, account.getSex());
-            psInsert.setString(5, account.getCccd());
-            psInsert.setString(6, account.getFullName());
-            psInsert.setString(7, account.getPhoneNumber());
-            psInsert.setInt(8, account.getRoleId());
+            ps.setString(2, password);
+            ps.setString(3, account.getStatus());
+            ps.setString(4, account.getSex());
+            ps.setString(5, account.getCccd());
+            ps.setString(6, account.getFullName());
+            ps.setString(7, account.getPhoneNumber());
+             ps.setString(8, account.getImageURL());
+            ps.setInt(8, account.getRoleId());
 
-            row = psInsert.executeUpdate();
+            row = ps.executeUpdate();
             System.out.println("(" + row + " row(s) affected)");
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -47,7 +48,7 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
     @Override
     public int update(Account account) {
         int row = 0;
-        String sql = "UPDATE Account SET Mail = ?, Password = ?, Status = ?, Sex = ?, CCCD = ?, FullName = ?, PhoneNumber = ?, RoleId = ? WHERE AccountId = ?";
+        String sql = "UPDATE Account SET Mail = ?, Password = ?, Status = ?, Sex = ?, CCCD = ?, FullName = ?, PhoneNumber = ?, ImageURL = ?, RoleId = ? WHERE AccountId = ?";
         System.out.println(sql);
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -58,8 +59,9 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
             ps.setString(5, account.getCccd());
             ps.setString(6, account.getFullName());
             ps.setString(7, account.getPhoneNumber());
-            ps.setInt(8, account.getRoleId());
-            ps.setInt(9, account.getAccountId());
+            ps.setString(8, account.getImageURL());
+            ps.setInt(9, account.getRoleId());
+            ps.setInt(10, account.getAccountId());
 
             row = ps.executeUpdate();
             System.out.println("(" + row + " row(s) affected)");
@@ -104,6 +106,7 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
                     rs.getString("CCCD"),
                     rs.getString("FullName"),
                     rs.getString("PhoneNumber"),
+                        rs.getString("ImageURL"),
                     rs.getInt("RoleId")
                 );
                 list.add(account);
@@ -133,6 +136,7 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
                         rs.getString("CCCD"),
                         rs.getString("FullName"),
                         rs.getString("PhoneNumber"),
+                            rs.getString("ImageURL"),
                         rs.getInt("RoleId")
                     );
                 }
@@ -159,9 +163,9 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
                 String fullName = rs.getString("FullName");
                 String phoneNumber = rs.getString("PhoneNumber");
                 int roleId = rs.getInt("RoleID");
-
+                String imageURL = rs.getString("ImageURL");
                 if (passwordEncode.checkPassword(password, storedPasswordHash) && "ACTIVE".equals(status.toUpperCase())) {
-                    account = new Account(accountId, storedMail, password, status, sex, cccd, fullName, phoneNumber, roleId);
+                    account = new Account(accountId, mail, password, status, sex, cccd, fullName, phoneNumber, imageURL, roleId);
                 }
             }
         }
@@ -170,7 +174,22 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
     }
     return account;
 }
+public boolean updatePasswordInDatabase(String email, String hashedPassword) {
+        
+        try {
+            Connection connection = DBContext.getConnection();
+            String sql = "UPDATE Account SET Password = ? WHERE Mail = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, hashedPassword);
+            statement.setString(2, email);
 
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
 }

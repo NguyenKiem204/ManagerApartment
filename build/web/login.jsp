@@ -42,7 +42,7 @@
                         <input  ${(cookie.remember.value!=null?'checked':'')} type="checkbox" id="remember_me" name="remember_me" /> Remember
                         Me
                     </label>
-                    <a href="#" class="forget-password">Forget Password?</a>
+                    <a href="forgot-password" class="forget-password">Forget Password?</a>
                 </div>
 
                 <button type="submit">Log In</button>

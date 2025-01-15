@@ -24,9 +24,10 @@ public class Account {
     String cccd;
     String fullName;
     String phoneNumber;
+    String imageURL;
     int roleId;
 
-    public Account(String mail, String password, String status, String sex, String cccd, String fullName, String phoneNumber, int roleId) {
+    public Account(String mail, String password, String status, String sex, String cccd, String fullName, String phoneNumber, int roleId, String imageURL) {
         this.mail = mail;
         this.password = password;
         this.status = status;
@@ -35,6 +36,7 @@ public class Account {
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.roleId = roleId;
+        this.imageURL = imageURL;
     }
     
 }

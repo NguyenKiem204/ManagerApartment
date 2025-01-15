@@ -1,10 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
+<%-- 
+    Document   : home
+    Created on : Jan 16, 2025, 2:33:23 AM
+    Author     : nkiem
+--%>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trang chủ</title>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Trang chủ</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
@@ -181,10 +187,10 @@
                                     <a href="auth-login.html">Thông tin cá nhân</a>
                                 </li>
                                 <li class="submenu-item">
-                                    <a href="login.html">Login</a>
+                                    <a href="#!">Login</a>
                                 </li>
                                 <li class="submenu-item">
-                                    <a href="auth-login.html">Logout</a>
+                                    <a href="login">Logout</a>
                                 </li>
                                 <li class="submenu-item">
                                     <a href="auth-forgot-password.html">Forgot Password</a>
@@ -409,7 +415,7 @@
                                 style="padding-top: 3.2rem !important; padding-bottom: 3.1rem !important;">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-xl">
-                                        <img src="assets/images/faces/1.png" alt="Face 1" />
+                                        <img src="./assets/images/faces/1.png" alt="Face 1" />
                                     </div>
                                     <div class="ms-3 name">
                                         <h5 class="font-bold">Chủ Căn Hộ</h5>
@@ -493,5 +499,4 @@
 
     <script src="assets/js/main.js"></script>
 </body>
-
 </html>

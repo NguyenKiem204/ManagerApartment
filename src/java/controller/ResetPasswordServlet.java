@@ -4,25 +4,22 @@
  */
 package controller;
 
-
+import config.PasswordUtil;
 import dao.AccountDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Account;
 
 /**
  *
  * @author nkiem
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "ResetPasswordServlet", urlPatterns = {"/reset-password"})
+public class ResetPasswordServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +38,10 @@ public class LoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");
+            out.println("<title>Servlet ResetPasswordServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ResetPasswordServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,7 +59,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -76,46 +73,41 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        AccountDAO accountDAO = new AccountDAO();
+        PasswordUtil passwordUtil = new PasswordUtil();
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String remember = request.getParameter("remember_me");
-        Cookie cookie1 = new Cookie("email", email);  
-        Cookie cookie2 = new Cookie("password", password);
-        Cookie cookie3 = new Cookie("remember", remember);
-        if(remember!=null){
-            cookie1.setMaxAge(60*60*24*365);
-            cookie2.setMaxAge(60*60*24*365);
-            cookie3.setMaxAge(60*60*24*365);
-        }else{
-            cookie1.setMaxAge(0);
-            cookie2.setMaxAge(0);
-            cookie3.setMaxAge(0);
+        String confirmPassword = request.getParameter("confirmPassword");
+
+        if (email == null || password == null || confirmPassword == null) {
+            response.getWriter().write("Yêu cầu không hợp lệ.");
+            return;
         }
-        response.addCookie(cookie1);
-        response.addCookie(cookie2);
-        response.addCookie(cookie3);
-        Account account = accountDAO.checkLogin(email, password);
-        HttpSession session = request.getSession();
-        if (account == null) {
-            request.setAttribute("email", email);
-            request.setAttribute("password", password);
-            request.setAttribute("error", "***Email or Password fail");
-            request.getRequestDispatcher("login").forward(request, response);
+
+        // Kiểm tra mật khẩu khớp
+        if (!password.equals(confirmPassword)) {
+            response.getWriter().write("Mật khẩu không khớp.");
+            return;
+        }
+        String hashedPassword = passwordUtil.hashPassword(password);
+
+        AccountDAO accountDAO = new AccountDAO();
+        boolean success = accountDAO.updatePasswordInDatabase(email, hashedPassword);
+
+        if (success) {
+            response.getWriter().write("Mật khẩu đã được đổi thành công!");
         } else {
-            session.setAttribute("account", account);
-            session.setMaxInactiveInterval(600);
-            response.sendRedirect("home");
+            response.getWriter().write("Có lỗi xảy ra khi cập nhật mật khẩu.");
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
+
+/**
+ * Returns a short description of the servlet.
+ *
+ * @return a String containing servlet description
+ */
+@Override
+public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 
