@@ -14,24 +14,13 @@
     <link rel="stylesheet" href="assets/vendors/iconly/bold.css" />
 
     <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
+     <link rel="stylesheet" href="assets/css/pages/index.css">
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css" />
     <link rel="stylesheet" href="assets/css/app.css" />
     <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        
-        .active::-webkit-scrollbar {
-            width: 0px;
-            height: 0px;
-        }
-
-        .active {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-    </style>
 </head>
 
 <body>
@@ -192,7 +181,7 @@
                                     <a href="auth-login.html">Thông tin cá nhân</a>
                                 </li>
                                 <li class="submenu-item">
-                                    <a href="auth-login.html">Login</a>
+                                    <a href="login.html">Login</a>
                                 </li>
                                 <li class="submenu-item">
                                     <a href="auth-login.html">Logout</a>
@@ -215,7 +204,7 @@
                     <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
-
+           
             <div class="page-heading">
                 <h3>Số Liệu Thống Kê</h3>
             </div>
@@ -223,75 +212,67 @@
                 <section class="row">
                     <div class="col-12 col-lg-9">
                         <div class="row">
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-3 py-4-5 border-cam">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="stats-icon purple">
-                                                    <i class="fa-regular fa-building"></i>
+                            <div class="scroll-container">
+                                <button class="scroll-btn left"><i class="fa-solid fa-angle-left"></i></button>
+                                <div class="row row-btn">
+                                    <div class="col-8 col-lg-5 col-md-8">
+                                        <div class="card">
+                                            <div class="card-body px-3 py-4-5 border-cam">
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <img class="fixed-size-img" 
+                                                            src="/web/assets/images/aparts/R.jpg" alt="Chung cư">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
+                                                        <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
+                                                        <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <h6 class="text-muted font-semibold">Số căn hộ</h6>
-                                                <h6 class="font-extrabold mb-0">1.506</h6>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-3 py-4-5 border-cam">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="stats-icon blue">
-                                                    <i class="fa-solid fa-people-roof"></i>
+                                    <div class="col-8 col-lg-5 col-md-8">
+                                        <div class="card">
+                                            <div class="card-body px-3 py-4-5 border-cam">
+                                                <div class="row">
+                                                    <div class="col-md-5" >
+                                                        <img class="fixed-size-img" 
+                                                            src="/web/assets/images/aparts/toab.jpg" alt="Chung cư">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
+                                                        <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
+                                                        <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <h6 class="text-muted font-semibold">Số cư dân</h6>
-                                                <h6 class="font-extrabold mb-0">5.034</h6>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-3 py-4-5 border-cam">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="stats-icon green">
-                                                    <i class="fa-solid fa-file-invoice"></i>
+                                    <div class="col-8 col-lg-5 col-md-8">
+                                        <div class="card">
+                                            <div class="card-body px-3 py-4-5 border-cam">
+                                                <div class="row">
+                                                    <div class="col-md-5" >
+                                                        <img class="fixed-size-img" 
+                                                            src="/web/assets/images/aparts/toac.jpeg" alt="Chung cư">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
+                                                        <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
+                                                        <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <h6 class="text-muted font-semibold">Hóa đơn</h6>
-                                                <h6 class="font-extrabold mb-0">600</h6>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
-                            </div>
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-3 py-4-5 border-cam">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="stats-icon red">
-                                                    <i class="fa-solid fa-handshake-simple"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <h6 class="text-muted font-semibold">Hợp đồng</h6>
-                                                <h6 class="font-extrabold mb-0">112</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <button class="scroll-btn right"><i class="fa-solid fa-angle-right"></i></button>
                             </div>
                         </div>
+
+
                         <div class="row">
                             <div class="col-12">
                                 <div class="card border-cam">
@@ -424,7 +405,8 @@
                     </div>
                     <div class="col-12 col-lg-3">
                         <div class="card">
-                            <div class="card-body py-4 px-5 border-cam">
+                            <div class="card-body  border-cam"
+                                style="padding-top: 3.2rem !important; padding-bottom: 3.1rem !important;">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-xl">
                                         <img src="assets/images/faces/1.png" alt="Face 1" />
