@@ -27,7 +27,7 @@ public class Account {
     String imageURL;
     int roleId;
 
-    public Account(String mail, String password, String status, String sex, String cccd, String fullName, String phoneNumber, int roleId, String imageURL) {
+    public Account(String mail, String password, String status, String sex, String cccd, String fullName, String phoneNumber, String imageURL, int roleId) {
         this.mail = mail;
         this.password = password;
         this.status = status;

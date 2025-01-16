@@ -35,7 +35,7 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
             ps.setString(6, account.getFullName());
             ps.setString(7, account.getPhoneNumber());
              ps.setString(8, account.getImageURL());
-            ps.setInt(8, account.getRoleId());
+            ps.setInt(9, account.getRoleId());
 
             row = ps.executeUpdate();
             System.out.println("(" + row + " row(s) affected)");
@@ -146,6 +146,24 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
         }
         return account;
     }
+    public boolean existEmail(String email) {
+    String sql = "SELECT * FROM Account WHERE Mail = ?";
+    System.out.println(sql);
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, email);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return true;
+            }
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return false;
+}
+
     public Account checkLogin(String mail, String password) {
     Account account = null;
     String sql = "SELECT * FROM Account WHERE Mail = ?";

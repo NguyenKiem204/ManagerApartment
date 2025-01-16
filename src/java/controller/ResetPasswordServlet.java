@@ -79,7 +79,7 @@ public class ResetPasswordServlet extends HttpServlet {
         String confirmPassword = request.getParameter("confirmPassword");
 
         if (email == null || password == null || confirmPassword == null) {
-            response.getWriter().write("Yêu cầu không hợp lệ.");
+            response.sendRedirect("error-403.html");
             return;
         }
 
@@ -94,9 +94,9 @@ public class ResetPasswordServlet extends HttpServlet {
         boolean success = accountDAO.updatePasswordInDatabase(email, hashedPassword);
 
         if (success) {
-            response.getWriter().write("Mật khẩu đã được đổi thành công!");
+            response.sendRedirect("changepasswordsuccess.jsp");
         } else {
-            response.getWriter().write("Có lỗi xảy ra khi cập nhật mật khẩu.");
+            response.sendRedirect("error-403.html");
         }
     }
 

@@ -5,6 +5,8 @@
 
 package controller;
 
+import config.EmailSender;
+import dao.AccountDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -68,8 +70,27 @@ public class SendResetLinkServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+         String email = request.getParameter("email");
+        if (email == null || email.trim().isEmpty()) {
+            response.getWriter().write("Email không được để trống.");
+            return;
+        }
+        AccountDAO accountDAO = new AccountDAO();
+        EmailSender emailSender = new EmailSender();
+        if (!accountDAO.existEmail(email)) {
+            response.getWriter().write("Email không tồn tại trong hệ thống.");
+            return;
+        }
+
+        try {
+            emailSender.sendVerificationEmail(email);
+            request.getRequestDispatcher("checkmail.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("error-403.html");
+        }
     }
+    
 
     /** 
      * Returns a short description of the servlet.

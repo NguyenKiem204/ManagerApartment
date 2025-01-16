@@ -8,7 +8,7 @@ import java.time.Instant;
 
 public class EmailSender {
 
-    public static void sendVerificationEmail(String toEmail) throws MessagingException {
+    public void sendVerificationEmail(String toEmail) throws MessagingException {
         // Tạo token với BCrypt
         String token = generateToken(toEmail);
 
@@ -39,7 +39,7 @@ public class EmailSender {
     }
 
     // Hàm tạo token sử dụng BCrypt
-    private static String generateToken(String email) {
+    private String generateToken(String email) {
         long timestamp = Instant.now().getEpochSecond(); // Lấy thời gian hiện tại (giây)
         String rawData = email + ":" + timestamp; // Kết hợp email và thời gian
         return BCrypt.withDefaults().hashToString(10, rawData.toCharArray());

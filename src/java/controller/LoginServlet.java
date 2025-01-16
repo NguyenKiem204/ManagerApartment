@@ -101,7 +101,7 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("email", email);
             request.setAttribute("password", password);
             request.setAttribute("error", "***Email or Password fail");
-            request.getRequestDispatcher("login").forward(request, response);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
             session.setAttribute("account", account);
             session.setMaxInactiveInterval(600);
