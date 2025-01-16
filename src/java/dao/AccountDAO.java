@@ -8,7 +8,6 @@ package dao;
  *
  * @author nkiem
  */
-
 import config.PasswordUtil;
 import model.Account;
 import java.sql.*;
@@ -18,7 +17,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AccountDAO implements DAOInterface<Account, Integer> {
-private final PasswordUtil passwordEncode = new PasswordUtil();
+
+    private final PasswordUtil passwordEncode = new PasswordUtil();
+
     @Override
     public int insert(Account account) {
         int row = 0;
@@ -34,8 +35,8 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
             ps.setString(5, account.getCccd());
             ps.setString(6, account.getFullName());
             ps.setString(7, account.getPhoneNumber());
-             ps.setString(8, account.getImageURL());
-            ps.setInt(8, account.getRoleId());
+            ps.setString(8, account.getImageURL());
+            ps.setInt(9, account.getRoleId());
 
             row = ps.executeUpdate();
             System.out.println("(" + row + " row(s) affected)");
@@ -98,16 +99,16 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Account account = new Account(
-                    rs.getInt("AccountId"),
-                    rs.getString("Mail"),
-                    rs.getString("Password"),
-                    rs.getString("Status"),
-                    rs.getString("Sex"),
-                    rs.getString("CCCD"),
-                    rs.getString("FullName"),
-                    rs.getString("PhoneNumber"),
-                        rs.getString("ImageURL"),
-                    rs.getInt("RoleId")
+                          rs.getInt("AccountId"),
+                          rs.getString("Mail"),
+                          rs.getString("Password"),
+                          rs.getString("Status"),
+                          rs.getString("Sex"),
+                          rs.getString("CCCD"),
+                          rs.getString("FullName"),
+                          rs.getString("PhoneNumber"),
+                          rs.getString("ImageURL"),
+                          rs.getInt("RoleId")
                 );
                 list.add(account);
             }
@@ -128,16 +129,16 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     account = new Account(
-                        rs.getInt("AccountId"),
-                        rs.getString("Mail"),
-                        rs.getString("Password"),
-                        rs.getString("Status"),
-                        rs.getString("Sex"),
-                        rs.getString("CCCD"),
-                        rs.getString("FullName"),
-                        rs.getString("PhoneNumber"),
-                            rs.getString("ImageURL"),
-                        rs.getInt("RoleId")
+                              rs.getInt("AccountId"),
+                              rs.getString("Mail"),
+                              rs.getString("Password"),
+                              rs.getString("Status"),
+                              rs.getString("Sex"),
+                              rs.getString("CCCD"),
+                              rs.getString("FullName"),
+                              rs.getString("PhoneNumber"),
+                              rs.getString("ImageURL"),
+                              rs.getInt("RoleId")
                     );
                 }
             }
@@ -146,36 +147,38 @@ private final PasswordUtil passwordEncode = new PasswordUtil();
         }
         return account;
     }
+
     public Account checkLogin(String mail, String password) {
-    Account account = null;
-    String sql = "SELECT * FROM Account WHERE Mail = ?";
-    System.out.println(sql);
-    try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setString(1, mail);
-        try (ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                int accountId = rs.getInt("AccountID");
-                String storedMail = rs.getString("Mail");
-                String storedPasswordHash = rs.getString("Password");
-                String status = rs.getString("Status");
-                String sex = rs.getString("Sex");
-                String cccd = rs.getString("CCCD");
-                String fullName = rs.getString("FullName");
-                String phoneNumber = rs.getString("PhoneNumber");
-                int roleId = rs.getInt("RoleID");
-                String imageURL = rs.getString("ImageURL");
-                if (passwordEncode.checkPassword(password, storedPasswordHash) && "ACTIVE".equals(status.toUpperCase())) {
-                    account = new Account(accountId, mail, password, status, sex, cccd, fullName, phoneNumber, imageURL, roleId);
+        Account account = null;
+        String sql = "SELECT * FROM Account WHERE Mail = ?";
+        System.out.println(sql);
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, mail);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int accountId = rs.getInt("AccountID");
+                    String storedMail = rs.getString("Mail");
+                    String storedPasswordHash = rs.getString("Password");
+                    String status = rs.getString("Status");
+                    String sex = rs.getString("Sex");
+                    String cccd = rs.getString("CCCD");
+                    String fullName = rs.getString("FullName");
+                    String phoneNumber = rs.getString("PhoneNumber");
+                    int roleId = rs.getInt("RoleID");
+                    String imageURL = rs.getString("ImageURL");
+                    if (passwordEncode.checkPassword(password, storedPasswordHash) && "ACTIVE".equals(status.toUpperCase())) {
+                        account = new Account(accountId, mail, password, status, sex, cccd, fullName, phoneNumber, imageURL, roleId);
+                    }
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return account;
     }
-    return account;
-}
-public boolean updatePasswordInDatabase(String email, String hashedPassword) {
-        
+
+    public boolean updatePasswordInDatabase(String email, String hashedPassword) {
+
         try {
             Connection connection = DBContext.getConnection();
             String sql = "UPDATE Account SET Password = ? WHERE Mail = ?";
@@ -190,7 +193,4 @@ public boolean updatePasswordInDatabase(String email, String hashedPassword) {
             return false;
         }
     }
-
-
 }
-
