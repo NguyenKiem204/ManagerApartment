@@ -84,7 +84,7 @@ public class verify extends HttpServlet {
     // Hàm kiểm tra token
     private boolean verifyToken(String email, String token) {
         long currentTimestamp = Instant.now().getEpochSecond();
-        for (long i = 0; i < 60 * 60; i++) {
+        for (long i = 0; i < 5 * 60; i++) {
             String expectedRawData = email + ":" + (currentTimestamp - i);
             if (BCrypt.verifyer().verify(expectedRawData.toCharArray(), token).verified) {
                 return true;

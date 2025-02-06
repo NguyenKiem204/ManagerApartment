@@ -1,4 +1,5 @@
 package dao;
+
 import config.PasswordUtil;
 import model.Staff;
 import model.Resident;
@@ -10,26 +11,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ResidentDAO implements DAOInterface<Resident, Integer> {
+
     private final PasswordUtil passwordEncode = new PasswordUtil();
+
     @Override
     public int insert(Resident resident) {
         int row = 0;
-        String sql = "INSERT INTO Resident (FullName, Password, PhoneNumber, CCCD, Mail, DOB, Sex, Status, ImageID, ApartmentID, RoleID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        String sqlInsert = "INSERT INTO Resident (FullName, Password, PhoneNumber, CCCD, Email, DOB, Sex, ImageID, ApartmentID, Status, RoleID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlInsert)) {
             ps.setString(1, resident.getFullName());
-            ps.setString(2, resident.getPassword());
+            ps.setString(2, passwordEncode.hashPassword(resident.getPassword()));
             ps.setString(3, resident.getPhoneNumber());
             ps.setString(4, resident.getCccd());
             ps.setString(5, resident.getMail());
             ps.setDate(6, Date.valueOf(resident.getDob()));
             ps.setString(7, resident.getSex());
-            ps.setString(8, resident.getStatus());
-            ps.setInt(9, resident.getImageId());
-            ps.setInt(10, resident.getApartmentId());
+            ps.setInt(8, resident.getImageId());
+            ps.setInt(9, resident.getApartmentId());
+            ps.setString(10, resident.getStatus());
             ps.setInt(11, resident.getRoleId());
-            
+
             row = ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,10 +42,9 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
     @Override
     public int update(Resident resident) {
         int row = 0;
-        String sql = "UPDATE Resident SET FullName = ?, Password = ?, PhoneNumber = ?, CCCD = ?, Mail = ?, DOB = ?, Sex = ?, Status = ?, ImageID = ?, ApartmentID = ?, RoleID = ? WHERE ResidentID = ?";
-        
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        String sql = "UPDATE Resident SET FullName = ?, Password = ?, PhoneNumber = ?, CCCD = ?, Email = ?, DOB = ?, Sex = ?, ImageID = ?, ApartmentID = ?, Status = ?, RoleID = ? WHERE ResidentID = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, resident.getFullName());
             ps.setString(2, resident.getPassword());
             ps.setString(3, resident.getPhoneNumber());
@@ -51,12 +52,12 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
             ps.setString(5, resident.getMail());
             ps.setDate(6, Date.valueOf(resident.getDob()));
             ps.setString(7, resident.getSex());
-            ps.setString(8, resident.getStatus());
-            ps.setInt(9, resident.getImageId());
-            ps.setInt(10, resident.getApartmentId());
+            ps.setInt(8, resident.getImageId());
+            ps.setInt(9, resident.getApartmentId());
+            ps.setString(10, resident.getStatus());
             ps.setInt(11, resident.getRoleId());
             ps.setInt(12, resident.getResidentId());
-            
+
             row = ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,9 +69,8 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
     public int delete(Resident resident) {
         int row = 0;
         String sql = "DELETE FROM Resident WHERE ResidentID = ?";
-        
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, resident.getResidentId());
             row = ps.executeUpdate();
         } catch (SQLException ex) {
@@ -83,10 +83,9 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
     public List<Resident> selectAll() {
         List<Resident> list = new ArrayList<>();
         String sql = "SELECT * FROM Resident";
-        
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Resident resident = new Resident(
                         rs.getInt("ResidentID"),
@@ -94,7 +93,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                         rs.getString("Password"),
                         rs.getString("PhoneNumber"),
                         rs.getString("CCCD"),
-                        rs.getString("Mail"),
+                        rs.getString("Email"),
                         rs.getDate("DOB").toLocalDate(),
                         rs.getString("Sex"),
                         rs.getString("Status"),
@@ -114,37 +113,35 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
     public Resident selectById(Integer id) {
         Resident resident = null;
         String sql = "SELECT * FROM Resident WHERE ResidentID = ?";
-        
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    resident = new Resident(
-                            rs.getInt("ResidentID"),
-                            rs.getString("FullName"),
-                            rs.getString("Password"),
-                            rs.getString("PhoneNumber"),
-                            rs.getString("CCCD"),
-                            rs.getString("Mail"),
-                            rs.getDate("DOB").toLocalDate(),
-                            rs.getString("Sex"),
-                            rs.getString("Status"),
-                            rs.getInt("ImageID"),
-                            rs.getInt("ApartmentID"),
-                            rs.getInt("RoleID")
-                    );
-                }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                resident = new Resident(
+                        rs.getInt("ResidentID"),
+                        rs.getString("FullName"),
+                        rs.getString("Password"),
+                        rs.getString("PhoneNumber"),
+                        rs.getString("CCCD"),
+                        rs.getString("Email"),
+                        rs.getDate("DOB").toLocalDate(),
+                        rs.getString("Sex"),
+                        rs.getString("Status"),
+                        rs.getInt("ImageID"),
+                        rs.getInt("ApartmentID"),
+                        rs.getInt("RoleID")
+                );
             }
         } catch (SQLException ex) {
             Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resident;
     }
+
     public boolean existEmail(String email) {
-        String sql = "SELECT * FROM Resident WHERE Mail = ?";
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        String sql = "SELECT * FROM Resident WHERE Email = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
@@ -157,9 +154,8 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
 
     public Resident checkLogin(String mail, String password) {
         Resident resident = null;
-        String sql = "SELECT * FROM Resident WHERE Mail = ?";
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        String sql = "SELECT * FROM Resident WHERE Email = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, mail);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -186,9 +182,8 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
     }
 
     public boolean updatePasswordInDatabase(String email, String hashedPassword) {
-        String sql = "UPDATE Resident SET Password = ? WHERE Mail = ?";
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        String sql = "UPDATE Resident SET Password = ? WHERE Email = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, hashedPassword);
             statement.setString(2, email);
             return statement.executeUpdate() > 0;
@@ -198,4 +193,3 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         return false;
     }
 }
-

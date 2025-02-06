@@ -6,6 +6,8 @@ package controller;
 
 import config.PasswordUtil;
 import dao.AccountDAO;
+import dao.ResidentDAO;
+import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -90,8 +92,15 @@ public class ResetPasswordServlet extends HttpServlet {
         }
         String hashedPassword = passwordUtil.hashPassword(password);
 
-        AccountDAO accountDAO = new AccountDAO();
-        boolean success = accountDAO.updatePasswordInDatabase(email, hashedPassword);
+        StaffDAO staffDAO = new StaffDAO();
+        ResidentDAO residentDAO = new ResidentDAO();
+        boolean success = false;
+        if(staffDAO.existEmail(email)){
+            success = staffDAO.updatePasswordInDatabase(email, hashedPassword);
+        }else if(residentDAO.existEmail(email)){
+            success = residentDAO.updatePasswordInDatabase(email, hashedPassword);
+        }
+        
 
         if (success) {
             response.sendRedirect("changepasswordsuccess.jsp");

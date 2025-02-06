@@ -7,6 +7,8 @@ package controller;
 
 import config.EmailSender;
 import dao.AccountDAO;
+import dao.ResidentDAO;
+import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -75,13 +77,13 @@ public class SendResetLinkServlet extends HttpServlet {
             response.getWriter().write("Email không được để trống.");
             return;
         }
-        AccountDAO accountDAO = new AccountDAO();
+        StaffDAO staffDAO = new StaffDAO();
+        ResidentDAO residentDAO = new ResidentDAO();
         EmailSender emailSender = new EmailSender();
-        if (!accountDAO.existEmail(email)) {
+        if (!staffDAO.existEmail(email)&&!residentDAO.existEmail(email)) {
             response.getWriter().write("Email không tồn tại trong hệ thống.");
             return;
         }
-
         try {
             emailSender.sendVerificationEmail(email);
             request.getRequestDispatcher("checkmail.jsp").forward(request, response);

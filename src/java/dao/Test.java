@@ -6,7 +6,9 @@ package dao;
 
 import java.time.LocalDate;
 import model.Account;
+import model.Apartment;
 import model.Image;
+import model.Resident;
 import model.Role;
 import model.Staff;
 
@@ -42,14 +44,20 @@ public class Test {
 //            System.out.println("Fail");
 //        }
         StaffDAO staffDAO = new StaffDAO();
+        ResidentDAO residentDAO = new ResidentDAO();
         RoleDAO roleDAO = new RoleDAO();
         ImageDAO imageDAO = new ImageDAO();
+        ApartmentDAO apartmentDAO = new ApartmentDAO();
         
-        Role role = new Role("ADMIN", "All Permission");
-        Image image = new Image("dhdhdhd");
-        roleDAO.insert(role);
-        imageDAO.insert(image);
-        Staff staff = new Staff("Nguyễn Văn Kiểm", "12345", "0336780144", "4985489535", "nkiem347@gmail.com",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 1);
-        staffDAO.insert(staff);
+//        Role role = new Role("OWNER", "Some Permission");
+//        Image image = new Image("./djhdjdhf/lo");
+//        roleDAO.insert(role);
+//Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
+//apartmentDAO.insert(apartment);
+        Resident resident = new Resident("Nguyễn Văn Kiểm", "12345", "0945207628", "8734873434", "kiemnvhe186025@fpt.edu.vn", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", 1, 1, 2);
+        residentDAO.insert(resident);
+//        imageDAO.insert(image);
+//        Staff staff = new Staff("Lonel Messi", "12345", "0985747574", "989999989989", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 2);
+//        staffDAO.insert(staff);
     }
 }

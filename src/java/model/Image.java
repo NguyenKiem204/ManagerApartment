@@ -16,11 +16,11 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Image {
-    private  int ImageID;
-    private String ImageURL;
+    private  int imageID;
+    private String imageURL;
 
-    public Image(String ImageURL) {
-        this.ImageURL = ImageURL;
+    public Image(String imageURL) {
+        this.imageURL = imageURL;
     }
     
 }
