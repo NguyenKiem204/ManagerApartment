@@ -6,6 +6,8 @@ package controller;
 
 
 import dao.AccountDAO;
+import dao.ResidentDAO;
+import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Account;
+import model.Resident;
+import model.Staff;
 
 /**
  *
@@ -77,12 +81,14 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         AccountDAO accountDAO = new AccountDAO();
+        String userType = request.getParameter("userType");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String remember = request.getParameter("remember_me");
         Cookie cookie1 = new Cookie("email", email);  
         Cookie cookie2 = new Cookie("password", password);
         Cookie cookie3 = new Cookie("remember", remember);
+        Cookie cookie4 = new Cookie("userType", userType);
         if(remember!=null){
             cookie1.setMaxAge(60*60*24*365);
             cookie2.setMaxAge(60*60*24*365);
@@ -95,15 +101,23 @@ public class LoginServlet extends HttpServlet {
         response.addCookie(cookie1);
         response.addCookie(cookie2);
         response.addCookie(cookie3);
-        Account account = accountDAO.checkLogin(email, password);
+        StaffDAO staffDAO = new StaffDAO();
+        ResidentDAO residentDAO = new ResidentDAO();
+        Staff staff = null;
+        Resident resident = null;
+        if(userType.toLowerCase().equals("staff")){
+            staff = staffDAO.checkLogin(email, password);
+        }else resident = residentDAO.checkLogin(email, password);
         HttpSession session = request.getSession();
-        if (account == null) {
+        if (staff == null && resident == null) {
+            request.setAttribute("userType", userType);
             request.setAttribute("email", email);
             request.setAttribute("password", password);
             request.setAttribute("error", "***Email or Password fail");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
-            session.setAttribute("account", account);
+            session.setAttribute("staff", staff);
+            session.setAttribute("resident", resident);
             session.setMaxInactiveInterval(600);
             response.sendRedirect("home");
         }
