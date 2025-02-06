@@ -17,7 +17,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
     @Override
     public int insert(Resident resident) {
         int row = 0;
-        String sqlInsert = "INSERT INTO Resident (FullName, Password, PhoneNumber, CCCD, Email, DOB, Sex, ImageID, ApartmentID, Status, RoleID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlInsert = "INSERT INTO Resident (FullName, Password, PhoneNumber, CCCD, Email, DOB, Sex, ImageID, Status, RoleID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlInsert)) {
             ps.setString(1, resident.getFullName());
@@ -28,9 +28,8 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
             ps.setDate(6, Date.valueOf(resident.getDob()));
             ps.setString(7, resident.getSex());
             ps.setInt(8, resident.getImageId());
-            ps.setInt(9, resident.getApartmentId());
-            ps.setString(10, resident.getStatus());
-            ps.setInt(11, resident.getRoleId());
+            ps.setString(9, resident.getStatus());
+            ps.setInt(10, resident.getRoleId());
 
             row = ps.executeUpdate();
         } catch (SQLException ex) {
@@ -42,7 +41,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
     @Override
     public int update(Resident resident) {
         int row = 0;
-        String sql = "UPDATE Resident SET FullName = ?, Password = ?, PhoneNumber = ?, CCCD = ?, Email = ?, DOB = ?, Sex = ?, ImageID = ?, ApartmentID = ?, Status = ?, RoleID = ? WHERE ResidentID = ?";
+        String sql = "UPDATE Resident SET FullName = ?, Password = ?, PhoneNumber = ?, CCCD = ?, Email = ?, DOB = ?, Sex = ?, ImageID = ?, Status = ?, RoleID = ? WHERE ResidentID = ?";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, resident.getFullName());
@@ -53,10 +52,9 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
             ps.setDate(6, Date.valueOf(resident.getDob()));
             ps.setString(7, resident.getSex());
             ps.setInt(8, resident.getImageId());
-            ps.setInt(9, resident.getApartmentId());
-            ps.setString(10, resident.getStatus());
-            ps.setInt(11, resident.getRoleId());
-            ps.setInt(12, resident.getResidentId());
+            ps.setString(9, resident.getStatus());
+            ps.setInt(10, resident.getRoleId());
+            ps.setInt(11, resident.getResidentId());
 
             row = ps.executeUpdate();
         } catch (SQLException ex) {
@@ -98,7 +96,6 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                         rs.getString("Sex"),
                         rs.getString("Status"),
                         rs.getInt("ImageID"),
-                        rs.getInt("ApartmentID"),
                         rs.getInt("RoleID")
                 );
                 list.add(resident);
@@ -129,7 +126,6 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                         rs.getString("Sex"),
                         rs.getString("Status"),
                         rs.getInt("ImageID"),
-                        rs.getInt("ApartmentID"),
                         rs.getInt("RoleID")
                 );
             }
@@ -169,9 +165,8 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                         LocalDate dob = rs.getDate("DOB").toLocalDate();
                         String sex = rs.getString("Sex");
                         int imageId = rs.getInt("ImageID");
-                        int apartmentId = rs.getInt("ApartmentID");
                         int roleId = rs.getInt("RoleID");
-                        resident = new Resident(residentId, fullName, storedPasswordHash, phoneNumber, cccd, mail, dob, sex, status, imageId, apartmentId, roleId);
+                        resident = new Resident(residentId, fullName, storedPasswordHash, phoneNumber, cccd, mail, dob, sex, status, imageId, roleId);
                     }
                 }
             }

@@ -26,10 +26,9 @@ public class Resident {
     String sex;
     String status;
     int imageId;
-    int apartmentId;
     int roleId;
 
-    public Resident(String fullName, String password, String phoneNumber, String cccd, String mail, LocalDate dob, String sex, String status, int imageId, int apartmentId, int roleId) {
+    public Resident(String fullName, String password, String phoneNumber, String cccd, String mail, LocalDate dob, String sex, String status, int imageId, int roleId) {
         this.fullName = fullName;
         this.password = password;
         this.phoneNumber = phoneNumber;
@@ -39,7 +38,6 @@ public class Resident {
         this.sex = sex;
         this.status = status;
         this.imageId = imageId;
-        this.apartmentId = apartmentId;
         this.roleId = roleId;
     }
 }
