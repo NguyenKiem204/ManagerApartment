@@ -61,19 +61,59 @@
             button:hover {
                 background-color: #e67e00;
             }
+            .error{
+                color: red;
+                font-weight: 500;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>Đặt lại mật khẩu</h1>
-            <form action="reset-password" method="POST">
+            <form action="reset-password" method="POST" id="resetForm">
                 <input type="hidden" name="email" value="${sessionScope.email}" />
-                <label for="password">Mật khẩu mới:</label>
+
+                <label for="password">New Password:</label>
                 <input type="password" name="password" id="password" required />
-                <label for="confirmPassword">Xác nhận mật khẩu:</label>
+
+                <label for="confirmPassword">Confirm Password:</label>
                 <input type="password" name="confirmPassword" id="confirmPassword" required />
-                <button type="submit">Đổi mật khẩu</button>
+                <p class="error" id="passwordError">${requestScope.passwordError}</p>
+
+                <button type="submit">Change Password</button>
             </form>
         </div>
     </body>
+
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("resetForm");
+            const password = document.getElementById("password");
+            const confirmPassword = document.getElementById("confirmPassword");
+            const passwordError = document.getElementById("passwordError");
+
+            form.addEventListener("submit", function (event) {
+                let isValid = true;
+                passwordError.textContent = "";
+                if (password.value.length < 6) {
+                    passwordError.textContent = "The password must be at least 6 characters long!";
+                    isValid = false;
+                }
+                else if (password.value !== confirmPassword.value) {
+                    passwordError.textContent = "The password does not match!";
+                    isValid = false;
+                } else if (!/\d/.test(password.value) || !/[!@#$%^&*(),.?":{}|<>]/.test(password.value) ||
+                        !/[a-zA-Z]/.test(password.value) ) {
+                    passwordError.textContent = "The password must contain at least one digit, one special character, and one letter!";
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+
 </html>

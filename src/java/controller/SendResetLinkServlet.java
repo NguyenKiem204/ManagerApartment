@@ -85,7 +85,7 @@ public class SendResetLinkServlet extends HttpServlet {
             return;
         }
         try {
-            emailSender.sendVerificationEmail(email);
+            emailSender.sendVerificationEmail(request,email);
             request.getRequestDispatcher("checkmail.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,7 +5,6 @@
 package controller;
 
 import config.PasswordUtil;
-import dao.AccountDAO;
 import dao.ResidentDAO;
 import dao.StaffDAO;
 import java.io.IOException;
@@ -85,22 +84,35 @@ public class ResetPasswordServlet extends HttpServlet {
             return;
         }
 
-        // Kiểm tra mật khẩu khớp
-        if (!password.equals(confirmPassword)) {
-            response.getWriter().write("Mật khẩu không khớp.");
+        if (password.length() < 6) {
+            request.setAttribute("passwordError", "The password must be at least 6 characters long!");
+            request.getRequestDispatcher("newpasword.jsp").forward(request, response);
             return;
         }
+
+        if (!password.matches("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).+$")) {
+            request.setAttribute("passwordError", "The password must contain at least one digit, one special character, and one letter!");
+            request.getRequestDispatcher("newpasword.jsp").forward(request, response);
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            request.setAttribute("passwordError", "The password does not match!");
+            request.getRequestDispatcher("newpasword.jsp").forward(request, response);
+            return;
+        }
+
         String hashedPassword = passwordUtil.hashPassword(password);
 
         StaffDAO staffDAO = new StaffDAO();
         ResidentDAO residentDAO = new ResidentDAO();
         boolean success = false;
-        if(staffDAO.existEmail(email)){
+
+        if (staffDAO.existEmail(email)) {
             success = staffDAO.updatePasswordInDatabase(email, hashedPassword);
-        }else if(residentDAO.existEmail(email)){
+        } else if (residentDAO.existEmail(email)) {
             success = residentDAO.updatePasswordInDatabase(email, hashedPassword);
         }
-        
 
         if (success) {
             response.sendRedirect("changepasswordsuccess.jsp");
@@ -109,14 +121,13 @@ public class ResetPasswordServlet extends HttpServlet {
         }
     }
 
-
-/**
- * Returns a short description of the servlet.
- *
- * @return a String containing servlet description
- */
-@Override
-public String getServletInfo() {
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 
