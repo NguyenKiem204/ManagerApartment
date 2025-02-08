@@ -1,0 +1,55 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Feb 8, 2025, 3:17:27 PM
+    Author     : nkiem
+*/
+
+.profile-container {
+    max-width: 1000px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border: 4px solid #007bff;
+    transition: transform 0.3s ease;
+}
+
+.profile-img:hover {
+    transform: scale(1.1);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.form-control, .form-select {
+    border-radius: 6px;
+}
+
+.btn-primary {
+    background: #007bff;
+    border: none;
+    transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
