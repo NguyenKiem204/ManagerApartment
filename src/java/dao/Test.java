@@ -5,8 +5,8 @@
 package dao;
 
 import java.time.LocalDate;
-import model.Account;
 import model.Apartment;
+import model.Feedback;
 import model.Image;
 import model.Resident;
 import model.Role;
@@ -48,16 +48,20 @@ public class Test {
         RoleDAO roleDAO = new RoleDAO();
         ImageDAO imageDAO = new ImageDAO();
         ApartmentDAO apartmentDAO = new ApartmentDAO();
+        FeedbackDAO feedbackDAO = new FeedbackDAO();
         
 //        Role role = new Role("OWNER", "Some Permission");
 //        Image image = new Image("./djhdjdhf/lo");
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
-        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "048758747", "598695869", "nguyen05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", 1, 2);
-        residentDAO.insert(resident);
+//        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "048758747", "598695869", "nguyen05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", 1, 2);
+//        residentDAO.insert(resident);
 //        imageDAO.insert(image);
 //        Staff staff = new Staff("Lonel Messi", "12345", "0985747574", "989999989989", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 2);
 //        staffDAO.insert(staff);
+
+        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);
+        feedbackDAO.insert(fb);
     }
 }

@@ -61,7 +61,7 @@
                             </a>
                             <ul class="submenu">
                                 <li class="submenu-item">
-                                    <a href="component-alert.html">Tòa Nhà</a>
+                                    <a href="feedback">Tòa Nhà</a>
                                 </li>
                                 <li class="submenu-item">
                                     <a href="component-badge.html">Tầng</a>

@@ -5,7 +5,6 @@
 package controller;
 
 import config.PasswordUtil;
-import dao.AccountDAO;
 import dao.ResidentDAO;
 import dao.StaffDAO;
 import java.io.IOException;
