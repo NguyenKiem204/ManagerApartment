@@ -3,6 +3,7 @@ package config;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.text.SimpleDateFormat;
@@ -12,7 +13,7 @@ import java.util.Properties;
 
 public class EmailSender {
 
-    public void sendVerificationEmail(String toEmail) throws MessagingException, UnsupportedEncodingException {
+    public void sendVerificationEmail(HttpServletRequest request, String toEmail) throws MessagingException, UnsupportedEncodingException {
     // Tạo token với BCrypt
     String token = generateToken(toEmail);
     Calendar calendar = Calendar.getInstance();
@@ -29,13 +30,15 @@ public class EmailSender {
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.starttls.enable", "true");
 
-    // Đăng nhập email gửi
     Session session = Session.getInstance(props, new jakarta.mail.Authenticator() {
         protected PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication("buildingmanagement77@gmail.com", "hpfyyhbaelpgdeir");
         }
     });
-    String verificationLink = "http://localhost:8080/ManagerApartment/verify?email=" + toEmail + "&token=" + token;
+
+    String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    String verificationLink = baseUrl + "/verify?email=" + toEmail + "&token=" + token;
+
     String htmlContent = "<html>"
             + "<body style='font-family: Arial, sans-serif;'>"
             + "<h2 style='color: #333;'>Đổi Mật Khẩu</h2>"
