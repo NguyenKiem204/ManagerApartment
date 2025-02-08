@@ -1,374 +1,499 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trang chủ</title>
 
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Trang chủ</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/bootstrap.css" />
 
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
-              rel="stylesheet" />
-        <link rel="stylesheet" href="assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="assets/vendors/iconly/bold.css" />
 
-        <link rel="stylesheet" href="assets/vendors/iconly/bold.css" />
+    <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
+    <link
+      rel="stylesheet"
+      href="assets/vendors/bootstrap-icons/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="assets/css/app.css" />
+    <link
+      rel="shortcut icon"
+      href="assets/images/favicon/favicon.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      .logo {
+        position: relative;
+        left: 35px;
+        top: 20px;
+      }
 
-        <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
-        <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css" />
-        <link rel="stylesheet" href="assets/css/app.css" />
-        <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <style>
+      .navbar {
+        background-color: #f8f9fa;
+        padding: 10px 20px;
+        border-bottom: 1px solid #e0e0e0;
+      }
 
-            .active::-webkit-scrollbar {
-                width: 0px;
-                height: 0px;
-            }
+      .navbar-nav {
+        margin-left: 0;
+        margin-right: 0;
+      }
 
-            .active {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
+      .nav-link {
+        font-size: 16px;
+        padding: 10px 15px;
+        color: #333;
+        transition: background-color 0.3s ease;
+      }
 
-            .app-header{
-                margin-left: 300px;
-                height: 55px;
-            }
-            .dropdown-menu{
-                min-width: 18rem !important;
-                right: -15px !important;
-            }
-            .navbar-nav > .user-menu > .dropdown-menu > li.user-header {
-                min-height: 175px;
-                padding: 10px;
-                text-align: center;
-                background-color: #0d6efd;
-                color: #fff;
-                font-size: 18px;
-            }
-            .user-header img{
-                width: 80px !important;
-                height: 80px !important;
-                border: 3px solid;
-                border-color: transparent;
-                border-color: rgba(0,0,0,0.175);
-            }
-            .dropdown-toggle::after {
-                display: none !important;
-            }
+      .user-menu .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+      }
 
-            .rounded-circle {
-                border-radius: 50% !important;
-            }
-            .shadow {
-                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-            }
-            img, svg {
-                vertical-align: middle;
-                object-fit: cover;
-                object-position: center;
-            }
-            .notify-menu{
-                min-width: 22rem !important;
-            }
-            .notify{
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                height: 60px;
-                padding:10px;
-                margin: 20px 0;
-            }
-            .notify .user-alert{
-                width: 56px ;
-                height: 56px ;
-            }
-            .notify img{
-                width: 100% !important;
-                height: 100% !important;
-            }
-            .text-alert{
-                overflow: hidden;
-                font-size: 15px;
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 3;
-                display: -webkit-box;
-                margin-bottom: 0 !important;
-            }
+      p {
+        margin: 0 !important;
+      }
 
-            .user-alert {
-                flex: 1;
-                max-width: 17%;
-            }
+      .dropdown-menu {
+        min-width: 17rem;
+      }
 
-            .user-image {
-                width: 100%;
-                height: auto;
-            }
+      .dropdown-toggle::after {
+        display: none !important;
+      }
+      img {
+        object-fit: cover;
+        object-position: center;
+      }
+      .img-drop img {
+        width: 70px !important;
+        height: 70px !important;
+      }
 
-            .text-alert {
-                flex: 3;
-            }
-            .navbar{
-                position: fixed;
-                right: 0;
-                left: 0;
-            }
-            footer{
-                margin-top: 50px;
-            }
-        </style>
-    </head>
+      .notify-menu {
+        margin-top: 25px;
+        max-width: 400px;
+        min-width: 23rem;
+        width: auto;
+        right: 0;
+        top: 50px;
+        padding: 10px;
+        border-radius: 8px;
+      }
 
-    <body>
-        <div id="app">
-            <nav class="app-header navbar navbar-expand bg-body"> <!--begin::Container-->
-                <div class="container-fluid"> <!--begin::Start Navbar Links-->
-                    <ul class="navbar-nav">
-                        <li class="nav-item d-none d-md-block"> <a href="home" class="nav-link">Home</a> </li>
-                        <li class="nav-item d-none d-md-block"> <a href="#" class="nav-link">Contact</a> </li>
-                    </ul> <!--end::Start Navbar Links--> <!--begin::End Navbar Links-->
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item dropdown user-menu"> <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <img src="./assets/images/faces/avatar.png" class="user-image rounded-circle shadow" alt="User Image"> <span class="d-none d-md-inline">NguyenKiem</span> </a>
-                            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end"> <!--begin::User Image-->
-                                <li class="user-header text-bg-primary"> <img src="./assets/images/faces/avatar.png" class="rounded-circle shadow" alt="User Image">
-                                    <p>
-                                        NguyenKiem - Web Developer
-                                        <small>Member since Nov. 2024</small>
-                                    </p>
-                                </li>
-                                <li class="user-footer d-flex justify-content-between">
-    <a href="#" class="btn btn-default btn-flat">Profile</a>
-    <a href="#" class="btn btn-default btn-flat">Setting</a>
-    <a href="#" class="btn btn-default btn-flat">Logout</a>
-</li>
- <!--end::Menu Footer-->
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown user-menu"> <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <i style="display: inline-block; margin-top: 10px" class="fa-solid fa-bell"></i></a>
-                            <ul class="notify-menu dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                                <li class="notify"><div class="user-alert"><img src="./assets/images/faces/nguyenkiem.jpg" class="user-image rounded-circle shadow" alt="User Image"></div>
-                                    <p class="text-alert"><strong>Đình Tùng</strong> đã nhắc bạn trong một bình luận trong nhóm Spring-boot Java web Việt Nam đã nhắc bạn trong một bình luận trong nhóm Spring-boot Java web Việt Nam đã nhắc bạn trong một bình luận trong nhóm Spring-boot Java web Việt Nam</p>
-                                </li>
-                                <li class="notify"><div class="user-alert"><img src="./assets/images/faces/nguyenkiem.jpg" class="user-image rounded-circle shadow" alt="User Image"></div>
-                                    <p class="text-alert"><strong>Đình Tùng</strong> đã nhắc bạn trong một bình luận trong nhóm Spring-boot Java web Việt Nam đã nhắc bạn trong một bình luận trong nhóm Spring-boot Java web Việt Nam đã nhắc bạn trong một bình luận trong nhóm Spring-boot Java web Việt Nam</p>
-                                </li>
-                                <li class="notify"><div class="user-alert"><img src="./assets/images/faces/nguyenkiem.jpg" class="user-image rounded-circle shadow" alt="User Image"></div>
-                                    <p class="text-alert"><strong>Đình Tùng</strong> đã nhắc bạn trong một bình luận trong nhóm Spring-boot Java web Việt Nam đã nhắc bạn trong một bình luận trong nhóm Spring-boot Java web Việt Nam đã nhắc bạn trong một bình luận trong nhóm Spring-boot Java web Việt Nam</p>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-            <div id="sidebar" class="active">
-                <div class="sidebar-wrapper active" style="border: 2px solid orangered;">
-                    <div class="sidebar-header">
+      .notify a {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #f1f1f1;
+      }
 
-                        <div class="d-flex justify-content-between">
-                            <div class="logo">
-                                <a href="index.html"><img src="assets/images/logo/logo.png" alt="Logo" /></a>
-                            </div>
-                            <div class="toggler">
-                                <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-                            </div>
-                        </div>
+      .user-alert {
+        width: 56px;
+        height: 56px;
+        margin-right: 10px;
+      }
+
+      .user-alert img {
+        width: 56px !important;
+        height: 56px !important;
+      }
+
+      .text-alert {
+        overflow: hidden;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #555;
+        -webkit-box-orient: vertical;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
+        display: -webkit-box;
+      }
+
+      .text-alert strong {
+        color: #000;
+      }
+
+      .user-header {
+        padding: 20px;
+        text-align: center;
+        background-color: #007bff;
+        color: #fff;
+      }
+
+      .user-footer {
+        padding: 10px;
+      }
+
+      .user-footer .btn-flat {
+        border: none;
+        background: none;
+        font-size: 14px;
+        color: #007bff;
+        transition: color 0.3s ease;
+      }
+
+      .user-footer .btn-flat:hover {
+        color: #0056b3;
+      }
+
+      .kiem_can_trai {
+        margin-left: 300px;
+      }
+
+      @media (max-width: 991px) {
+        .kiem_button {
+          position: relative;
+          top: -90px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <nav class="app-header navbar navbar-expand bg-body">
+        <div class="container-fluid">
+          <!-- Navbar Links -->
+          <ul class="navbar-nav kiem_can_trai">
+            <li class="nav-item d-none d-md-block">
+              <a href="home" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item d-none d-md-block">
+              <a href="#" class="nav-link">Contact</a>
+            </li>
+          </ul>
+
+          <!-- User and Notification Dropdowns -->
+          <ul class="navbar-nav ms-auto">
+            <!-- User Menu -->
+            <li class="nav-item dropdown user-menu">
+              <a
+                href="#"
+                class="nav-link dropdown-toggle"
+                data-bs-toggle="dropdown"
+              >
+                <img
+                  src="./assets/images/faces/avatar.png"
+                  class="user-image rounded-circle shadow"
+                  alt="User Image"
+                />
+                <span class="d-none d-md-inline">NguyenKiem</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                <li class="user-header text-bg-primary img-drop">
+                  <img
+                    src="./assets/images/faces/avatar.png"
+                    class="rounded-circle shadow"
+                    alt="User Image"
+                  />
+                  <p>
+                    NguyenKiem - Web Developer
+                    <small>Member since Nov. 2024</small>
+                  </p>
+                </li>
+                <li class="user-footer d-flex justify-content-between">
+                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="#" class="btn btn-default btn-flat">Setting</a>
+                  <a href="#" class="btn btn-default btn-flat">Logout</a>
+                </li>
+              </ul>
+            </li>
+
+            <!-- Notification Menu -->
+            <li class="nav-item dropdown user-menu">
+              <a
+                href="#"
+                class="nav-link dropdown-toggle"
+                data-bs-toggle="dropdown"
+              >
+                <i
+                  class="fa-solid fa-bell"
+                  style="font-size: 1.5rem; margin-top: 10px"
+                ></i>
+              </a>
+              <ul
+                class="notify-menu dropdown-menu dropdown-menu-lg dropdown-menu-end"
+              >
+                <li class="notify">
+                  <a href="!#">
+                    <div class="user-alert">
+                      <img
+                        src="./assets/images/faces/nguyenkiem.jpg"
+                        class="user-image rounded-circle shadow"
+                        alt="User Image"
+                      />
                     </div>
-                    <div class="sidebar-menu">
-                        <ul class="menu">
-                            <li class="sidebar-title">Menu</li>
+                    <p class="text-alert">
+                      <strong>Đình Tùng</strong> đã nhắc bạn trong một bình luận
+                      trong nhóm Spring-boot Java web Việt Nam. đã nhắc bạn
+                      trong một bình luận trong nhóm Spring-boot Java web Việt
+                      Nam đã nhắc bạn trong một bình luận trong nhóm Spring-boot
+                      Java web Việt Nam
+                    </p>
+                  </a>
+                </li>
 
-                            <li class="sidebar-item active">
-                                <a href="index.html" class="sidebar-link">
-                                    <i class="bi bi-grid-fill"></i>
-                                    <span>Trang Chủ</span>
-                                </a>
-                            </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-stack"></i>
-                                    <span>Chung Cư</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="component-alert.html">Tòa Nhà</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="component-badge.html">Tầng</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="component-breadcrumb.html">Căn Hộ</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="component-button.html">Tiện Ích</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-collection-fill"></i>
-                                    <span>Cư Dân</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="extra-component-avatar.html">Danh Sách</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-sweetalert.html">Phương Tiện</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-toastify.html">Thông Báo</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-rating.html">Khiếu Nại</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-divider.html">Divider</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-grid-1x2-fill"></i>
-                                    <span>Phản hồi</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="layout-default.html">Gửi thông báo</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-vertical-1-column.html">Cư dân</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-vertical-navbar.html">Ban kế toán</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-horizontal.html">Ban bảo vệ</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-collection-fill"></i>
-                                    <span>Thống kê</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="extra-component-avatar.html">Dịch vụ lốt xe</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-sweetalert.html">Dịch vụ điện công cộng</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-toastify.html">Dịch vụ vệ sinh</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="sidebar-title">Khác</li>
-
-                            <li class="sidebar-item">
-                                <a href="application-email.html" class="sidebar-link">
-                                    <i class="bi bi-envelope-fill"></i>
-                                    <span>Blogs</span>
-                                </a>
-                            </li>
-
-                            <li class="sidebar-item">
-                                <a href="application-chat.html" class="sidebar-link">
-                                    <i class="bi bi-chat-dots-fill"></i>
-                                    <span>Nhắn tin</span>
-                                </a>
-                            </li>
-
-
-                            <li class="sidebar-title">Chính sách</li>
-
-                            <li class="sidebar-item">
-                                <a href="https://zuramai.github.io/mazer/docs" class="sidebar-link">
-                                    <i class="bi bi-life-preserver"></i>
-                                    <span>Thông tin tòa nhà</span>
-                                </a>
-                            </li>
-
-                            <li class="sidebar-item">
-                                <a href="https://github.com/zuramai/mazer/blob/main/CONTRIBUTING.md" class="sidebar-link">
-                                    <i class="bi bi-puzzle"></i>
-                                    <span>Thông tin phí dịch vụ</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="!#" class="sidebar-link">
-                                    <i class="bi bi-puzzle"></i>
-                                    <span>Quy định</span>
-                                </a>
-                            </li>
-                            <!-- =================================đăng nhập, log out..==================== -->
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-person-badge-fill"></i>
-                                    <span>Cài đặt</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="auth-login.html">Thông tin cá nhân</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="auth-login.html">Login</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="auth-login.html">Logout</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="forget-password.jsp">Forgot Password</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+                <li class="notify">
+                  <a href="#!">
+                    <div class="user-alert">
+                      <img
+                        src="./assets/images/faces/nguyenkiem.jpg"
+                        class="user-image rounded-circle shadow"
+                        alt="User Image"
+                      />
                     </div>
-                    <button class="sidebar-toggler btn x">
-                        <i data-feather="x"></i>
-                    </button>
-                </div>
-            </div>
-            <div id="main">
-                <header class="mb-3">
-                    <a href="#" class="burger-btn d-block d-xl-none">
-                        <i class="bi bi-justify fs-3"></i>
-                    </a>
-                </header>
+                    <p class="text-alert">
+                      <strong>Đình Tùng</strong> đã nhắc bạn trong một bình luận
+                      trong nhóm Spring-boot Java web Việt Nam.
+                    </p>
+                  </a>
+                </li>
 
-
-
-                <footer>
-                    <div class="footer clearfix mb-0 text-muted">
-                        <div class="float-start">
-                            <p>2021 &copy; Mazer</p>
-                        </div>
-                        <div class="float-end">
-                            <p>
-                                Crafted with
-                                <span class="text-danger"><i class="bi bi-heart"></i></span> by
-                                <a href="http://ahmadsaugi.com">A. Saugi</a>
-                            </p>
-                        </div>
+                <li class="notify">
+                  <a href="#!">
+                    <div class="user-alert">
+                      <img
+                        src="./assets/images/faces/nguyenkiem.jpg"
+                        class="user-image rounded-circle shadow"
+                        alt="User Image"
+                      />
                     </div>
-                </footer>
-            </div>
+                    <p class="text-alert">
+                      <strong>Đình Tùng</strong> đã nhắc bạn trong một bình luận
+                      trong nhóm Spring-boot Java web Việt Nam.
+                    </p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
-        <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
-        <script src="assets/js/bootstrap.bundle.min.js"></script>
+      </nav>
+      <div id="sidebar" class="active">
+        <div class="sidebar-wrapper active" style="border: 2px solid orangered">
+          <div class="sidebar-header">
+            <div class="d-flex justify-content-between">
+              <div class="logo">
+                <a href="index.html"
+                  ><img src="assets/images/logo/logo1.png" alt="Logo"
+                /></a>
+              </div>
+              <div class="toggler">
+                <a href="#" class="sidebar-hide d-xl-none d-block"
+                  ><i class="bi bi-x bi-middle"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+          <div class="sidebar-menu">
+            <ul class="menu">
+              <li class="sidebar-title">Menu</li>
 
-        <script src="assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="assets/js/pages/dashboard.js"></script>
+              <li class="sidebar-item active">
+                <a href="index.html" class="sidebar-link">
+                  <i class="bi bi-grid-fill"></i>
+                  <span>Trang Chủ</span>
+                </a>
+              </li>
 
-        <script src="assets/js/main.js"></script>
-    </body>
+              <li class="sidebar-item has-sub">
+                <a href="#" class="sidebar-link">
+                  <i class="bi bi-stack"></i>
+                  <span>Chung Cư</span>
+                </a>
+                <ul class="submenu">
+                  <li class="submenu-item">
+                    <a href="component-alert.html">Tòa Nhà</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="component-badge.html">Tầng</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="component-breadcrumb.html">Căn Hộ</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="component-button.html">Tiện Ích</a>
+                  </li>
+                </ul>
+              </li>
 
+              <li class="sidebar-item has-sub">
+                <a href="#" class="sidebar-link">
+                  <i class="bi bi-collection-fill"></i>
+                  <span>Cư Dân</span>
+                </a>
+                <ul class="submenu">
+                  <li class="submenu-item">
+                    <a href="extra-component-avatar.html">Danh Sách</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="extra-component-sweetalert.html">Phương Tiện</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="extra-component-toastify.html">Thông Báo</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="extra-component-rating.html">Khiếu Nại</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="extra-component-divider.html">Divider</a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="sidebar-item has-sub">
+                <a href="#" class="sidebar-link">
+                  <i class="bi bi-grid-1x2-fill"></i>
+                  <span>Phản hồi</span>
+                </a>
+                <ul class="submenu">
+                  <li class="submenu-item">
+                    <a href="layout-default.html">Gửi thông báo</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="layout-vertical-1-column.html">Cư dân</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="layout-vertical-navbar.html">Ban kế toán</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="layout-horizontal.html">Ban bảo vệ</a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="sidebar-item has-sub">
+                <a href="#" class="sidebar-link">
+                  <i class="bi bi-collection-fill"></i>
+                  <span>Thống kê</span>
+                </a>
+                <ul class="submenu">
+                  <li class="submenu-item">
+                    <a href="extra-component-avatar.html">Dịch vụ lốt xe</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="extra-component-sweetalert.html"
+                      >Dịch vụ điện công cộng</a
+                    >
+                  </li>
+                  <li class="submenu-item">
+                    <a href="extra-component-toastify.html">Dịch vụ vệ sinh</a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="sidebar-title">Khác</li>
+
+              <li class="sidebar-item">
+                <a href="application-email.html" class="sidebar-link">
+                  <i class="bi bi-envelope-fill"></i>
+                  <span>Blogs</span>
+                </a>
+              </li>
+
+              <li class="sidebar-item">
+                <a href="application-chat.html" class="sidebar-link">
+                  <i class="bi bi-chat-dots-fill"></i>
+                  <span>Nhắn tin</span>
+                </a>
+              </li>
+
+              <li class="sidebar-title">Chính sách</li>
+
+              <li class="sidebar-item">
+                <a
+                  href="https://zuramai.github.io/mazer/docs"
+                  class="sidebar-link"
+                >
+                  <i class="bi bi-life-preserver"></i>
+                  <span>Thông tin tòa nhà</span>
+                </a>
+              </li>
+
+              <li class="sidebar-item">
+                <a
+                  href="https://github.com/zuramai/mazer/blob/main/CONTRIBUTING.md"
+                  class="sidebar-link"
+                >
+                  <i class="bi bi-puzzle"></i>
+                  <span>Thông tin phí dịch vụ</span>
+                </a>
+              </li>
+              <li class="sidebar-item">
+                <a href="!#" class="sidebar-link">
+                  <i class="bi bi-puzzle"></i>
+                  <span>Quy định</span>
+                </a>
+              </li>
+              <!-- =================================đăng nhập, log out..==================== -->
+              <li class="sidebar-item has-sub">
+                <a href="#" class="sidebar-link">
+                  <i class="bi bi-person-badge-fill"></i>
+                  <span>Cài đặt</span>
+                </a>
+                <ul class="submenu">
+                  <li class="submenu-item">
+                    <a href="auth-login.html">Thông tin</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="auth-login.html">Login</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="auth-login.html">Logout</a>
+                  </li>
+                  <li class="submenu-item">
+                    <a href="forget-password.jsp">Forgot Password</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <button class="sidebar-toggler btn x">
+            <i data-feather="x"></i>
+          </button>
+        </div>
+      </div>
+      <div id="main">
+        <a href="#" class="burger-btn d-inline-block d-xl-none kiem_button">
+          <i class="bi bi-justify fs-3"></i>
+        </a>
+        <footer>
+          <div class="footer clearfix mb-0 text-muted">
+            <div class="float-start">
+              <p>2025 &copy; Kiemm</p>
+            </div>
+            <div class="float-end">
+              <p>
+                Crafted with
+                <span class="text-danger"><i class="bi bi-heart"></i></span> by
+                <a href="http://ahmadsaugi.com">NguyenKiem</a>
+              </p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+
+    <script src="assets/vendors/apexcharts/apexcharts.js"></script>
+    <script src="assets/js/pages/dashboard.js"></script>
+
+    <script src="assets/js/main.js"></script>
+  </body>
 </html>
