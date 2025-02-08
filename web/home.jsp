@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -48,21 +49,21 @@
                     <!-- User Menu -->
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img src="./assets/images/faces/avatar.png" class="user-image rounded-circle shadow"
+                            <img src="${sessionScope.staff.imageURL}" class="user-image rounded-circle shadow"
                                 alt="User Image" />
-                            <span class="d-none d-md-inline">NguyenKiem</span>
+                            <span class="d-none d-md-inline">${sessionScope.staff.fullName}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <li class="user-header text-bg-primary img-drop">
-                                <img src="./assets/images/faces/avatar.png" class="rounded-circle shadow"
+                                <img src="${sessionScope.staff.imageURL}" class="rounded-circle shadow"
                                     alt="User Image" />
                                 <p>
-                                    NguyenKiem - Web Developer
+                                   ${sessionScope.staff.fullName} - Web Developer
                                     <small>Member since Nov. 2024</small>
                                 </p>
                             </li>
                             <li class="user-footer d-flex justify-content-between">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                <a href="profile" class="btn btn-default btn-flat">Profile</a>
                                 <a href="#" class="btn btn-default btn-flat">Setting</a>
                                 <a href="#" class="btn btn-default btn-flat">Logout</a>
                             </li>
@@ -121,6 +122,7 @@
                 </ul>
             </div>
         </nav>
+                                    
         <div id="sidebar" class="active">
             <div class="sidebar-wrapper active" style="border: 2px solid orangered">
                 <div class="sidebar-header">
