@@ -3,25 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/ManagerApartment/src/java/controller/LoginServlet.java</file>
-            <file>file:/D:/ManagerApartment/src/java/model/Resident.java</file>
-            <file>file:/D:/ManagerApartment/src/java/model/Account.java</file>
-            <file>file:/D:/ManagerApartment/src/java/model/Staff.java</file>
-            <file>file:/D:/ManagerApartment/src/java/dao/RoleDAO.java</file>
-            <file>file:/D:/ManagerApartment/src/java/controller/HomeServlet.java</file>
-            <file>file:/D:/ManagerApartment/web/home.jsp</file>
-            <file>file:/D:/ManagerApartment/web/assets/css/login.css</file>
-            <file>file:/D:/ManagerApartment/src/java/dao/DBContext.java</file>
-            <file>file:/D:/ManagerApartment/src/java/model/Role.java</file>
-            <file>file:/D:/ManagerApartment/src/java/controller/ForgotPassword.java</file>
-            <file>file:/D:/ManagerApartment/src/java/dao/AccountDAO.java</file>
-            <file>file:/D:/ManagerApartment/web/WEB-INF/web.xml</file>
-            <file>file:/D:/ManagerApartment/src/java/dao/ImageDAO.java</file>
-            <file>file:/D:/ManagerApartment/web/login.jsp</file>
-            <file>file:/D:/ManagerApartment/src/java/dao/Test.java</file>
-            <file>file:/D:/ManagerApartment/src/java/dao/StaffDAO.java</file>
-            <file>file:/D:/ManagerApartment/src/java/dao/ResidentDAO.java</file>
-            <file>file:/D:/ManagerApartment/src/java/model/Image.java</file>
+            <file>file:/D:/WorkSpace/Project/ManagerApartment/web/newpasword.jsp</file>
+            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/dao/DAOInterface.java</file>
+            <file>file:/D:/WorkSpace/Project/ManagerApartment/web/home.jsp</file>
+            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/controller/NewPasswordServlet.java</file>
+            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/config/EmailSender.java</file>
+            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/controller/ResetPasswordServlet.java</file>
+            <file>file:/D:/WorkSpace/Project/ManagerApartment/web/login.jsp</file>
+            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/model/Resident.java</file>
+            <file>file:/D:/WorkSpace/Project/ManagerApartment/web/menu.html</file>
+            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/controller/SendResetLinkServlet.java</file>
+            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/dao/ResidentDAO.java</file>
         </group>
     </open-files>
 </project-private>
