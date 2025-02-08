@@ -54,18 +54,19 @@
                     <!-- User and Notification Dropdowns -->
                     <ul class="navbar-nav ms-auto">
                         <!-- User Menu -->
+                        <c:set var="staff" value="${sessionScope.staff}"/>
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="./assets/images/faces/avatar.png" class="user-image rounded-circle shadow"
+                                <img src="${staff.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
-                                <span class="d-none d-md-inline">NguyenKiem</span>
+                                <span class="d-none d-md-inline">${staff.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="./assets/images/faces/avatar.png" class="rounded-circle shadow"
+                                    <img src="${staff.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
-                                        NguyenKiem - Web Developer
+                                        ${staff.fullName} - Web Developer
                                         <small>Member since Nov. 2024</small>
                                     </p>
                                 </li>
@@ -308,39 +309,42 @@
                 <!--=============================CONTENT HERE=======================-->
                 <div class="container profile-container mt-5">
                     <h2 class="text-center mb-4">Chỉnh sửa thông tin cá nhân</h2>
-                    <form>
+                    <c:set var="staff" value="${sessionScope.staff}"/>
+                    <c:set var="resident" value="${sessionScope.resident}"/>
+                    <form action="update-profile" method="POST" enctype="multipart/form-data">
                         <div class="text-center mb-3">
-                            <img src="assets/images/faces/avatar1.jpg"
+                            <img src="${not empty staff ? staff.imageURL : (not empty resident ? resident.imageURL : 'Guest')}"
                                  alt="Ảnh cá nhân" class="profile-img rounded-circle">
-                            <input type="file" class="form-control mt-2" id="upload-photo">
+                            <input type="file" class="form-control mt-2" value="${not empty staff ? staff.imageURL : (not empty resident ? resident.imageURL : 'Guest')}" name="imgURL" id="upload-photo">
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="fullName" class="form-label">Họ và tên</label>
-                                <input type="text" class="form-control" id="fullName" value="Nguyễn Văn Kiểm">
+                                <input type="text" class="form-control" id="fullName" name="fullName" value="${not empty staff ? staff.fullName : (not empty resident ? resident.fullName : 'Guest')}">
+                                <input type="hidden" class="form-control" id="userID" name="userID" value="${not empty staff ? staff.staffId : (not empty resident ? resident.residentId : 'Guest')}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" value="nkiem347@gmail.com">
+                                <input type="email" class="form-control" id="email" name="email" value="${not empty staff ? staff.email : (not empty resident ? resident.email : 'N/A')}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="phone" class="form-label">Số điện thoại</label>
-                                <input type="text" class="form-control" id="phone" value="0336780144">
+                                <input type="text" class="form-control" id="phone" name="phoneNumber" value="${not empty staff ? staff.phoneNumber : (not empty resident ? resident.phoneNumber : 'N/A')}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="address" class="form-label">Địa chỉ</label>
-                                <input type="text" class="form-control" id="address" value="Nghệ An">
+                                <input type="text" class="form-control" id="address" name="address" value="Hà Nội">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="dob" class="form-label">Ngày sinh</label>
-                                <input type="date" class="form-control" id="dob" value="2004-04-10">
+                                <input type="date" class="form-control" id="dob" name="dob" value="${not empty staff ? staff.dob : (not empty resident ? resident.dob : 'N/A')}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="sex" class="form-label">Giới tính</label>
-                                <select class="form-select" id="sex">
-                                    <option value="Male" selected>Nam</option>
-                                    <option value="Female">Nữ</option>
-                                    <option value="Other">Khác</option>
+                                <select class="form-select" id="sex" name="sex">
+                                    <option value="Male" ${((not empty staff ? staff.sex : resident.sex) == 'Male') ? 'selected' : ''}>Nam</option>
+                                    <option value="Female" ${((not empty staff ? staff.sex : resident.sex) == 'Female') ? 'selected' : ''}>Nữ</option>
+                                    <option value="Other" ${((not empty staff ? staff.sex : resident.sex) == 'Other') ? 'selected' : ''}>Khác</option>
                                 </select>
                             </div>
                             <div class="col-md-12 mb-3">

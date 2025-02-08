@@ -5,12 +5,14 @@
 package dao;
 
 import java.time.LocalDate;
+import java.util.List;
 import model.Account;
 import model.Apartment;
 import model.Image;
 import model.Resident;
 import model.Role;
 import model.Staff;
+import model.StaffDetail;
 
 /**
  *
@@ -54,10 +56,17 @@ public class Test {
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
-        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "048758747", "598695869", "nguyen05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", 1, 2);
-        residentDAO.insert(resident);
+//        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "048758747", "598695869", "nguyen05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", 1, 2);
+//        residentDAO.insert(resident);
 //        imageDAO.insert(image);
-//        Staff staff = new Staff("Lonel Messi", "12345", "0985747574", "989999989989", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 2);
+//        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "39849348394", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 1);
 //        staffDAO.insert(staff);
+//        System.out.println(residentDAO.getResidentDetailByID(3));
+//        List<Staff> list = staffDAO.selectAll();
+//        for (Staff staff : list) {
+//            System.out.println(staff);
+//        }
+StaffDetail staff = new StaffDetail(4, "Nguyễn Kiểm", "033456789", "837483487", "kiemnvhe186025@fpt.edu.vn", LocalDate.of(2004, 04, 10), "Male", "", "/asset/images/hi.jpn", "", 1, 1);
+staffDAO.updateProfileStaff(staff);
     }
 }

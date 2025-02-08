@@ -4,7 +4,6 @@
  */
 package controller;
 
-
 import dao.AccountDAO;
 import dao.ResidentDAO;
 import dao.StaffDAO;
@@ -17,9 +16,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.Account;
 import model.Resident;
+import model.ResidentDetail;
 import model.Staff;
+import model.StaffDetail;
 
 /**
  *
@@ -85,15 +85,15 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String remember = request.getParameter("remember_me");
-        Cookie cookie1 = new Cookie("email", email);  
+        Cookie cookie1 = new Cookie("email", email);
         Cookie cookie2 = new Cookie("password", password);
         Cookie cookie3 = new Cookie("remember", remember);
         Cookie cookie4 = new Cookie("userType", userType);
-        if(remember!=null){
-            cookie1.setMaxAge(60*60*24*365);
-            cookie2.setMaxAge(60*60*24*365);
-            cookie3.setMaxAge(60*60*24*365);
-        }else{
+        if (remember != null) {
+            cookie1.setMaxAge(60 * 60 * 24 * 365);
+            cookie2.setMaxAge(60 * 60 * 24 * 365);
+            cookie3.setMaxAge(60 * 60 * 24 * 365);
+        } else {
             cookie1.setMaxAge(0);
             cookie2.setMaxAge(0);
             cookie3.setMaxAge(0);
@@ -103,19 +103,28 @@ public class LoginServlet extends HttpServlet {
         response.addCookie(cookie3);
         StaffDAO staffDAO = new StaffDAO();
         ResidentDAO residentDAO = new ResidentDAO();
-        Staff staff = null;
-        Resident resident = null;
-        if(userType.toLowerCase().equals("staff")){
-            staff = staffDAO.checkLogin(email, password);
-        }else resident = residentDAO.checkLogin(email, password);
+        Staff staffCheck = null;
+        Resident residentCheck = null;
+        if (userType.toLowerCase().equals("staff")) {
+            staffCheck = staffDAO.checkLogin(email, password);
+        } else {
+            residentCheck = residentDAO.checkLogin(email, password);
+        }
         HttpSession session = request.getSession();
-        if (staff == null && resident == null) {
+        if (staffCheck == null && residentCheck == null) {
             request.setAttribute("userType", userType);
             request.setAttribute("email", email);
             request.setAttribute("password", password);
             request.setAttribute("error", "***Email or Password fail");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
+            StaffDetail staff = null;
+            ResidentDetail resident = null;
+            if (residentCheck == null && staffCheck!=null) {
+                staff = staffDAO.getStaffDetailByID(staffCheck.getStaffId());
+            } else if(residentCheck != null && staffCheck==null){
+                resident = residentDAO.getResidentDetailByID(residentCheck.getResidentId());
+            }
             session.setAttribute("staff", staff);
             session.setAttribute("resident", resident);
             session.setMaxInactiveInterval(600);

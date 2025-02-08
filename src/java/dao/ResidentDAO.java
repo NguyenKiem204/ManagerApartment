@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.ResidentDetail;
 
 public class ResidentDAO implements DAOInterface<Resident, Integer> {
 
@@ -134,6 +135,45 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return resident;
     }
+    
+    public ResidentDetail getResidentDetailByID(Integer id) {
+    ResidentDetail residentDetail = null;
+    String sql = """
+        SELECT r.ResidentID, r.FullName, r.PhoneNumber, r.CCCD, r.Email, r.DOB, 
+               r.Sex, r.Status, i.ImageURL, ro.RoleName, i.ImageID, ro.RoleID
+        FROM Resident r
+        LEFT JOIN Role ro ON r.RoleID = ro.RoleID
+        LEFT JOIN Image i ON r.ImageID = i.ImageID
+        WHERE r.ResidentID = ?
+        """;
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            residentDetail = new ResidentDetail();
+            residentDetail.setResidentId(rs.getInt("ResidentID"));
+            residentDetail.setFullName(rs.getString("FullName"));
+            residentDetail.setPhoneNumber(rs.getString("PhoneNumber"));
+            residentDetail.setCccd(rs.getString("CCCD"));
+            residentDetail.setEmail(rs.getString("Email"));
+            residentDetail.setDob(rs.getDate("DOB").toLocalDate());
+            residentDetail.setSex(rs.getString("Sex"));
+            residentDetail.setStatus(rs.getString("Status"));
+            residentDetail.setImageURL(rs.getString("ImageURL"));
+            residentDetail.setRoleName(rs.getString("RoleName"));
+            residentDetail.setImageID(rs.getInt("ImageID"));
+            residentDetail.setRoleID(rs.getInt("RoleID"));
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    return residentDetail;
+}
+
 
     public boolean existEmail(String email) {
         String sql = "SELECT * FROM Resident WHERE Email = ?";
