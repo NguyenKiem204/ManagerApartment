@@ -6,6 +6,7 @@ package controller;
 
 import config.FileUploadUtil;
 import dao.ImageDAO;
+import dao.ResidentDAO;
 import dao.RoleDAO;
 import dao.StaffDAO;
 import java.io.IOException;
@@ -18,6 +19,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
+import model.Resident;
+import model.ResidentDetail;
 import model.Staff;
 import model.StaffDetail;
 
@@ -92,22 +95,28 @@ public class UpdateProfileServlet extends HttpServlet {
         if (userIDParam != null) {
             userID = Integer.parseInt(userIDParam);
         }
-        StaffDAO staffDAO = new StaffDAO();
-        RoleDAO roleDAO = new RoleDAO();
-        Staff staff = staffDAO.selectById(userID);
 
         LocalDate dob = LocalDate.parse(dobParam);
 
-        // Upload ảnh và lấy URL mới
         String newImageURL = FileUploadUtil.uploadAvatarImage(request, userIDParam);
         if (newImageURL != null) {
             imageURL = newImageURL;
         }
-
-        StaffDetail staffDetail = new StaffDetail(userID, fullName, phoneNumber, staff.getCccd(), email, dob, sex, staff.getStatus(), imageURL, roleDAO.selectById(staff.getRoleId()).getRoleName(), staff.getImageId(), staff.getRoleId());
-        staffDAO.updateProfileStaff(staffDetail);
+        StaffDAO staffDAO = new StaffDAO();
+        ResidentDAO residentDAO = new ResidentDAO();
+        RoleDAO roleDAO = new RoleDAO();
+        Staff staff = staffDAO.selectById(userID);
+        Resident resident = residentDAO.selectById(userID);
         HttpSession session = request.getSession();
-        session.setAttribute("staff", staffDetail);
+        if (staff != null) {
+            StaffDetail staffDetail = new StaffDetail(userID, fullName, phoneNumber, staff.getCccd(), email, dob, sex, staff.getStatus(), imageURL, roleDAO.selectById(staff.getRoleId()).getRoleName(), staff.getImageId(), staff.getRoleId());
+            staffDAO.updateProfileStaff(staffDetail);
+            session.setAttribute("staff", staffDetail);
+        } else if (resident != null) {
+            ResidentDetail residentDetail = new ResidentDetail(userID, fullName, phoneNumber, resident.getCccd(), email, dob, sex, sex, imageURL, roleDAO.selectById(resident.getRoleId()).getRoleName(), resident.getImageId(), resident.getRoleId());
+            residentDAO.updateProfileResident(residentDetail);
+            session.setAttribute("resident", residentDetail);
+        }
         response.sendRedirect("profile");
     }
 

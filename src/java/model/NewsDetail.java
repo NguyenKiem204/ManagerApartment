@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
+import java.time.LocalDate;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,12 +16,14 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Image {
+public class NewsDetail {
+    int newsID;
     int imageID;
     String imageURL;
-
-    public Image(String imageURL) {
-        this.imageURL = imageURL;
-    }
+    String title;
+    String description;
+    LocalDate sentDate;
+    int staffID;
+    String staffFullName;
     
 }

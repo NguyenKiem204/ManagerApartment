@@ -248,12 +248,21 @@
 
                                     <li class="sidebar-title">Others</li>
 
-                                    <li class="sidebar-item">
-                                        <a href="application-email.html" class="sidebar-link">
-                                            <i class="bi bi-envelope-fill"></i>
-                                            <span>Blogs</span>
+                                    <li class="sidebar-item has-sub">
+                                        <a href="#" class="sidebar-link">
+                                            <i class="fa-solid fa-envelope"></i>
+                                            <span>News</span>
                                         </a>
+                                        <ul class="submenu">
+                                            <li class="submenu-item">
+                                                <a href="extra-component-avatar.html">Add News</a>
+                                            </li>
+                                            <li class="submenu-item">
+                                                <a href="extra-component-sweetalert.html">News</a>
+                                            </li>
+                                        </ul>
                                     </li>
+                                    
 
                                     <li class="sidebar-item">
                                         <a href="application-chat.html" class="sidebar-link">

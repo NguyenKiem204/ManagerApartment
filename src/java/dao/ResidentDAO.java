@@ -1,7 +1,6 @@
 package dao;
 
 import config.PasswordUtil;
-import model.Staff;
 import model.Resident;
 import java.sql.*;
 import java.time.LocalDate;
@@ -58,6 +57,41 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
             ps.setInt(11, resident.getResidentId());
 
             row = ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return row;
+    }
+
+    public int updateProfileResident(ResidentDetail resident) {
+        int row = 0;
+        String updateRessidentSQL = "UPDATE Resident SET FullName = ?,PhoneNumber = ?, Email = ?, DOB = ?, Sex = ?, ImageID = ?, RoleID = ? WHERE ResidentID = ?";
+        String updateImageSQL = "UPDATE Image SET ImageURL = ? WHERE ImageID = ?";
+
+        try (Connection connection = DBContext.getConnection()) {
+            connection.setAutoCommit(false);
+
+            if (resident.getImageID() > 0 && resident.getImageURL() != null) {
+                try (PreparedStatement psUpdateImage = connection.prepareStatement(updateImageSQL)) {
+                    psUpdateImage.setString(1, resident.getImageURL());
+                    psUpdateImage.setInt(2, resident.getImageID());
+                    psUpdateImage.executeUpdate();
+                }
+            }
+            try (PreparedStatement ps = connection.prepareStatement(updateRessidentSQL)) {
+                ps.setString(1, resident.getFullName());
+                ps.setString(2, resident.getPhoneNumber());
+                ps.setString(3, resident.getEmail());
+                ps.setDate(4, Date.valueOf(resident.getDob()));
+                ps.setString(5, resident.getSex());
+                ps.setInt(6, resident.getImageID());
+                ps.setInt(7, resident.getRoleID());
+                ps.setInt(8, resident.getResidentId());
+
+                row = ps.executeUpdate();
+            }
+
+            connection.commit();
         } catch (SQLException ex) {
             Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -135,10 +169,10 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return resident;
     }
-    
+
     public ResidentDetail getResidentDetailByID(Integer id) {
-    ResidentDetail residentDetail = null;
-    String sql = """
+        ResidentDetail residentDetail = null;
+        String sql = """
         SELECT r.ResidentID, r.FullName, r.PhoneNumber, r.CCCD, r.Email, r.DOB, 
                r.Sex, r.Status, i.ImageURL, ro.RoleName, i.ImageID, ro.RoleID
         FROM Resident r
@@ -147,33 +181,31 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         WHERE r.ResidentID = ?
         """;
 
-    try (Connection connection = DBContext.getConnection();
-         PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            residentDetail = new ResidentDetail();
-            residentDetail.setResidentId(rs.getInt("ResidentID"));
-            residentDetail.setFullName(rs.getString("FullName"));
-            residentDetail.setPhoneNumber(rs.getString("PhoneNumber"));
-            residentDetail.setCccd(rs.getString("CCCD"));
-            residentDetail.setEmail(rs.getString("Email"));
-            residentDetail.setDob(rs.getDate("DOB").toLocalDate());
-            residentDetail.setSex(rs.getString("Sex"));
-            residentDetail.setStatus(rs.getString("Status"));
-            residentDetail.setImageURL(rs.getString("ImageURL"));
-            residentDetail.setRoleName(rs.getString("RoleName"));
-            residentDetail.setImageID(rs.getInt("ImageID"));
-            residentDetail.setRoleID(rs.getInt("RoleID"));
+            if (rs.next()) {
+                residentDetail = new ResidentDetail();
+                residentDetail.setResidentId(rs.getInt("ResidentID"));
+                residentDetail.setFullName(rs.getString("FullName"));
+                residentDetail.setPhoneNumber(rs.getString("PhoneNumber"));
+                residentDetail.setCccd(rs.getString("CCCD"));
+                residentDetail.setEmail(rs.getString("Email"));
+                residentDetail.setDob(rs.getDate("DOB").toLocalDate());
+                residentDetail.setSex(rs.getString("Sex"));
+                residentDetail.setStatus(rs.getString("Status"));
+                residentDetail.setImageURL(rs.getString("ImageURL"));
+                residentDetail.setRoleName(rs.getString("RoleName"));
+                residentDetail.setImageID(rs.getInt("ImageID"));
+                residentDetail.setRoleID(rs.getInt("RoleID"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } catch (SQLException ex) {
-        Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+
+        return residentDetail;
     }
-
-    return residentDetail;
-}
-
 
     public boolean existEmail(String email) {
         String sql = "SELECT * FROM Resident WHERE Email = ?";
