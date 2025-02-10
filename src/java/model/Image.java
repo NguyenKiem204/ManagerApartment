@@ -16,8 +16,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Image {
-    private  int imageID;
-    private String imageURL;
+    int imageID;
+    String imageURL;
 
     public Image(String imageURL) {
         this.imageURL = imageURL;

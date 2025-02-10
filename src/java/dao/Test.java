@@ -12,6 +12,7 @@ import model.Image;
 import model.Resident;
 import model.Role;
 import model.Staff;
+import model.StaffDetail;
 
 /**
  *
@@ -59,14 +60,16 @@ public class Test {
 //        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "048758747", "598695869", "nguyen05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", 1, 2);
 //        residentDAO.insert(resident);
 //        imageDAO.insert(image);
-//        Staff staff = new Staff("Lonel Messi", "12345", "0985747574", "989999989989", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 2);
+//        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "39849348394", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 1);
 //        staffDAO.insert(staff);
+
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);
 //        feedbackDAO.insert(fb);
-         List list = feedbackDAO.selectAll();
+         List list = feedbackDAO.getAllFeedbacksSortedByStaff();
          for (Object object : list) {
              System.out.println(object.toString());
         }
+
     }
 }

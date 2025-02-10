@@ -6,6 +6,11 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="model.Staff" %>
+<%@page import="model.Role" %>
+<%@page import="dao.StaffDAO" %>
+<%@page import="dao.RoleDAO" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -30,13 +35,23 @@
                 text-align: center;
                 color: #ff9800;
             }
-            input {
-                width: 100%;
+            .search-sort-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            input, select {
                 padding: 10px;
-                margin: 10px 0;
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 font-size: 16px;
+            }
+            input {
+                width: 70%;
+            }
+            select {
+                width: 28%;
             }
             table {
                 width: 100%;
@@ -53,6 +68,12 @@
             th {
                 background-color: #ff9800;
                 color: white;
+                cursor: pointer;
+                position: relative;
+            }
+            th .sort-icon {
+                margin-left: 5px;
+                font-size: 12px;
             }
             .rating {
                 color: #FFD700;
@@ -75,6 +96,10 @@
                 background-color: #ccc;
                 cursor: not-allowed;
             }
+            #pageNumber {
+                color: black;
+                font-weight: bold;
+            }
         </style>
     </head>
     <body>
@@ -83,7 +108,15 @@
             <div class="container">
                 <h2>Manager Feedback Dashboard</h2>
 
-                <input type="text" id="searchBox" placeholder="Search by name or service..." onkeyup="filterTable()">
+                <div class="search-sort-container">
+                    <input type="text" id="searchBox" placeholder="Search by title or staff member..." onkeyup="filterTable()">
+                    <select id="sortBox" name="sortBox" onchange="sortProducts()">
+                        <option value="0" hidden selected>Sort by</option>
+                        <option value="1">Sort by Feedback for</option>
+                        <option value="2">Sort by Rating</option>
+                        <option value="3">Sort by Date</option>
+                    </select>
+                </div>
 
                 <table id="feedbackTable">
                     <thead>
@@ -97,17 +130,18 @@
                     </thead>
                     <tbody id="tableBody">
                         <c:forEach var="fb" items="${listfb}">
+                            <jsp:useBean id="dao" class="dao.StaffDAO"/> 
+                            <jsp:useBean id="roledao" class="dao.RoleDAO"/>
+                            <c:set var="staff" value="${dao.selectById(fb.staffID)}"/>
+                            <c:set var="role" value="${roledao.selectById(staff.roleId)}"/>
                             <tr>
                                 <td>${fb.title}</td>
-                                <td>${fb.staffID}</td>
-                                <td>xxx</td>
-                                <!--<td class="rating"></td>-->
+                                <td>${role.roleName}</td>
+                                <td class="rating">${"★".repeat(fb.rate)}${"☆".repeat(5 - fb.rate)}</td>
                                 <td>${fb.description}</td>
                                 <td>${fb.date}</td>
                             </tr>
                         </c:forEach>
-
-                        
                     </tbody>
                 </table>
 
@@ -122,6 +156,7 @@
         <script>
             let currentPage = 1;
             const rowsPerPage = 5;
+            let currentSort = {column: 'title', order: 'asc'};
 
             function renderTable() {
                 const tableBody = document.getElementById("tableBody");
@@ -158,13 +193,23 @@
 
                 for (let row of rows) {
                     const cells = row.getElementsByTagName("td");
-                    const name = cells[0].innerText.toLowerCase();
-                    const service = cells[2].innerText.toLowerCase();
-                    row.style.display = (name.includes(query) || service.includes(query)) ? "" : "none";
+                    const title = cells[0].innerText.toLowerCase();
+                    const staff = cells[1].innerText.toLowerCase();
+                    row.style.display = (title.includes(query) || staff.includes(query)) ? "" : "none";
                 }
             }
 
-            document.addEventListener("DOMContentLoaded", renderTable);
+            document.addEventListener("DOMContentLoaded", () => {
+                renderTable();
+                updateSortIcons();
+            });
+            function sortProducts() {
+                const sortValue = document.getElementById('sortBox').value;
+                if (sortValue) {
+                    // Chuyển hướng đến servlet với tham số sort
+                    window.location.href = `feedbackadministrative?sort=` + sortValue;
+                }
+            }
         </script>
 
     </body>

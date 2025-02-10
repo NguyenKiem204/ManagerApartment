@@ -87,5 +87,76 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
     public Feedback selectById(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+    public List<Feedback> getAllFeedbacksSortedByStaff(){
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT * FROM Feedback ORDER BY StaffID";
 
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback fb = new Feedback(
+                        rs.getInt("FeedbackID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getDate("Date").toLocalDate(),
+                        rs.getInt("Rate"),
+                        rs.getInt("StaffID"),
+                        rs.getInt("ResidentID")
+                );
+                list.add(fb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public List<Feedback> getAllFeedbacksSortedByRating(){
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT * FROM Feedback ORDER BY Rate";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback fb = new Feedback(
+                        rs.getInt("FeedbackID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getDate("Date").toLocalDate(),
+                        rs.getInt("Rate"),
+                        rs.getInt("StaffID"),
+                        rs.getInt("ResidentID")
+                );
+                list.add(fb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public List<Feedback> getAllFeedbacksSortedByDate(){
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT * FROM Feedback ORDER BY Date DESC";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback fb = new Feedback(
+                        rs.getInt("FeedbackID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getDate("Date").toLocalDate(),
+                        rs.getInt("Rate"),
+                        rs.getInt("StaffID"),
+                        rs.getInt("ResidentID")
+                );
+                list.add(fb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 }
