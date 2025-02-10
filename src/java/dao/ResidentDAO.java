@@ -259,4 +259,32 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return false;
     }
+    
+//    public Resident getResidentByApartmentID(int ApartmentID){
+//        Resident resident = null;
+//        String sql = "SELECT * FROM Resident WHERE ApartmentID = ?";
+//
+//        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+//            ps.setInt(1, ApartmentID);
+//            ResultSet rs = ps.executeQuery();
+//            if (rs.next()) {
+//                resident = new Resident(
+//                        rs.getInt("ResidentID"),
+//                        rs.getString("FullName"),
+//                        rs.getString("Password"),
+//                        rs.getString("PhoneNumber"),
+//                        rs.getString("CCCD"),
+//                        rs.getString("Email"),
+//                        rs.getDate("DOB").toLocalDate(),
+//                        rs.getString("Sex"),
+//                        rs.getString("Status"),
+//                        rs.getInt("ImageID"),
+//                        rs.getInt("RoleID")
+//                );
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return resident;
+//    }
 }

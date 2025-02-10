@@ -5,7 +5,6 @@
 
 package controller;
 
-import com.oracle.wls.shaded.org.apache.xalan.transformer.MsgMgr;
 import dao.RequestDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,17 +13,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.time.LocalDate;
+import java.util.List;
 import model.Request;
-import model.Resident;
 
 /**
  *
  * @author admin
  */
-@WebServlet(name="RequestServlet", urlPatterns={"/request"})
-public class RequestServlet extends HttpServlet {
+@WebServlet(name="RequestAdministrativeServlet", urlPatterns={"/requestadministrative"})
+public class RequestAdministrativeServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -41,10 +38,10 @@ public class RequestServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RequestServlet</title>");  
+            out.println("<title>Servlet RequestAdministrativeServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RequestServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet RequestAdministrativeServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,7 +58,10 @@ public class RequestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("request.jsp").forward(request, response);
+        RequestDAO rqDAO = new RequestDAO();
+        List<Request> list = rqDAO.selectAll();
+        request.setAttribute("listrq", list);
+        request.getRequestDispatcher("requestadministrative.jsp").forward(request, response);
     } 
 
     /** 
@@ -74,32 +74,7 @@ public class RequestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        HttpSession session = request.getSession();
-//        Resident resident = (Resident) session.getAttribute("resident"); // Loi vi dang xung dot resident va resident detail
-        
-        String title = request.getParameter("title");
-        String apartmentName = request.getParameter("apartment");
-        String typerq_raw = request.getParameter("service");
-        String description = request.getParameter("request");
-        
-        int typerq;
-        
-        try {
-            typerq = Integer.parseInt(typerq_raw);
-            
-            //add data into DB
-            RequestDAO rqDAO = new RequestDAO();
-            
-            Request rq = new Request(description, title, "Pending", LocalDate.now(), 1, 1, typerq); //resident.getResidentId()
-            System.out.println(rq.toString());
-            int row = rqDAO.insert(rq);
-            if (row != 0) {
-                request.setAttribute("msg", "submit form success");
-            }
-            
-        } catch (NumberFormatException e) {
-        }
-        request.getRequestDispatcher("request.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /** 

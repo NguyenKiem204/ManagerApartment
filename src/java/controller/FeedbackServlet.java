@@ -75,7 +75,7 @@ public class FeedbackServlet extends HttpServlet {
     throws ServletException, IOException {
 //      lấy được residentID dựa trên session
         HttpSession session = request.getSession();
-        Resident resident = (Resident) session.getAttribute("resident");
+//        Resident resident = (Resident) session.getAttribute("resident");
         
         String title = request.getParameter("title");
         String staffID_raw = request.getParameter("staff");
@@ -92,7 +92,7 @@ public class FeedbackServlet extends HttpServlet {
             //add data into DB
             FeedbackDAO fbDAO = new FeedbackDAO();
             
-            Feedback fb = new Feedback(title, description, LocalDate.now(), rating, staffID, resident.getResidentId());
+            Feedback fb = new Feedback(title, description, LocalDate.now(), rating, staffID, 1); //resident.getResidentId()
             System.out.println(fb.toString());
             fbDAO.insert(fb);
             

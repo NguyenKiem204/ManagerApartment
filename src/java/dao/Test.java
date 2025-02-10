@@ -74,8 +74,12 @@ public class Test {
 //             System.out.println(object.toString());
 //        }
 
-        Request rq = new Request("Lam lai hanh lang cho tang 8", "Hanh lang bi hu hai", "hong", LocalDate.now(), 3, 2, 1);
-        System.out.println(requestDAO.insert(rq));
+//        Request rq = new Request("Lam lai hanh lang cho tang 8", "Hanh lang bi hu hai", "hong", LocalDate.now(), 3, 2, 1);
+//        System.out.println(requestDAO.insert(rq));
 //        requestDAO.insert(rq);
+        List<Request> listrq = requestDAO.selectAll();
+        for (Request request : listrq) {
+            System.out.println(request.toString());
+        }
     }
 }

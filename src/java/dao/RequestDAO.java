@@ -7,7 +7,9 @@ package dao;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,7 +61,28 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
 
     @Override
     public List<Request> selectAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT * FROM Request";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Request rq = new Request(
+                        rs.getInt("requestID"),
+                        rs.getString("description"),
+                        rs.getString("title"),
+                          rs.getString("status"),
+                        rs.getDate("Date").toLocalDate(),
+                        rs.getInt("StaffID"),
+                        rs.getInt("ResidentID"),
+                          rs.getInt("TypeRqID")
+                );
+                list.add(rq);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 
     @Override
