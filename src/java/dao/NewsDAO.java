@@ -124,7 +124,11 @@ public class NewsDAO implements DAOInterface<News, Integer> {
                         rs.getString("ImageURL"),
                         rs.getString("Title"),
                         rs.getString("Description"),
+<<<<<<< HEAD
                         rs.getDate("SentDate").toLocalDate(),
+=======
+                        rs.getTimestamp("SentDate").toLocalDateTime(),
+>>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
                         rs.getInt("StaffID"),
                         rs.getString("FullName")
                 );
@@ -153,7 +157,11 @@ public class NewsDAO implements DAOInterface<News, Integer> {
                             rs.getString("ImageURL"),
                             rs.getString("Title"),
                             rs.getString("Description"),
+<<<<<<< HEAD
                             rs.getDate("SentDate").toLocalDate(),
+=======
+                            rs.getTimestamp("SentDate").toLocalDateTime(),
+>>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
                             rs.getInt("StaffID"),
                             rs.getString("FullName")
                     );
@@ -164,5 +172,42 @@ public class NewsDAO implements DAOInterface<News, Integer> {
         }
         return news;
     }
+<<<<<<< HEAD
+=======
+    
+    public void insertNewsWithImage(NewsDetail newsDetail) {
+    String sqlInsertImage = "INSERT INTO Image (ImageURL) VALUES (?)";
+    String sqlInsertNews = "INSERT INTO News (Title, Description, SentDate, StaffID, ImageID) VALUES (?, ?, ?, ?, ?)";
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement psImage = connection.prepareStatement(sqlInsertImage, Statement.RETURN_GENERATED_KEYS);
+         PreparedStatement psNews = connection.prepareStatement(sqlInsertNews, Statement.RETURN_GENERATED_KEYS)) {
+
+        connection.setAutoCommit(false);
+        psImage.setString(1, newsDetail.getImageURL());
+        psImage.executeUpdate();
+        ResultSet rs = psImage.getGeneratedKeys();
+        if (!rs.next()) {
+            System.out.println("Thêm ảnh thất bại!");
+            connection.rollback();
+            return;
+        }
+        int imageID = rs.getInt(1);
+        psNews.setString(1, newsDetail.getTitle());
+        psNews.setString(2, newsDetail.getDescription());
+        psNews.setTimestamp(3, Timestamp.valueOf(newsDetail.getSentDate()));
+        psNews.setInt(4, newsDetail.getStaffID());
+        psNews.setInt(5, imageID);
+        psNews.executeUpdate();
+
+        connection.commit();
+        System.out.println("Thêm tin tức thành công!");
+
+    } catch (SQLException ex) {
+        System.out.println("Lỗi khi thêm tin tức: " + ex.getMessage());
+    }
+}
+
+>>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
 }
 

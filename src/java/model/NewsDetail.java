@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -22,7 +23,7 @@ public class NewsDetail {
     String imageURL;
     String title;
     String description;
-    LocalDate sentDate;
+    LocalDateTime sentDate;
     int staffID;
     String staffFullName;
     

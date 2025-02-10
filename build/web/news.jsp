@@ -28,6 +28,18 @@
             .news-card {
                 margin-bottom: 20px;
             }
+            .truncated-text {
+                display: -webkit-box;
+                line-clamp: 2;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .card-img-top {
+                height: 200px; 
+                object-fit: cover;
+            }
         </style>
     </head>
 
@@ -253,20 +265,20 @@
 
                             <li class="sidebar-title">Others</li>
 
-                           <li class="sidebar-item has-sub active">
-                                        <a href="#" class="sidebar-link">
-                                            <i class="fa-solid fa-envelope"></i>
-                                            <span>News</span>
-                                        </a>
-                                        <ul class="submenu">
-                                            <li class="submenu-item">
-                                                <a href="extra-component-avatar.html">Add News</a>
-                                            </li>
-                                            <li class="submenu-item">
-                                                <a href="extra-component-sweetalert.html">News</a>
-                                            </li>
-                                        </ul>
+                            <li class="sidebar-item has-sub active">
+                                <a href="#" class="sidebar-link">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <span>News</span>
+                                </a>
+                                <ul class="submenu active">
+                                    <li class="submenu-item">
+                                        <a href="addnews">Add News</a>
                                     </li>
+                                    <li class="submenu-item">
+                                        <a href="news" style="text-decoration: underline;">News</a>
+                                    </li>
+                                </ul>
+                            </li>
 
                             <li class="sidebar-item">
                                 <a href="application-chat.html" class="sidebar-link">
@@ -331,24 +343,23 @@
                 </a>
                 <!--=============================CONTENT HERE=======================-->
                 <div class="text-center mb-4">
-                        <h1 class="text-d" style="font-family: 'Playball', cursive; font-size: 36px">
-                            <i class="fa-solid fa-fire"></i>Breaking News
-                        </h1>
-                        <hr class="w-25 mx-auto border-3 border-warning" />
-                    </div>
+                    <h1 class="text-d" style="font-family: 'Playball', cursive; font-size: 36px">
+                        <i class="fa-solid fa-fire"></i>Breaking News
+                    </h1>
+                    <hr class="w-25 mx-auto border-3 border-warning" />
+                </div>
                 <div class="container my-5">
-                    
+
                     <!-- News Section -->
                     <div class="row">
                         <c:forEach var="news" items="${newsList}">
                             <div class="col-md-4 news-card">
                                 <div class="card">
-                                    <img src="${news.imageURL}" class="card-img-top" alt="News Image">
+                                    <img src="${news.imageURL}" class="card-img-top img-fluid" alt="News Image">
                                     <div class="card-body">
-                                        <h5 class="card-title">${news.title}</h5>
-                                        <p class="card-text">${news.description}</p>
+                                        <h5 class="card-title truncated-text" style="height: 65px">${news.title}</h5>
                                         <p class="text-muted">Ngày đăng: ${news.sentDate}</p>
-                                        <a href="#" class="btn btn-primary mt-1">Đọc thêm</a>
+                                        <a href="news-detail?newsId=${news.newsID}" class="btn btn-primary mt-1">Đọc thêm</a>
                                     </div>
                                 </div>
                             </div>

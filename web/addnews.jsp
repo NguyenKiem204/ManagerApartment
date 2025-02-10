@@ -30,11 +30,11 @@
               crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
-         <link rel="stylesheet" href="assets/css/menu.css" />
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+        <link rel="stylesheet" href="assets/css/menu.css" />
 
         <style>
             body {
@@ -268,11 +268,19 @@
 
                             <li class="sidebar-title">Others</li>
 
-                            <li class="sidebar-item">
-                                <a href="application-email.html" class="sidebar-link">
-                                    <i class="bi bi-envelope-fill"></i>
-                                    <span>Blogs</span>
+                            <li class="sidebar-item has-sub active">
+                                <a href="#" class="sidebar-link">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <span>News</span>
                                 </a>
+                                <ul class="submenu active">
+                                    <li class="submenu-item">
+                                        <a href="#!" style="text-decoration: underline;">Add News</a>
+                                    </li>
+                                    <li class="submenu-item">
+                                        <a href="news">News</a>
+                                    </li>
+                                </ul>
                             </li>
 
                             <li class="sidebar-item">
@@ -347,12 +355,13 @@
 
                     <div class="row justify-content-center">
                         <div class="col-lg-8 col-md-10">
-                            <form id="Create" class="p-4 border rounded shadow bg-white">
+                            <form id="Create" action="addnews" method="POST" class="p-4 border rounded shadow bg-white" enctype="multipart/form-data">
+                                <input type="hidden" value="${sessionScope.staff.staffId}" name="staffId"/>
                                 <div class="alert alert-danger mb-3 d-none">Có lỗi xảy ra!</div>
 
                                 <div class="mb-3">
                                     <label for="title" class="form-label"><i class="fas fa-heading"></i> Tên bài viết</label>
-                                    <input type="text" id="title" class="form-control border-orange" />
+                                    <input type="text" name="title" id="title" class="form-control border-orange" />
                                 </div>
 
                                 <div class="mb-3">
@@ -365,27 +374,14 @@
                                 <div class="mb-3">
                                     <label for="image" class="form-label">Chọn Ảnh</label>
                                     <div class="input-group">
-                                        <button type="button" id="btn-select-image" class="btn btn-primary">
-                                            <i class="fas fa-folder-open"></i> Chọn ảnh
-                                        </button>
-                                        <input type="text" class="form-control" id="image" placeholder="Đường dẫn hình ảnh" />
+                                        <input type="file" name="imageURL" class="form-control" id="image">
                                     </div>
-                                    <img id="preview-image" src="" alt="Preview" class="img-thumbnail mt-3 d-none" style="max-height: 200px" />
                                 </div>
+
 
                                 <div class="mb-3">
-                                    <label for="description" class="form-label"><i class="fas fa-file-alt"></i> Mô tả</label>
-                                    <input type="text" id="description" class="form-control border-orange" />
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="detail" class="form-label">Chi tiết</label>
-                                    <textarea id="detail" class="form-control"></textarea>
-                                </div>
-
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="isActive" />
-                                    <label class="form-check-label" for="isActive"> Hiển thị </label>
+                                    <label for="detail" class="form-label"><i class="fas fa-file-alt"></i> Chi tiết</label>
+                                    <textarea id="detail" name="description" class="form-control"></textarea>
                                 </div>
 
                                 <div class="text-center">
@@ -429,6 +425,7 @@
                 </footer>
             </div>
         </div>
+        
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
         <script src="assets/js/bootstrap.bundle.min.js"></script>
 
