@@ -32,6 +32,16 @@ public class Feedback {
     public Feedback() {
     }
 
+    public Feedback(int feedbackID, String title, String description, LocalDate date, int rate, int staffID, int residentID) {
+        this.feedbackID = feedbackID;
+        this.title = title;
+        this.description = description;
+        this.date = date;
+        this.rate = rate;
+        this.staffID = staffID;
+        this.residentID = residentID;
+    }
+
     public Feedback(String title, String description, LocalDate date, int rate, int staffID, int residentID) {
         this.title = title;
         this.description = description;

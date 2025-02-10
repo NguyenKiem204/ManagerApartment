@@ -3,22 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/menumanager.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/feedbackadministrative.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/src/java/model/Feedback.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/menuadministrative.jsp</file>
             <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/menu.html</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/feedbacksuccess.jsp</file>
-=======
-            <file>file:/D:/WorkSpace/Project/ManagerApartment/web/newpasword.jsp</file>
-            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/dao/DAOInterface.java</file>
-            <file>file:/D:/WorkSpace/Project/ManagerApartment/web/home.jsp</file>
-            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/controller/NewPasswordServlet.java</file>
-            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/config/EmailSender.java</file>
-            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/controller/ResetPasswordServlet.java</file>
-            <file>file:/D:/WorkSpace/Project/ManagerApartment/web/login.jsp</file>
-            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/model/Resident.java</file>
-            <file>file:/D:/WorkSpace/Project/ManagerApartment/web/menu.html</file>
-            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/controller/SendResetLinkServlet.java</file>
-            <file>file:/D:/WorkSpace/Project/ManagerApartment/src/java/dao/ResidentDAO.java</file>
->>>>>>> main
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/src/java/dao/Test.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/managefeedback.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/src/java/dao/FeedbackDAO.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/menuowner.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/src/java/controller/FeedbackAdministrativeServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/feedback.jsp</file>
         </group>
     </open-files>
 </project-private>

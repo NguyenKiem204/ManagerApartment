@@ -109,193 +109,20 @@
         </style>
     </head>
     <body>
-        <div id="app">
-            <div id="sidebar" class="active">
-                <div class="sidebar-wrapper active" style="border: 2px solid orangered; border-radius: 0 20px 20px 0">
-                    <div class="sidebar-header">
-                        <div class="d-flex justify-content-between">
-                            <div class="logo">
-                                <a href="index.html"><img src="assets/images/logo/logo.png" alt="Logo" /></a>
-                            </div>
-                            <div class="toggler">
-                                <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sidebar-menu">
-                        <ul class="menu">
-                            <li class="sidebar-title">Menu</li>
+        <%@include file="menuowner.jsp" %>
 
-                            <li class="sidebar-item active">
-                                <a href="index.html" class="sidebar-link">
-                                    <i class="bi bi-grid-fill"></i>
-                                    <span>Trang Chủ</span>
-                                </a>
-                            </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-stack"></i>
-                                    <span>Chung Cư</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="component-alert.html">Tòa Nhà</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="component-badge.html">Tầng</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="component-breadcrumb.html">Căn Hộ</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="component-button.html">Tiện Ích</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-collection-fill"></i>
-                                    <span>Cư Dân</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="extra-component-avatar.html">Danh Sách</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-sweetalert.html">Phương Tiện</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-toastify.html">Thông Báo</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-rating.html">Khiếu Nại</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-divider.html">Divider</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-grid-1x2-fill"></i>
-                                    <span>Phản hồi</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="layout-default.html">Gửi thông báo</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-vertical-1-column.html">Cư dân</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-vertical-navbar.html">Ban kế toán</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-horizontal.html">Ban bảo vệ</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-collection-fill"></i>
-                                    <span>Thống kê</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="extra-component-avatar.html">Dịch vụ lốt xe</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-sweetalert.html">Dịch vụ điện công cộng</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-toastify.html">Dịch vụ vệ sinh</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="sidebar-title">Khác</li>
-
-                            <li class="sidebar-item">
-                                <a href="application-email.html" class="sidebar-link">
-                                    <i class="bi bi-envelope-fill"></i>
-                                    <span>Blogs</span>
-                                </a>
-                            </li>
-
-                            <li class="sidebar-item">
-                                <a href="application-chat.html" class="sidebar-link">
-                                    <i class="bi bi-chat-dots-fill"></i>
-                                    <span>Nhắn tin</span>
-                                </a>
-                            </li>
-
-
-                            <li class="sidebar-title">Chính sách</li>
-
-                            <li class="sidebar-item">
-                                <a href="https://zuramai.github.io/mazer/docs" class="sidebar-link">
-                                    <i class="bi bi-life-preserver"></i>
-                                    <span>Thông tin tòa nhà</span>
-                                </a>
-                            </li>
-
-                            <li class="sidebar-item">
-                                <a href="https://github.com/zuramai/mazer/blob/main/CONTRIBUTING.md" class="sidebar-link">
-                                    <i class="bi bi-puzzle"></i>
-                                    <span>Thông tin phí dịch vụ</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="!#" class="sidebar-link">
-                                    <i class="bi bi-puzzle"></i>
-                                    <span>Quy định</span>
-                                </a>
-                            </li>
-                            <!-- =================================đăng nhập, log out..==================== -->
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-person-badge-fill"></i>
-                                    <span>Cài đặt</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="auth-login.html">Thông tin cá nhân</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#!">Login</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="login">Logout</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="auth-forgot-password.html">Forgot Password</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <button class="sidebar-toggler btn x">
-                        <i data-feather="x"></i>
-                    </button>
-                </div>
+        <div id = "main">
+            <div class="container">
+                <h2>Thank You!</h2>
+                <p>Your feedback has been submitted successfully.</p>
+                <button onclick="window.location.href = 'feedback.jsp'">Submit Another Feedback</button>
             </div>
+        </div>
+        <script src="assets/js/bootstrap.bundle.min.js"></script>
 
-            <div id = "main">
-                <div class="container">
-                    <h2>Thank You!</h2>
-                    <p>Your feedback has been submitted successfully.</p>
-                    <button onclick="window.location.href = 'feedback.jsp'">Submit Another Feedback</button>
-                </div>
-            </div>
-            <script src="assets/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/vendors/apexcharts/apexcharts.js"></script>
+        <script src="assets/js/pages/dashboard.js"></script>
 
-            <script src="assets/vendors/apexcharts/apexcharts.js"></script>
-            <script src="assets/js/pages/dashboard.js"></script>
-
-            <script src="assets/js/main.js"></script>
+        <script src="assets/js/main.js"></script>
     </body>
 </html>

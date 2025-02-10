@@ -8,10 +8,13 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Feedback;
+import java.sql.*;
 
 /**
  *
@@ -57,7 +60,27 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
 
     @Override
     public List<Feedback> selectAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT * FROM Feedback";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback fb = new Feedback(
+                        rs.getInt("FeedbackID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getDate("Date").toLocalDate(),
+                        rs.getInt("Rate"),
+                        rs.getInt("StaffID"),
+                        rs.getInt("ResidentID")
+                );
+                list.add(fb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 
     @Override

@@ -5,6 +5,7 @@
 package dao;
 
 import java.time.LocalDate;
+import java.util.List;
 import model.Apartment;
 import model.Feedback;
 import model.Image;
@@ -61,7 +62,11 @@ public class Test {
 //        Staff staff = new Staff("Lonel Messi", "12345", "0985747574", "989999989989", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 2);
 //        staffDAO.insert(staff);
 
-        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);
-        feedbackDAO.insert(fb);
+//        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);
+//        feedbackDAO.insert(fb);
+         List list = feedbackDAO.selectAll();
+         for (Object object : list) {
+             System.out.println(object.toString());
+        }
     }
 }
