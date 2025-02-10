@@ -198,10 +198,10 @@
                             </a>
                             <ul class="submenu">
                                 <li class="submenu-item">
-                                    <a href="layout-default.html">Gửi thông báo</a>
+                                    <a href="feedback">Gửi thông báo</a>
                                 </li>
                                 <li class="submenu-item">
-                                    <a href="layout-vertical-1-column.html">Cư dân</a>
+                                    <a href="request">Request</a>
                                 </li>
                                 <li class="submenu-item">
                                     <a href="layout-vertical-navbar.html">Ban kế toán</a>

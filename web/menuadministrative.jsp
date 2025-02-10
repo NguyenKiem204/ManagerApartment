@@ -212,7 +212,7 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="layout-default.html">Send Notification</a>
+                                        <a href="feedbackadministrative">Feedback</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="layout-vertical-1-column.html">Residents</a>

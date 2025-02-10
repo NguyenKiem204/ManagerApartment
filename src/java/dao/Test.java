@@ -9,6 +9,7 @@ import java.util.List;
 import model.Apartment;
 import model.Feedback;
 import model.Image;
+import model.Request;
 import model.Resident;
 import model.Role;
 import model.Staff;
@@ -51,6 +52,7 @@ public class Test {
         ImageDAO imageDAO = new ImageDAO();
         ApartmentDAO apartmentDAO = new ApartmentDAO();
         FeedbackDAO feedbackDAO = new FeedbackDAO();
+        RequestDAO requestDAO = new RequestDAO();
         
 //        Role role = new Role("OWNER", "Some Permission");
 //        Image image = new Image("./djhdjdhf/lo");
@@ -66,10 +68,14 @@ public class Test {
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);
 //        feedbackDAO.insert(fb);
-         List list = feedbackDAO.getAllFeedbacksSortedByStaff();
-         for (Object object : list) {
-             System.out.println(object.toString());
-        }
+//         List list = feedbackDAO.getAllFeedbacksSortedByStaff();
+        
+//         for (Object object : list) {
+//             System.out.println(object.toString());
+//        }
 
+        Request rq = new Request("Lam lai hanh lang cho tang 8", "Hanh lang bi hu hai", "hong", LocalDate.now(), 3, 2, 1);
+        System.out.println(requestDAO.insert(rq));
+//        requestDAO.insert(rq);
     }
 }

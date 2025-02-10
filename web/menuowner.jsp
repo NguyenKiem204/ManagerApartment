@@ -194,13 +194,7 @@
                                         <a href="feedback">Send Notification</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="layout-vertical-1-column.html">Residents</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-vertical-navbar.html">Accounting Department</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-horizontal.html">Security Department</a>
+                                        <a href="request">Request</a>
                                     </li>
                                 </ul>
                             </li>
@@ -288,7 +282,7 @@
                     </button>
                 </div>
             </div>
-            
+
         </div>
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
         <script src="assets/js/bootstrap.bundle.min.js"></script>
