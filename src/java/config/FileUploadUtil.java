@@ -4,10 +4,7 @@ import java.io.*;
 import java.nio.file.*;
 import jakarta.servlet.http.Part;
 import jakarta.servlet.http.HttpServletRequest;
-<<<<<<< HEAD
-=======
 import java.util.UUID;
->>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
 
 public class FileUploadUtil {
 
@@ -62,8 +59,6 @@ public class FileUploadUtil {
 
         return imgURL;
     }
-<<<<<<< HEAD
-=======
     
 
 public static String insertNewsImage(HttpServletRequest request) {
@@ -120,5 +115,4 @@ public static String insertNewsImage(HttpServletRequest request) {
     return imgURL;
 }
 
->>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
 }

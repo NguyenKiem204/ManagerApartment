@@ -6,10 +6,6 @@ package dao;
 
 import java.time.LocalDate;
 import java.util.List;
-<<<<<<< HEAD
-=======
-import model.Account;
->>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
 import model.Apartment;
 import model.Feedback;
 import model.Image;
@@ -68,7 +64,6 @@ public class Test {
 //        imageDAO.insert(image);
 //        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "39849348394", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 1);
 //        staffDAO.insert(staff);
-<<<<<<< HEAD
 
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);
@@ -86,7 +81,6 @@ public class Test {
         for (Request request : listrq) {
             System.out.println(request.toString());
         }
-=======
 //        System.out.println(residentDAO.getResidentDetailByID(3));
 //        List<Staff> list = staffDAO.selectAll();
 //        for (Staff staff : list) {
@@ -94,6 +88,5 @@ public class Test {
 //        }
 StaffDetail staff = new StaffDetail(4, "Nguyễn Kiểm", "033456789", "837483487", "kiemnvhe186025@fpt.edu.vn", LocalDate.of(2004, 04, 10), "Male", "", "/asset/images/hi.jpn", "", 1, 1);
 staffDAO.updateProfileStaff(staff);
->>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
     }
 }

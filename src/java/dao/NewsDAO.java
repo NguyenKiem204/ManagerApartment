@@ -124,11 +124,7 @@ public class NewsDAO implements DAOInterface<News, Integer> {
                         rs.getString("ImageURL"),
                         rs.getString("Title"),
                         rs.getString("Description"),
-<<<<<<< HEAD
-                        rs.getDate("SentDate").toLocalDate(),
-=======
                         rs.getTimestamp("SentDate").toLocalDateTime(),
->>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
                         rs.getInt("StaffID"),
                         rs.getString("FullName")
                 );
@@ -157,11 +153,7 @@ public class NewsDAO implements DAOInterface<News, Integer> {
                             rs.getString("ImageURL"),
                             rs.getString("Title"),
                             rs.getString("Description"),
-<<<<<<< HEAD
-                            rs.getDate("SentDate").toLocalDate(),
-=======
                             rs.getTimestamp("SentDate").toLocalDateTime(),
->>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
                             rs.getInt("StaffID"),
                             rs.getString("FullName")
                     );
@@ -172,9 +164,6 @@ public class NewsDAO implements DAOInterface<News, Integer> {
         }
         return news;
     }
-<<<<<<< HEAD
-=======
-    
     public void insertNewsWithImage(NewsDetail newsDetail) {
     String sqlInsertImage = "INSERT INTO Image (ImageURL) VALUES (?)";
     String sqlInsertNews = "INSERT INTO News (Title, Description, SentDate, StaffID, ImageID) VALUES (?, ?, ?, ?, ?)";
@@ -208,6 +197,5 @@ public class NewsDAO implements DAOInterface<News, Integer> {
     }
 }
 
->>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
 }
 

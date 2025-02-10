@@ -4,11 +4,6 @@
  */
 package controller;
 
-<<<<<<< HEAD
-
-=======
-import dao.AccountDAO;
->>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
 import dao.ResidentDAO;
 import dao.StaffDAO;
 import java.io.IOException;
