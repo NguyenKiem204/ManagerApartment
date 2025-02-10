@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Đẹp</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .blog-card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <!-- Blog Posts Section -->
+        <div id="blog-posts" class="row">
+            <!-- Blog posts will be dynamically inserted here -->
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul id="pagination" class="pagination justify-content-center">
+                <!-- Pagination links will be dynamically inserted here -->
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS for pagination -->
+    <script>
+        // Sample blog data
+        const blogData = [
+            { title: "Bài viết 1", description: "Mô tả ngắn cho bài viết 1.", image: "https://via.placeholder.com/300x200" },
+            { title: "Bài viết 2", description: "Mô tả ngắn cho bài viết 2.", image: "https://via.placeholder.com/300x200" },
+            { title: "Bài viết 3", description: "Mô tả ngắn cho bài viết 3.", image: "https://via.placeholder.com/300x200" },
+            { title: "Bài viết 4", description: "Mô tả ngắn cho bài viết 4.", image: "https://via.placeholder.com/300x200" },
+            { title: "Bài viết 5", description: "Mô tả ngắn cho bài viết 5.", image: "https://via.placeholder.com/300x200" },
+            { title: "Bài viết 6", description: "Mô tả ngắn cho bài viết 6.", image: "https://via.placeholder.com/300x200" },
+            { title: "Bài viết 7", description: "Mô tả ngắn cho bài viết 7.", image: "https://via.placeholder.com/300x200" },
+            { title: "Bài viết 8", description: "Mô tả ngắn cho bài viết 8.", image: "https://via.placeholder.com/300x200" },
+            { title: "Bài viết 9", description: "Mô tả ngắn cho bài viết 9.", image: "https://via.placeholder.com/300x200" },
+            { title: "Bài viết 10", description: "Mô tả ngắn cho bài viết 10.", image: "https://via.placeholder.com/300x200" }
+        ];
+
+        // Number of blogs per page
+        const blogsPerPage = 3;
+
+        // Function to display blogs for a specific page
+        function displayBlogs(page) {
+            const blogPosts = document.getElementById('blog-posts');
+            blogPosts.innerHTML = ''; // Clear previous content
+
+            const startIndex = (page - 1) * blogsPerPage;
+            const endIndex = startIndex + blogsPerPage;
+
+            const blogsToShow = blogData.slice(startIndex, endIndex);
+
+            blogsToShow.forEach(blog => {
+                const blogCard = `
+                    <div class="col-md-4 blog-card">
+                        <div class="card">
+                            <img src="${blog.image}" class="card-img-top" alt="Blog Image">
+                            <div class="card-body">
+                                <h5 class="card-title">${blog.title}</h5>
+                                <p class="card-text">${blog.description}</p>
+                                <a href="#" class="btn btn-primary">Đọc thêm</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                blogPosts.innerHTML += blogCard;
+            });
+        }
+
+        // Function to setup pagination
+        function setupPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = ''; // Clear previous pagination
+
+            const totalPages = Math.ceil(blogData.length / blogsPerPage);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.classList.add('page-item');
+                const pageLink = document.createElement('a');
+                pageLink.classList.add('page-link');
+                pageLink.href = '#';
+                pageLink.innerText = i;
+
+                pageLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    displayBlogs(i);
+                });
+
+                pageItem.appendChild(pageLink);
+                pagination.appendChild(pageItem);
+            }
+        }
+
+        // Initial load
+        displayBlogs(1);
+        setupPagination();
+    </script>
+</body>
+</html>
