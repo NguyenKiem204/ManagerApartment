@@ -96,7 +96,7 @@ public class FeedbackServlet extends HttpServlet {
             System.out.println(fb.toString());
             fbDAO.insert(fb);
             
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
         }
         response.sendRedirect("feedbacksuccess.jsp");
     }

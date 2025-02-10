@@ -381,11 +381,7 @@
                         });
                     });
                 </script>
-<<<<<<< HEAD
-            
-=======
             </div>
->>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
             <script src="assets/js/bootstrap.bundle.min.js"></script>
 
             <script src="assets/vendors/apexcharts/apexcharts.js"></script>
