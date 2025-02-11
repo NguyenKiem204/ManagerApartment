@@ -342,7 +342,7 @@
                             <!-- Thông tin tác giả -->
                             <div class="author-info">
                                 <div class="author-avatar">
-                                    <img src="${news.image.imageURL}"
+                                    <img src="${news.staff.image.imageURL}"
                                          alt="Avatar tác giả">
                                 </div>
                                 <div class="author-details">

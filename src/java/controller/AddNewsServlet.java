@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import model.Image;
 import model.News;
+import model.Staff;
 
 /**
  *
@@ -90,14 +91,13 @@ public class AddNewsServlet extends HttpServlet {
         }
         NewsDAO newsDAO = new NewsDAO();
         StaffDAO staffDAO = new StaffDAO();
-        ImageDAO imageDAO = new ImageDAO();
         String newImageURL = FileUploadUtil.insertNewsImage(request);
         if (newImageURL != null) {
             imageURL = newImageURL;
         }
         News news = News.builder()
                 .staff(staffDAO.selectById(staffId))
-                .image(imageDAO.selectById(staffId))
+                .image(new Image(imageURL))
                 .title(title)
                 .description(description)
                 .sentDate(LocalDateTime.now())

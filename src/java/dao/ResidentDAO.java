@@ -98,6 +98,26 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return row;
     }
+    
+    public String getImageURL(int residentId) {
+        String imageURL = null;
+        String query = "SELECT i.ImageURL FROM Image i "
+                + "JOIN Resident s ON i.ImageID = s.ImageID "
+                + "WHERE s.ResidentID = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setInt(1, residentId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    imageURL = rs.getString("ImageURL");
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return imageURL;
+    }
 
     @Override
     public int delete(Resident resident) {

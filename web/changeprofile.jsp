@@ -53,13 +53,13 @@
                         <c:set var="staff" value="${sessionScope.staff}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="${staff.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="${staff.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
                                 <span class="d-none d-md-inline">${staff.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="${staff.imageURL}" class="rounded-circle shadow"
+                                    <img src="${staff.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
                                         ${staff.fullName} - Web Developer
@@ -339,9 +339,9 @@
                     <c:set var="resident" value="${sessionScope.resident}"/>
                     <form action="update-profile" method="POST" enctype="multipart/form-data">
                         <div class="text-center mb-3">
-                            <img src="${not empty staff ? staff.imageURL : (not empty resident ? resident.imageURL : 'Guest')}"
+                            <img src="${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}"
                                  alt="Ảnh cá nhân" class="profile-img rounded-circle">
-                            <input type="file" class="form-control mt-2" value="${not empty staff ? staff.imageURL : (not empty resident ? resident.imageURL : 'Guest')}" name="imgURL" id="upload-photo">
+                            <input type="file" class="form-control mt-2" value="${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}" name="imgURL" id="upload-photo">
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -402,7 +402,6 @@
                 </footer>
             </div>
         </div>
-        <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
         <script src="assets/js/bootstrap.bundle.min.js"></script>
 
         <script src="assets/vendors/apexcharts/apexcharts.js"></script>

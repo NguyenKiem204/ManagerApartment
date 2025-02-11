@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
+import model.Image;
 import model.Resident;
 import model.Staff;
 
@@ -94,22 +95,43 @@ public class UpdateProfileServlet extends HttpServlet {
         }
 
         LocalDate dob = LocalDate.parse(dobParam);
-
+        
         String newImageURL = FileUploadUtil.uploadAvatarImage(request, userIDParam);
         if (newImageURL != null) {
             imageURL = newImageURL;
         }
         StaffDAO staffDAO = new StaffDAO();
         ResidentDAO residentDAO = new ResidentDAO();
-        RoleDAO roleDAO = new RoleDAO();
-        Staff staff = staffDAO.selectById(userID);
-        Resident resident = residentDAO.selectById(userID);
+        Staff staff = Staff.builder()
+                .staffId(userID)
+                .image(new Image(0, imageURL))
+                .fullName(fullName)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .dob(dob)
+                .sex(sex)
+                .build();
+        Resident resident = Resident.builder()
+                .residentId(userID)
+                .image(new Image(0, imageURL))
+                .fullName(fullName)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .dob(dob)
+                .sex(sex)
+                .build();
         HttpSession session = request.getSession();
         if (staff != null) {
             staffDAO.updateProfileStaff(staff);
+            session.removeAttribute("staff");
+            if(imageURL==null || imageURL.isEmpty())
+            staff.getImage().setImageURL(staffDAO.getImageURL(userID));
             session.setAttribute("staff", staff);
         } else if (resident != null) {
             residentDAO.updateProfileResident(resident);
+            session.removeAttribute("resident");
+            if(imageURL==null || imageURL.isEmpty())
+            resident.getImage().setImageURL(residentDAO.getImageURL(userID));
             session.setAttribute("resident", resident);
         }
         response.sendRedirect("profile");

@@ -112,8 +112,6 @@ public class NewsDAO implements DAOInterface<News, Integer> {
     }
 
     
-
-    //check lai cau lenh sql
     public void insertNewsWithImage(News news) {
         String sqlInsertImage = "INSERT INTO Image (ImageURL) VALUES (?)";
         String sqlInsertNews = "INSERT INTO News (Title, Description, SentDate, StaffID, ImageID) VALUES (?, ?, ?, ?, ?)";
