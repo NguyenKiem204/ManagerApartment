@@ -1,23 +1,4 @@
 <%-- 
-<<<<<<< HEAD
-    Document   : profile.jsp
-    Created on : Feb 8, 2025, 3:12:35 PM
-    Author     : nkiem
---%>
-
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%-- 
-    Document   : menu.jsp
-    Created on : Feb 8, 2025, 2:54:18 PM
-    Author     : nkiem
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-=======
     Document   : home1
     Created on : Feb 11, 2025, 2:12:16 AM
     Author     : nkiem
@@ -31,7 +12,6 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
->>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
         <title>Trang chủ</title>
 
         <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -42,11 +22,7 @@
         <link rel="stylesheet" href="assets/vendors/iconly/bold.css" />
 
         <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
-<<<<<<< HEAD
-        <link rel="stylesheet" href="assets/css/pages/index.css">
-=======
         <link rel="stylesheet" href="assets/css/pages/index.css" />
->>>>>>> 3ca1e80d4dfacfa3f1b50e2a598feea2c78129b6
         <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css" />
         <link rel="stylesheet" href="assets/css/app.css" />
         <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />

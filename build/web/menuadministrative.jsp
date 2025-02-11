@@ -162,27 +162,6 @@
 
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
-                                    <i class="bi bi-people-fill"></i>
-                                    <span>Staff</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="#">Administrative Staff</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Accountant</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Technical Board</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Service Provider</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
                                     <i class="bi bi-collection-fill"></i>
                                     <span>Residents</span>
                                 </a>
@@ -215,7 +194,7 @@
                                         <a href="feedbackadministrative">Feedback</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="layout-vertical-1-column.html">Residents</a>
+                                        <a href="requestadministrative">Request</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="layout-vertical-navbar.html">Accounting Department</a>

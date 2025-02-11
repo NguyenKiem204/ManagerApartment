@@ -62,8 +62,8 @@ public class Test {
 //        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "048758747", "598695869", "nguyen05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", 1, 2);
 //        residentDAO.insert(resident);
 //        imageDAO.insert(image);
-//        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "39849348394", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 1);
-//        staffDAO.insert(staff);
+        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "39849348394", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 1);
+        staffDAO.insert(staff);
 
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);
@@ -77,16 +77,16 @@ public class Test {
 //        Request rq = new Request("Lam lai hanh lang cho tang 8", "Hanh lang bi hu hai", "hong", LocalDate.now(), 3, 2, 1);
 //        System.out.println(requestDAO.insert(rq));
 //        requestDAO.insert(rq);
-        List<Request> listrq = requestDAO.selectAll();
-        for (Request request : listrq) {
-            System.out.println(request.toString());
+//        List<Request> listrq = requestDAO.selectAll();
+//        for (Request request : listrq) {
+//            System.out.println(request.toString());
         }
 //        System.out.println(residentDAO.getResidentDetailByID(3));
 //        List<Staff> list = staffDAO.selectAll();
 //        for (Staff staff : list) {
 //            System.out.println(staff);
 //        }
-StaffDetail staff = new StaffDetail(4, "Nguyễn Kiểm", "033456789", "837483487", "kiemnvhe186025@fpt.edu.vn", LocalDate.of(2004, 04, 10), "Male", "", "/asset/images/hi.jpn", "", 1, 1);
-staffDAO.updateProfileStaff(staff);
-    }
+//StaffDetail staff = new StaffDetail(4, "Nguyễn Kiểm", "033456789", "837483487", "kiemnvhe186025@fpt.edu.vn", LocalDate.of(2004, 04, 10), "Male", "", "/asset/images/hi.jpn", "", 1, 1);
+//staffDAO.updateProfileStaff(staff);
+//    }
 }

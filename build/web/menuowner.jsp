@@ -142,7 +142,7 @@
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="bi bi-stack"></i>
-                                    <span>Apartment</span>
+                                    <span>News</span>
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
@@ -163,7 +163,7 @@
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="bi bi-collection-fill"></i>
-                                    <span>Residents</span>
+                                    <span>Invoices</span>
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
@@ -191,28 +191,10 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="feedback">Send Notification</a>
+                                        <a href="feedback">Send Feedback</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="request">Request</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-collection-fill"></i>
-                                    <span>Statistics</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="extra-component-avatar.html">Parking Service</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-sweetalert.html">Public Electricity Service</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-toastify.html">Cleaning Service</a>
                                     </li>
                                 </ul>
                             </li>
