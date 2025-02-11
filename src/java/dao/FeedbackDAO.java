@@ -21,7 +21,8 @@ import java.sql.*;
  * @author admin
  */
 public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
-
+    StaffDAO st = new StaffDAO();
+    
     @Override
     public int insert(Feedback fb) {
         int row = 0;
@@ -39,8 +40,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ps.setString(2, fb.getDescription());
             ps.setDate(3, Date.valueOf(fb.getDate()));
             ps.setInt(4, fb.getRate());
-            ps.setInt(5, fb.getStaffID());
-            ps.setInt(6, fb.getResidentID());
+            ps.setInt(5, fb.getStaff().getStaffId());
+            ps.setInt(6, fb.getResident().getResidentId());
             row = ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ImageDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -58,6 +59,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    StaffDAO staff = new StaffDAO();
+    ResidentDAO resident = new ResidentDAO();
     @Override
     public List<Feedback> selectAll() {
         List<Feedback> list = new ArrayList<>();
@@ -72,8 +75,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
                         rs.getString("Description"),
                         rs.getDate("Date").toLocalDate(),
                         rs.getInt("Rate"),
-                        rs.getInt("StaffID"),
-                        rs.getInt("ResidentID")
+                        staff.selectById(rs.getInt("StaffID")),
+                        resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -101,8 +104,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
                         rs.getString("Description"),
                         rs.getDate("Date").toLocalDate(),
                         rs.getInt("Rate"),
-                        rs.getInt("StaffID"),
-                        rs.getInt("ResidentID")
+                        staff.selectById(rs.getInt("StaffID")),
+                        resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -125,8 +128,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
                         rs.getString("Description"),
                         rs.getDate("Date").toLocalDate(),
                         rs.getInt("Rate"),
-                        rs.getInt("StaffID"),
-                        rs.getInt("ResidentID")
+                        staff.selectById(rs.getInt("StaffID")),
+                        resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -149,8 +152,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
                         rs.getString("Description"),
                         rs.getDate("Date").toLocalDate(),
                         rs.getInt("Rate"),
-                        rs.getInt("StaffID"),
-                        rs.getInt("ResidentID")
+                        staff.selectById(rs.getInt("StaffID")),
+                        resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }

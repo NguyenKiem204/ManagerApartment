@@ -52,13 +52,13 @@
                         <c:set var="staff" value="${sessionScope.staff}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="${staff.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="${staff.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
                                 <span class="d-none d-md-inline">${staff.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="${staff.imageURL}" class="rounded-circle shadow"
+                                    <img src="${staff.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
                                         ${staff.fullName} - Web Developer
@@ -212,6 +212,21 @@
                                     </li>
                                 </ul>
                             </li>
+                            
+                            <li class="sidebar-item has-sub">
+                                <a href="#" class="sidebar-link">
+                                    <i class="bi bi-collection-fill"></i>
+                                    <span>Account</span>
+                                </a>
+                                <ul class="submenu">
+                                    <li class="submenu-item">
+                                        <a href="manageResident">Resident</a>
+                                    </li>
+                                    <li class="submenu-item">
+                                        <a href="manageStaff">Staff</a>
+                                    </li>
+                                </ul>
+                            </li>
 
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
@@ -220,7 +235,11 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="layout-default.html">Send Notification</a>
+                                        <a href="feedbackadministrative">Feedback</a>
+
+                                    </li>
+                                    <li class="submenu-item">
+                                        <a href="reqadministrative">Request</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="layout-vertical-1-column.html">Residents</a>

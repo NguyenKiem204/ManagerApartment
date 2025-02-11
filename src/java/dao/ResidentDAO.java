@@ -8,11 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.ResidentDetail;
 
 public class ResidentDAO implements DAOInterface<Resident, Integer> {
 
     private final PasswordUtil passwordEncode = new PasswordUtil();
+    ImageDAO imageDAO = new ImageDAO();
+    RoleDAO roleDAO = new RoleDAO();
 
     @Override
     public int insert(Resident resident) {
@@ -24,12 +25,12 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
             ps.setString(2, passwordEncode.hashPassword(resident.getPassword()));
             ps.setString(3, resident.getPhoneNumber());
             ps.setString(4, resident.getCccd());
-            ps.setString(5, resident.getMail());
+            ps.setString(5, resident.getEmail());
             ps.setDate(6, Date.valueOf(resident.getDob()));
             ps.setString(7, resident.getSex());
-            ps.setInt(8, resident.getImageId());
+            ps.setInt(8, resident.getImage().getImageID());
             ps.setString(9, resident.getStatus());
-            ps.setInt(10, resident.getRoleId());
+            ps.setInt(10, resident.getRole().getRoleID());
 
             row = ps.executeUpdate();
         } catch (SQLException ex) {
@@ -48,12 +49,12 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
             ps.setString(2, resident.getPassword());
             ps.setString(3, resident.getPhoneNumber());
             ps.setString(4, resident.getCccd());
-            ps.setString(5, resident.getMail());
+            ps.setString(5, resident.getEmail());
             ps.setDate(6, Date.valueOf(resident.getDob()));
             ps.setString(7, resident.getSex());
-            ps.setInt(8, resident.getImageId());
+            ps.setInt(8, resident.getImage().getImageID());
             ps.setString(9, resident.getStatus());
-            ps.setInt(10, resident.getRoleId());
+            ps.setInt(10, resident.getRole().getRoleID());
             ps.setInt(11, resident.getResidentId());
 
             row = ps.executeUpdate();
@@ -63,7 +64,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         return row;
     }
 
-    public int updateProfileResident(ResidentDetail resident) {
+    public int updateProfileResident(Resident resident) {
         int row = 0;
         String updateRessidentSQL = "UPDATE Resident SET FullName = ?,PhoneNumber = ?, Email = ?, DOB = ?, Sex = ?, ImageID = ?, RoleID = ? WHERE ResidentID = ?";
         String updateImageSQL = "UPDATE Image SET ImageURL = ? WHERE ImageID = ?";
@@ -71,10 +72,10 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         try (Connection connection = DBContext.getConnection()) {
             connection.setAutoCommit(false);
 
-            if (resident.getImageID() > 0 && resident.getImageURL() != null) {
+            if (resident.getImage().getImageID() > 0 && resident.getImage().getImageURL() != null) {
                 try (PreparedStatement psUpdateImage = connection.prepareStatement(updateImageSQL)) {
-                    psUpdateImage.setString(1, resident.getImageURL());
-                    psUpdateImage.setInt(2, resident.getImageID());
+                    psUpdateImage.setString(1, resident.getImage().getImageURL());
+                    psUpdateImage.setInt(2, resident.getImage().getImageID());
                     psUpdateImage.executeUpdate();
                 }
             }
@@ -84,8 +85,8 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                 ps.setString(3, resident.getEmail());
                 ps.setDate(4, Date.valueOf(resident.getDob()));
                 ps.setString(5, resident.getSex());
-                ps.setInt(6, resident.getImageID());
-                ps.setInt(7, resident.getRoleID());
+                ps.setInt(6, resident.getImage().getImageID());
+                ps.setInt(7, resident.getRole().getRoleID());
                 ps.setInt(8, resident.getResidentId());
 
                 row = ps.executeUpdate();
@@ -112,6 +113,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         return row;
     }
 
+
     @Override
     public List<Resident> selectAll() {
         List<Resident> list = new ArrayList<>();
@@ -130,8 +132,8 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                         rs.getDate("DOB").toLocalDate(),
                         rs.getString("Sex"),
                         rs.getString("Status"),
-                        rs.getInt("ImageID"),
-                        rs.getInt("RoleID")
+                        imageDAO.selectById(rs.getInt("ImageID")),
+                       roleDAO.selectById(rs.getInt("RoleID"))
                 );
                 list.add(resident);
             }
@@ -160,51 +162,14 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                         rs.getDate("DOB").toLocalDate(),
                         rs.getString("Sex"),
                         rs.getString("Status"),
-                        rs.getInt("ImageID"),
-                        rs.getInt("RoleID")
+                        imageDAO.selectById(rs.getInt("ImageID")),
+                        roleDAO.selectById(rs.getInt("RoleID"))
                 );
             }
         } catch (SQLException ex) {
             Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resident;
-    }
-
-    public ResidentDetail getResidentDetailByID(Integer id) {
-        ResidentDetail residentDetail = null;
-        String sql = """
-        SELECT r.ResidentID, r.FullName, r.PhoneNumber, r.CCCD, r.Email, r.DOB, 
-               r.Sex, r.Status, i.ImageURL, ro.RoleName, i.ImageID, ro.RoleID
-        FROM Resident r
-        LEFT JOIN Role ro ON r.RoleID = ro.RoleID
-        LEFT JOIN Image i ON r.ImageID = i.ImageID
-        WHERE r.ResidentID = ?
-        """;
-
-        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                residentDetail = new ResidentDetail();
-                residentDetail.setResidentId(rs.getInt("ResidentID"));
-                residentDetail.setFullName(rs.getString("FullName"));
-                residentDetail.setPhoneNumber(rs.getString("PhoneNumber"));
-                residentDetail.setCccd(rs.getString("CCCD"));
-                residentDetail.setEmail(rs.getString("Email"));
-                residentDetail.setDob(rs.getDate("DOB").toLocalDate());
-                residentDetail.setSex(rs.getString("Sex"));
-                residentDetail.setStatus(rs.getString("Status"));
-                residentDetail.setImageURL(rs.getString("ImageURL"));
-                residentDetail.setRoleName(rs.getString("RoleName"));
-                residentDetail.setImageID(rs.getInt("ImageID"));
-                residentDetail.setRoleID(rs.getInt("RoleID"));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return residentDetail;
     }
 
     public boolean existEmail(String email) {
@@ -238,7 +203,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                         String sex = rs.getString("Sex");
                         int imageId = rs.getInt("ImageID");
                         int roleId = rs.getInt("RoleID");
-                        resident = new Resident(residentId, fullName, storedPasswordHash, phoneNumber, cccd, mail, dob, sex, status, imageId, roleId);
+                        resident = new Resident(residentId, fullName, storedPasswordHash, phoneNumber, cccd, mail, dob, sex, status, imageDAO.selectById(imageId), roleDAO.selectById(roleId));
                     }
                 }
             }
@@ -259,7 +224,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return false;
     }
-    
+
 //    public Resident getResidentByApartmentID(int ApartmentID){
 //        Resident resident = null;
 //        String sql = "SELECT * FROM Resident WHERE ApartmentID = ?";
@@ -287,4 +252,129 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
 //        }
 //        return resident;
 //    }
+//    ====================Dung====================
+    public List<Resident> getAllResidents(String sex, String status) {
+        List<Resident> residents = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM Resident WHERE 1=1";
+
+            if (sex != null && !sex.isEmpty()) {
+                query += " AND Sex = ?";
+            }
+            if (status != null && !status.isEmpty()) {
+                query += " AND Status = ?";
+            }
+            Connection conn = DBContext.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            int paramIndex = 1;
+
+            if (sex != null && !sex.isEmpty()) {
+                ps.setString(paramIndex++, sex);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setString(paramIndex++, status);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Resident resident = new Resident(
+                        rs.getInt("ResidentID"),
+                        rs.getString("FullName"),
+                        rs.getString("Password"),
+                        rs.getString("PhoneNumber"),
+                        rs.getString("CCCD"),
+                        rs.getString("Email"),
+                        rs.getDate("DOB").toLocalDate(),
+                        rs.getString("Sex"),
+                        rs.getString("Status"),
+                        imageDAO.selectById(rs.getInt("ImageID")),
+                        roleDAO.selectById(rs.getInt("RoleID"))
+                );
+                residents.add(resident);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return residents;
+    }
+
+    public boolean updateStatus(int residentId, String newStatus) {
+        String query = "UPDATE Resident SET Status = ? WHERE ResidentID = ?";
+        try {
+            Connection conn = DBContext.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, newStatus);
+            ps.setInt(2, residentId);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isResidentExists(String phoneNumber, String cccd, String email) {
+        String sql = "SELECT COUNT(*) FROM Resident WHERE PhoneNumber = ? OR Cccd = ? OR Email = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, phoneNumber);
+            ps.setString(2, cccd);
+            ps.setString(3, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu COUNT > 0 nghĩa là đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<Resident> searchResidents(String keyword, String sex, String status) {
+        List<Resident> residents = new ArrayList<>();
+        String query = "SELECT * FROM Resident WHERE (FullName LIKE ? OR Email LIKE ?)";
+
+        if (sex != null && !sex.isEmpty()) {
+            query += " AND Sex = ?";
+        }
+        if (status != null && !status.isEmpty()) {
+            query += " AND Status = ?";
+        }
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, "%" + keyword + "%");
+            ps.setString(2, "%" + keyword + "%");
+
+            int paramIndex = 3;
+            if (sex != null && !sex.isEmpty()) {
+                ps.setString(paramIndex++, sex);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setString(paramIndex++, status);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Resident resident = new Resident(
+                            rs.getInt("ResidentID"),
+                            rs.getString("FullName"),
+                            rs.getString("Password"),
+                            rs.getString("PhoneNumber"),
+                            rs.getString("CCCD"),
+                            rs.getString("Email"),
+                            rs.getDate("DOB").toLocalDate(),
+                            rs.getString("Sex"),
+                            rs.getString("Status"),
+                            imageDAO.selectById(rs.getInt("ImageID")),
+                            roleDAO.selectById(rs.getInt("RoleID"))
+                    );
+                    residents.add(resident);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return residents;
+    }
 }

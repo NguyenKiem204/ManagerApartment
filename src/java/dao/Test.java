@@ -12,8 +12,8 @@ import model.Image;
 import model.Request;
 import model.Resident;
 import model.Role;
+import model.RoleEnum;
 import model.Staff;
-import model.StaffDetail;
 
 /**
  *
@@ -53,17 +53,21 @@ public class Test {
         ApartmentDAO apartmentDAO = new ApartmentDAO();
         FeedbackDAO feedbackDAO = new FeedbackDAO();
         RequestDAO requestDAO = new RequestDAO();
+        List<Role> listr = roleDAO.selectAll();
+        for (Role role : listr) {
+            System.out.println(role.toString());
+        }
         
 //        Role role = new Role("OWNER", "Some Permission");
 //        Image image = new Image("./djhdjdhf/lo");
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
-//        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "048758747", "598695869", "nguyen05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", 1, 2);
-//        residentDAO.insert(resident);
+        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "048758747", "598695869", "nguyen05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", imageDAO.selectById(1), roleDAO.selectById(7));
+        residentDAO.insert(resident);
 //        imageDAO.insert(image);
-        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "39849348394", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 1);
-        staffDAO.insert(staff);
+//        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "39849348394", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 1);
+//        staffDAO.insert(staff);
 
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);

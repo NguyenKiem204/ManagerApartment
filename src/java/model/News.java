@@ -4,6 +4,7 @@
  */
 package model;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,9 +19,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class News {
     int newsID;
-    int imageID;
     String title;
     String description;
-    LocalDate sentDate;
-    int staffID;
+    LocalDateTime sentDate;
+    Staff staff;
+    Image image;
 }

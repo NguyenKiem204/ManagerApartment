@@ -63,13 +63,13 @@
                         <c:set var="staff" value="${sessionScope.staff}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="${staff.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="${staff.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
                                 <span class="d-none d-md-inline">${staff.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="${staff.imageURL}" class="rounded-circle shadow"
+                                    <img src="${staff.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
                                         ${staff.fullName} - Web Developer
@@ -355,7 +355,7 @@
                         <c:forEach var="news" items="${newsList}">
                             <div class="col-md-4 news-card">
                                 <div class="card">
-                                    <img src="${news.imageURL}" class="card-img-top img-fluid" alt="News Image">
+                                    <img src="${news.image.imageURL}" class="card-img-top img-fluid" alt="News Image">
                                     <div class="card-body">
                                         <h5 class="card-title truncated-text" style="height: 65px">${news.title}</h5>
                                         <p class="text-muted">Ngày đăng: ${news.sentDate}</p>
