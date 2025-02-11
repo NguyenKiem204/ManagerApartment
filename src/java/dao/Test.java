@@ -5,6 +5,7 @@
 package dao;
 
 import java.time.LocalDate;
+import java.util.List;
 import model.Account;
 import model.Apartment;
 import model.Image;
@@ -54,10 +55,29 @@ public class Test {
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
-        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "048758747", "598695869", "nguyen05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", 1, 2);
-        residentDAO.insert(resident);
+        //Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "048758747", "598695869", "nguyen05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", 1, 2);
+       //residentDAO.insert(resident);
+       Resident resident1 = new Resident("Nguyễn Đăng Nguyênnnn", "123", "0487587471", "5986958691", "nguyenn05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", 1, 2);
+       residentDAO.insert(resident1);
+       Resident resident2 = new Resident("Hương béo", "123", "0487587472", "5986958692", "huongbeo@gmail.com", LocalDate.of(2004, 04, 10), "Male", "ACTIVE", 1, 2);
+       residentDAO.insert(resident2);
 //        imageDAO.insert(image);
 //        Staff staff = new Staff("Lonel Messi", "12345", "0985747574", "989999989989", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", 1, 2);
 //        staffDAO.insert(staff);
-    }
-}
+ /*ResidentDAO dao = new ResidentDAO();
+        List<Resident> residents = dao.selectAll();
+
+        if (residents.isEmpty()) {
+            System.out.println("⚠️ Không có dữ liệu trong danh sách Resident!");
+        } else {
+            System.out.println("✅ Dữ liệu Resident:");
+            for (Resident r : residents) {
+                System.out.println("ID: " + r.getResidentId() + ", Name: " + r.getFullName());
+            }
+        }*/
+
+
+
+}}
+
+

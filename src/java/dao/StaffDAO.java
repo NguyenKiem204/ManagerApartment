@@ -35,7 +35,7 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             ps.setDate(6, Date.valueOf(staff.getDob()));
             ps.setString(7, staff.getSex());
             ps.setInt(8, staff.getImageId());
-            ps.setString(9, staff.getStatus());
+            ps.setString(9, "Active");
             ps.setInt(10, staff.getRoleId());
 
             row = ps.executeUpdate();
@@ -141,6 +141,129 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         }
         return staff;
     }
+    public List<Staff> getAllStaffs(String sex, String status) {
+    List<Staff> staffs = new ArrayList<>();
+    try {
+        String query = "SELECT * FROM Staff WHERE 1=1";
+        
+        if (sex != null && !sex.isEmpty()) {
+            query += " AND Sex = ?";
+        }
+        if (status != null && !status.isEmpty()) {
+            query += " AND Status = ?";
+        }
+        Connection conn = DBContext.getConnection();
+        PreparedStatement ps = conn.prepareStatement(query);
+        int paramIndex = 1;
+        
+        if (sex != null && !sex.isEmpty()) {
+            ps.setString(paramIndex++, sex);
+        }
+        if (status != null && !status.isEmpty()) {
+            ps.setString(paramIndex++, status);
+        }
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Staff staff = new Staff(
+                 rs.getInt("StaffID"),
+                    rs.getString("FullName"),
+                    rs.getString("Password"),
+                    rs.getString("PhoneNumber"),
+                    rs.getString("CCCD"),
+                    rs.getString("Email"),
+                    rs.getDate("DOB").toLocalDate(),
+                    rs.getString("Sex"),
+                    rs.getString("Status"),
+                        rs.getInt("ImageID"),
+                    rs.getInt("RoleID")
+            );
+            staffs.add(staff);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return staffs;
+}
+    public List<Staff> searchStaffs(String keyword, String sex, String status) {
+    List<Staff> staffs = new ArrayList<>();
+    String query = "SELECT * FROM Staff WHERE (FullName LIKE ? OR Email LIKE ?)";
+
+    if (sex != null && !sex.isEmpty()) {
+        query += " AND Sex = ?";
+    }
+    if (status != null && !status.isEmpty()) {
+        query += " AND Status = ?";
+    }
+
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(query)) {
+
+        ps.setString(1, "%" + keyword + "%");
+        ps.setString(2, "%" + keyword + "%");
+
+        int paramIndex = 3;
+        if (sex != null && !sex.isEmpty()) {
+            ps.setString(paramIndex++, sex);
+        }
+        if (status != null && !status.isEmpty()) {
+            ps.setString(paramIndex++, status);
+        }
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Staff staff = new Staff(
+                rs.getInt("StaffID"),
+                        rs.getString("FullName"),
+                        rs.getString("Password"),
+                        rs.getString("PhoneNumber"),
+                        rs.getString("CCCD"),
+                        rs.getString("Email"),
+                        rs.getDate("DOB").toLocalDate(),
+                        rs.getString("Sex"),
+                        rs.getString("Status"),
+                        rs.getInt("ImageID"),
+                        rs.getInt("RoleID")
+            );
+            staffs.add(staff);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return staffs;
+}
+public boolean isStaffExists(String phoneNumber, String cccd, String email) {
+    String sql = "SELECT COUNT(*) FROM Staff WHERE PhoneNumber = ? OR Cccd = ? OR Email = ?";
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, phoneNumber);
+        ps.setString(2, cccd);
+        ps.setString(3, email);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // Nếu COUNT > 0 nghĩa là đã tồn tại
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+public boolean updateStatus(int staffId, String newStatus) {
+    String query = "UPDATE Staff SET Status = ? WHERE StaffID = ?";
+    try {
+        Connection conn = DBContext.getConnection();
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setString(1, newStatus);
+        ps.setInt(2, staffId);
+
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
 public boolean existEmail(String email) {
         String sql = "SELECT * FROM Staff WHERE Email = ?";
         System.out.println(sql);

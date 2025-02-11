@@ -78,24 +78,16 @@
                         <li class="sidebar-item has-sub">
                             <a href="#" class="sidebar-link">
                                 <i class="bi bi-collection-fill"></i>
-                                <span>Cư Dân</span>
+                                <span>Tài khoản</span>
                             </a>
                             <ul class="submenu">
                                 <li class="submenu-item">
-                                    <a href="extra-component-avatar.html">Danh Sách</a>
+                                    <a href="manageResident">Cư dân</a>
                                 </li>
                                 <li class="submenu-item">
-                                    <a href="extra-component-sweetalert.html">Phương Tiện</a>
+                                    <a href="manageStaff">Nhân viên</a>
                                 </li>
-                                <li class="submenu-item">
-                                    <a href="extra-component-toastify.html">Thông Báo</a>
-                                </li>
-                                <li class="submenu-item">
-                                    <a href="extra-component-rating.html">Khiếu Nại</a>
-                                </li>
-                                <li class="submenu-item">
-                                    <a href="extra-component-divider.html">Divider</a>
-                                </li>
+                                
                             </ul>
                         </li>
 

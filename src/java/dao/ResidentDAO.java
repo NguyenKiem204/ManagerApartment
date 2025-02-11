@@ -28,7 +28,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
             ps.setDate(6, Date.valueOf(resident.getDob()));
             ps.setString(7, resident.getSex());
             ps.setInt(8, resident.getImageId());
-            ps.setString(9, resident.getStatus());
+            ps.setString(9, "Active");
             ps.setInt(10, resident.getRoleId());
 
             row = ps.executeUpdate();
@@ -82,8 +82,8 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         List<Resident> list = new ArrayList<>();
         String sql = "SELECT * FROM Resident";
 
-        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()){
             while (rs.next()) {
                 Resident resident = new Resident(
                         rs.getInt("ResidentID"),
@@ -100,11 +100,104 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                 );
                 list.add(resident);
             }
+             //System.out.println("Residents fetched: " + list.size());
         } catch (SQLException ex) {
             Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
+    /*public static void main(String[] args) {
+        ResidentDAO dao = new ResidentDAO();
+        List<Resident> list = dao.selectAll();
+        System.out.println("Residents fetched: " + list.size());
+        
+    }*/
+    public List<Resident> getResidentsBySex(String sex) {
+    List<Resident> list = new ArrayList<>();
+    String sql = "SELECT * FROM Resident WHERE Sex = ?";
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, sex);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            Resident resident = new Resident(
+                rs.getInt("ResidentID"),
+                        rs.getString("FullName"),
+                        rs.getString("Password"),
+                        rs.getString("PhoneNumber"),
+                        rs.getString("CCCD"),
+                        rs.getString("Email"),
+                        rs.getDate("DOB").toLocalDate(),
+                        rs.getString("Sex"),
+                        rs.getString("Status"),
+                        rs.getInt("ImageID"),
+                        rs.getInt("RoleID")
+            );
+            list.add(resident);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+    public List<Resident> getAllResidents(String sex, String status) {
+    List<Resident> residents = new ArrayList<>();
+    try {
+        String query = "SELECT * FROM Resident WHERE 1=1";
+        
+        if (sex != null && !sex.isEmpty()) {
+            query += " AND Sex = ?";
+        }
+        if (status != null && !status.isEmpty()) {
+            query += " AND Status = ?";
+        }
+        Connection conn = DBContext.getConnection();
+        PreparedStatement ps = conn.prepareStatement(query);
+        int paramIndex = 1;
+        
+        if (sex != null && !sex.isEmpty()) {
+            ps.setString(paramIndex++, sex);
+        }
+        if (status != null && !status.isEmpty()) {
+            ps.setString(paramIndex++, status);
+        }
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Resident resident = new Resident(
+                rs.getInt("ResidentID"),
+                        rs.getString("FullName"),
+                        rs.getString("Password"),
+                        rs.getString("PhoneNumber"),
+                        rs.getString("CCCD"),
+                        rs.getString("Email"),
+                        rs.getDate("DOB").toLocalDate(),
+                        rs.getString("Sex"),
+                        rs.getString("Status"),
+                        rs.getInt("ImageID"),
+                        rs.getInt("RoleID")
+            );
+            residents.add(resident);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return residents;
+}
+    public boolean updateStatus(int residentId, String newStatus) {
+    String query = "UPDATE Resident SET Status = ? WHERE ResidentID = ?";
+    try {
+        Connection conn = DBContext.getConnection();
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setString(1, newStatus);
+        ps.setInt(2, residentId);
+
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
 
     @Override
     public Resident selectById(Integer id) {
@@ -147,6 +240,71 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return false;
     }
+    public boolean isResidentExists(String phoneNumber, String cccd, String email) {
+    String sql = "SELECT COUNT(*) FROM Resident WHERE PhoneNumber = ? OR Cccd = ? OR Email = ?";
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, phoneNumber);
+        ps.setString(2, cccd);
+        ps.setString(3, email);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // Nếu COUNT > 0 nghĩa là đã tồn tại
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+    public List<Resident> searchResidents(String keyword, String sex, String status) {
+    List<Resident> residents = new ArrayList<>();
+    String query = "SELECT * FROM Resident WHERE (FullName LIKE ? OR Email LIKE ?)";
+
+    if (sex != null && !sex.isEmpty()) {
+        query += " AND Sex = ?";
+    }
+    if (status != null && !status.isEmpty()) {
+        query += " AND Status = ?";
+    }
+
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(query)) {
+
+        ps.setString(1, "%" + keyword + "%");
+        ps.setString(2, "%" + keyword + "%");
+
+        int paramIndex = 3;
+        if (sex != null && !sex.isEmpty()) {
+            ps.setString(paramIndex++, sex);
+        }
+        if (status != null && !status.isEmpty()) {
+            ps.setString(paramIndex++, status);
+        }
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Resident resident = new Resident(
+                rs.getInt("ResidentID"),
+                        rs.getString("FullName"),
+                        rs.getString("Password"),
+                        rs.getString("PhoneNumber"),
+                        rs.getString("CCCD"),
+                        rs.getString("Email"),
+                        rs.getDate("DOB").toLocalDate(),
+                        rs.getString("Sex"),
+                        rs.getString("Status"),
+                        rs.getInt("ImageID"),
+                        rs.getInt("RoleID")
+            );
+            residents.add(resident);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return residents;
+}
 
     public Resident checkLogin(String mail, String password) {
         Resident resident = null;

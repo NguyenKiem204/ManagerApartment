@@ -40,5 +40,9 @@ public class Resident {
         this.imageId = imageId;
         this.roleId = roleId;
     }
+
+    
+
+    
 }
 
