@@ -10,24 +10,24 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Menu of Owner</title>
+        <title>Trang chủ</title>
 
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
               rel="stylesheet" />
-        <link rel="stylesheet" href="assets/css/bootstrap.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
 
-        <link rel="stylesheet" href="assets/vendors/iconly/bold.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
 
         <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
-        <link rel="stylesheet" href="assets/css/pages/index.css">
-        <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css" />
-        <link rel="stylesheet" href="assets/css/app.css" />
-        <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css">
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
+        <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="assets/css/menu.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
     </head>
 
     <body>
@@ -133,7 +133,7 @@
                             <li class="sidebar-title">Menu</li>
 
                             <li class="sidebar-item active">
-                                <a href="home" class="sidebar-link">
+                                <a href="index.html" class="sidebar-link">
                                     <i class="bi bi-grid-fill"></i>
                                     <span>Home</span>
                                 </a>
@@ -142,7 +142,7 @@
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="bi bi-stack"></i>
-                                    <span>News</span>
+                                    <span>Apartment</span>
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
@@ -163,7 +163,7 @@
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="bi bi-collection-fill"></i>
-                                    <span>Invoices</span>
+                                    <span>Residents</span>
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
@@ -191,10 +191,34 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="feedback">Send Feedback</a>
+                                        <a href="feedbackadministrative">Feedback</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="request">Request</a>
+                                        <a href="requestadministrative">Request</a>
+                                    </li>
+                                    <li class="submenu-item">
+                                        <a href="layout-vertical-navbar.html">Accounting Department</a>
+                                    </li>
+                                    <li class="submenu-item">
+                                        <a href="layout-horizontal.html">Security Department</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="sidebar-item has-sub">
+                                <a href="#" class="sidebar-link">
+                                    <i class="bi bi-collection-fill"></i>
+                                    <span>Statistics</span>
+                                </a>
+                                <ul class="submenu">
+                                    <li class="submenu-item">
+                                        <a href="extra-component-avatar.html">Parking Service</a>
+                                    </li>
+                                    <li class="submenu-item">
+                                        <a href="extra-component-sweetalert.html">Public Electricity Service</a>
+                                    </li>
+                                    <li class="submenu-item">
+                                        <a href="extra-component-toastify.html">Cleaning Service</a>
                                     </li>
                                 </ul>
                             </li>
@@ -264,15 +288,15 @@
                     </button>
                 </div>
             </div>
-
+            
         </div>
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
-        <script src="assets/js/bootstrap.bundle.min.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 
-        <script src="assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="assets/js/pages/dashboard.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
 
-        <script src="assets/js/main.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
     </body>
 
 </html>
