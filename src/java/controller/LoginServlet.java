@@ -120,13 +120,24 @@ public class LoginServlet extends HttpServlet {
             ResidentDetail resident = null;
             if (residentCheck == null && staffCheck!=null) {
                 staff = staffDAO.getStaffDetailByID(staffCheck.getStaffId());
+                if(staff.getRoleID() == 1){
+                    session.setAttribute("staff", staff);
+                    session.setMaxInactiveInterval(600);
+                    response.sendRedirect("home");
+                }
+                
             } else if(residentCheck != null && staffCheck==null){
                 resident = residentDAO.getResidentDetailByID(residentCheck.getResidentId());
+                if(resident.getRoleID() == 7){
+                    session.setAttribute("resident", resident);
+                    session.setMaxInactiveInterval(600);
+                    response.sendRedirect("menuowner");
+                }
             }
-            session.setAttribute("staff", staff);
-            session.setAttribute("resident", resident);
-            session.setMaxInactiveInterval(600);
-            response.sendRedirect("home");
+            
+            
+            
+            
         }
     }
 

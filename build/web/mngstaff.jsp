@@ -30,6 +30,171 @@
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="assets/css/menu.css" />
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #ffe6cc;
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+            }
+
+            h1 {
+                color: #e65c00;
+                margin-bottom: 20px;
+            }
+
+            .table-container {
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                width: 100%;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            th {
+                background-color: #ff944d;
+                color: white;
+            }
+
+            tr:hover {
+                background-color: #f1f1f1;
+            }
+
+            .actions {
+                display: flex;
+                gap: 10px;
+            }
+
+            .actions button {
+                background-color: #ff944d;
+                color: white;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .actions button:hover {
+                background-color: #e65c00;
+            }
+
+            .sidebar {
+                position: fixed;
+                width: 250px;
+                height: 100%;
+                background-color: #ff944d;
+                padding: 20px;
+                color: white;
+            }
+
+            .sidebar ul {
+                list-style-type: none;
+                padding: 0;
+            }
+
+            .sidebar ul li {
+                margin: 20px 0;
+            }
+
+            .sidebar ul li a {
+                color: white;
+                text-decoration: none;
+                font-size: 18px;
+            }
+
+            .sidebar ul li a:hover {
+                text-decoration: underline;
+            }
+
+            .content {
+                margin-left: 270px;
+                padding: 20px;
+            }
+            .message {
+                color: green;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+            .add-resident-button {
+                display: inline-block;
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px 20px;
+                text-decoration: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                transition: background-color 0.3s;
+            }
+
+            .add-resident-button:hover {
+                background-color: #45a049;
+            }
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 34px;
+                height: 20px;
+            }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                transition: .4s;
+                border-radius: 34px;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 14px;
+                width: 14px;
+                left: 3px;
+                bottom: 3px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+
+            input:checked + .slider {
+                background-color: #4CAF50;
+            }
+
+            input:checked + .slider:before {
+                transform: translateX(14px);
+            }
+
+        </style>
     </head>
 
     <body>
@@ -212,21 +377,6 @@
                                     </li>
                                 </ul>
                             </li>
-                            
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-collection-fill"></i>
-                                    <span>Account</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="manageResident">Resident</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="manageStaff">Staff</a>
-                                    </li>
-                                </ul>
-                            </li>
 
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
@@ -235,10 +385,7 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="feedbackadministrative">Feedback</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="reqadministrative">Request</a>
+                                        <a href="layout-default.html">Send Notification</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="layout-vertical-1-column.html">Residents</a>
@@ -350,269 +497,126 @@
                     <i class="bi bi-justify fs-3"></i>
                 </a>
                 <!--=============================CONTENT HERE=======================-->
-                <div class="page-heading">
-                    <h3>Số Liệu Thống Kê</h3>
-                </div>
-                <div class="page-content">
-                    <section class="row">
-                        <div class="col-12 col-lg-9">
-                            <div class="row">
-                                <div class="scroll-container">
-                                    <button class="scroll-btn left"><i class="fa-solid fa-angle-left"></i></button>
-                                    <div class="row row-btn">
-                                        <div class="col-8 col-lg-5 col-md-8">
-                                            <div class="card">
-                                                <div class="card-body px-3 py-4-5 border-cam">
-                                                    <div class="row">
-                                                        <div class="col-md-5">
-                                                            <img class="fixed-size-img" 
-                                                                 src="./assets/images/aparts/R.jpg" alt="Chung cư">
-                                                        </div>
-                                                        <div class="col-md-7">
-                                                            <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
-                                                            <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
-                                                            <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-8 col-lg-5 col-md-8">
-                                            <div class="card">
-                                                <div class="card-body px-3 py-4-5 border-cam">
-                                                    <div class="row">
-                                                        <div class="col-md-5" >
-                                                            <img class="fixed-size-img" 
-                                                                 src="./assets/images/aparts/toab.jpg" alt="Chung cư">
-                                                        </div>
-                                                        <div class="col-md-7">
-                                                            <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
-                                                            <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
-                                                            <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-8 col-lg-5 col-md-8">
-                                            <div class="card">
-                                                <div class="card-body px-3 py-4-5 border-cam">
-                                                    <div class="row">
-                                                        <div class="col-md-5" >
-                                                            <img class="fixed-size-img" 
-                                                                 src="./assets/images/aparts/toac.jpeg" alt="Chung cư">
-                                                        </div>
-                                                        <div class="col-md-7">
-                                                            <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
-                                                            <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
-                                                            <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                <div>
+                    <div>
+                        <h1>Danh Sách Nhân Viên</h1>
+                        <%-- Hiển thị thông báo nếu có --%>
+                        <c:if test="${not empty mess}">
+                            <div class="message">${mess}</div>
+                        </c:if>
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <a href="addstaff.jsp" class="add-resident-button">Thêm Nhân Viên</a>
+                        </div>
+                        <div class="row mb-3">
 
-                                    </div>
-                                    <button class="scroll-btn right"><i class="fa-solid fa-angle-right"></i></button>
-                                </div>
+                            <div class="col-md-5 d-flex gap-2">
+                                <form action="manageStaff" method="get" class="d-flex gap-2 flex-grow-1">
+                                    <select name="sex" id="sexFilter" class="form-select" style="width: 100%;">
+                                        <option value="">AllGenders</option>
+                                        <option value="Male" ${selectedSex == 'Male' ? 'selected' : ''}>Male</option>
+                                        <option value="Female" ${selectedSex == 'Female' ? 'selected' : ''}>Female</option>
+                                    </select>
+
+                                    <select name="status" id="statusFilter" class="form-select" style="width: 100%;">
+                                        <option value="">AllStatus</option>
+                                        <option value="Active" ${selectedStatus == 'Active' ? 'selected' : ''}>Active</option>
+                                        <option value="Deactive" ${selectedStatus == 'Deactive' ? 'selected' : ''}>Deactive</option>
+                                    </select>
+
+                                    <button type="submit" class="btn btn-primary" style="width: 20%;">Lọc</button>
+                                </form>
                             </div>
 
 
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card border-cam">
-                                        <div class="card-header">
-                                            <h4>Số tiền điện</h4>
-                                        </div>
-                                        <div class="card-body">
-                                            <div id="chart-profile-visit"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-xl-4">
-                                    <div class="card border-cam">
-                                        <div class="card-header">
-                                            <h4>Số Lượng Dân Cư</h4>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <svg class="bi text-primary" width="32" height="32" fill="blue"
-                                                             style="width: 10px">
-                                                        <use
-                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
-                                                        </svg>
-                                                        <h5 class="mb-0 ms-3">Chí Thanh</h5>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <h5 class="mb-0">862</h5>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div id="chart-europe"></div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <svg class="bi text-success" width="32" height="32" fill="blue"
-                                                             style="width: 10px">
-                                                        <use
-                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
-                                                        </svg>
-                                                        <h5 class="mb-0 ms-3">Mường Thanh</h5>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <h5 class="mb-0">375</h5>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div id="chart-america"></div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <svg class="bi text-danger" width="32" height="32" fill="blue"
-                                                             style="width: 10px">
-                                                        <use
-                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
-                                                        </svg>
-                                                        <h5 class="mb-0 ms-3">Hải Phong</h5>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <h5 class="mb-0">1025</h5>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div id="chart-indonesia"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-xl-8">
-                                    <div class="card border-cam">
-                                        <div class="card-header">
-                                            <h4>Latest Comments</h4>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="table-responsive">
-                                                <table class="table table-hover table-lg">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Comment</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="col-3">
-                                                                <div class="d-flex align-items-center">
-                                                                    <div class="avatar avatar-md">
-                                                                        <img src="assets/images/faces/5.jpg" />
-                                                                    </div>
-                                                                    <p class="font-bold ms-3 mb-0">Si Cantik</p>
-                                                                </div>
-                                                            </td>
-                                                            <td class="col-auto">
-                                                                <p class="mb-0">
-                                                                    Congratulations on your graduation!
-                                                                </p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="col-3">
-                                                                <div class="d-flex align-items-center">
-                                                                    <div class="avatar avatar-md">
-                                                                        <img src="assets/images/faces/2.jpg" />
-                                                                    </div>
-                                                                    <p class="font-bold ms-3 mb-0">Si Ganteng</p>
-                                                                </div>
-                                                            </td>
-                                                            <td class="col-auto">
-                                                                <p class="mb-0">
-                                                                    Wow amazing design! Can you make another
-                                                                    tutorial for this design?
-                                                                </p>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-md-5">
+                                <form action="manageStaff" method="get" class="d-flex">
+                                    <input type="text" name="searchKeyword" placeholder="Nhập tên hoặc email..." value="${searchKeyword != null ? searchKeyword : ''}" class="form-control me-2" style="width: 70%;">
+
+                                    <button type="submit" class="btn btn-primary" style="width: 30%;">Tìm</button>
+                                </form>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-3">
-                            <div class="card">
-                                <div class="card-body  border-cam"
-                                     style="padding-top: 3.2rem !important; padding-bottom: 3.1rem !important;">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar avatar-xl">
-                                            <img src="./assets/images/faces/1.png" alt="Face 1" />
-                                        </div>
-                                        <div class="ms-3 name">
-                                            <h5 class="font-bold">Chủ Căn Hộ</h5>
-                                            <h6 class="text-muted mb-0">Nguyễn Đăng Nguyên</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card border-cam">
-                                <div class="card-header">
-                                    <h4>Tin nhắn gần đây</h4>
-                                </div>
-                                <div class="card-content pb-4">
-                                    <div class="recent-message d-flex px-4 py-3">
-                                        <div class="avatar avatar-lg">
-                                            <img src="assets/images/faces/4.jpg" />
-                                        </div>
-                                        <div class="name ms-4">
-                                            <h5 class="mb-1">Nguyễn Kiểm</h5>
-                                            <h6 class="text-muted mb-0">@nkiem</h6>
-                                        </div>
-                                    </div>
-                                    <div class="recent-message d-flex px-4 py-3">
-                                        <div class="avatar avatar-lg">
-                                            <img src="assets/images/faces/3.jpg" />
-                                        </div>
-                                        <div class="name ms-4">
-                                            <h5 class="mb-1">Quang Dũng</h5>
-                                            <h6 class="text-muted mb-0">@dung</h6>
-                                        </div>
-                                    </div>
-                                    <div class="recent-message d-flex px-4 py-3">
-                                        <div class="avatar avatar-lg">
-                                            <img src="assets/images/faces/5.jpg" />
-                                        </div>
-                                        <div class="name ms-4">
-                                            <h5 class="mb-1">Mai Hương</h5>
-                                            <h6 class="text-muted mb-0">@huong</h6>
-                                        </div>
-                                    </div>
-                                    <div class="px-4">
-                                        <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3">
-                                            Start Conversation
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card border-cam">
-                                <div class="card-header">
-                                    <h4>Số căn hộ đã thuê</h4>
-                                </div>
-                                <div class="card-body">
-                                    <div id="chart-visitors-profile"></div>
-                                </div>
-                            </div>
+
+
+
+
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Staff ID</th>
+                                        <th>Họ và Tên</th>
+                                        <th>Số Điện Thoại</th>
+                                        <th>CCCD</th>
+                                        <th>Email</th>
+                                        <th>Ngày Sinh</th>
+                                        <th>Giới Tính</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Role</th>
+                                        <th>Hành Động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="staff" items="${listStaff}">
+                                        <tr>
+                                            <td>${staff.staffId}</td>
+                                            <td>${staff.fullName}</td>
+                                            <td>${staff.phoneNumber}</td>
+                                            <td>${staff.cccd}</td>
+                                            <td>${staff.email}</td>
+                                            <td>${staff.dob}</td>
+                                            <td>${staff.sex}</td>
+                                            <td>
+                                                <label class="switch">
+                                                    <input type="checkbox" class="status-toggle" data-id="${staff.staffId}" ${staff.status == 'Active' ? 'checked' : ''}>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${staff.roleId == 1}">Manager</c:when>
+                                                    <c:when test="${staff.roleId == 2}">Accountant</c:when>
+                                                    <c:when test="${staff.roleId == 3}">Technical Board</c:when>
+                                                    <c:when test="${staff.roleId == 4}">Service Provider</c:when>
+                                                    <c:otherwise>Unknown</c:otherwise>
+                                                </c:choose>
+                                            </td>
+
+                                            <td>
+                                                <div class="actions">
+                                                    <a href="deleteStaff?staffId=${staff.staffId}" onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này không?');">Delete</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
                         </div>
-                    </section>
+
+                    </div>
                 </div>
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                                                        $(document).ready(function () {
+                                                            $(".status-toggle").change(function () {
+                                                                let staffId = $(this).data("id");
+                                                                let newStatus = $(this).is(":checked") ? "Active" : "Deactive";
+
+                                                                $.ajax({
+                                                                    url: "updateStaffStatus",
+                                                                    type: "POST",
+                                                                    data: {staffId: staffId, status: newStatus},
+                                                                    success: function (response) {
+                                                                        alert(response.message);
+                                                                    },
+                                                                    error: function () {
+                                                                        alert("Lỗi khi cập nhật trạng thái.");
+                                                                    }
+                                                                });
+                                                            });
+                                                        });
+                </script>
                 <!--==============================END================================-->
 
                 <footer>
