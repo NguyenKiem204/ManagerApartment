@@ -106,13 +106,11 @@ public class UpdateProfileServlet extends HttpServlet {
         Resident resident = residentDAO.selectById(userID);
         HttpSession session = request.getSession();
         if (staff != null) {
-            StaffDetail staffDetail = new StaffDetail(userID, fullName, phoneNumber, staff.getCccd(), email, dob, sex, staff.getStatus(), imageURL, roleDAO.selectById(staff.getRoleId()).getRoleName(), staff.getImageId(), staff.getRoleId());
-            staffDAO.updateProfileStaff(staffDetail);
-            session.setAttribute("staff", staffDetail);
+            staffDAO.updateProfileStaff(staff);
+            session.setAttribute("staff", staff);
         } else if (resident != null) {
-            ResidentDetail residentDetail = new ResidentDetail(userID, fullName, phoneNumber, resident.getCccd(), email, dob, sex, sex, imageURL, roleDAO.selectById(resident.getRoleId()).getRoleName(), resident.getImageId(), resident.getRoleId());
-            residentDAO.updateProfileResident(residentDetail);
-            session.setAttribute("resident", residentDetail);
+            residentDAO.updateProfileResident(resident);
+            session.setAttribute("resident", resident);
         }
         response.sendRedirect("profile");
     }

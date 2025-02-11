@@ -4,6 +4,7 @@
  */
 package model;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,7 +21,7 @@ public class News {
     int newsID;
     String title;
     String description;
-    LocalDate sentDate;
+    LocalDateTime sentDate;
     Staff staff;
     Image image;
 }

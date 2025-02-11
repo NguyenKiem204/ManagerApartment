@@ -21,7 +21,7 @@ public class NewsDAO implements DAOInterface<News, Integer> {
             ps.setInt(1, news.getImage().getImageID());
             ps.setString(2, news.getTitle());
             ps.setString(3, news.getDescription());
-            ps.setDate(4, Date.valueOf(news.getSentDate()));
+            ps.setTimestamp(4, Timestamp.valueOf(news.getSentDate()));
             ps.setInt(5, news.getStaff().getStaffId());
             row = ps.executeUpdate();
         } catch (SQLException ex) {
@@ -38,7 +38,7 @@ public class NewsDAO implements DAOInterface<News, Integer> {
             ps.setInt(1, news.getImage().getImageID());
             ps.setString(2, news.getTitle());
             ps.setString(3, news.getDescription());
-            ps.setDate(4, Date.valueOf(news.getSentDate()));
+            ps.setTimestamp(4, Timestamp.valueOf(news.getSentDate()));
             ps.setInt(5, news.getStaff().getStaffId());
             ps.setInt(6, news.getNewsID());
             row = ps.executeUpdate();
@@ -75,7 +75,7 @@ public class NewsDAO implements DAOInterface<News, Integer> {
                           rs.getInt("NewsID"),
                           rs.getString("Title"),
                           rs.getString("Description"),
-                          rs.getDate("SentDate").toLocalDate(),
+                          rs.getTimestamp("SentDate").toLocalDateTime(),
                           staffdao.selectById(rs.getInt("StaffID")),
                           imagedao.selectById(rs.getInt("ImageID"))
                 );
@@ -99,7 +99,7 @@ public class NewsDAO implements DAOInterface<News, Integer> {
                               rs.getInt("NewsID"),
                               rs.getString("Title"),
                               rs.getString("Description"),
-                              rs.getDate("SentDate").toLocalDate(),
+                              rs.getTimestamp("SentDate").toLocalDateTime(),
                               staffdao.selectById(rs.getInt("StaffID")),
                               imagedao.selectById(rs.getInt("ImageID"))
                     );
@@ -111,59 +111,7 @@ public class NewsDAO implements DAOInterface<News, Integer> {
         return news;
     }
 
-    //sua lai doan nay( cau lenh sql)
-    public List<News> getAllNews() {
-        List<News> list = new ArrayList<>();
-        String sql = "SELECT n.NewsID, n.ImageID, i.ImageURL, n.Title, n.Description, n.SentDate, n.StaffID, s.FullName "
-                  + "FROM [News] n "
-                  + "JOIN [Image] i ON n.ImageID = i.ImageID "
-                  + "JOIN [Staff] s ON n.StaffID = s.StaffID";
-        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                News news = new News(
-                          rs.getInt("NewsID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getDate("SendDate").toLocalDate(),
-                          staffdao.selectById(rs.getInt("StaffID")),
-                          imagedao.selectById(rs.getInt("ImageID"))
-                );
-                list.add(news);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
-    }
-
-    //sua lai cau lenh sql
-    public News getNewsByID(Integer id) {
-        News news = null;
-        String sql = "SELECT n.NewsID, n.ImageID, i.ImageURL, n.Title, n.Description, n.SentDate, n.StaffID, s.FullName "
-                  + "FROM [News] n "
-                  + "JOIN [Image] i ON n.ImageID = i.ImageID "
-                  + "JOIN [Staff] s ON n.StaffID = s.StaffID "
-                  + "WHERE n.NewsID = ?";
-        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    news = new News(
-                              rs.getInt("NewsID"),
-                              rs.getString("Title"),
-                              rs.getString("Description"),
-                              rs.getDate("SentDate").toLocalDate(),
-                              staffdao.selectById(rs.getInt("StaffID")),
-                              imagedao.selectById(rs.getInt("ImageID"))
-                    );
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return news;
-    }
+    
 
     //check lai cau lenh sql
     public void insertNewsWithImage(News news) {
@@ -184,7 +132,7 @@ public class NewsDAO implements DAOInterface<News, Integer> {
             int imageID = rs.getInt(1);
             psNews.setString(1, news.getTitle());
             psNews.setString(2, news.getDescription());
-            psNews.setDate(3, Date.valueOf(news.getSentDate()));
+            psNews.setTimestamp(3, Timestamp.valueOf(news.getSentDate()));
             psNews.setInt(4, news.getStaff().getStaffId());
             psNews.setInt(5, imageID);
             psNews.executeUpdate();

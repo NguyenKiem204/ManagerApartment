@@ -16,9 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Resident;
-import model.ResidentDetail;
 import model.Staff;
-import model.StaffDetail;
 
 /**
  *
@@ -101,35 +99,31 @@ public class LoginServlet extends HttpServlet {
         response.addCookie(cookie3);
         StaffDAO staffDAO = new StaffDAO();
         ResidentDAO residentDAO = new ResidentDAO();
-        Staff staffCheck = null;
-        Resident residentCheck = null;
+        Staff staff = null;
+        Resident resident = null;
         if (userType.toLowerCase().equals("staff")) {
-            staffCheck = staffDAO.checkLogin(email, password);
+            staff = staffDAO.checkLogin(email, password);
         } else {
-            residentCheck = residentDAO.checkLogin(email, password);
+            resident = residentDAO.checkLogin(email, password);
         }
         HttpSession session = request.getSession();
-        if (staffCheck == null && residentCheck == null) {
+        if (staff == null && resident == null) {
             request.setAttribute("userType", userType);
             request.setAttribute("email", email);
             request.setAttribute("password", password);
             request.setAttribute("error", "***Email or Password fail");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
-            StaffDetail staff = null;
-            ResidentDetail resident = null;
-            if (residentCheck == null && staffCheck != null) {
-                staff = staffDAO.getStaffDetailByID(staffCheck.getStaffId());
-
-                if(staff.getRoleID() == 1){
+            if (resident == null && staff != null) {
+                
+                if(staff.getRole().getRoleID() == 1){
                     session.setAttribute("staff", staff);
                     session.setMaxInactiveInterval(600);
                     response.sendRedirect("home");
                 }
                 
-            } else if(residentCheck != null && staffCheck==null){
-                resident = residentDAO.getResidentDetailByID(residentCheck.getResidentId());
-                if(resident.getRoleID() == 7){
+            } else if(resident != null && staff==null){
+                if(resident.getRole().getRoleID() == 7){
                     session.setAttribute("resident", resident);
                     session.setMaxInactiveInterval(600);
                     response.sendRedirect("menuowner");

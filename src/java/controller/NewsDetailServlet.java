@@ -13,8 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import model.NewsDetail;
+import model.News;
 
 /**
  *
@@ -65,8 +64,8 @@ public class NewsDetailServlet extends HttpServlet {
             
         }
         NewsDAO newsDAO = new NewsDAO();
-        NewsDetail newsDetail = newsDAO.getNewsDetailByID(newsID);
-        request.setAttribute("news", newsDetail);
+        News news = newsDAO.selectById(newsID);
+        request.setAttribute("news", news);
         request.getRequestDispatcher("newsdetail.jsp").forward(request, response);
     } 
 

@@ -53,13 +53,13 @@
                         <c:set var="staff" value="${sessionScope.staff}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="${staff.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="${staff.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
                                 <span class="d-none d-md-inline">${staff.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="${staff.imageURL}" class="rounded-circle shadow"
+                                    <img src="${staff.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
                                         ${staff.fullName} - Web Developer
@@ -341,7 +341,7 @@
                                     <c:set var="staff" value="${sessionScope.staff}"/>
                                         <c:set var="resident" value="${sessionScope.resident}"/>
                                     <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
-                                        <img src="${not empty staff ? staff.imageURL : (not empty resident ? resident.imageURL : 'Guest')}"
+                                        <img src="${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}"
                                              alt="Ảnh cá nhân" class="img-fluid rounded-circle profile-img" />
                                     </div>
                                     <div class="col-md-8 d-flex flex-column justify-content-center">
@@ -351,7 +351,7 @@
                                         </h2>
 
                                         <!-- Hiển thị vai trò nếu có -->
-                                        <p class="user-role"> ${not empty staff ? staff.roleName : (not empty resident ? resident.roleName : 'Guest')}</p>
+                                        <p class="user-role"> ${not empty staff ? staff.role.roleName : (not empty resident ? resident.role.roleName : 'Guest')}</p>
                                        
                                         <!-- Hiển thị thông tin -->
                                         <div class="profile-info">
