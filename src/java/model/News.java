@@ -18,9 +18,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class News {
     int newsID;
-    int imageID;
     String title;
     String description;
     LocalDate sentDate;
-    int staffID;
+    Staff staff;
+    Image image;
 }

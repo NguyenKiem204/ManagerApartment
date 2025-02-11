@@ -6,6 +6,8 @@
 package controller;
 
 import dao.FeedbackDAO;
+import dao.RoleDAO;
+import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,8 +17,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.util.List;
 import model.Feedback;
-import model.Resident;
+import model.Role;
+import model.Staff;
 
 /**
  *
@@ -60,6 +64,14 @@ public class FeedbackServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        FeedbackDAO fbDAO = new FeedbackDAO();
+//        StaffDAO stdao = new StaffDAO();
+        RoleDAO rdao = new RoleDAO();
+        List<Role> listrole = rdao.selectAll();
+        for (Role role : listrole) {
+            System.out.println(role);
+        }
+        request.setAttribute("listst", listrole);
         request.getRequestDispatcher("feedback.jsp").forward(request, response);
     } 
 
@@ -75,7 +87,7 @@ public class FeedbackServlet extends HttpServlet {
     throws ServletException, IOException {
 //      lấy được residentID dựa trên session
         HttpSession session = request.getSession();
-//        Resident resident = (Resident) session.getAttribute("resident");
+        ResidentDetail resident = (ResidentDetail) session.getAttribute("resident");
         
         String title = request.getParameter("title");
         String staffID_raw = request.getParameter("staff");
@@ -92,7 +104,7 @@ public class FeedbackServlet extends HttpServlet {
             //add data into DB
             FeedbackDAO fbDAO = new FeedbackDAO();
             
-            Feedback fb = new Feedback(title, description, LocalDate.now(), rating, staffID, 1); //resident.getResidentId()
+            Feedback fb = new Feedback(title, description, LocalDate.now(), rating, staffID, resident.getResidentId()); //resident.getResidentId()
             System.out.println(fb.toString());
             fbDAO.insert(fb);
             

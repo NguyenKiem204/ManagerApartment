@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import model.Request;
 import model.Resident;
+import model.ResidentDetail;
 
 /**
  *
@@ -75,7 +76,7 @@ public class RequestServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         HttpSession session = request.getSession();
-//        Resident resident = (Resident) session.getAttribute("resident"); // Loi vi dang xung dot resident va resident detail
+        ResidentDetail resident = (ResidentDetail) session.getAttribute("resident"); // Loi vi dang xung dot resident va resident detail
         
         String title = request.getParameter("title");
         String apartmentName = request.getParameter("apartment");

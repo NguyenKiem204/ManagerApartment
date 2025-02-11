@@ -21,24 +21,26 @@ public class Resident {
     String password;
     String phoneNumber;
     String cccd;
-    String mail;
+    String email;
     LocalDate dob;
     String sex;
     String status;
-    int imageId;
-    int roleId;
+    Image image;
+    Role role;
 
-    public Resident(String fullName, String password, String phoneNumber, String cccd, String mail, LocalDate dob, String sex, String status, int imageId, int roleId) {
+    public Resident(String fullName, String password, String phoneNumber, String cccd, String mail, LocalDate dob, String sex, String status, Image image, Role role) {
         this.fullName = fullName;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.cccd = cccd;
-        this.mail = mail;
+        this.email = mail;
         this.dob = dob;
         this.sex = sex;
         this.status = status;
-        this.imageId = imageId;
-        this.roleId = roleId;
+        this.image = image;
+        this.role = role;
     }
+
+    
 }
 

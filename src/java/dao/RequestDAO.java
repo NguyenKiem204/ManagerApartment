@@ -39,9 +39,9 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
             ps.setString(2, t.getTitle());
             ps.setString(3, t.getStatus());
             ps.setDate(4, Date.valueOf(t.getDate()));
-            ps.setInt(5, t.getStaffID());
-            ps.setInt(6, t.getResidentID());
-            ps.setInt(7, t.getTypeID());
+            ps.setInt(5, t.getStaff().getStaffId());
+            ps.setInt(6, t.getResident().getResidentId());
+            ps.setInt(7, t.getTypeRq().getTypeRqID());
             row = ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ImageDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,30 +59,13 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    StaffDAO staffdao = new StaffDAO();
+    ResidentDAO residentdao = new ResidentDAO();
+    
+
     @Override
     public List<Request> selectAll() {
-        List<Request> list = new ArrayList<>();
-        String sql = "SELECT * FROM Request";
-
-        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Request rq = new Request(
-                        rs.getInt("requestID"),
-                        rs.getString("description"),
-                        rs.getString("title"),
-                          rs.getString("status"),
-                        rs.getDate("Date").toLocalDate(),
-                        rs.getInt("StaffID"),
-                        rs.getInt("ResidentID"),
-                          rs.getInt("TypeRqID")
-                );
-                list.add(rq);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override

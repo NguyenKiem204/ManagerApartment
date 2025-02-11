@@ -3,30 +3,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-import java.time.LocalDate;
-import lombok.*;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
 /**
  *
- * @author nkiem
+ * @author admin
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StaffDetail {
-    int staffId;
-    String fullName;
-    String phoneNumber;
-    String cccd;
-    String email;
-    LocalDate dob;
-    String sex;
-    String status;
-    String imageURL;
-    String roleName; 
-    int imageID;
-    int roleID;
-    
+public class InvoiceDetail {
+    int detailID;
+    double amount;
+    String description;
+    Invoice invoice;
+    TypeBill typeBill;
 }

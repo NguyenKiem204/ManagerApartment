@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -64,7 +64,7 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
@@ -78,7 +78,7 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         String userType = request.getParameter("userType");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -118,8 +118,9 @@ public class LoginServlet extends HttpServlet {
         } else {
             StaffDetail staff = null;
             ResidentDetail resident = null;
-            if (residentCheck == null && staffCheck!=null) {
+            if (residentCheck == null && staffCheck != null) {
                 staff = staffDAO.getStaffDetailByID(staffCheck.getStaffId());
+
                 if(staff.getRoleID() == 1){
                     session.setAttribute("staff", staff);
                     session.setMaxInactiveInterval(600);
@@ -134,9 +135,6 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect("menuowner");
                 }
             }
-            
-            
-            
             
         }
     }

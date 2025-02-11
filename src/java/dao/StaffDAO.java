@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.StaffDetail;
 
 /**
  *
@@ -22,6 +21,8 @@ import model.StaffDetail;
 public class StaffDAO implements DAOInterface<Staff, Integer> {
 
     private final PasswordUtil passwordEncode = new PasswordUtil();
+    ImageDAO imageDAO  = new ImageDAO();
+    RoleDAO roleDAO = new RoleDAO();
 
     @Override
     public int insert(Staff staff) {
@@ -36,9 +37,9 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             ps.setString(5, staff.getEmail());
             ps.setDate(6, Date.valueOf(staff.getDob()));
             ps.setString(7, staff.getSex());
-            ps.setInt(8, staff.getImageId());
+            ps.setInt(8, staff.getImage().getImageID());
             ps.setString(9, staff.getStatus());
-            ps.setInt(10, staff.getRoleId());
+            ps.setInt(10, staff.getRole().getRoleID());
 
             row = ps.executeUpdate();
         } catch (SQLException ex) {
@@ -60,9 +61,9 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             ps.setString(5, staff.getEmail());
             ps.setDate(6, Date.valueOf(staff.getDob()));
             ps.setString(7, staff.getSex());
-            ps.setInt(8, staff.getImageId());
+            ps.setInt(8, staff.getImage().getImageID());
             ps.setString(9, staff.getStatus());
-            ps.setInt(10, staff.getRoleId());
+            ps.setInt(10, staff.getRole().getRoleID());
             ps.setInt(11, staff.getStaffId());
 
             row = ps.executeUpdate();
@@ -72,7 +73,7 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         return row;
     }
 
-    public int updateProfileStaff(StaffDetail staff) {
+    public int updateProfileStaff(Staff staff) {
         int row = 0;
         String updateStaffSQL = "UPDATE Staff SET FullName = ?,PhoneNumber = ?, Email = ?, DOB = ?, Sex = ?, ImageID = ?, RoleID = ? WHERE StaffID = ?";
         String updateImageSQL = "UPDATE Image SET ImageURL = ? WHERE ImageID = ?";
@@ -80,10 +81,10 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         try (Connection connection = DBContext.getConnection()) {
             connection.setAutoCommit(false);
 
-            if (staff.getImageID() > 0 && staff.getImageURL()!=null) {
+            if (staff.getImage().getImageID()> 0 && staff.getImage().getImageURL()!=null) {
                 try (PreparedStatement psUpdateImage = connection.prepareStatement(updateImageSQL)) {
-                    psUpdateImage.setString(1, staff.getImageURL());
-                    psUpdateImage.setInt(2, staff.getImageID());
+                    psUpdateImage.setString(1, staff.getImage().getImageURL());
+                    psUpdateImage.setInt(2, staff.getImage().getImageID());
                     psUpdateImage.executeUpdate();
                 }
             }
@@ -93,8 +94,8 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
                 ps.setString(3, staff.getEmail());
                 ps.setDate(4, Date.valueOf(staff.getDob()));
                 ps.setString(5, staff.getSex());
-                ps.setInt(6, staff.getImageID());
-                ps.setInt(7, staff.getRoleID());
+                ps.setInt(6, staff.getImage().getImageID());
+                ps.setInt(7, staff.getRole().getRoleID());
                 ps.setInt(8, staff.getStaffId());
 
                 row = ps.executeUpdate();
@@ -120,6 +121,7 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         }
         return row;
     }
+    
 
     @Override
     public List<Staff> selectAll() {
@@ -129,8 +131,7 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Staff staff = new Staff(
-                        rs.getInt("StaffID"),
+                Staff staff = new Staff(rs.getInt("StaffID"),
                         rs.getString("FullName"),
                         rs.getString("Password"),
                         rs.getString("PhoneNumber"),
@@ -139,9 +140,10 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
                         rs.getDate("DOB").toLocalDate(),
                         rs.getString("Sex"),
                         rs.getString("Status"),
-                        rs.getInt("ImageID"),
-                        rs.getInt("RoleID")
-                );
+                        imageDAO.selectById(rs.getInt("ImageID")),
+                        roleDAO.selectById(rs.getInt("RoleID")));
+                
+                
                 list.add(staff);
             }
         } catch (SQLException ex) {
@@ -169,8 +171,8 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
                         rs.getDate("DOB").toLocalDate(),
                         rs.getString("Sex"),
                         rs.getString("Status"),
-                        rs.getInt("ImageID"),
-                        rs.getInt("RoleID")
+                        imageDAO.selectById(rs.getInt("ImageID")),
+                        roleDAO.selectById(rs.getInt("RoleID"))
                 );
             }
         } catch (SQLException ex) {
@@ -179,8 +181,8 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         return staff;
     }
 
-    public StaffDetail getStaffDetailByID(Integer id) {
-        StaffDetail staffDetail = null;
+    public Staff getStaffByID(Integer id) {
+        Staff staff = null;
         String sql = """
         SELECT s.StaffID, s.FullName, s.PhoneNumber, s.CCCD, s.Email, s.DOB, 
                s.Sex, s.Status, i.ImageURL, i.ImageID, r.RoleName, r.RoleID
@@ -195,25 +197,23 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                staffDetail = new StaffDetail();
-                staffDetail.setStaffId(rs.getInt("StaffID"));
-                staffDetail.setFullName(rs.getString("FullName"));
-                staffDetail.setPhoneNumber(rs.getString("PhoneNumber"));
-                staffDetail.setCccd(rs.getString("CCCD"));
-                staffDetail.setEmail(rs.getString("Email"));
-                staffDetail.setDob(rs.getDate("DOB").toLocalDate());
-                staffDetail.setSex(rs.getString("Sex"));
-                staffDetail.setStatus(rs.getString("Status"));
-                staffDetail.setImageURL(rs.getString("ImageURL"));
-                staffDetail.setRoleName(rs.getString("RoleName"));
-                staffDetail.setImageID(rs.getInt("ImageID"));
-                staffDetail.setRoleID(rs.getInt("RoleID"));
+                staff = new Staff();
+                staff.setStaffId(rs.getInt("StaffID"));
+                staff.setFullName(rs.getString("FullName"));
+                staff.setPhoneNumber(rs.getString("PhoneNumber"));
+                staff.setCccd(rs.getString("CCCD"));
+                staff.setEmail(rs.getString("Email"));
+                staff.setDob(rs.getDate("DOB").toLocalDate());
+                staff.setSex(rs.getString("Sex"));
+                staff.setStatus(rs.getString("Status"));
+                staff.setImage(imageDAO.selectById(rs.getInt("ImageID")));
+                staff.setRole(roleDAO.selectById(rs.getInt("RoleID")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return staffDetail;
+        return staff;
     }
 
     public boolean existEmail(String email) {
@@ -254,7 +254,7 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
                     int imageId = rs.getInt("ImageID");
 
                     if (passwordEncode.checkPassword(password, storedPasswordHash) && "ACTIVE".equals(status.toUpperCase())) {
-                        staff = new Staff(staffId, fullName, password, phoneNumber, cccd, storedEmail, dob, sex, status, imageId, roleId);
+                        staff = new Staff(staffId, fullName, password, phoneNumber, cccd, storedEmail, dob, sex, status, imageDAO.selectById(imageId), roleDAO.selectById(roleId));
                     }
                 }
             }
@@ -316,8 +316,8 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
                     rs.getDate("DOB").toLocalDate(),
                     rs.getString("Sex"),
                     rs.getString("Status"),
-                        rs.getInt("ImageID"),
-                    rs.getInt("RoleID")
+                    imageDAO.selectById(rs.getInt("ImageID")),
+                    roleDAO.selectById(rs.getInt("RoleID"))
             );
             staffs.add(staff);
         }
@@ -363,8 +363,8 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
                         rs.getDate("DOB").toLocalDate(),
                         rs.getString("Sex"),
                         rs.getString("Status"),
-                        rs.getInt("ImageID"),
-                        rs.getInt("RoleID")
+                        imageDAO.selectById(rs.getInt("ImageID")),
+                    roleDAO.selectById(rs.getInt("RoleID"))
             );
             staffs.add(staff);
 }

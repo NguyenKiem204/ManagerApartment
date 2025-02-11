@@ -5,7 +5,6 @@
 package controller;
 
 import config.FileUploadUtil;
-import dao.ImageDAO;
 import dao.ResidentDAO;
 import dao.RoleDAO;
 import dao.StaffDAO;
@@ -20,9 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import model.Resident;
-import model.ResidentDetail;
 import model.Staff;
-import model.StaffDetail;
 
 /**
  *

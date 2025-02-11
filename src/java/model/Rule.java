@@ -4,27 +4,27 @@
  */
 package model;
 
-import java.time.LocalDateTime;
-import lombok.*;
+import java.time.LocalDate;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 /**
  *
- * @author nkiem
+ * @author admin
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NewsDetail {
-    int newsID;
-    int imageID;
-    String imageURL;
-    String title;
-    String description;
-    LocalDateTime sentDate;
-    int staffID;
-    String staffFullName;
-    
+public class Rule {
+    int ruleID;
+    String ruleName;
+    String ruleDescription;
+    LocalDate publicDate;
+    Staff staff;
 }
