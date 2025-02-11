@@ -40,5 +40,11 @@ public class Resident {
         this.imageId = imageId;
         this.roleId = roleId;
     }
+     public Resident(int residentId, String fullName, String phoneNumber, String mail) {
+        this.residentId = residentId;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.mail = mail;
+    }
 }
 
