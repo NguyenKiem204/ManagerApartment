@@ -63,11 +63,11 @@ public class Test {
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
-//        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "048758747", "598695869", "nguyen05082004@gmail.com", LocalDate.of(2004, 04, 10), "Female", "ACTIVE", imageDAO.selectById(1), roleDAO.selectById(7));
-//        residentDAO.insert(resident);
+        Resident resident = new Resident("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "3984934834394", "nkiem347@gmail.com",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", new Image().builder().imageID(1).build(), new Role().builder().roleID(6).build());
+        residentDAO.insert(resident);
 //        imageDAO.insert(image);
-        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "3984934834394", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", new Image().builder().imageID(1).build(), new Role().builder().roleID(6).build());
-        staffDAO.insert(staff);
+//        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "3984934834394", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", new Image().builder().imageID(1).build(), new Role().builder().roleID(6).build());
+//        staffDAO.insert(staff);
 
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);

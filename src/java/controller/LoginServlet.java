@@ -115,7 +115,6 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
             if (resident == null && staff != null) {
-                
                 if(staff.getRole().getRoleID() == 1){
                     session.setAttribute("staff", staff);
                     session.setMaxInactiveInterval(600);
@@ -129,7 +128,6 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect("menuowner");
                 }
             }
-            
         }
     }
 
