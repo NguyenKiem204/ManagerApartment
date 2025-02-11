@@ -30,7 +30,6 @@
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/profile.css" />
     </head>
 
     <body>
@@ -53,13 +52,13 @@
                         <c:set var="staff" value="${sessionScope.staff}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="<%= request.getContextPath() %>${staff.image.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="${staff.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
                                 <span class="d-none d-md-inline">${staff.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="<%= request.getContextPath() %>${staff.image.imageURL}" class="rounded-circle shadow"
+                                    <img src="${staff.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
                                         ${staff.fullName} - Web Developer
@@ -347,47 +346,7 @@
                     <i class="bi bi-justify fs-3"></i>
                 </a>
                 <!--=============================CONTENT HERE=======================-->
-                <div class="container-fluid p-5">
-                    <div class="row justify-content-center">
-                        <div class="col-12">
-                            <div class="profile-card">
-                                <div class="row">
-                                    <c:set var="staff" value="${sessionScope.staff}"/>
-                                        <c:set var="resident" value="${sessionScope.resident}"/>
-                                    <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
-                                        <img src="<%= request.getContextPath() %>${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}"
-                                             alt="Ảnh cá nhân" class="img-fluid rounded-circle profile-img" />
-                                    </div>
-                                    <div class="col-md-8 d-flex flex-column justify-content-center">
-                                        <!-- Hiển thị tên, ưu tiên staff trước, nếu không có thì lấy resident -->
-                                        <h2 class="user-name">
-                                            ${not empty staff ? staff.fullName : (not empty resident ? resident.fullName : 'Guest')}
-                                        </h2>
-
-                                        <!-- Hiển thị vai trò nếu có -->
-                                        <p class="user-role"> ${not empty staff ? staff.role.roleName : (not empty resident ? resident.role.roleName : 'Guest')}</p>
-                                       
-                                        <!-- Hiển thị thông tin -->
-                                        <div class="profile-info">
-                                            <p><strong>Email:</strong> ${not empty staff ? staff.email : (not empty resident ? resident.email : 'N/A')}</p>
-                                            <p><strong>Phone:</strong> ${not empty staff ? staff.phoneNumber : (not empty resident ? resident.phoneNumber : 'N/A')}</p>
-                                            <p><strong>Address:</strong> Hà Nội</p>
-                                            <p><strong>Status: </strong>Active</p>
-                                            <p><strong>Date Of Birth:</strong> ${not empty staff ? staff.dob : (not empty resident ? resident.dob : 'N/A')}</p>
-                                            <p><strong>Sex:</strong> ${not empty staff ? staff.sex : (not empty resident ? resident.sex : 'N/A')}</p>
-                                        </div>
-                                    </div>
-
-                                    <button class="btn edit-button mt-4" onclick="window.location.href = 'changeprofile'">
-                                        Chỉnh sửa thông tin
-                                    </button>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                
                 <!--==============================END================================-->
 
                 <footer>

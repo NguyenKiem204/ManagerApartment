@@ -19,7 +19,7 @@
               rel="stylesheet" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
 
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
+        <link rel="stylesheet" href="assets/vendors/iconly/bold.css" />
 
         <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css" />
@@ -30,7 +30,6 @@
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/profile.css" />
     </head>
 
     <body>
@@ -53,13 +52,13 @@
                         <c:set var="staff" value="${sessionScope.staff}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="<%= request.getContextPath() %>${staff.image.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="${staff.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
                                 <span class="d-none d-md-inline">${staff.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="<%= request.getContextPath() %>${staff.image.imageURL}" class="rounded-circle shadow"
+                                    <img src="${staff.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
                                         ${staff.fullName} - Web Developer
@@ -213,6 +212,7 @@
                                     </li>
                                 </ul>
                             </li>
+                            
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="fa-solid fa-users-gear"></i>
@@ -235,7 +235,11 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="layout-default.html">Send Notification</a>
+                                        <a href="feedbackadministrative">Feedback</a>
+
+                                    </li>
+                                    <li class="submenu-item">
+                                        <a href="reqadministrative">Request</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="layout-vertical-1-column.html">Residents</a>
@@ -347,47 +351,269 @@
                     <i class="bi bi-justify fs-3"></i>
                 </a>
                 <!--=============================CONTENT HERE=======================-->
-                <div class="container-fluid p-5">
-                    <div class="row justify-content-center">
-                        <div class="col-12">
-                            <div class="profile-card">
-                                <div class="row">
-                                    <c:set var="staff" value="${sessionScope.staff}"/>
-                                        <c:set var="resident" value="${sessionScope.resident}"/>
-                                    <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
-                                        <img src="<%= request.getContextPath() %>${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}"
-                                             alt="Ảnh cá nhân" class="img-fluid rounded-circle profile-img" />
-                                    </div>
-                                    <div class="col-md-8 d-flex flex-column justify-content-center">
-                                        <!-- Hiển thị tên, ưu tiên staff trước, nếu không có thì lấy resident -->
-                                        <h2 class="user-name">
-                                            ${not empty staff ? staff.fullName : (not empty resident ? resident.fullName : 'Guest')}
-                                        </h2>
+                <div class="page-heading">
+                    <h3>Số Liệu Thống Kê</h3>
+                </div>
+                <div class="page-content">
+                    <section class="row">
+                        <div class="col-12 col-lg-9">
+                            <div class="row">
+                                <div class="scroll-container">
+                                    <button class="scroll-btn left"><i class="fa-solid fa-angle-left"></i></button>
+                                    <div class="row row-btn">
+                                        <div class="col-8 col-lg-5 col-md-8">
+                                            <div class="card">
+                                                <div class="card-body px-3 py-4-5 border-cam">
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <img class="fixed-size-img" 
+                                                                 src="./assets/images/aparts/R.jpg" alt="Chung cư">
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
+                                                            <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
+                                                            <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-8 col-lg-5 col-md-8">
+                                            <div class="card">
+                                                <div class="card-body px-3 py-4-5 border-cam">
+                                                    <div class="row">
+                                                        <div class="col-md-5" >
+                                                            <img class="fixed-size-img" 
+                                                                 src="./assets/images/aparts/toab.jpg" alt="Chung cư">
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
+                                                            <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
+                                                            <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-8 col-lg-5 col-md-8">
+                                            <div class="card">
+                                                <div class="card-body px-3 py-4-5 border-cam">
+                                                    <div class="row">
+                                                        <div class="col-md-5" >
+                                                            <img class="fixed-size-img" 
+                                                                 src="./assets/images/aparts/toac.jpeg" alt="Chung cư">
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
+                                                            <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
+                                                            <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                        <!-- Hiển thị vai trò nếu có -->
-                                        <p class="user-role"> ${not empty staff ? staff.role.roleName : (not empty resident ? resident.role.roleName : 'Guest')}</p>
-                                       
-                                        <!-- Hiển thị thông tin -->
-                                        <div class="profile-info">
-                                            <p><strong>Email:</strong> ${not empty staff ? staff.email : (not empty resident ? resident.email : 'N/A')}</p>
-                                            <p><strong>Phone:</strong> ${not empty staff ? staff.phoneNumber : (not empty resident ? resident.phoneNumber : 'N/A')}</p>
-                                            <p><strong>Address:</strong> Hà Nội</p>
-                                            <p><strong>Status: </strong>Active</p>
-                                            <p><strong>Date Of Birth:</strong> ${not empty staff ? staff.dob : (not empty resident ? resident.dob : 'N/A')}</p>
-                                            <p><strong>Sex:</strong> ${not empty staff ? staff.sex : (not empty resident ? resident.sex : 'N/A')}</p>
+                                    </div>
+                                    <button class="scroll-btn right"><i class="fa-solid fa-angle-right"></i></button>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card border-cam">
+                                        <div class="card-header">
+                                            <h4>Số tiền điện</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="chart-profile-visit"></div>
                                         </div>
                                     </div>
-
-                                    <button class="btn edit-button mt-4" onclick="window.location.href = 'changeprofile'">
-                                        Chỉnh sửa thông tin
-                                    </button>
-
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-xl-4">
+                                    <div class="card border-cam">
+                                        <div class="card-header">
+                                            <h4>Số Lượng Dân Cư</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <svg class="bi text-primary" width="32" height="32" fill="blue"
+                                                             style="width: 10px">
+                                                        <use
+                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
+                                                        </svg>
+                                                        <h5 class="mb-0 ms-3">Chí Thanh</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h5 class="mb-0">862</h5>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div id="chart-europe"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <svg class="bi text-success" width="32" height="32" fill="blue"
+                                                             style="width: 10px">
+                                                        <use
+                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
+                                                        </svg>
+                                                        <h5 class="mb-0 ms-3">Mường Thanh</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h5 class="mb-0">375</h5>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div id="chart-america"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <svg class="bi text-danger" width="32" height="32" fill="blue"
+                                                             style="width: 10px">
+                                                        <use
+                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
+                                                        </svg>
+                                                        <h5 class="mb-0 ms-3">Hải Phong</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h5 class="mb-0">1025</h5>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div id="chart-indonesia"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-8">
+                                    <div class="card border-cam">
+                                        <div class="card-header">
+                                            <h4>Latest Comments</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-lg">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Comment</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="col-3">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="avatar avatar-md">
+                                                                        <img src="assets/images/faces/5.jpg" />
+                                                                    </div>
+                                                                    <p class="font-bold ms-3 mb-0">Si Cantik</p>
+                                                                </div>
+                                                            </td>
+                                                            <td class="col-auto">
+                                                                <p class="mb-0">
+                                                                    Congratulations on your graduation!
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="col-3">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="avatar avatar-md">
+                                                                        <img src="assets/images/faces/2.jpg" />
+                                                                    </div>
+                                                                    <p class="font-bold ms-3 mb-0">Si Ganteng</p>
+                                                                </div>
+                                                            </td>
+                                                            <td class="col-auto">
+                                                                <p class="mb-0">
+                                                                    Wow amazing design! Can you make another
+                                                                    tutorial for this design?
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="col-12 col-lg-3">
+                            <div class="card">
+                                <div class="card-body  border-cam"
+                                     style="padding-top: 3.2rem !important; padding-bottom: 3.1rem !important;">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-xl">
+                                            <img src="./assets/images/faces/1.png" alt="Face 1" />
+                                        </div>
+                                        <div class="ms-3 name">
+                                            <h5 class="font-bold">Chủ Căn Hộ</h5>
+                                            <h6 class="text-muted mb-0">Nguyễn Đăng Nguyên</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card border-cam">
+                                <div class="card-header">
+                                    <h4>Tin nhắn gần đây</h4>
+                                </div>
+                                <div class="card-content pb-4">
+                                    <div class="recent-message d-flex px-4 py-3">
+                                        <div class="avatar avatar-lg">
+                                            <img src="assets/images/faces/4.jpg" />
+                                        </div>
+                                        <div class="name ms-4">
+                                            <h5 class="mb-1">Nguyễn Kiểm</h5>
+                                            <h6 class="text-muted mb-0">@nkiem</h6>
+                                        </div>
+                                    </div>
+                                    <div class="recent-message d-flex px-4 py-3">
+                                        <div class="avatar avatar-lg">
+                                            <img src="assets/images/faces/3.jpg" />
+                                        </div>
+                                        <div class="name ms-4">
+                                            <h5 class="mb-1">Quang Dũng</h5>
+                                            <h6 class="text-muted mb-0">@dung</h6>
+                                        </div>
+                                    </div>
+                                    <div class="recent-message d-flex px-4 py-3">
+                                        <div class="avatar avatar-lg">
+                                            <img src="assets/images/faces/5.jpg" />
+                                        </div>
+                                        <div class="name ms-4">
+                                            <h5 class="mb-1">Mai Hương</h5>
+                                            <h6 class="text-muted mb-0">@huong</h6>
+                                        </div>
+                                    </div>
+                                    <div class="px-4">
+                                        <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3">
+                                            Start Conversation
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card border-cam">
+                                <div class="card-header">
+                                    <h4>Số căn hộ đã thuê</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="chart-visitors-profile"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
-            </div>
                 <!--==============================END================================-->
 
                 <footer>

@@ -129,7 +129,7 @@ public class LoginServlet extends HttpServlet {
     private void redirectBasedOnRole(HttpServletResponse response, HttpServletRequest request, int roleID) throws IOException {
         switch (roleID) {
             case 1:
-                redirectToPage(response, request,"home");
+                redirectToPage(response, request,"/manager/home");
                 break;
             case 2:
                 redirectToPage(response, request,"menuadministrative.jsp");

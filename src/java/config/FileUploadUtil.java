@@ -48,7 +48,7 @@ public class FileUploadUtil {
                     e.printStackTrace();
                     return null;
                 }
-                imgURL = "./assets/images/avatar/" + newFileName;
+                imgURL = "/assets/images/avatar/" + newFileName;
             } else {
                 System.out.println("No file uploaded or file is empty.");
             }
@@ -103,7 +103,7 @@ public static String insertNewsImage(HttpServletRequest request) {
                 e.printStackTrace();
                 return null;
             }
-            imgURL = "./assets/images/news/" + newFileName;
+            imgURL = "/assets/images/news/" + newFileName;
         } else {
             System.out.println("No file uploaded or file is empty.");
         }
