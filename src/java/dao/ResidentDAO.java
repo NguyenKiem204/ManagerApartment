@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Image;
+import model.Role;
 
 public class ResidentDAO implements DAOInterface<Resident, Integer> {
 
@@ -220,9 +222,9 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                         String cccd = rs.getString("CCCD");
                         LocalDate dob = rs.getDate("DOB").toLocalDate();
                         String sex = rs.getString("Sex");
-                        int imageId = rs.getInt("ImageID");
-                        int roleId = rs.getInt("RoleID");
-                        resident = new Resident(residentId, fullName, storedPasswordHash, phoneNumber, cccd, mail, dob, sex, status, imageDAO.selectById(imageId), roleDAO.selectById(roleId));
+                        Image imageId = imageDAO.selectById(rs.getInt("ImageID"));
+                        Role roleId = roleDAO.selectById(rs.getInt("RoleID"));
+                        resident = new Resident(residentId, fullName, storedPasswordHash, phoneNumber, cccd, mail, dob, sex, status, imageId, roleId);
                     }
                 }
             }
@@ -333,7 +335,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
     }
 
     public boolean isResidentExists(String phoneNumber, String cccd, String email) {
-        String sql = "SELECT COUNT(*) FROM Resident WHERE PhoneNumber = ? OR Cccd = ? OR Email = ?";
+        String sql = "SELECT COUNT(*) FROM Resident WHERE PhoneNumber = ? OR CCCD = ? OR Email = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, phoneNumber);
             ps.setString(2, cccd);

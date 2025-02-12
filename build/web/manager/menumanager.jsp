@@ -95,7 +95,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -108,7 +108,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -127,7 +127,7 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"><img src="assets/images/logo/logo1.png"
+                                <a href="menumanager.jsp"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
                                                                alt="Logo" /></a>
                             </div>
                             <div class="toggler">

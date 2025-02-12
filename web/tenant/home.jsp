@@ -39,7 +39,32 @@
                     <!-- Navbar Links -->
                     <ul class="navbar-nav kiem_can_trai">
                         <li class="nav-item d-none d-md-block">
-                            <a href="home" class="nav-link">Home</a>
+                            <c:choose>
+                                <c:when test="${sessionScope.staff.role.roleID == 1}">
+                                    <a href="${pageContext.request.contextPath}/manager/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.staff.role.roleID == 2}">
+                                    <a href="${pageContext.request.contextPath}/administrative/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.staff.role.roleID == 3}">
+                                    <a href="${pageContext.request.contextPath}/accountant/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.staff.role.roleID == 4}">
+                                    <a href="${pageContext.request.contextPath}/technical/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.staff.role.roleID == 5}">
+                                    <a href="${pageContext.request.contextPath}/service/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.resident.role.roleID == 6}">
+                                    <a href="${pageContext.request.contextPath}/tenant/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.resident.role.roleID == 7}">
+                                    <a href="${pageContext.request.contextPath}/owner/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${pageContext.request.contextPath}/error-403" class="nav-link">Home</a>
+                                </c:otherwise>
+                            </c:choose>
                         </li>
                         <li class="nav-item d-none d-md-block">
                             <a href="#" class="nav-link">Contact</a>
@@ -52,13 +77,13 @@
                         <c:set var="resident" value="${sessionScope.resident}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="${resident.image.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="<%= request.getContextPath() %>${resident.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
                                 <span class="d-none d-md-inline">${resident.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="${resident.image.imageURL}" class="rounded-circle shadow"
+                                    <img src="<%= request.getContextPath() %>${resident.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
                                         ${resident.fullName} - Web Developer
@@ -141,10 +166,40 @@
                             <li class="sidebar-title">Menu</li>
 
                             <li class="sidebar-item active">
-                                <a href="index.html" class="sidebar-link">
-                                    <i class="bi bi-grid-fill"></i>
-                                    <span>Home</span>
-                                </a>
+                                <c:choose>
+                                    <c:when test="${sessionScope.staff.role.roleID == 1}">
+                                        <a href="${pageContext.request.contextPath}/manager/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 2}">
+                                        <a href="${pageContext.request.contextPath}/administrative/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 3}">
+                                        <a href="${pageContext.request.contextPath}/accountant/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 4}">
+                                        <a href="${pageContext.request.contextPath}/technical/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 5}">
+                                        <a href="${pageContext.request.contextPath}/service/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.resident.role.roleID == 6}">
+                                        <a href="${pageContext.request.contextPath}/tenant/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.resident.role.roleID == 7}">
+                                        <a href="${pageContext.request.contextPath}/owner/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:otherwise>
+                                        <a href="${pageContext.request.contextPath}/error-403" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:otherwise>
+                                    </c:choose>
                             </li>
 
                             <li class="sidebar-item has-sub">
@@ -268,19 +323,11 @@
 
                             <li class="sidebar-title">Others</li>
 
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
+                            <li class="sidebar-item">
+                                <a href="<%= request.getContextPath() %>/news" class="sidebar-link">
                                     <i class="fa-solid fa-envelope"></i>
                                     <span>News</span>
                                 </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="addnews">Add News</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="news">News</a>
-                                    </li>
-                                </ul>
                             </li>
 
 

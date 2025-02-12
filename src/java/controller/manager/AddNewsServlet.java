@@ -19,7 +19,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import model.Image;
 import model.News;
-import model.Staff;
 
 /**
  *
@@ -103,7 +102,7 @@ public class AddNewsServlet extends HttpServlet {
                 .sentDate(LocalDateTime.now())
                 .build();
         newsDAO.insertNewsWithImage(news);
-        response.sendRedirect("news");
+        response.sendRedirect(request.getContextPath()+"/news");
 
     }
 

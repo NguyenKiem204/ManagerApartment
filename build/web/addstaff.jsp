@@ -100,11 +100,12 @@
                 <option value="Female">Female</option>
             </select>
             <label for="sex" class="me-2">Phân loại:</label>
-            <select id="roleId" name="roleId" required class="w-25 pe-5 me-5">
+            <select id="role" name="role" required class="w-25 pe-5 me-5">
                 <option value="1">Manager</option>
-                <option value="2">Accountant</option>
-                <option value="3">Technical Board</option>
-                <option value="4">Service Provider</option>
+                <option value="2">Administrative Staff</option>
+                <option value="3">Accountant</option>
+                <option value="4">Technical Board</option>
+                <option value="5">Service Provider</option>
             </select>
 
             <%--<label for="status" class="me-2">Trạng Thái:</label>

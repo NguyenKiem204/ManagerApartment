@@ -16,25 +16,25 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
               rel="stylesheet" />
-        <link rel="stylesheet" href="assets/css/bootstrap.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
 
-        <link rel="stylesheet" href="assets/vendors/iconly/bold.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
 
         <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
-        <link rel="stylesheet" href="assets/css/pages/index.css" />
-        <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css" />
-        <link rel="stylesheet" href="assets/css/app.css" />
-        <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
+        <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />-->
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
-        <link rel="stylesheet" href="assets/css/menu.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
 
         <style>
             body {
@@ -66,13 +66,13 @@
                         <c:set var="staff" value="${sessionScope.staff}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="${staff.image.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
                                 <span class="d-none d-md-inline">${staff.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="${staff.image.imageURL}" class="rounded-circle shadow"
+                                    <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
                                         ${staff.fullName} - Web Developer
@@ -96,7 +96,7 @@
                                 <li class="notify">
                                     <a href="!#">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -109,7 +109,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -122,7 +122,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -141,7 +141,7 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"><img src="assets/images/logo/logo1.png"
+                                <a href="menumanager.jsp"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
                                                                alt="Logo" /></a>
                             </div>
                             <div class="toggler">
@@ -154,11 +154,41 @@
                         <ul class="menu">
                             <li class="sidebar-title">Menu</li>
 
-                            <li class="sidebar-item active">
-                                <a href="index.html" class="sidebar-link">
-                                    <i class="bi bi-grid-fill"></i>
-                                    <span>Home</span>
-                                </a>
+                            <li class="sidebar-item">
+                                <c:choose>
+                                    <c:when test="${sessionScope.staff.role.roleID == 1}">
+                                        <a href="${pageContext.request.contextPath}/manager/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 2}">
+                                        <a href="${pageContext.request.contextPath}/administrative/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 3}">
+                                        <a href="${pageContext.request.contextPath}/accountant/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 4}">
+                                        <a href="${pageContext.request.contextPath}/technical/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 5}">
+                                        <a href="${pageContext.request.contextPath}/service/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.resident.role.roleID == 6}">
+                                        <a href="${pageContext.request.contextPath}/tenant/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.resident.role.roleID == 7}">
+                                        <a href="${pageContext.request.contextPath}/owner/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:otherwise>
+                                        <a href="${pageContext.request.contextPath}/error-403" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:otherwise>
+                                    </c:choose>
                             </li>
 
                             <li class="sidebar-item has-sub">
@@ -292,7 +322,7 @@
                                         <a href="#!" style="text-decoration: underline;">Add News</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="news" style="text-decoration: none;">News</a>
+                                        <a href="<%= request.getContextPath() %>/news" style="text-decoration: none;">News</a>
                                     </li>
                                 </ul>
                             </li>
@@ -441,12 +471,12 @@
         </div>
         
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
-        <script src="assets/js/bootstrap.bundle.min.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 
-        <script src="assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="assets/js/pages/dashboard.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
 
-        <script src="assets/js/main.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
     </body>
 
 </html>

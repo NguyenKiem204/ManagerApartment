@@ -42,8 +42,8 @@ public class Test {
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
-//        Resident resident = new Resident("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "3984934834394", "nkiem347@gmail.com",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", new Image().builder().imageID(1).build(), new Role().builder().roleID(6).build());
-//        residentDAO.insert(resident);
+        Resident resident = new Resident("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "3984934834394", "nkiem347@gmail.com",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", new Image().builder().imageID(3).build(), new Role().builder().roleID(6).build());
+        residentDAO.insert(resident);
 //        Resident resident = new Resident("Nguyễn Văn A", "123", "1234560144", "0123934834394", "nva347@gmail.com",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", new Image().builder().imageID(1).build(), new Role().builder().roleID(7).build());
 //        residentDAO.insert(resident);
 //        imageDAO.insert(image);
