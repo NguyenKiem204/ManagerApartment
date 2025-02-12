@@ -33,6 +33,9 @@ public class Test {
         RequestDAO requestDAO = new RequestDAO();
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
+        
+        requestDAO.updateStatus(2, 2);
+        requestDAO.updateStatus(1, 1);
   
 //        Role role = new Role("OWNER", "Some Permission");
 //        Image image = new Image("./djhdjdhf/lo");

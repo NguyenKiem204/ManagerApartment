@@ -239,7 +239,7 @@
 
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="reqadministrative">Request</a>
+                                        <a href="request">Request</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="layout-vertical-1-column.html">Residents</a>

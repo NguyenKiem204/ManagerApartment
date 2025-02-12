@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Manage Feedback</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -95,6 +95,8 @@
             #pageNumber {
                 color: black;
                 font-weight: bold;
+                margin-top: auto;
+                margin-bottom: auto;
             }
         </style>
     </head>
@@ -105,7 +107,9 @@
                 <h2>Manager Feedback Dashboard</h2>
 
                 <div class="search-sort-container">
-                    <input type="text" id="searchBox" placeholder="Search by title or staff member..." onkeyup="filterTable()">
+                    <form id="searchForm" action="${pageContext.request.contextPath}/manager/feedback?search" method="get">
+                        <input type="text" id="searchBox" name="key" style="width: 100%;" placeholder="Search by title or staff member..." value="${param.key}">
+                    </form>
                     <select id="sortBox" name="sortBox" onchange="sortProducts()">
                         <option value="0" hidden selected>Sort by</option>
                         <option value="1">Sort by Feedback for</option>
@@ -149,7 +153,7 @@
 
         <script>
             let currentPage = 1;
-            const rowsPerPage = 5;
+            const rowsPerPage = 7;
             let currentSort = {column: 'title', order: 'asc'};
 
             function renderTable() {
@@ -161,7 +165,7 @@
                     rows[i].style.display = (i >= (currentPage - 1) * rowsPerPage && i < currentPage * rowsPerPage) ? "" : "none";
                 }
 
-                document.getElementById("pageNumber").innerText = `Page ${currentPage}`;
+                document.getElementById("pageNumber").innerText = 'Page ' + currentPage;
                 document.getElementById("prevBtn").disabled = currentPage === 1;
                 document.getElementById("nextBtn").disabled = currentPage * rowsPerPage >= totalRows;
             }
@@ -201,9 +205,20 @@
                 const sortValue = document.getElementById('sortBox').value;
                 if (sortValue) {
                     // Chuyển hướng đến servlet với tham số sort
-                    window.location.href = `feedback?sort=` + sortValue;
+                    window.location.href = `${pageContext.request.contextPath}/manager/feedback?sort=` + sortValue;
                 }
             }
+            
+            let typingTimer;
+            const typingDelay = 500; // Độ trễ trước khi gửi request
+
+            document.getElementById("searchBox").addEventListener("keyup", function () {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(() => {
+                    document.getElementById("searchForm").submit();
+                }, typingDelay);
+            });
+
         </script>
 
     </body>

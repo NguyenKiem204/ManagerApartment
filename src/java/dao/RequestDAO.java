@@ -98,4 +98,135 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    public List<Request> getAllRequestsSortedByResident() {
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT * FROM Request ORDER BY ResidentID";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Request rq = new Request(rs.getInt("RequestID"),
+                          rs.getString("Description"),
+                          rs.getString("Title"),
+                          rs.getDate("Date").toLocalDate(),
+                          statusrequestdao.selectById(rs.getInt("statusID")),
+                          staffdao.selectById(rs.getInt("StaffID")),
+                          residentdao.selectById(rs.getInt("ResidentID")),
+                          typerequestdao.selectById(rs.getInt("TypeRqID")),
+                          apartmentdao.selectById(rs.getInt("ApartmentID")));
+
+                list.add(rq);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public List<Request> getAllRequestsSortedByService() {
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT * FROM Request ORDER BY TypeRqID";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Request rq = new Request(rs.getInt("RequestID"),
+                          rs.getString("Description"),
+                          rs.getString("Title"),
+                          rs.getDate("Date").toLocalDate(),
+                          statusrequestdao.selectById(rs.getInt("statusID")),
+                          staffdao.selectById(rs.getInt("StaffID")),
+                          residentdao.selectById(rs.getInt("ResidentID")),
+                          typerequestdao.selectById(rs.getInt("TypeRqID")),
+                          apartmentdao.selectById(rs.getInt("ApartmentID")));
+
+                list.add(rq);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public List<Request> getAllRequestsSortedByStatus() {
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT * FROM Request ORDER BY StatusID";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Request rq = new Request(rs.getInt("RequestID"),
+                          rs.getString("Description"),
+                          rs.getString("Title"),
+                          rs.getDate("Date").toLocalDate(),
+                          statusrequestdao.selectById(rs.getInt("statusID")),
+                          staffdao.selectById(rs.getInt("StaffID")),
+                          residentdao.selectById(rs.getInt("ResidentID")),
+                          typerequestdao.selectById(rs.getInt("TypeRqID")),
+                          apartmentdao.selectById(rs.getInt("ApartmentID")));
+
+                list.add(rq);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public List<Request> getAllRequestsByResidentOrApartment(String key) {
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT [RequestID]\n"
+                  + "      ,[Description]\n"
+                  + "      ,[Title]\n"
+                  + "      ,[Date]\n"
+                  + "      ,[StaffID]\n"
+                  + "      ,r.ResidentID\n"
+                  + "      ,[TypeRqID]\n"
+                  + "      ,r.StatusID\n"
+                  + "      ,r.ApartmentID\n"
+                  + "	  ,re.FullName\n"
+                  + "	  ,a.ApartmentName\n"
+                  + "  FROM [ApartmentManagement].[dbo].[Request] r \n"
+                  + "		join Resident re on r.ResidentID = re.ResidentID\n"
+                  + "		join Apartment a on a.ApartmentID = r.ApartmentID\n"
+                  + "  WHERE re.FullName LIKE ? OR a.ApartmentName LIKE ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + key + "%");
+            ps.setString(2, "%" + key + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Request rq = new Request(rs.getInt("ResidentID"),
+                          rs.getString("Description"),
+                          rs.getString("Title"),
+                          rs.getDate("Date").toLocalDate(),
+                          statusrequestdao.selectById(rs.getInt("statusID")),
+                          staffdao.selectById(rs.getInt("staffID")),
+                          residentdao.selectById(rs.getInt("residentID")),
+                          typerequestdao.selectById(rs.getInt("typeRqID")),
+                          apartmentdao.selectById(rs.getInt("apartmentID")));
+
+                list.add(rq);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public boolean updateStatus(int requestID, int newStatus) {
+        String query = "update Request set StatusID = ? where RequestID = ?";
+        try {
+            Connection conn = DBContext.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, newStatus);
+            ps.setInt(2, requestID);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

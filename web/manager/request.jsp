@@ -86,11 +86,42 @@
             #pageNumber {
                 color: black;
                 font-weight: bold;
+                margin-top: auto;
+                margin-bottom: auto;
             }
+            .status {
+                cursor: pointer;
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-weight: bold;
+                display: inline-block;
+                text-align: center;
+                min-width: 100px;
+                color: white;
+            }
+
+            .status[data-status-id="1"] { /* Pending */
+                background-color: #FF5722; /* Cam đậm */
+                border: 2px solid #E64A19;
+                box-shadow: 0 0 5px rgba(255, 87, 34, 0.5);
+            }
+
+            .status[data-status-id="2"] { /* Processing */
+                background-color: #03A9F4; /* Xanh dương sáng */
+                border: 2px solid #0288D1;
+                box-shadow: 0 0 5px rgba(3, 169, 244, 0.5);
+            }
+
+            .status[data-status-id="3"] { /* Resolved */
+                background-color: #4CAF50; /* Xanh lá đậm */
+                border: 2px solid #388E3C;
+                box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+            }
+
         </style>
     </head>
     <body>
-        <%@include file="menuadministrative.jsp" %>
+        <%@include file="menumanager.jsp" %>
         <div id="main">
             <div class="container">
                 <h2>Resident Requests Dashboard</h2>
@@ -99,10 +130,10 @@
                     <input type="text" id="searchBox" placeholder="Search by resident name or service..." onkeyup="filterTable()">
                     <select id="sortBox" name="sortBox" onchange="sortRequests()">
                         <option value="0" hidden selected>Sort by</option>
+
                         <option value="1">Sort by Resident Name</option>
-                        <option value="2">Sort by Apartment</option>
-                        <option value="3">Sort by Date</option>
-                        <option value="4">Sort by Status</option>
+                        <option value="2">Sort by Service</option>
+                        <option value="3">Sort by Status</option>
                     </select>
                 </div>
 
@@ -119,16 +150,18 @@
                     </thead>
                     <tbody id="tableBody">
                         <c:forEach var="rq" items="${listrq}">
-                            <jsp:useBean id="dao" class="dao.StaffDAO"/> 
-                            <jsp:useBean id="roledao" class="dao.RoleDAO"/>
-                            <c:set var="staff" value="${dao.selectById(fb.staffID)}"/>
-                            <c:set var="role" value="${roledao.selectById(staff.roleId)}"/>
                             <tr>
-                                <td>${fb.title}</td>
-                                <td>${role.roleName}</td>
-                                <td class="rating">${"★".repeat(fb.rate)}${"☆".repeat(5 - fb.rate)}</td>
-                                <td>${fb.description}</td>
-                                <td>${fb.date}</td>
+                                <td>${rq.resident.fullName}</td>
+                                <td>${rq.apartment.apartmentName}</td>
+                                <td>${rq.typeRq.typeName}</td>
+                                <td>${rq.description}</td>
+                                <td>${rq.date}</td>
+                                <td>
+                                    <span class="status" data-id="${rq.requestID}" data-status-id="${rq.status.statusID}" onclick="updateStatus(this)">
+                                        ${rq.status.statusName}
+                                    </span>
+                                </td>
+
                             </tr>
                         </c:forEach>
                     </tbody>
@@ -155,7 +188,7 @@
                     rows[i].style.display = (i >= (currentPage - 1) * rowsPerPage && i < currentPage * rowsPerPage) ? "" : "none";
                 }
 
-                document.getElementById("pageNumber").innerText = `Page ${currentPage}`;
+                document.getElementById("pageNumber").innerText = 'Page ' + currentPage;
                 document.getElementById("prevBtn").disabled = currentPage === 1;
                 document.getElementById("nextBtn").disabled = currentPage * rowsPerPage >= totalRows;
             }
@@ -190,13 +223,64 @@
             function sortRequests() {
                 const sortValue = document.getElementById('sortBox').value;
                 if (sortValue) {
-                    window.location.href = `requestadministrative?sort=` + sortValue;
+                    window.location.href = `${pageContext.request.contextPath}/manager/request?sort=` + sortValue;
                 }
             }
 
             document.addEventListener("DOMContentLoaded", () => {
                 renderTable();
             });
+        </script>
+        <script>
+            function updateStatus(element) {
+                const requestID = element.getAttribute("data-id");
+                let statusID = parseInt(element.getAttribute("data-status-id"));
+
+                // Chuyển đổi trạng thái ID theo vòng lặp: 1 → 2 → 3
+                if (statusID === 1) {
+                    statusID = 2; // Pending → Processing
+                } else if (statusID === 2) {
+                    statusID = 3; // Processing → Resolved
+                } else {
+                    return; // Nếu đã là Resolved (3), không làm gì cả
+                }
+
+                // Gửi AJAX cập nhật trạng thái
+                fetch('${pageContext.request.contextPath}/manager/updateRequestStatus', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({id: requestID, statusID: statusID})
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                element.setAttribute("data-status-id", statusID);
+
+                                // Cập nhật trạng thái hiển thị & màu sắc
+                                if (statusID === 1) {
+                                    element.innerText = "Pending";
+                                    element.style.backgroundColor = "#FF5722";
+                                    element.style.border = "2px solid #E64A19";
+                                    element.style.boxShadow = "0 0 5px rgba(255, 87, 34, 0.5)";
+                                } else if (statusID === 2) {
+                                    element.innerText = "Processing";
+                                    element.style.backgroundColor = "#03A9F4";
+                                    element.style.border = "2px solid #0288D1";
+                                    element.style.boxShadow = "0 0 5px rgba(3, 169, 244, 0.5)";
+                                } else if (statusID === 3) {
+                                    element.innerText = "Resolved";
+                                    element.style.backgroundColor = "#4CAF50";
+                                    element.style.border = "2px solid #388E3C";
+                                    element.style.boxShadow = "0 0 5px rgba(76, 175, 80, 0.5)";
+                                }
+                            } else {
+                                alert("Lỗi cập nhật trạng thái!");
+                            }
+                        })
+                        .catch(error => console.error('Lỗi:', error));
+            }
         </script>
 
     </body>

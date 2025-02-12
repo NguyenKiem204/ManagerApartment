@@ -20,7 +20,7 @@ import model.Request;
  *
  * @author admin
  */
-@WebServlet(name="RequestAdministrativeServlet", urlPatterns={"/administrative/requestadministrative"})
+@WebServlet(name="RequestAdministrativeServlet", urlPatterns={"/manager/request"})
 public class RequestAdministrativeServlet extends HttpServlet {
    
     /** 
@@ -58,10 +58,27 @@ public class RequestAdministrativeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        String sort = request.getParameter("sort");
+        String key = request.getParameter("key");
+        
         RequestDAO rqDAO = new RequestDAO();
         List<Request> list = rqDAO.selectAll();
+        
+        if (key != null) {
+            list = rqDAO.getAllRequestsByResidentOrApartment(key);
+        }
+        
+        if (sort != null) {
+            switch (sort) {
+                case "1" -> list = rqDAO.getAllRequestsSortedByResident();
+                case "2" -> list = rqDAO.getAllRequestsSortedByService();
+                case "3" -> list = rqDAO.getAllRequestsSortedByStatus();
+                default -> {
+                }
+            }
+        }
         request.setAttribute("listrq", list);
-        request.getRequestDispatcher("requestadministrative.jsp").forward(request, response);
+        request.getRequestDispatcher("request.jsp").forward(request, response);
     } 
 
     /** 
