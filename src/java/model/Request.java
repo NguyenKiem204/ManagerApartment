@@ -26,9 +26,24 @@ public class Request {
     int requestID;
     String description;
     String title;
-    String status;
     LocalDate date;
+    StatusRequest status;
     Staff staff;
     Resident resident;
     TypeRequest typeRq;
+    Apartment apartment;
+
+    public Request(String description, String title, LocalDate date, StatusRequest status, Staff staff, Resident resident, TypeRequest typeRq, Apartment apartment) {
+        this.description = description;
+        this.title = title;
+        this.date = date;
+        this.status = status;
+        this.staff = staff;
+        this.resident = resident;
+        this.typeRq = typeRq;
+        this.apartment = apartment;
+    }
+
+    
+    
 }

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package controller.manager;
 
 import dao.FeedbackDAO;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import model.Feedback;
  *
  * @author admin
  */
-@WebServlet(name = "FeedbackAdministrativeServlet", urlPatterns = {"/feedbackadministrative"})
+@WebServlet(name = "FeedbackAdministrativeServlet", urlPatterns = {"/manager/feedback"})
 public class FeedbackAdministrativeServlet extends HttpServlet {
 
     /**

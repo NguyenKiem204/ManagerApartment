@@ -123,5 +123,29 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return apartment;
     }
+
+    public Apartment getApartmentByName(String apartmentName) {
+        Apartment apartment = null;
+        String sql = "SELECT * FROM Apartment WHERE ApartmentName = ?";
+        System.out.println(sql);
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, apartmentName);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    apartment = new Apartment(
+                            rs.getInt("ApartmentID"),
+                            rs.getString("ApartmentName"),
+                            rs.getString("Block"),
+                            rs.getString("Status"),
+                            rs.getString("Type")
+                    );
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return apartment;
+    }
 }
 

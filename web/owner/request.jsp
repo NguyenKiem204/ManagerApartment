@@ -110,11 +110,9 @@
                     <label for="service">Service Type</label>
                     <select id="service" name="service">
                         <option value="" disabled selected>Select a service type</option>
-                        <option value="1">Electricity</option>
-                        <option value="2">Water</option>
-                        <option value="3">Maintenance</option>
-                        <option value="4">Security</option>
-                        <option value="5">Other</option>
+                        <c:forEach var="typerq" items="${listtyperq}">
+                            <option value="${typerq.typeRqID}">${typerq.typeName}</option>
+                        </c:forEach>
                     </select>
                     <span class="error" id="serviceError">Please select a service type</span>
 
@@ -122,9 +120,10 @@
                     <textarea id="request" name="request" rows="4" placeholder="Write your request here..." required></textarea>
                     <span class="error" id="feedbackError">Please enter your feedback</span>
                     <c:if test="${not empty msg}">
-                        <div style="color: greenyellow">
-                            ${msg}
-                        </div>
+                        <p style="color: green">${msg}</p>
+                    </c:if>
+                    <c:if test="${not empty error}">
+                        <p style="color: red;">${error}</p>
                     </c:if>
 
                     <button type="submit">Submit Request</button>

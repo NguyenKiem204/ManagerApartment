@@ -132,7 +132,7 @@ public class LoginServlet extends HttpServlet {
                 redirectToPage(response, request,"/manager/home");
                 break;
             case 2:
-                redirectToPage(response, request,"menuadministrative.jsp");
+                redirectToPage(response, request,"/administrative/menuadministrative.jsp");
                 break;
             case 3:
                 redirectToPage(response, request,"menuaccountant.jsp");
@@ -147,7 +147,7 @@ public class LoginServlet extends HttpServlet {
                 redirectToPage(response, request,"/tenant/home");
                 break;
             case 7:
-                redirectToPage(response, request,"menuowner.jsp");
+                redirectToPage(response, request,"/owner/home");
                 break;
             default:
                 redirectToPage(response, request,"error-403");

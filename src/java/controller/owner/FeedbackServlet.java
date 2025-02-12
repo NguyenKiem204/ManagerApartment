@@ -3,9 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller.administrative;
+package controller.owner;
 
-import dao.RequestDAO;
+import dao.FeedbackDAO;
+import dao.ResidentDAO;
+import dao.RoleDAO;
+import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,15 +16,20 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.util.List;
-import model.Request;
+import model.Feedback;
+import model.Resident;
+import model.Role;
+import model.Staff;
 
 /**
  *
  * @author admin
  */
-@WebServlet(name="RequestAdministrativeServlet", urlPatterns={"/administrative/requestadministrative"})
-public class RequestAdministrativeServlet extends HttpServlet {
+@WebServlet(name="FeedbackServlet", urlPatterns={"/owner/feedback"})
+public class FeedbackServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +46,10 @@ public class RequestAdministrativeServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RequestAdministrativeServlet</title>");  
+            out.println("<title>Servlet FeedbackServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RequestAdministrativeServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet FeedbackServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,10 +66,12 @@ public class RequestAdministrativeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        RequestDAO rqDAO = new RequestDAO();
-        List<Request> list = rqDAO.selectAll();
-        request.setAttribute("listrq", list);
-        request.getRequestDispatcher("requestadministrative.jsp").forward(request, response);
+        FeedbackDAO fbDAO = new FeedbackDAO();
+//        StaffDAO stdao = new StaffDAO();
+        RoleDAO rdao = new RoleDAO();
+        List<Role> listrole = rdao.selectAll();
+        request.setAttribute("listrole", listrole);
+        request.getRequestDispatcher("feedback.jsp").forward(request, response);
     } 
 
     /** 
@@ -74,7 +84,35 @@ public class RequestAdministrativeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+//      lấy được residentID dựa trên session
+        HttpSession session = request.getSession();
+        Resident resident = (Resident) session.getAttribute("resident");
+        StaffDAO staffDAO = new StaffDAO();
+        ResidentDAO residentDAO = new ResidentDAO();
+        
+        String title = request.getParameter("title");
+        String staffID_raw = request.getParameter("staff");
+        String rating_raw = request.getParameter("rating");
+        String description = request.getParameter("description");
+        
+        int rating;
+        int staffID;
+        
+        try {
+            rating = Integer.parseInt(rating_raw);
+            staffID = Integer.parseInt(staffID_raw);
+            
+            //add data into DB
+            FeedbackDAO fbDAO = new FeedbackDAO();
+            
+            Feedback fb = new Feedback(title, description, LocalDate.now(), rating, staffDAO.selectById(staffID), resident); //resident.getResidentId()
+//            Feedback fb = new Feedback
+            System.out.println(fb.toString());
+            fbDAO.insert(fb);
+            
+        } catch (NumberFormatException e) {
+        }
+        response.sendRedirect("feedbacksuccess.jsp");
     }
 
     /** 

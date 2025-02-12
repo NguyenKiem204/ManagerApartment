@@ -1,16 +1,17 @@
 <%-- 
-    Document   : requestadministrative
-    Created on : Feb 11, 2025, 5:19:31 AM
+    Document   : feedbackadministrative
+    Created on : Feb 9, 2025, 2:24:20 AM
     Author     : admin
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Request Administrative</title>
+        <title>JSP Page</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -66,6 +67,14 @@
                 cursor: pointer;
                 position: relative;
             }
+            th .sort-icon {
+                margin-left: 5px;
+                font-size: 12px;
+            }
+            .rating {
+                color: #FFD700;
+                font-size: 20px;
+            }
             .pagination {
                 text-align: center;
                 margin-top: 10px;
@@ -90,42 +99,38 @@
         </style>
     </head>
     <body>
-        <%@include file="menuadministrative.jsp" %>
+        <%@include file="menumanager.jsp" %>
         <div id="main">
             <div class="container">
-                <h2>Resident Requests Dashboard</h2>
+                <h2>Manager Feedback Dashboard</h2>
 
                 <div class="search-sort-container">
-                    <input type="text" id="searchBox" placeholder="Search by resident name or service..." onkeyup="filterTable()">
-                    <select id="sortBox" name="sortBox" onchange="sortRequests()">
+                    <input type="text" id="searchBox" placeholder="Search by title or staff member..." onkeyup="filterTable()">
+                    <select id="sortBox" name="sortBox" onchange="sortProducts()">
                         <option value="0" hidden selected>Sort by</option>
-                        <option value="1">Sort by Resident Name</option>
-                        <option value="2">Sort by Apartment</option>
+                        <option value="1">Sort by Feedback for</option>
+                        <option value="2">Sort by Rating</option>
                         <option value="3">Sort by Date</option>
-                        <option value="4">Sort by Status</option>
                     </select>
                 </div>
 
-                <table id="requestTable">
+                <table id="feedbackTable">
                     <thead>
                         <tr>
-                            <th>Resident Name</th>
-                            <th>Apartment</th>
-                            <th>Service</th>
-                            <th>Request Detail</th>
+                            <th>Title</th>
+                            <th>Feedback for</th>
+                            <th>Staff</th>
+                            <th>Rating</th>
+                            <th>Feedback</th>
                             <th>Date</th>
-                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
-                        <c:forEach var="rq" items="${listrq}">
-                            <jsp:useBean id="dao" class="dao.StaffDAO"/> 
-                            <jsp:useBean id="roledao" class="dao.RoleDAO"/>
-                            <c:set var="staff" value="${dao.selectById(fb.staffID)}"/>
-                            <c:set var="role" value="${roledao.selectById(staff.roleId)}"/>
+                        <c:forEach var="fb" items="${listfb}">
                             <tr>
                                 <td>${fb.title}</td>
-                                <td>${role.roleName}</td>
+                                <td>${fb.staff.fullName}</td>
+                                <td>${fb.staff.role.roleName}</td>
                                 <td class="rating">${"★".repeat(fb.rate)}${"☆".repeat(5 - fb.rate)}</td>
                                 <td>${fb.description}</td>
                                 <td>${fb.date}</td>
@@ -145,6 +150,7 @@
         <script>
             let currentPage = 1;
             const rowsPerPage = 5;
+            let currentSort = {column: 'title', order: 'asc'};
 
             function renderTable() {
                 const tableBody = document.getElementById("tableBody");
@@ -181,22 +187,23 @@
 
                 for (let row of rows) {
                     const cells = row.getElementsByTagName("td");
-                    const resident = cells[0].innerText.toLowerCase();
-                    const service = cells[2].innerText.toLowerCase();
-                    row.style.display = (resident.includes(query) || service.includes(query)) ? "" : "none";
-                }
-            }
-
-            function sortRequests() {
-                const sortValue = document.getElementById('sortBox').value;
-                if (sortValue) {
-                    window.location.href = `requestadministrative?sort=` + sortValue;
+                    const title = cells[0].innerText.toLowerCase();
+                    const staff = cells[1].innerText.toLowerCase();
+                    row.style.display = (title.includes(query) || staff.includes(query)) ? "" : "none";
                 }
             }
 
             document.addEventListener("DOMContentLoaded", () => {
                 renderTable();
+                updateSortIcons();
             });
+            function sortProducts() {
+                const sortValue = document.getElementById('sortBox').value;
+                if (sortValue) {
+                    // Chuyển hướng đến servlet với tham số sort
+                    window.location.href = `feedback?sort=` + sortValue;
+                }
+            }
         </script>
 
     </body>

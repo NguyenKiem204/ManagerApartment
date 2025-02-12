@@ -30,4 +30,14 @@ public class Feedback {
     int rate;
     Staff staff;
     Resident resident;
+
+    public Feedback(String title, String description, LocalDate date, int rate, Staff staff, Resident resident) {
+        this.title = title;
+        this.description = description;
+        this.date = date;
+        this.rate = rate;
+        this.staff = staff;
+        this.resident = resident;
+    }
+    
 }

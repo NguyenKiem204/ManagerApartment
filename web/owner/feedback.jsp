@@ -125,14 +125,9 @@
                         <label for="staff">Feedback for</label>
                         <select id="staff" name="staff">
                             <option value="" disabled selected>Select a staff member</option>
-                            <c:forEach var="role" items="${listst}">
+                            <c:forEach var="role" items="${listrole}" begin="1" end="4">
                                 <option value="${role.roleID}">${role.roleName}</option>
-<!--                            </c:forEach>
-                            <option value="1">Manager</option>
-                            <option value="2">Accountant</option>
-                            <option value="3">Technical Board</option>
-                            <option value="4">Provider Service</option>
-                            <option value="5">Administrative Staff</option>-->
+                            </c:forEach>
                         </select>
                         <span class="error" id="staffError">Please select a staff member</span>
 

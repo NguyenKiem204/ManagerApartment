@@ -25,6 +25,6 @@ public class Notification {
     int notificationID;
     String content;
     LocalDate createAt;
-    String status;
+    StatusNotification status;
     Resident resident;
 }

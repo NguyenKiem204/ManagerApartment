@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,27 +22,34 @@ import model.Request;
  */
 public class RequestDAO implements DAOInterface<Request, Integer> {
 
+    StaffDAO staffdao = new StaffDAO();
+    ResidentDAO residentdao = new ResidentDAO();
+    StatusRequestDAO statusrequestdao = new StatusRequestDAO();
+    TypeRequestDAO typerequestdao = new TypeRequestDAO();
+    ApartmentDAO apartmentdao = new ApartmentDAO();
+
     @Override
     public int insert(Request t) {
         int row = 0;
         String sqlInsert = "INSERT INTO [dbo].[Request]\n"
                   + "           ([Description]\n"
                   + "           ,[Title]\n"
-                  + "           ,[Status]\n"
                   + "           ,[Date]\n"
                   + "           ,[StaffID]\n"
                   + "           ,[ResidentID]\n"
-                  + "           ,[TypeRqID])\n"
+                  + "           ,[TypeRqID]\n"
+                  + "           ,[StatusID], [ApartmentID])\n"
                   + "     VALUES\n"
-                  + "           (?, ?, ?, ?, ?, ?, ?)";
+                  + "           (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlInsert)) {
             ps.setString(1, t.getDescription());
             ps.setString(2, t.getTitle());
-            ps.setString(3, t.getStatus());
-            ps.setDate(4, Date.valueOf(t.getDate()));
-            ps.setInt(5, t.getStaff().getStaffId());
-            ps.setInt(6, t.getResident().getResidentId());
-            ps.setInt(7, t.getTypeRq().getTypeRqID());
+            ps.setDate(3, Date.valueOf(t.getDate()));
+            ps.setInt(4, t.getStaff().getStaffId());
+            ps.setInt(5, t.getResident().getResidentId());
+            ps.setInt(6, t.getTypeRq().getTypeRqID());
+            ps.setInt(7, t.getStatus().getStatusID());
+            ps.setInt(8, t.getApartment().getApartmentId());
             row = ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ImageDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,13 +67,30 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    StaffDAO staffdao = new StaffDAO();
-    ResidentDAO residentdao = new ResidentDAO();
-    
-
     @Override
     public List<Request> selectAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT * FROM Request";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Request fb = new Request(rs.getInt("RequestID"),
+                          rs.getString("Description"),
+                          rs.getString("Title"),
+                          rs.getDate("Date").toLocalDate(),
+                          statusrequestdao.selectById(rs.getInt("StatusID")),
+                          staffdao.selectById(rs.getInt("StaffID")),
+                          residentdao.selectById(rs.getInt("ResidentID")),
+                          typerequestdao.selectById(rs.getInt("TypeRqID")),
+                          apartmentdao.selectById(rs.getInt("ApartmentID"))
+                );
+                list.add(fb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 
     @Override

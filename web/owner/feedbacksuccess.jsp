@@ -115,7 +115,7 @@
             <div class="container">
                 <h2>Thank You!</h2>
                 <p>Your feedback has been submitted successfully.</p>
-                <button onclick="window.location.href = 'feedback.jsp'">Submit Another Feedback</button>
+                <button onclick="window.location.href = 'feedback'">Submit Another Feedback</button>
             </div>
         </div>
         <script src="assets/js/bootstrap.bundle.min.js"></script>

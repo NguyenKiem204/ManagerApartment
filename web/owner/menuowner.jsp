@@ -37,7 +37,7 @@
                     <!-- Navbar Links -->
                     <ul class="navbar-nav kiem_can_trai">
                         <li class="nav-item d-none d-md-block">
-                            <a href="home" class="nav-link">Home</a>
+                            <a href="menuowner" class="nav-link">Home</a>
                         </li>
                         <li class="nav-item d-none d-md-block">
                             <a href="#" class="nav-link">Contact</a>
@@ -146,16 +146,16 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="component-alert.html">Building</a>
+                                        <a href="#">Building</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="component-badge.html">Floor</a>
+                                        <a href="#">Floor</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="component-breadcrumb.html">Apartment</a>
+                                        <a href="#">Apartment</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="component-button.html">Utilities</a>
+                                        <a href="#">Utilities</a>
                                     </li>
                                 </ul>
                             </li>
@@ -167,16 +167,16 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="extra-component-avatar.html">List</a>
+                                        <a href="#">List</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="extra-component-sweetalert.html">Vehicles</a>
+                                        <a href="#">Vehicles</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="extra-component-toastify.html">Notifications</a>
+                                        <a href="#">Notifications</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="extra-component-rating.html">Complaints</a>
+                                        <a href="#">Complaints</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="extra-component-divider.html">Divider</a>
@@ -187,7 +187,7 @@
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="bi bi-grid-1x2-fill"></i>
-                                    <span>Feedback</span>
+                                    <span>Feedback && Request</span>
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
@@ -202,14 +202,14 @@
                             <li class="sidebar-title">Others</li>
 
                             <li class="sidebar-item">
-                                <a href="application-email.html" class="sidebar-link">
+                                <a href="#" class="sidebar-link">
                                     <i class="bi bi-envelope-fill"></i>
                                     <span>Blogs</span>
                                 </a>
                             </li>
 
                             <li class="sidebar-item">
-                                <a href="application-chat.html" class="sidebar-link">
+                                <a href="#" class="sidebar-link">
                                     <i class="bi bi-chat-dots-fill"></i>
                                     <span>Messages</span>
                                 </a>
