@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-	 version="6.0">
-
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    <filter>
+        <filter-name>ManagerFilter</filter-name>
+        <filter-class>controller.auth.ManagerFilter</filter-class>
+    </filter>
+    
+    <filter>
+        <filter-name>BlockJspHtmlFilter</filter-name>
+        <filter-class>controller.auth.BlockJspHtmlFilter</filter-class>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>ManagerFilter</filter-name>
+        <url-pattern>/home</url-pattern>
+        <url-pattern>/addnews</url-pattern>
+        <url-pattern>/updateResidentStatus</url-pattern>
+        <url-pattern>/updateStaffStatus</url-pattern>
+        <url-pattern>/deleteStaff</url-pattern>
+        <url-pattern>/deleteResident</url-pattern>
+        <url-pattern>/insertResident</url-pattern>
+        <url-pattern>/insertStaff</url-pattern>
+        <url-pattern>/manageResident</url-pattern>
+        <url-pattern>/manageStaff</url-pattern>
+    </filter-mapping>
+    
+    <filter-mapping>
+        <filter-name>BlockJspHtmlFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
 </web-app>
