@@ -102,32 +102,34 @@ public class UpdateProfileServlet extends HttpServlet {
         }
         StaffDAO staffDAO = new StaffDAO();
         ResidentDAO residentDAO = new ResidentDAO();
-        Staff staff = Staff.builder()
-                .staffId(userID)
-                .image(new Image(0, imageURL))
-                .fullName(fullName)
-                .email(email)
-                .phoneNumber(phoneNumber)
-                .dob(dob)
-                .sex(sex)
-                .build();
-        Resident resident = Resident.builder()
-                .residentId(userID)
-                .image(new Image(0, imageURL))
-                .fullName(fullName)
-                .email(email)
-                .phoneNumber(phoneNumber)
-                .dob(dob)
-                .sex(sex)
-                .build();
+        
+        
         HttpSession session = request.getSession();
-        if (staff != null) {
+        if (staffDAO.selectById(userID)!= null) {
+            Staff staff = Staff.builder()
+                .staffId(userID)
+                .image(new Image(staffDAO.selectById(userID).getImage().getImageID(), imageURL))
+                .fullName(fullName)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .dob(dob)
+                .sex(sex)
+                .build();
             staffDAO.updateProfileStaff(staff);
             session.removeAttribute("staff");
             if(imageURL==null || imageURL.isEmpty())
             staff.getImage().setImageURL(staffDAO.getImageURL(userID));
             session.setAttribute("staff", staff);
-        } else if (resident != null) {
+        } else if (residentDAO.selectById(userID) != null) {
+            Resident resident = Resident.builder()
+                .residentId(userID)
+                .image(new Image(residentDAO.selectById(userID).getImage().getImageID(), imageURL))
+                .fullName(fullName)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .dob(dob)
+                .sex(sex)
+                .build();
             residentDAO.updateProfileResident(resident);
             session.removeAttribute("resident");
             if(imageURL==null || imageURL.isEmpty())

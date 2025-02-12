@@ -4,38 +4,75 @@
  */
 package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.TypeRequest;
 
 
 /**
  *
  * @author admin
  */
-public class TypeRequestDAO implements DAOInterface<TypeRequestDAO, Integer>{
+public class TypeRequestDAO implements DAOInterface<TypeRequest, Integer>{
 
     @Override
-    public int insert(TypeRequestDAO t) {
+    public int insert(TypeRequest t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int update(TypeRequestDAO t) {
+    public int update(TypeRequest t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int delete(TypeRequestDAO t) {
+    public int delete(TypeRequest t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public List<TypeRequestDAO> selectAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<TypeRequest> selectAll() {
+        List<TypeRequest> list = new ArrayList<>();
+        String sql = "SELECT * FROM TypeRequest";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                TypeRequest tr = new TypeRequest(
+                          rs.getInt("TypeRqID"),
+                          rs.getString("TypeName"));
+          
+                list.add(tr);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 
     @Override
-    public TypeRequestDAO selectById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public TypeRequest selectById(Integer id) {
+        TypeRequest typeRequest = null;
+        String sql = "SELECT * FROM [TypeRequest] WHERE [TypeRqID] = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    typeRequest = new TypeRequest(rs.getInt("TypeRqID"),
+                              rs.getString("TypeName"));
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoleDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return typeRequest;
     }
+
     
 }
