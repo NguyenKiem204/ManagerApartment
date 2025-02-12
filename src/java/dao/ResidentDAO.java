@@ -66,7 +66,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
 
     public int updateProfileResident(Resident resident) {
         int row = 0;
-        String updateRessidentSQL = "UPDATE Resident SET FullName = ?,PhoneNumber = ?, Email = ?, DOB = ?, Sex = ?, ImageID = ?, RoleID = ? WHERE ResidentID = ?";
+        String updateRessidentSQL = "UPDATE Resident SET FullName = ?,PhoneNumber = ?, Email = ?, DOB = ?, Sex = ?, ImageID = ? WHERE ResidentID = ?";
         String updateImageSQL = "UPDATE Image SET ImageURL = ? WHERE ImageID = ?";
 
         try (Connection connection = DBContext.getConnection()) {
@@ -86,8 +86,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                 ps.setDate(4, Date.valueOf(resident.getDob()));
                 ps.setString(5, resident.getSex());
                 ps.setInt(6, resident.getImage().getImageID());
-                ps.setInt(7, resident.getRole().getRoleID());
-                ps.setInt(8, resident.getResidentId());
+                ps.setInt(7, resident.getResidentId());
 
                 row = ps.executeUpdate();
             }

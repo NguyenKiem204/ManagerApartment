@@ -50,19 +50,19 @@
                     <!-- User and Notification Dropdowns -->
                     <ul class="navbar-nav ms-auto">
                         <!-- User Menu -->
-                        <c:set var="staff" value="${sessionScope.staff}" />
+                        <c:set var="resident" value="${sessionScope.resident}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="<%= request.getContextPath() %>${staff.image.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="<%= request.getContextPath() %>${resident.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
-                                <span class="d-none d-md-inline">${staff.fullName}</span>
+                                <span class="d-none d-md-inline">${resident.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="<%= request.getContextPath() %>${staff.image.imageURL}" class="rounded-circle shadow"
+                                    <img src="<%= request.getContextPath() %>${resident.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
-                                        ${staff.fullName} - Web Developer
+                                        ${resident.fullName} - Web Developer
                                         <small>Member since Nov. 2024</small>
                                     </p>
                                 </li>
@@ -83,7 +83,7 @@
                                 <li class="notify">
                                     <a href="!#">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -96,7 +96,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -109,7 +109,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -128,7 +128,7 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"><img src="assets/images/logo/logo1.png"
+                                <a href="menumanager.jsp"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
                                                                alt="Logo" /></a>
                             </div>
                             <div class="toggler">
@@ -322,16 +322,16 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="profile">Information</a>
+                                        <a href="<%= request.getContextPath() %>/profile">Information</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="login">Login</a>
+                                        <a href="<%= request.getContextPath() %>/login">Login</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="logout">Logout</a>
+                                        <a href="<%= request.getContextPath() %>/logout">Logout</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="forgot-password">Forgot Password</a>
+                                        <a href="<%= request.getContextPath() %>/forgot-password">Forgot Password</a>
                                     </li>
                                 </ul>
                             </li>
@@ -352,7 +352,7 @@
                         <div class="col-12">
                             <div class="profile-card">
                                 <div class="row">
-                                    <c:set var="staff" value="${sessionScope.staff}"/>
+                                    <c:set var="staff" value="${sessionScope.resident}"/>
                                         <c:set var="resident" value="${sessionScope.resident}"/>
                                     <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
                                         <img src="<%= request.getContextPath() %>${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}"

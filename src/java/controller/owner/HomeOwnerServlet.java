@@ -17,8 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author admin
  */
-@WebServlet(name="MenuOwnerServlet", urlPatterns={"/menuowner"})
-public class MenuOwnerServlet extends HttpServlet {
+@WebServlet(name="MenuOwnerServlet", urlPatterns={"/owner/home"})
+public class HomeOwnerServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -55,7 +55,7 @@ public class MenuOwnerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("menuowner.jsp").forward(request, response);
+        request.getRequestDispatcher("home.jsp").forward(request, response);
     } 
 
     /** 
