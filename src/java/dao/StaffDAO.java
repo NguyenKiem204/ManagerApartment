@@ -392,7 +392,7 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
     }
 
     public boolean isStaffExists(String phoneNumber, String cccd, String email) {
-        String sql = "SELECT COUNT(*) FROM Staff WHERE PhoneNumber = ? OR Cccd = ? OR Email = ?";
+        String sql = "SELECT COUNT(*) FROM Staff WHERE PhoneNumber = ? OR CCCD = ? OR Email = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, phoneNumber);
             ps.setString(2, cccd);

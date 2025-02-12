@@ -5,6 +5,8 @@
 
 package controller;
 
+import dao.ImageDAO;
+import dao.RoleDAO;
 import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,6 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import model.EmailUtil;
+import model.Image;
+import model.Role;
 import model.Staff;
 
 /**
@@ -29,6 +33,8 @@ public class InsertStaffServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         StaffDAO staffDAO = new StaffDAO();
+        ImageDAO imageDAO = new ImageDAO();
+        RoleDAO roleDAO = new RoleDAO();
         try {
             String phoneNumber = request.getParameter("phoneNumber");
             String cccd = request.getParameter("cccd");
@@ -52,14 +58,14 @@ public class InsertStaffServlet extends HttpServlet {
             String fullName = request.getParameter("fullName");
             LocalDate dob = LocalDate.parse(request.getParameter("dob"));
             String sex = request.getParameter("sex");
-            String status = request.getParameter("status");
+            String status = "Active";
         //int imageId = Integer.parseInt(request.getParameter("imageId"));
-            int imageId = 3;
-            int roleId = Integer.parseInt(request.getParameter("roleId"));
+            Image imageId = imageDAO.selectById(1);
+            Role roleId = roleDAO.selectById(Integer.parseInt(request.getParameter("role")));
             //int roleId = 5;
 
         // Tạo mật khẩu ngẫu nhiên
-            String password = generateRandomPassword(3);
+            String password = generateRandomPassword(5);
 
             Staff newStaff = new Staff(fullName, password, phoneNumber, cccd, mail, dob, sex, status,imageId, roleId);
             

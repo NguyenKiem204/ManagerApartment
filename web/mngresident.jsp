@@ -577,7 +577,7 @@
                                             <td>${resident.fullName}</td>
                                             <td>${resident.phoneNumber}</td>
                                             <td>${resident.cccd}</td>
-                                            <td>${resident.mail}</td>
+                                            <td>${resident.email}</td>
                                             <td>${resident.dob}</td>
                                             <td>${resident.sex}</td>
                                             <td>
@@ -588,8 +588,8 @@
                                             </td>
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${resident.roleId == 5}">Tenant</c:when>
-                                                    <c:when test="${resident.roleId == 6}">Owner</c:when>
+                                                    <c:when test="${resident.role.getRoleID() == 6}">Tenant</c:when>
+                                                    <c:when test="${resident.role.getRoleID() == 7}">Owner</c:when>
                                                     <c:otherwise>Unknown</c:otherwise>
                                                 </c:choose>
                                             </td>

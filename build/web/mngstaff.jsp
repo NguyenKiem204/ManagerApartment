@@ -589,10 +589,11 @@
                                             </td>
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${staff.roleId == 1}">Manager</c:when>
-                                                    <c:when test="${staff.roleId == 2}">Accountant</c:when>
-                                                    <c:when test="${staff.roleId == 3}">Technical Board</c:when>
-                                                    <c:when test="${staff.roleId == 4}">Service Provider</c:when>
+                                                    <c:when test="${staff.role.getRoleID() == 1}">Manager</c:when>
+                                                    <c:when test="${staff.role.getRoleID() == 2}">Administrative Staff</c:when>
+                                                    <c:when test="${staff.role.getRoleID() == 3}">Accountant</c:when>
+                                                    <c:when test="${staff.role.getRoleID() == 4}">Technical Board</c:when>
+                                                    <c:when test="${staff.role.getRoleID() == 5}">Service Provider</c:when>
                                                     <c:otherwise>Unknown</c:otherwise>
                                                 </c:choose>
                                             </td>

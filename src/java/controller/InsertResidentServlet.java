@@ -5,7 +5,9 @@
 
 package controller;
 
+import dao.ImageDAO;
 import dao.ResidentDAO;
+import dao.RoleDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,7 +18,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import model.EmailUtil;
+import model.Image;
 import model.Resident;
+import model.Role;
 
 /**
  *
@@ -29,6 +33,8 @@ public class InsertResidentServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         ResidentDAO residentDAO = new ResidentDAO();
+        ImageDAO imageDAO = new ImageDAO();
+        RoleDAO roleDAO = new RoleDAO();
         try {
             String phoneNumber = request.getParameter("phoneNumber");
             String cccd = request.getParameter("cccd");
@@ -52,17 +58,19 @@ public class InsertResidentServlet extends HttpServlet {
             String fullName = request.getParameter("fullName");
             LocalDate dob = LocalDate.parse(request.getParameter("dob"));
             String sex = request.getParameter("sex");
-            String status = request.getParameter("status");
+            String status = "Active";
         //int imageId = Integer.parseInt(request.getParameter("imageId"));
-            int imageId = 3;
-            int roleId = Integer.parseInt(request.getParameter("roleId"));
+            Image imageId = imageDAO.selectById(3);
+            Role roleId = roleDAO.selectById(Integer.parseInt(request.getParameter("role")));
             //int roleId = 5;
 
         // Tạo mật khẩu ngẫu nhiên
-            String password = generateRandomPassword(3);
+            String password = generateRandomPassword(5);
+            System.out.println(password);
+            //Resident newResident = new Resident(fullName, password, phoneNumber, cccd, mail, dob, sex, status,image, role);
 
             Resident newResident = new Resident(fullName, password, phoneNumber, cccd, mail, dob, sex, status,imageId, roleId);
-            
+
             int isAdded = residentDAO.insert(newResident);
             System.out.println(isAdded);
 //        String msg = isAdded!=0 ? "Thêm cư dân thành công! Mật khẩu: " + password : "Thêm cư dân thất bại!";

@@ -100,7 +100,7 @@
                         <option value="Female">Female</option>
                     </select>
                     <label for="sex" class="me-2">Phân loại:</label>
-                    <select id="roleId" name="roleId" required class="w-25 pe-5 me-5">
+                    <select id="role" name="role" required class="w-25 pe-5 me-5">
                         <option value="6">Tenant</option>
                         <option value="7">Owner Department</option>
                     </select>
