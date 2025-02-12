@@ -12,16 +12,17 @@
     
     <filter-mapping>
         <filter-name>ManagerFilter</filter-name>
-        <url-pattern>/home</url-pattern>
-        <url-pattern>/addnews</url-pattern>
-        <url-pattern>/updateResidentStatus</url-pattern>
-        <url-pattern>/updateStaffStatus</url-pattern>
-        <url-pattern>/deleteStaff</url-pattern>
-        <url-pattern>/deleteResident</url-pattern>
-        <url-pattern>/insertResident</url-pattern>
-        <url-pattern>/insertStaff</url-pattern>
-        <url-pattern>/manageResident</url-pattern>
-        <url-pattern>/manageStaff</url-pattern>
+        <url-pattern>/manager/home</url-pattern>
+        <url-pattern>/manager/addnews</url-pattern>
+        <url-pattern>/manager/updateResidentStatus</url-pattern>
+        <url-pattern>/manager/updateStaffStatus</url-pattern>
+        <url-pattern>/manager/deleteStaff</url-pattern>
+        <url-pattern>/manager/deleteResident</url-pattern>
+        <url-pattern>/manager/insertResident</url-pattern>
+        <url-pattern>/manager/insertStaff</url-pattern>
+        <url-pattern>/manager/manageResident</url-pattern>
+        <url-pattern>/manager/manageStaff</url-pattern>
+        <url-pattern>/manager/request</url-pattern>
     </filter-mapping>
     
     <filter-mapping>
