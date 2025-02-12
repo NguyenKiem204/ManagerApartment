@@ -2,7 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+<<<<<<< Updated upstream:src/java/controller/DetailInvoice.java
 package controller;
+=======
+package controller.accountant;
+>>>>>>> Stashed changes:src/java/controller/accountant/DetailInvoice.java
 
 import dao.InvoiceDAO;
 import java.io.IOException;

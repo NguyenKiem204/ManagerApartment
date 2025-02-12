@@ -146,5 +146,31 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return list;
     }
+<<<<<<< Updated upstream
     
+=======
+
+    public List<Apartment> selectAllOcc() {
+        List<Apartment> list = new ArrayList<>();
+        String sql = "SELECT * FROM Apartment a where a.Status='Occupied'";
+        System.out.println(sql);
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Apartment apartment = new Apartment(
+                        rs.getInt("ApartmentID"),
+                        rs.getString("ApartmentName"),
+                        rs.getString("Block"),
+                        rs.getString("Status"),
+                        rs.getString("Type")
+                );
+                list.add(apartment);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+>>>>>>> Stashed changes
 }

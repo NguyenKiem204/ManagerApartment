@@ -46,5 +46,15 @@ public class Resident {
         this.phoneNumber = phoneNumber;
         this.mail = mail;
     }
+<<<<<<< Updated upstream
+=======
+    public Resident(int residentId, String fullName, String phoneNumber, String email) {
+        this.residentId = residentId;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+    
+>>>>>>> Stashed changes
 }
 
