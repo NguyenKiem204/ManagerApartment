@@ -236,7 +236,7 @@
                 const requestID = element.getAttribute("data-id");
                 let statusID = parseInt(element.getAttribute("data-status-id"));
 
-                // Chuyển đổi trạng thái ID theo vòng lặp: 1 → 2 → 3
+                // Chuyển đổi trạng thái ID theo vòng lặp: 1 => 2 => 3
                 if (statusID === 1) {
                     statusID = 2; // Pending → Processing
                 } else if (statusID === 2) {
