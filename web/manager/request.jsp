@@ -161,7 +161,6 @@
                                         ${rq.status.statusName}
                                     </span>
                                 </td>
-
                             </tr>
                         </c:forEach>
                     </tbody>
