@@ -1,10 +1,3 @@
-<%-- 
-    Document   : home1
-    Created on : Feb 11, 2025, 2:12:16 AM
-    Author     : nkiem
---%>
-
-<%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem --%>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -355,7 +348,7 @@
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="!#" class="sidebar-link">
+                                <a href="rule" class="sidebar-link">
                                     <i class="bi bi-puzzle"></i>
                                     <span>Regulations</span>
                                 </a>
@@ -397,16 +390,8 @@
                 <!--==============================END================================-->
 
                 <footer>
-                    <div class="footer clearfix mb-0 text-muted">
-                        <div class="float-start">
-                            <p>2025 &copy; Kiemm</p>
-                        </div>
+                    <div class="footer clearfix mb-0 text-muted">  
                         <div class="float-end">
-                            <p>
-                                Crafted with
-                                <span class="text-danger"><i class="bi bi-heart"></i></span> by
-                                <a href="http://ahmadsaugi.com">NguyenKiem</a>
-                            </p>
                         </div>
                     </div>
                 </footer>

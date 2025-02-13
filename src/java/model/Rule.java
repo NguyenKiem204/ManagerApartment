@@ -22,9 +22,28 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Rule {
+
     int ruleID;
     String ruleName;
     String ruleDescription;
     LocalDate publicDate;
     Staff staff;
+
+    public Rule(int ruleID, String ruleName, String ruleDescription, LocalDate publicDate) {
+        this.ruleID = ruleID;
+        this.ruleName = ruleName;
+        this.ruleDescription = ruleDescription;
+        this.publicDate = publicDate;
+    }
+
+    public Rule(String ruleName, String ruleDescription, LocalDate publicDate) {
+        this.ruleName = ruleName;
+        this.ruleDescription = ruleDescription;
+        this.publicDate = publicDate;
+        // them staffID vao day
+    }
+
+    public Rule(int ruleID) {
+        this.ruleID = ruleID;
+    }
 }
