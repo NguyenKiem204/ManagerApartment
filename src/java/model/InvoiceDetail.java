@@ -4,26 +4,84 @@
  */
 package model;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-
 /**
  *
- * @author admin
+ * @author nguye
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceDetail {
-    int detailID;
-    double amount;
-    String description;
-    Invoice invoice;
-    TypeBill typeBill;
+    private int detailID;
+    private double amount;
+    private String description;
+    private int TypeBillId;
+    private String billType;
+
+    public InvoiceDetail(double amount, String description, int TypeBillId) {
+        this.amount = amount;
+        this.description = description;
+        this.TypeBillId = TypeBillId;
+    }
+
+    public InvoiceDetail(int detailID, double amount, String description, String billType) {
+        this.detailID = detailID;
+        this.amount = amount;
+        this.description = description;
+        this.billType = billType;
+    }
+
+    public InvoiceDetail(int detailID, double amount, String description, int TypeBillId, String billType) {
+        this.detailID = detailID;
+        this.amount = amount;
+        this.description = description;
+        this.TypeBillId = TypeBillId;
+        this.billType = billType;
+    }
+
+    public InvoiceDetail(int detailID, double amount, String description, int TypeBillId) {
+        this.detailID = detailID;
+        this.amount = amount;
+        this.description = description;
+        this.TypeBillId = TypeBillId;
+    }
+
+    public int getDetailID() {
+        return detailID;
+    }
+
+    public void setDetailID(int detailID) {
+        this.detailID = detailID;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getBillType() {
+        return billType;
+    }
+
+    public void setBillType(String billType) {
+        this.billType = billType;
+    }
+
+    public int getTypeBillId() {
+        return TypeBillId;
+    }
+
+    public void setTypeBillId(int TypeBillId) {
+        this.TypeBillId = TypeBillId;
+    }
+    
+    
 }

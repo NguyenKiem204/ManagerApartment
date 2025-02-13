@@ -3,9 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
+
 import java.time.LocalDate;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 /**
  *
  * @author nkiem
@@ -16,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Resident {
+
     int residentId;
     String fullName;
     String password;
@@ -41,6 +44,10 @@ public class Resident {
         this.role = role;
     }
 
-    
+    public Resident(int residentId, String fullName, String phoneNumber, String email) {
+        this.residentId = residentId;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
 }
-

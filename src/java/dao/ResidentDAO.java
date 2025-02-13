@@ -99,7 +99,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return row;
     }
-    
+
     public String getImageURL(int residentId) {
         String imageURL = null;
         String query = "SELECT i.ImageURL FROM Image i "
@@ -134,7 +134,6 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         return row;
     }
 
-
     @Override
     public List<Resident> selectAll() {
         List<Resident> list = new ArrayList<>();
@@ -154,7 +153,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
                         rs.getString("Sex"),
                         rs.getString("Status"),
                         imageDAO.selectById(rs.getInt("ImageID")),
-                       roleDAO.selectById(rs.getInt("RoleID"))
+                        roleDAO.selectById(rs.getInt("RoleID"))
                 );
                 list.add(resident);
             }
@@ -397,5 +396,38 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
 
         return residents;
+    }
+
+    public Resident getApartmentOwnerByDepartment(int departmentID) {
+        String sql = "SELECT "
+                + "    r.ResidentID, "
+                + "    r.FullName, "
+                + "    r.PhoneNumber, "
+                + "    r.Email "
+                + "FROM Contract c "
+                + "JOIN Resident r ON c.ResidentID = r.ResidentID "
+                + "JOIN Apartment a ON c.ApartmentID = a.ApartmentID "
+                + "WHERE a.ApartmentID = ? AND r.RoleID = 7 AND r.Status ='Active' ";
+
+        Resident owner = null;
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, departmentID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    owner = new Resident();
+                    owner.setResidentId(rs.getInt("ResidentID"));
+                    owner.setFullName(rs.getString("FullName"));
+                    owner.setPhoneNumber(rs.getString("PhoneNumber"));
+                    owner.setEmail(rs.getString("Email"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return owner;
     }
 }
