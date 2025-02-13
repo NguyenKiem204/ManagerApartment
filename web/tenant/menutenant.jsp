@@ -183,10 +183,11 @@
                             <li class="sidebar-title">Others</li>
 
                             <li class="sidebar-item">
-                                <a href="../news" class="sidebar-link">
+                                <a href="<%= request.getContextPath() %>/news" class="sidebar-link">
                                     <i class="fa-solid fa-envelope"></i>
                                     <span>News</span>
                                 </a>
+                            </li>
                             <li class="sidebar-item">
                                 <a href="application-chat.html" class="sidebar-link">
                                     <i class="bi bi-chat-dots-fill"></i>

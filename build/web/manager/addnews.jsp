@@ -11,7 +11,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Trang chủ</title>
+        <title>Add News</title>
 
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
@@ -82,7 +82,7 @@
                                 <li class="user-footer d-flex justify-content-between">
                                     <a href="#" class="btn btn-default btn-flat">Profile</a>
                                     <a href="#" class="btn btn-default btn-flat">Setting</a>
-                                    <a href="#" class="btn btn-default btn-flat">Logout</a>
+                                    <a href="<%= request.getContextPath() %>/logout" class="btn btn-default btn-flat">Logout</a>
                                 </li>
                             </ul>
                         </li>

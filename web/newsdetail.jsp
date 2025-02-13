@@ -12,7 +12,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Trang chủ</title>
+        <title>${news.title}</title>
 
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
@@ -311,20 +311,34 @@
 
                             <li class="sidebar-title">Others</li>
 
-                            <li class="sidebar-item has-sub active">
-                                <a href="#" class="sidebar-link">
-                                    <i class="fa-solid fa-envelope"></i>
-                                    <span>News</span>
-                                </a>
-                                <ul class="submenu active">
-                                    <li class="submenu-item">
-                                        <a href="addnews">Add News</a>
+                            <c:choose>
+                                <c:when test="${sessionScope.staff.role.roleID == 1}">
+                                    <!-- Nếu là role 1, hiển thị submenu như cũ -->
+                                    <li class="sidebar-item has-sub active">
+                                        <a href="#" class="sidebar-link">
+                                            <i class="fa-solid fa-envelope"></i>
+                                            <span>News</span>
+                                        </a>
+                                        <ul class="submenu active">
+                                            <li class="submenu-item">
+                                                <a href="manager/addnews">Add News</a>
+                                            </li>
+                                            <li class="submenu-item">
+                                                <a href="news" style="text-decoration: underline;">News</a>
+                                            </li>
+                                        </ul>
                                     </li>
-                                    <li class="submenu-item">
-                                        <a href="news" style="text-decoration: underline;">News</a>
+                                </c:when>
+                                <c:otherwise>
+                                    <!-- Nếu không phải role 1, chỉ hiển thị liên kết News -->
+                                    <li class="sidebar-item active">
+                                        <a href="<%= request.getContextPath() %>/news" class="sidebar-link">
+                                            <i class="fa-solid fa-envelope"></i>
+                                            <span>News</span>
+                                        </a>
                                     </li>
-                                </ul>
-                            </li>
+                                </c:otherwise>
+                            </c:choose>
 
 
                             <li class="sidebar-item">

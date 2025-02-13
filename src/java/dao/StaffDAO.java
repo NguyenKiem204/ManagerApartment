@@ -281,10 +281,10 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
     }
 
     public boolean updatePasswordInDatabase(String email, String hashedPassword) {
-        try {
-            Connection connection = DBContext.getConnection();
-            String sql = "UPDATE Staff SET Password = ? WHERE Email = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
+        String sql = "UPDATE Staff SET Password = ? WHERE Email = ?";
+
+        try (Connection connection = DBContext.getConnection(); 
+            PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, hashedPassword);
             statement.setString(2, email);
 

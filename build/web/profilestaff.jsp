@@ -334,7 +334,7 @@
                                         <a href="addnews">Add News</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="news">News</a>
+                                        <a href="<%= request.getContextPath() %>/news">News</a>
                                     </li>
                                 </ul>
                             </li>
