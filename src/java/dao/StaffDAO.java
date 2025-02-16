@@ -197,6 +197,34 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         return staff;
     }
 
+    public Staff selectByEmail(String email) {
+        Staff staff = null;
+        String sql = "SELECT * FROM Staff WHERE Email = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                staff = new Staff(
+                        rs.getInt("StaffID"),
+                        rs.getString("FullName"),
+                        rs.getString("Password"),
+                        rs.getString("PhoneNumber"),
+                        rs.getString("CCCD"),
+                        rs.getString("Email"),
+                        rs.getDate("DOB").toLocalDate(),
+                        rs.getString("Sex"),
+                        rs.getString("Status"),
+                        imageDAO.selectById(rs.getInt("ImageID")),
+                        roleDAO.selectById(rs.getInt("RoleID"))
+                );
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return staff;
+    }
+
     public Staff getStaffByID(Integer id) {
         Staff staff = null;
         String sql = """
@@ -283,8 +311,7 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
     public boolean updatePasswordInDatabase(String email, String hashedPassword) {
         String sql = "UPDATE Staff SET Password = ? WHERE Email = ?";
 
-        try (Connection connection = DBContext.getConnection(); 
-            PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DBContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, hashedPassword);
             statement.setString(2, email);
 

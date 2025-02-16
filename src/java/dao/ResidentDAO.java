@@ -192,6 +192,34 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         return resident;
     }
 
+    public Resident selectByEmail(String email) {
+        Resident resident = null;
+        String sql = "SELECT * FROM Resident WHERE Email = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                resident = new Resident(
+                        rs.getInt("ResidentID"),
+                        rs.getString("FullName"),
+                        rs.getString("Password"),
+                        rs.getString("PhoneNumber"),
+                        rs.getString("CCCD"),
+                        rs.getString("Email"),
+                        rs.getDate("DOB").toLocalDate(),
+                        rs.getString("Sex"),
+                        rs.getString("Status"),
+                        imageDAO.selectById(rs.getInt("ImageID")),
+                        roleDAO.selectById(rs.getInt("RoleID"))
+                );
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resident;
+    }
+
     public boolean existEmail(String email) {
         String sql = "SELECT * FROM Resident WHERE Email = ?";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
