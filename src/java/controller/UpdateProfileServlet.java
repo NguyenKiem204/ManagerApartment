@@ -6,8 +6,6 @@ package controller;
 
 import config.FileUploadUtil;
 import dao.ResidentDAO;
-import dao.RoleDAO;
-import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -21,7 +19,8 @@ import java.time.LocalDate;
 import model.Image;
 import model.Resident;
 import model.Role;
-import model.Staff;
+import java.util.List;
+import jakarta.servlet.http.Part;
 
 /**
  *
@@ -80,6 +79,22 @@ public class UpdateProfileServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private String getSubmittedFileName(Part part) {
+        for (String content : part.getHeader("content-disposition").split(";")) {
+            if (content.trim().startsWith("filename")) {
+                return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return null;
+    }
+
+    private String getFileExtension(String fileName) {
+        if (fileName == null || !fileName.contains(".")) {
+            return "";
+        }
+        return fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -90,55 +105,51 @@ public class UpdateProfileServlet extends HttpServlet {
         String phoneNumber = request.getParameter("phoneNumber");
         String dobParam = request.getParameter("dob");
         String sex = request.getParameter("sex");
-        Integer userID = null;
-        if (userIDParam != null) {
-            userID = Integer.parseInt(userIDParam);
+
+        Integer userID = (userIDParam != null) ? Integer.parseInt(userIDParam) : null;
+        LocalDate dob = LocalDate.parse(dobParam);
+        Part filePart = request.getPart("imgURL");
+
+        List<String> allowedMimeTypes = List.of("image/jpeg", "image/png", "image/gif", "image/webp");
+        List<String> allowedExtensions = List.of("jpg", "jpeg", "png", "gif", "webp");
+
+        if (filePart != null && filePart.getSize() > 0) {
+            String mimeType = filePart.getContentType();
+            String fileName = getSubmittedFileName(filePart);
+            String fileExtension = getFileExtension(fileName);
+
+            if (allowedMimeTypes.contains(mimeType) && allowedExtensions.contains(fileExtension)) {
+                String newImageURL = FileUploadUtil.uploadAvatarImage(request, userIDParam);
+                if (newImageURL != null) {
+                    imageURL = newImageURL;
+                }
+            }
         }
 
-        LocalDate dob = LocalDate.parse(dobParam);
-        
-        String newImageURL = FileUploadUtil.uploadAvatarImage(request, userIDParam);
-        if (newImageURL != null) {
-            imageURL = newImageURL;
-        }
-        StaffDAO staffDAO = new StaffDAO();
         ResidentDAO residentDAO = new ResidentDAO();
-        
-        
         HttpSession session = request.getSession();
-        if (staffDAO.selectById(userID)!= null) {
-            Staff staff = Staff.builder()
-                .staffId(userID)
-                .image(new Image(staffDAO.selectById(userID).getImage().getImageID(), imageURL))
-                .fullName(fullName)
-                .email(email)
-                .phoneNumber(phoneNumber)
-                .dob(dob)
-                .role(new Role(staffDAO.selectById(userID).getRole().getRoleID(), staffDAO.selectById(userID).getRole().getRoleName(), ""))
-                .sex(sex)
-                .build();
-            staffDAO.updateProfileStaff(staff);
-            session.removeAttribute("staff");
-            if(imageURL==null || imageURL.isEmpty())
-            staff.getImage().setImageURL(staffDAO.getImageURL(userID));
-            session.setAttribute("staff", staff);
-        } else if (residentDAO.selectById(userID) != null) {
+
+        Resident oldResident = residentDAO.selectById(userID);
+        if (oldResident != null) {
             Resident resident = Resident.builder()
-                .residentId(userID)
-                .image(new Image(residentDAO.selectById(userID).getImage().getImageID(), imageURL))
-                .fullName(fullName)
-                .email(email)
-                .phoneNumber(phoneNumber)
-                .dob(dob)
-                .role(new Role(residentDAO.selectById(userID).getRole().getRoleID(), residentDAO.selectById(userID).getRole().getRoleName(), ""))
-                .sex(sex)
-                .build();
+                    .residentId(userID)
+                    .image(new Image(oldResident.getImage().getImageID(), imageURL))
+                    .fullName(fullName)
+                    .email(email)
+                    .phoneNumber(phoneNumber)
+                    .dob(dob)
+                    .role(new Role(oldResident.getRole().getRoleID(), oldResident.getRole().getRoleName(), ""))
+                    .sex(sex)
+                    .build();
             residentDAO.updateProfileResident(resident);
-            session.removeAttribute("resident");
-            if(imageURL==null || imageURL.isEmpty())
-            resident.getImage().setImageURL(residentDAO.getImageURL(userID));
+
+            if (imageURL == null || imageURL.isEmpty()) {
+                imageURL = oldResident.getImage().getImageURL();
+            }
+            resident.getImage().setImageURL(imageURL);
             session.setAttribute("resident", resident);
         }
+
         response.sendRedirect("profile");
     }
 

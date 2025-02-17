@@ -19,6 +19,7 @@ public class FileUploadUtil {
         String imgURL = null;
 
         try {
+            // Nhận phần tệp được tải lên  
             filePart = request.getPart("imgURL");
             if (filePart != null && filePart.getSize() > 0) {
                 File uploadFolder = new File(cleanUploadDir);
@@ -29,17 +30,22 @@ public class FileUploadUtil {
                         return null;
                     }
                 }
+                File[] existingFiles = uploadFolder.listFiles((dir, name) -> name.startsWith(avatarName));
+                if (existingFiles != null) {
+                    for (File existingFile : existingFiles) {
+                        boolean deleted = existingFile.delete();
+                        if (deleted) {
+                            System.out.println("Deleted existing file: " + existingFile.getAbsolutePath());
+                        } else {
+                            System.out.println("Failed to delete existing file: " + existingFile.getAbsolutePath());
+                        }
+                    }
+                }
                 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
                 String fileExtension = fileName.substring(fileName.lastIndexOf("."));
-                String newFileName = avatarName + fileExtension;
+                String newFileName = avatarName + fileExtension; 
                 File file = new File(uploadFolder, newFileName);
-                if (file.exists()) {
-                    boolean deleted = file.delete();
-                    if (!deleted) {
-                    System.out.println("Failed to delete existing file: " + file.getAbsolutePath());
-                    return null;
-                }
-                }
+
                 try (InputStream fileContent = filePart.getInputStream()) {
                     Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     System.out.println("File successfully uploaded to: " + file.getAbsolutePath());
@@ -59,7 +65,6 @@ public class FileUploadUtil {
 
         return imgURL;
     }
-
 
     public static String insertNewsImage(HttpServletRequest request) {
         String uploadDir = request.getServletContext().getRealPath("/assets/images/news/");
