@@ -36,24 +36,39 @@ public class ChatRoomServerEndpoint {
     @OnMessage
     public void handleMessage(String message, Session userSession) throws IOException {
         JSONObject jsonMessage = new JSONObject(message);
+
         if (jsonMessage.has("type") && jsonMessage.getString("type").equals("connect")) {
             String email = jsonMessage.getString("email");
             userSession.getUserProperties().put("email", email);
             System.out.println("User connected with email: " + email);
-        } else {
+        } else if (jsonMessage.has("type") && jsonMessage.getString("type").equals("message")) {
             String sender = jsonMessage.getString("sender");
             String receiver = jsonMessage.getString("receiver");
             String messageText = jsonMessage.getString("message");
 
             MessageDAO messageDAO = new MessageDAO();
             messageDAO.sendMessage(sender, receiver, messageText);
+            boolean receiverConnected = false;
             for (Session session : users) {
                 if (session.getUserProperties().get("email").equals(receiver)) {
                     session.getBasicRemote().sendText(message);
+                    receiverConnected = true;
+                    System.out.println("Message sent to: " + receiver + " - " + message);
                 }
             }
 
-            System.out.println("Message received from " + sender + " to " + receiver + ": " + messageText);
+            if (!receiverConnected) {
+                System.out.println("Receiver " + receiver + " is not connected. Message saved.");
+            }
+
+            JSONObject response = new JSONObject();
+            response.put("type", "message");
+            response.put("sender", sender);
+            response.put("receiver", receiver); 
+            response.put("message", messageText);
+
+            userSession.getBasicRemote().sendText(response.toString());
+            System.out.println("Message sent to sender: " + sender + " - " + response.toString());
         }
     }
 
