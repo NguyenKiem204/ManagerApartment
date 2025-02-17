@@ -5,6 +5,7 @@
 
 package controller.manager;
 
+import dao.ImageDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,15 +14,22 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import dao.ResidentDAO;
+import dao.RoleDAO;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import model.EmailUtil;
+import model.Image;
 import model.Resident;
+import model.Role;
+import org.json.JSONObject;
 
 /**
  *
  * @author fptshop
  */
-@WebServlet(name="ManageResidentControl", urlPatterns={"/manageResident"})
+@WebServlet(name="ManageResidentControl", urlPatterns={"/manager/manageResident"})
 public class ManageResidentServlet extends HttpServlet {
     
     @Override
@@ -45,24 +53,101 @@ public class ManageResidentServlet extends HttpServlet {
     request.setAttribute("selectedStatus", status);
     request.setAttribute("searchKeyword", searchKeyword); 
 
-    request.getRequestDispatcher("mngresident.jsp").forward(request, response);
+    request.getRequestDispatcher("/manager/mngresident.jsp").forward(request, response);
 }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        String txtSearch = request.getParameter("valueSearch");
-        ResidentDAO dao = new ResidentDAO();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        JSONObject jsonResponse = new JSONObject();
 
-        //List<Resident> list = dao.selectById(Integer.parseInt(txtSearch));
+        ResidentDAO residentDAO = new ResidentDAO();
+        ImageDAO imageDAO = new ImageDAO();
+        RoleDAO roleDAO = new RoleDAO();
 
-        //request.setAttribute("listUser", list);
-        //request.setAttribute("searchValue", txtSearch);
-        //request.getRequestDispatcher("dashboard/mngaccount.jsp").forward(request, response);
+        try {
+            // Nhận dữ liệu từ request
+            String fullName = request.getParameter("fullName");
+            String phoneNumber = request.getParameter("phoneNumber");
+            String cccd = request.getParameter("cccd");
+            String email = request.getParameter("email");
+            String dobStr = request.getParameter("dob");
+            String sex = request.getParameter("sex");
+            int roleId = Integer.parseInt(request.getParameter("roleId"));
+
+            // Kiểm tra định dạng số điện thoại (10 số)
+            if (!phoneNumber.matches("\\d{10}")) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Số điện thoại phải có đúng 10 chữ số!");
+                out.write(jsonResponse.toString());
+                return;
+            }
+
+            // Kiểm tra định dạng CCCD (12 số)
+            if (!cccd.matches("\\d{12}")) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "CCCD phải có đúng 12 chữ số!");
+                out.write(jsonResponse.toString());
+                return;
+            }
+
+            // Kiểm tra xem cư dân đã tồn tại chưa
+            if (residentDAO.isResidentExists(phoneNumber, cccd, email)) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "PhoneNumber, CCCD or Email is exist!");
+                out.write(jsonResponse.toString());
+                return;
+            }
+
+            // Chuyển đổi ngày sinh
+            LocalDate dob = LocalDate.parse(dobStr);
+
+            // Mặc định trạng thái là Active
+            String status = "Active";
+            //Image image = null;
+            Role role = roleDAO.selectById(roleId);
+
+            // Tạo mật khẩu ngẫu nhiên (3 ký tự)
+            String password = generateRandomPassword(3);
+
+            // Tạo đối tượng Resident
+            Resident newResident = new Resident(fullName, password, phoneNumber, cccd, email, dob, sex, status, role);
+
+            // Thêm vào database
+            int isAdded = residentDAO.insert(newResident);
+
+            if (isAdded != 0) {
+                // Gửi email chứa mật khẩu
+                EmailUtil.sendEmail(email, password);
+                jsonResponse.put("success", true);
+                jsonResponse.put("message", "Add staff successfully! Password was sent to the mail.");
+            } else {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Add staff failed!");
+            }
+        } catch (DateTimeParseException e) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Birthdate is not valid!");
+        } catch (Exception e) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Unknown error: " + e.getMessage());
+        }
+
+        // Trả về JSON response
+        out.write(jsonResponse.toString());
     }
-
+private String generateRandomPassword(int length) {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int randomIndex = (int) (Math.random() * chars.length());
+            password.append(chars.charAt(randomIndex));
+        }
+        return password.toString();
+    }
     
     @Override
     public String getServletInfo() {

@@ -18,15 +18,26 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author fptshop
  */
-@WebServlet(name="UpdateResidentStatusServlet", urlPatterns={"/updateResidentStatus"})
+@WebServlet(name="UpdateResidentStatusServlet", urlPatterns={"/manager/updateResidentStatus"})
 public class UpdateResidentStatusServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
 
         try {
-            int residentId = Integer.parseInt(request.getParameter("residentId"));
+            String residentIdStr = request.getParameter("residentId");
             String status = request.getParameter("status");
+
+            System.out.println("Received residentId: " + residentIdStr);
+            System.out.println("Received status: " + status);
+
+            if (residentIdStr == null || status == null) {
+                out.write("{\"success\": false, \"message\": \"Thiếu dữ liệu residentId hoặc status!\"}");
+                return;
+            }
+
+            int residentId = Integer.parseInt(residentIdStr);
 
             ResidentDAO residentDAO = new ResidentDAO();
             boolean isUpdated = residentDAO.updateStatus(residentId, status);
@@ -36,7 +47,10 @@ public class UpdateResidentStatusServlet extends HttpServlet {
             } else {
                 out.write("{\"success\": false, \"message\": \"Cập nhật thất bại!\"}");
             }
+        } catch (NumberFormatException e) {
+            out.write("{\"success\": false, \"message\": \"residentId phải là số!\"}");
         } catch (Exception e) {
+            e.printStackTrace(); // Log lỗi ra console
             out.write("{\"success\": false, \"message\": \"Lỗi: " + e.getMessage() + "\"}");
         }
     }

@@ -41,6 +41,19 @@ public class Resident {
         this.role = role;
     }
 
+    public Resident(String fullName, String password, String phoneNumber, String cccd, String email, LocalDate dob, String sex, String status, Role role) {
+        this.fullName = fullName;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.cccd = cccd;
+        this.email = email;
+        this.dob = dob;
+        this.sex = sex;
+        this.status = status;
+        this.role = role;
+    }
+
+
     
 }
 

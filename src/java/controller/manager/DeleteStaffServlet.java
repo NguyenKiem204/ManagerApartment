@@ -19,7 +19,7 @@ import model.Staff;
  *
  * @author fptshop
  */
-@WebServlet(name="DeleteStaffServlet", urlPatterns={"/deleteStaff"})
+@WebServlet(name="DeleteStaffServlet", urlPatterns={"/manager/deleteStaff"})
 public class DeleteStaffServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String StaffId = request.getParameter("staffId");
