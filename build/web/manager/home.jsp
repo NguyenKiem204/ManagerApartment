@@ -52,13 +52,13 @@
                         <c:set var="staff" value="${sessionScope.staff}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="${staff.image.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
                                 <span class="d-none d-md-inline">${staff.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="${staff.image.imageURL}" class="rounded-circle shadow"
+                                    <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
                                         ${staff.fullName} - Web Developer
@@ -66,9 +66,9 @@
                                     </p>
                                 </li>
                                 <li class="user-footer d-flex justify-content-between">
-                                    <a href="profile" class="btn btn-default btn-flat">Profile</a>
+                                    <a href="<%= request.getContextPath() %>/profile-staff" class="btn btn-default btn-flat">Profile</a>
                                     <a href="#" class="btn btn-default btn-flat">Setting</a>
-                                    <a href="logout" class="btn btn-default btn-flat">Logout</a>
+                                    <a href="<%= request.getContextPath() %>/logout" class="btn btn-default btn-flat">Logout</a>
                                 </li>
                             </ul>
                         </li>
@@ -127,7 +127,7 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"><img src="assets/images/logo/logo1.png"
+                                <a href="menumanager.jsp"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
                                                                alt="Logo" /></a>
                             </div>
                             <div class="toggler">
@@ -239,7 +239,7 @@
 
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="reqadministrative">Request</a>
+                                        <a href="request">Request</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="layout-vertical-1-column.html">Residents</a>
@@ -283,7 +283,7 @@
                                         <a href="addnews">Add News</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="news">News</a>
+                                        <a href="<%= request.getContextPath() %>/news">News</a>
                                     </li>
                                 </ul>
                             </li>
@@ -367,7 +367,7 @@
                                                     <div class="row">
                                                         <div class="col-md-5">
                                                             <img class="fixed-size-img" 
-                                                                 src="./assets/images/aparts/R.jpg" alt="Chung cư">
+                                                                 src="<%= request.getContextPath() %>/assets/images/aparts/R.jpg" alt="Chung cư">
                                                         </div>
                                                         <div class="col-md-7">
                                                             <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
@@ -384,7 +384,7 @@
                                                     <div class="row">
                                                         <div class="col-md-5" >
                                                             <img class="fixed-size-img" 
-                                                                 src="./assets/images/aparts/toab.jpg" alt="Chung cư">
+                                                                 src="<%= request.getContextPath() %>/assets/images/aparts/toab.jpg" alt="Chung cư">
                                                         </div>
                                                         <div class="col-md-7">
                                                             <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
@@ -401,7 +401,7 @@
                                                     <div class="row">
                                                         <div class="col-md-5" >
                                                             <img class="fixed-size-img" 
-                                                                 src="./assets/images/aparts/toac.jpeg" alt="Chung cư">
+                                                                 src="<%= request.getContextPath() %>/assets/images/aparts/toac.jpeg" alt="Chung cư">
                                                         </div>
                                                         <div class="col-md-7">
                                                             <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
@@ -444,7 +444,7 @@
                                                         <svg class="bi text-primary" width="32" height="32" fill="blue"
                                                              style="width: 10px">
                                                         <use
-                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
+                                                            xlink:href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
                                                         </svg>
                                                         <h5 class="mb-0 ms-3">Chí Thanh</h5>
                                                     </div>
@@ -462,7 +462,7 @@
                                                         <svg class="bi text-success" width="32" height="32" fill="blue"
                                                              style="width: 10px">
                                                         <use
-                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
+                                                            xlink:href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
                                                         </svg>
                                                         <h5 class="mb-0 ms-3">Mường Thanh</h5>
                                                     </div>
@@ -480,7 +480,7 @@
                                                         <svg class="bi text-danger" width="32" height="32" fill="blue"
                                                              style="width: 10px">
                                                         <use
-                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
+                                                            xlink:href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
                                                         </svg>
                                                         <h5 class="mb-0 ms-3">Hải Phong</h5>
                                                     </div>
@@ -514,7 +514,7 @@
                                                             <td class="col-3">
                                                                 <div class="d-flex align-items-center">
                                                                     <div class="avatar avatar-md">
-                                                                        <img src="assets/images/faces/5.jpg" />
+                                                                        <img src="<%= request.getContextPath() %>/assets/images/faces/5.jpg" />
                                                                     </div>
                                                                     <p class="font-bold ms-3 mb-0">Si Cantik</p>
                                                                 </div>
@@ -529,7 +529,7 @@
                                                             <td class="col-3">
                                                                 <div class="d-flex align-items-center">
                                                                     <div class="avatar avatar-md">
-                                                                        <img src="assets/images/faces/2.jpg" />
+                                                                        <img src="<%= request.getContextPath() %>/assets/images/faces/2.jpg" />
                                                                     </div>
                                                                     <p class="font-bold ms-3 mb-0">Si Ganteng</p>
                                                                 </div>
@@ -555,7 +555,7 @@
                                      style="padding-top: 3.2rem !important; padding-bottom: 3.1rem !important;">
                                     <div class="d-flex align-items-center">
                                         <div class="avatar avatar-xl">
-                                            <img src="./assets/images/faces/1.png" alt="Face 1" />
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/1.png" alt="Face 1" />
                                         </div>
                                         <div class="ms-3 name">
                                             <h5 class="font-bold">Chủ Căn Hộ</h5>
@@ -571,7 +571,7 @@
                                 <div class="card-content pb-4">
                                     <div class="recent-message d-flex px-4 py-3">
                                         <div class="avatar avatar-lg">
-                                            <img src="assets/images/faces/4.jpg" />
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/4.jpg" />
                                         </div>
                                         <div class="name ms-4">
                                             <h5 class="mb-1">Nguyễn Kiểm</h5>
@@ -580,7 +580,7 @@
                                     </div>
                                     <div class="recent-message d-flex px-4 py-3">
                                         <div class="avatar avatar-lg">
-                                            <img src="assets/images/faces/3.jpg" />
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/3.jpg" />
                                         </div>
                                         <div class="name ms-4">
                                             <h5 class="mb-1">Quang Dũng</h5>
@@ -589,7 +589,7 @@
                                     </div>
                                     <div class="recent-message d-flex px-4 py-3">
                                         <div class="avatar avatar-lg">
-                                            <img src="assets/images/faces/5.jpg" />
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/5.jpg" />
                                         </div>
                                         <div class="name ms-4">
                                             <h5 class="mb-1">Mai Hương</h5>

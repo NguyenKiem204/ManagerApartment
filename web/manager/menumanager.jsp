@@ -52,13 +52,13 @@
                         <c:set var="staff" value="${sessionScope.staff}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="${staff.image.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
                                 <span class="d-none d-md-inline">${staff.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="${staff.image.imageURL}" class="rounded-circle shadow"
+                                    <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
                                         ${staff.fullName} - Web Developer
@@ -68,7 +68,7 @@
                                 <li class="user-footer d-flex justify-content-between">
                                     <a href="profile" class="btn btn-default btn-flat">Profile</a>
                                     <a href="#" class="btn btn-default btn-flat">Setting</a>
-                                    <a href="logout" class="btn btn-default btn-flat">Logout</a>
+                                    <a href="<%= request.getContextPath() %>/logout" class="btn btn-default btn-flat">Logout</a>
                                 </li>
                             </ul>
                         </li>
@@ -95,7 +95,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -108,7 +108,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -127,7 +127,7 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"><img src="assets/images/logo/logo1.png"
+                                <a href="menumanager.jsp"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
                                                                alt="Logo" /></a>
                             </div>
                             <div class="toggler">
@@ -234,7 +234,10 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="layout-default.html">Send Notification</a>
+                                        <a href="feedback">Feedback</a>
+                                    </li>
+                                    <li class="submenu-item">
+                                        <a href="request">Request</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="layout-vertical-1-column.html">Residents</a>

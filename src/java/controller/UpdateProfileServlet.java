@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import model.Image;
 import model.Resident;
+import model.Role;
 import model.Staff;
 
 /**
@@ -113,6 +114,7 @@ public class UpdateProfileServlet extends HttpServlet {
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .dob(dob)
+                .role(new Role(staffDAO.selectById(userID).getRole().getRoleID(), staffDAO.selectById(userID).getRole().getRoleName(), ""))
                 .sex(sex)
                 .build();
             staffDAO.updateProfileStaff(staff);
@@ -128,6 +130,7 @@ public class UpdateProfileServlet extends HttpServlet {
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .dob(dob)
+                .role(new Role(residentDAO.selectById(userID).getRole().getRoleID(), residentDAO.selectById(userID).getRole().getRoleName(), ""))
                 .sex(sex)
                 .build();
             residentDAO.updateProfileResident(resident);

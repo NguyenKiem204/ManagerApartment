@@ -47,25 +47,26 @@
                     <!-- User and Notification Dropdowns -->
                     <ul class="navbar-nav ms-auto">
                         <!-- User Menu -->
+                        <c:set var="resident" value="${sessionScope.resident}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="./assets/images/faces/avatar.png" class="user-image rounded-circle shadow"
+                                <img src="<%= request.getContextPath() %>/${resident.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
-                                <span class="d-none d-md-inline">NguyenKiem</span>
+                                <span class="d-none d-md-inline">${resident.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="./assets/images/faces/avatar.png" class="rounded-circle shadow"
+                                    <img src="<%= request.getContextPath() %>/${resident.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
-                                        NguyenKiem - Web Developer
+                                        ${resident.fullName} - Web Developer
                                         <small>Member since Nov. 2024</small>
                                     </p>
                                 </li>
                                 <li class="user-footer d-flex justify-content-between">
-                                    <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                    <a href="<%= request.getContextPath() %>/profile" class="btn btn-default btn-flat">Profile</a>
                                     <a href="#" class="btn btn-default btn-flat">Setting</a>
-                                    <a href="#" class="btn btn-default btn-flat">Logout</a>
+                                    <a href="<%= request.getContextPath() %>/logout" class="btn btn-default btn-flat">Logout</a>
                                 </li>
                             </ul>
                         </li>
@@ -79,7 +80,7 @@
                                 <li class="notify">
                                     <a href="!#">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -91,7 +92,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -103,7 +104,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -121,7 +122,7 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"><img src="assets/images/logo/logo1.png" alt="Logo" /></a>
+                                <a href="menumanager.jsp"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png" alt="Logo" /></a>
                             </div>
                             <div class="toggler">
                                 <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -139,25 +140,11 @@
                                 </a>
                             </li>
 
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-stack"></i>
+                            <li class="sidebar-item">
+                                <a href="<%= request.getContextPath() %>/news" class="sidebar-link">
+                                    <i class="fa-solid fa-envelope"></i>
                                     <span>News</span>
                                 </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="#">Building</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Floor</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Apartment</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Utilities</a>
-                                    </li>
-                                </ul>
                             </li>
 
                             <li class="sidebar-item has-sub">

@@ -17,20 +17,20 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
               rel="stylesheet" />
-        <link rel="stylesheet" href="assets/css/bootstrap.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
 
-        <link rel="stylesheet" href="assets/vendors/iconly/bold.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
 
         <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
-        <link rel="stylesheet" href="assets/css/pages/index.css" />
-        <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css" />
-        <link rel="stylesheet" href="assets/css/app.css" />
-        <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
+        <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="assets/css/menu.css" />
-        <link rel="stylesheet" href="assets/css/changeprofile.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/changeprofile.css" />
     </head>
 
     <body>
@@ -40,7 +40,32 @@
                     <!-- Navbar Links -->
                     <ul class="navbar-nav kiem_can_trai">
                         <li class="nav-item d-none d-md-block">
-                            <a href="home" class="nav-link">Home</a>
+                            <c:choose>
+                                <c:when test="${sessionScope.staff.role.roleID == 1}">
+                                    <a href="${pageContext.request.contextPath}/manager/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.staff.role.roleID == 2}">
+                                    <a href="${pageContext.request.contextPath}/administrative/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.staff.role.roleID == 3}">
+                                    <a href="${pageContext.request.contextPath}/accountant/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.staff.role.roleID == 4}">
+                                    <a href="${pageContext.request.contextPath}/technical/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.staff.role.roleID == 5}">
+                                    <a href="${pageContext.request.contextPath}/service/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.resident.role.roleID == 6}">
+                                    <a href="${pageContext.request.contextPath}/tenant/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:when test="${sessionScope.resident.role.roleID == 7}">
+                                    <a href="${pageContext.request.contextPath}/owner/home" class="nav-link">Home</a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${pageContext.request.contextPath}/error-403" class="nav-link">Home</a>
+                                </c:otherwise>
+                            </c:choose>
                         </li>
                         <li class="nav-item d-none d-md-block">
                             <a href="#" class="nav-link">Contact</a>
@@ -50,19 +75,19 @@
                     <!-- User and Notification Dropdowns -->
                     <ul class="navbar-nav ms-auto">
                         <!-- User Menu -->
-                        <c:set var="staff" value="${sessionScope.staff}" />
+                        <c:set var="resident" value="${sessionScope.resident}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="${staff.image.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="<%= request.getContextPath() %>/${resident.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
-                                <span class="d-none d-md-inline">${staff.fullName}</span>
+                                <span class="d-none d-md-inline">${resident.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="${staff.image.imageURL}" class="rounded-circle shadow"
+                                    <img src="<%= request.getContextPath() %>/${resident.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
-                                        ${staff.fullName} - Web Developer
+                                        ${resident.fullName} - Web Developer
                                         <small>Member since Nov. 2024</small>
                                     </p>
                                 </li>
@@ -96,7 +121,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -109,7 +134,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -128,7 +153,7 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"><img src="assets/images/logo/logo1.png"
+                                <a href="menumanager.jsp"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
                                                                alt="Logo" /></a>
                             </div>
                             <div class="toggler">
@@ -142,10 +167,40 @@
                             <li class="sidebar-title">Menu</li>
 
                             <li class="sidebar-item active">
-                                <a href="index.html" class="sidebar-link">
-                                    <i class="bi bi-grid-fill"></i>
-                                    <span>Home</span>
-                                </a>
+                                <c:choose>
+                                    <c:when test="${sessionScope.staff.role.roleID == 1}">
+                                        <a href="${pageContext.request.contextPath}/manager/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 2}">
+                                        <a href="${pageContext.request.contextPath}/administrative/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 3}">
+                                        <a href="${pageContext.request.contextPath}/accountant/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 4}">
+                                        <a href="${pageContext.request.contextPath}/technical/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.staff.role.roleID == 5}">
+                                        <a href="${pageContext.request.contextPath}/service/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.resident.role.roleID == 6}">
+                                        <a href="${pageContext.request.contextPath}/tenant/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.resident.role.roleID == 7}">
+                                        <a href="${pageContext.request.contextPath}/owner/home" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:when>
+                                        <c:otherwise>
+                                        <a href="${pageContext.request.contextPath}/error-403" class="sidebar-link"><i class="bi bi-grid-fill"></i>
+                                            <span>Home</span></a>
+                                        </c:otherwise>
+                                    </c:choose>
                             </li>
 
                             <li class="sidebar-item has-sub">
@@ -339,9 +394,11 @@
                     <c:set var="resident" value="${sessionScope.resident}"/>
                     <form action="update-profile" method="POST" enctype="multipart/form-data">
                         <div class="text-center mb-3">
-                            <img src="${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}"
-                                 alt="Ảnh cá nhân" class="profile-img rounded-circle">
-                            <input type="file" class="form-control mt-2" value="${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}" name="imgURL" id="upload-photo">
+                            <img id="preview-img" 
+                                 src="<%= request.getContextPath() %>/${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}" 
+                                 alt="Ảnh cá nhân" class="profile-img rounded-circle" width="150" height="150">
+
+                            <input type="file" class="form-control mt-2" name="imgURL" id="upload-photo" accept="image/*">
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -375,7 +432,7 @@
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label for="password" class="form-label">Mật khẩu</label>
-                                <input type="password" class="form-control" id="password" value="*******">
+                                <input type="password" class="form-control" id="password" value="*******" disabled>
                             </div>
                         </div>
                         <div class="d-flex justify-content-between">
@@ -402,6 +459,24 @@
                 </footer>
             </div>
         </div>
+        <script>
+            document.getElementById("upload-photo").addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    if (!file.type.startsWith("image/")) {
+                        alert("Chỉ được chọn file ảnh!");
+                        event.target.value = "";
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        document.getElementById("preview-img").src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        </script>
         <script src="assets/js/bootstrap.bundle.min.js"></script>
 
         <script src="assets/vendors/apexcharts/apexcharts.js"></script>

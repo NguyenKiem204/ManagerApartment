@@ -62,8 +62,13 @@ public class FeedbackAdministrativeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
               throws ServletException, IOException {
         String sort = request.getParameter("sort");
+        String key = request.getParameter("key");
+        
         FeedbackDAO fbDAO = new FeedbackDAO();
         List<Feedback> list = fbDAO.selectAll();
+        if (key != null) {
+            list = fbDAO.getAllFeedbacksByTitleOrStaff(key);
+        }
         if (sort != null) {
             switch (sort) {
                 case "1" -> list = fbDAO.getAllFeedbacksSortedByStaff();
@@ -74,7 +79,7 @@ public class FeedbackAdministrativeServlet extends HttpServlet {
             }
         }
         request.setAttribute("listfb", list);
-        request.getRequestDispatcher("feedbackadministrative.jsp").forward(request, response);
+        request.getRequestDispatcher("/manager/feedback.jsp").forward(request, response);
     }
 
     /**

@@ -1,0 +1,194 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Feb 17, 2025, 1:46:38 AM
+    Author     : nkiem
+*/
+body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f2f5;
+      }
+
+      .container {
+        display: flex;
+        height: 100vh;
+      }
+
+      .sidebar {
+        width: 300px;
+        background-color: white;
+        border-right: 1px solid #dddfe2;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar-header {
+        padding: 16px;
+        border: 1px solid #dddfe2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .sidebar-header input {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #dddfe2;
+        border-radius: 5px;
+      }
+
+      .sidebar-header .fa-search {
+        margin-left: 10px;
+        color: #606770;
+      }
+
+      .sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+      }
+      .sidebar-content a {
+        text-decoration: none;
+        color: #212529;
+        cursor: pointer;
+      }
+
+      .sidebar-content .contact {
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #dddfe2;
+      }
+
+      .sidebar-content .contact img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .sidebar-content .contact .name {
+        font-weight: bold;
+      }
+
+      .sidebar-content .contact .time {
+        color: #606770;
+        font-size: 12px;
+      }
+
+      .chat-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+      }
+
+      .chat-header {
+        padding: 10px;
+        border-bottom: 1px solid #dddfe2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .chat-header .user-info {
+        display: flex;
+        align-items: center;
+      }
+
+      .chat-header .user-info img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .chat-header .fa-phone,
+      .chat-header .fa-video,
+      .chat-header .fa-info-circle {
+        margin-left: 10px;
+        color: #606770;
+      }
+
+      .chat-content {
+        flex: 1;
+        padding: 10px;
+        overflow-y: auto;
+      }
+
+      .chat-content .message {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: flex-end;
+      }
+
+      .chat-content .message.sent {
+        justify-content: flex-end;
+      }
+
+      .chat-content .message .text {
+        display: inline-block;
+        padding: 10px;
+        border-radius: 20px;
+        max-width: 100%;
+      }
+
+      .chat-content .message.sent .text {
+        background-color: #0084ff;
+        color: white;
+        margin-left: auto;
+      }
+
+      .chat-content .message.received .text {
+        background-color: #f1f0f0;
+        color: black;
+      }
+
+      .chat-content .message .time {
+        font-size: 12px;
+      }
+
+      .time-left {
+        text-align: left;
+        font-size: 12px;
+        color: #606770;
+        margin-top: 5px;
+      }
+
+      .time-right {
+        text-align: right;
+        font-size: 12px;
+        color: #606770;
+        margin-top: 5px;
+      }
+
+      .chat-content .message.received img.avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .chat-footer {
+        padding: 10px;
+        border-top: 1px solid #dddfe2;
+        display: flex;
+        align-items: center;
+      }
+
+      .chat-footer input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #dddfe2;
+        border-radius: 20px;
+        margin-right: 10px;
+      }
+
+      .chat-footer .fa-thumbs-up,
+      .chat-footer .fa-heart {
+        color: #0084ff;
+        margin-left: 10px;
+      }

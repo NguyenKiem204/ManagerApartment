@@ -36,9 +36,9 @@ public class FileUploadUtil {
                 if (file.exists()) {
                     boolean deleted = file.delete();
                     if (!deleted) {
-                        System.out.println("Failed to delete existing file: " + file.getAbsolutePath());
-                        return null;
-                    }
+                    System.out.println("Failed to delete existing file: " + file.getAbsolutePath());
+                    return null;
+                }
                 }
                 try (InputStream fileContent = filePart.getInputStream()) {
                     Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -59,60 +59,60 @@ public class FileUploadUtil {
 
         return imgURL;
     }
-    
 
-public static String insertNewsImage(HttpServletRequest request) {
-    String uploadDir = request.getServletContext().getRealPath("/assets/images/news/");
-    System.out.println("Before cleaning: " + uploadDir);
 
-    String cleanUploadDir = uploadDir.replaceAll("[/\\\\]build", "");
-    System.out.println("After cleaning: " + cleanUploadDir);
+    public static String insertNewsImage(HttpServletRequest request) {
+        String uploadDir = request.getServletContext().getRealPath("/assets/images/news/");
+        System.out.println("Before cleaning: " + uploadDir);
 
-    Part filePart;
-    String imgURL = null;
+        String cleanUploadDir = uploadDir.replaceAll("[/\\\\]build", "");
+        System.out.println("After cleaning: " + cleanUploadDir);
 
-    try {
-        filePart = request.getPart("imageURL");
-        if (filePart != null && filePart.getSize() > 0) {
-            File uploadFolder = new File(cleanUploadDir);
-            if (!uploadFolder.exists()) {
-                boolean created = uploadFolder.mkdirs();
-                if (!created) {
-                    System.out.println("Failed to create upload directory: " + cleanUploadDir);
+        Part filePart;
+        String imgURL = null;
+
+        try {
+            filePart = request.getPart("imageURL");
+            if (filePart != null && filePart.getSize() > 0) {
+                File uploadFolder = new File(cleanUploadDir);
+                if (!uploadFolder.exists()) {
+                    boolean created = uploadFolder.mkdirs();
+                    if (!created) {
+                        System.out.println("Failed to create upload directory: " + cleanUploadDir);
+                        return null;
+                    }
+                }
+                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                String fileExtension = fileName.substring(fileName.lastIndexOf("."));
+
+                // Sử dụng UUID để tạo tên file ngẫu nhiên
+                String newFileName = UUID.randomUUID().toString() + fileExtension;
+                File file = new File(uploadFolder, newFileName);
+                if (file.exists()) {
+                    boolean deleted = file.delete();
+                    if (!deleted) {
+                        System.out.println("Failed to delete existing file: " + file.getAbsolutePath());
+                        return null;
+                    }
+                }
+                try (InputStream fileContent = filePart.getInputStream()) {
+                    Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    System.out.println("File successfully uploaded to: " + file.getAbsolutePath());
+                } catch (IOException e) {
+                    System.out.println("Error saving file: " + e.getMessage());
+                    e.printStackTrace();
                     return null;
                 }
+                imgURL = "/assets/images/news/" + newFileName;
+            } else {
+                System.out.println("No file uploaded or file is empty.");
             }
-            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            String fileExtension = fileName.substring(fileName.lastIndexOf("."));
-            
-            // Sử dụng UUID để tạo tên file ngẫu nhiên
-            String newFileName = UUID.randomUUID().toString() + fileExtension;
-            File file = new File(uploadFolder, newFileName);
-            if (file.exists()) {
-                boolean deleted = file.delete();
-                if (!deleted) {
-                    System.out.println("Failed to delete existing file: " + file.getAbsolutePath());
-                    return null;
-                }
-            }
-            try (InputStream fileContent = filePart.getInputStream()) {
-                Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                System.out.println("File successfully uploaded to: " + file.getAbsolutePath());
-            } catch (IOException e) {
-                System.out.println("Error saving file: " + e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
-            imgURL = "/assets/images/news/" + newFileName;
-        } else {
-            System.out.println("No file uploaded or file is empty.");
+        } catch (Exception e) {
+            System.out.println("Error during file upload: " + e.getMessage());
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        System.out.println("Error during file upload: " + e.getMessage());
-        e.printStackTrace();
-    }
 
-    return imgURL;
-}
+        return imgURL;
+    }
 
 }

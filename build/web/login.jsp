@@ -7,7 +7,6 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
         <title>Login Apartment Building</title>
 
         <link rel="preconnect" href="https://fonts.gstatic.com" />

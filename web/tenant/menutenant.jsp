@@ -1,10 +1,3 @@
-<%-- 
-    Document   : home1
-    Created on : Feb 11, 2025, 2:12:16 AM
-    Author     : nkiem
---%>
-
-<%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem --%>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -49,26 +42,26 @@
                     <!-- User and Notification Dropdowns -->
                     <ul class="navbar-nav ms-auto">
                         <!-- User Menu -->
-                        <c:set var="staff" value="${sessionScope.staff}" />
+                        <c:set var="resident" value="${sessionScope.resident}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="${staff.image.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="<%= request.getContextPath() %>${resident.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
-                                <span class="d-none d-md-inline">${staff.fullName}</span>
+                                <span class="d-none d-md-inline">${resident.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="${staff.image.imageURL}" class="rounded-circle shadow"
+                                    <img src="<%= request.getContextPath() %>${resident.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
-                                        ${staff.fullName} - Web Developer
+                                        ${resident.fullName} - Web Developer
                                         <small>Member since Nov. 2024</small>
                                     </p>
                                 </li>
                                 <li class="user-footer d-flex justify-content-between">
-                                    <a href="profile" class="btn btn-default btn-flat">Profile</a>
+                                    <a href="<%= request.getContextPath() %>/profile" class="btn btn-default btn-flat">Profile</a>
                                     <a href="#" class="btn btn-default btn-flat">Setting</a>
-                                    <a href="logout" class="btn btn-default btn-flat">Logout</a>
+                                    <a href="<%= request.getContextPath() %>/logout" class="btn btn-default btn-flat">Logout</a>
                                 </li>
                             </ul>
                         </li>
@@ -82,7 +75,7 @@
                                 <li class="notify">
                                     <a href="!#">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -95,7 +88,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -108,7 +101,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -127,7 +120,7 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"><img src="assets/images/logo/logo1.png"
+                                <a href="menumanager.jsp"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
                                                                alt="Logo" /></a>
                             </div>
                             <div class="toggler">
@@ -167,66 +160,6 @@
                                     </li>
                                 </ul>
                             </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-people-fill"></i>
-                                    <span>Staff</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="#">Administrative Staff</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Accountant</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Technical Board</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Service Provider</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-collection-fill"></i>
-                                    <span>Residents</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="extra-component-avatar.html">List</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-sweetalert.html">Vehicles</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-toastify.html">Notifications</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-rating.html">Complaints</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-divider.html">Divider</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="fa-solid fa-users-gear"></i>
-                                    <span>Account</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="manageResident">Resident</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="manageStaff">Staff</a>
-                                    </li>
-                                </ul>
-                            </li>
-
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="bi bi-grid-1x2-fill"></i>
@@ -247,43 +180,14 @@
                                     </li>
                                 </ul>
                             </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-collection-fill"></i>
-                                    <span>Statistics</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="extra-component-avatar.html">Parking Service</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-sweetalert.html">Public Electricity Service</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-toastify.html">Cleaning Service</a>
-                                    </li>
-                                </ul>
-                            </li>
-
                             <li class="sidebar-title">Others</li>
 
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
+                            <li class="sidebar-item">
+                                <a href="<%= request.getContextPath() %>/news" class="sidebar-link">
                                     <i class="fa-solid fa-envelope"></i>
                                     <span>News</span>
                                 </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="addnews">Add News</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="news">News</a>
-                                    </li>
-                                </ul>
                             </li>
-
-
                             <li class="sidebar-item">
                                 <a href="application-chat.html" class="sidebar-link">
                                     <i class="bi bi-chat-dots-fill"></i>
@@ -308,7 +212,7 @@
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="!#" class="sidebar-link">
+                                <a href="../rule" class="sidebar-link">
                                     <i class="bi bi-puzzle"></i>
                                     <span>Regulations</span>
                                 </a>
@@ -317,14 +221,11 @@
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="bi bi-person-badge-fill"></i>
-                                    <span>Settings</span>
+                                    <span>Account</span>
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
                                         <a href="profile">Information</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="login">Login</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="logout">Logout</a>
@@ -351,27 +252,20 @@
 
                 <footer>
                     <div class="footer clearfix mb-0 text-muted">
-                        <div class="float-start">
-                            <p>2025 &copy; Kiemm</p>
-                        </div>
                         <div class="float-end">
-                            <p>
-                                Crafted with
-                                <span class="text-danger"><i class="bi bi-heart"></i></span> by
-                                <a href="http://ahmadsaugi.com">NguyenKiem</a>
-                            </p>
                         </div>
                     </div>
                 </footer>
             </div>
         </div>
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
-        <script src="assets/js/bootstrap.bundle.min.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 
-        <script src="assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="assets/js/pages/dashboard.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
 
-        <script src="assets/js/main.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
+        <img src="<%= request.getContextPath() %>/images/bg/anh_dothi.jpg"/> 
     </body>
 
 </html>

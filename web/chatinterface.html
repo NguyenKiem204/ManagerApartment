@@ -1,0 +1,585 @@
+<html>
+  <head>
+    <title>Chat Interface</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f2f5;
+      }
+
+      .container {
+        display: flex;
+        height: 100vh;
+      }
+
+      .sidebar {
+        width: 300px;
+        background-color: white;
+        border-right: 1px solid #dddfe2;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar-header {
+        padding: 16px;
+        border: 1px solid #dddfe2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .sidebar-header input {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #dddfe2;
+        border-radius: 5px;
+      }
+
+      .sidebar-header .fa-search {
+        margin-left: 10px;
+        color: #606770;
+      }
+
+      .sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+      }
+      .sidebar-content a {
+        text-decoration: none;
+        color: #212529;
+        cursor: pointer;
+      }
+
+      .sidebar-content .contact {
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #dddfe2;
+      }
+
+      .sidebar-content .contact img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .sidebar-content .contact .name {
+        font-weight: bold;
+      }
+
+      .sidebar-content .contact .time {
+        color: #606770;
+        font-size: 12px;
+      }
+
+      .chat-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+      }
+
+      .chat-header {
+        padding: 10px;
+        border-bottom: 1px solid #dddfe2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .chat-header .user-info {
+        display: flex;
+        align-items: center;
+      }
+
+      .chat-header .user-info img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .chat-header .fa-phone,
+      .chat-header .fa-video,
+      .chat-header .fa-info-circle {
+        margin-left: 10px;
+        color: #606770;
+      }
+
+      .chat-content {
+        flex: 1;
+        padding: 10px;
+        overflow-y: auto;
+      }
+
+      .chat-content .message {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: flex-end;
+      }
+
+      .chat-content .message.sent {
+        justify-content: flex-end;
+      }
+
+      .chat-content .message .text {
+        display: inline-block;
+        padding: 10px;
+        border-radius: 20px;
+        max-width: 100%;
+      }
+
+      .chat-content .message.sent .text {
+        background-color: #0084ff;
+        color: white;
+        margin-left: auto;
+      }
+
+      .chat-content .message.received .text {
+        background-color: #f1f0f0;
+        color: black;
+      }
+
+      .chat-content .message .time {
+        font-size: 12px;
+      }
+
+      .time-left {
+        text-align: left;
+        font-size: 12px;
+        color: #606770;
+        margin-top: 5px;
+      }
+
+      .time-right {
+        text-align: right;
+        font-size: 12px;
+        color: #606770;
+        margin-top: 5px;
+      }
+
+      .chat-content .message.received img.avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .chat-footer {
+        padding: 10px;
+        border-top: 1px solid #dddfe2;
+        display: flex;
+        align-items: center;
+      }
+
+      .chat-footer input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #dddfe2;
+        border-radius: 20px;
+        margin-right: 10px;
+      }
+
+      .chat-footer .fa-thumbs-up,
+      .chat-footer .fa-heart {
+        color: #0084ff;
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <input placeholder="Tìm kiếm trên Messenger" type="text" />
+          <i class="fas fa-search"> </i>
+        </div>
+        <div class="sidebar-content">
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Anh Phapp"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Anh Phapp</div>
+                <div class="time">Đã đọc cho hết ❤️ 1 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Đinh Nhật Quân"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Đinh Nhật Quân</div>
+                <div class="time">Đã bày tỏ cảm xúc ❤️ 2 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Tuyển dụng NodeJS/ReactJS ViệtNam"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Tuyển dụng NodeJS/ReactJS ViệtNam</div>
+                <div class="time">Tony: 😆 2 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Bảo Đào"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Bảo Đào</div>
+                <div class="time">Đã xác nhận 2 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Tuyển dụng NodeJS/ReactJS ViệtNam"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Tuyển dụng NodeJS/ReactJS ViệtNam</div>
+                <div class="time">Minh: Tố Hậu - HN) MOR ch... 3 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Nguyễn Chương"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Nguyễn Chương</div>
+                <div class="time">Chương đã gọi 1 lần 4 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of K15 CP Phanxico Assisi"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">K15 CP Phanxico Assisi</div>
+                <div class="time">Lan Anh: Cả nhà nhớ lịch ... 5 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Nguyễn Đăng Nguyễn"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Nguyễn Đăng Nguyễn</div>
+                <div class="time">5 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Dũng Alan"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Dũng Alan</div>
+                <div class="time">Bạn: Mai này có 5 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Thơ"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Thơ</div>
+                <div class="time">Bạn: 1 ngày 5 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Nguyễn Trà My"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Nguyễn Trà My</div>
+                <div class="time">Bạn: Đã đọc báo cáo 5 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Rèn luyện sức khỏe và thi giác"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Rèn luyện sức khỏe và thi giác</div>
+                <div class="time">Bạn: 5 giờ</div>
+              </div>
+            </div>
+          </a>
+          <a href="">
+            <div class="contact">
+              <img
+                alt="Profile picture of Vinh"
+                height="40"
+                src="https://placehold.co/40x40"
+                width="40"
+              />
+              <div>
+                <div class="name">Vinh</div>
+                <div class="time">Bạn: 5 giờ</div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="chat-area">
+        <div class="chat-header">
+          <div class="user-info">
+            <img
+              alt="Profile picture of Đinh Nhật Quân"
+              height="40"
+              src="https://placehold.co/40x40"
+              width="40"
+            />
+            <div>Đinh Nhật Quân</div>
+          </div>
+          <div>
+            <i class="fas fa-phone"> </i>
+            <i class="fas fa-video"> </i>
+            <i class="fas fa-info-circle"> </i>
+          </div>
+        </div>
+        <div class="chat-content">
+          <div class="message received">
+            <img
+              alt="Profile picture of Đinh Nhật Quân"
+              class="avatar"
+              height="30"
+              src="https://placehold.co/30x30"
+              width="30"
+            />
+            <div>
+              <div class="text">Ê</div>
+              <div class="time-left">21:51 CN</div>
+            </div>
+          </div>
+          <div class="message received">
+            <img
+              alt="Profile picture of Đinh Nhật Quân"
+              class="avatar"
+              height="30"
+              src="https://placehold.co/30x30"
+              width="30"
+            />
+            <div>
+              <div class="text">Lớt ý</div>
+              <div class="time-left">21:51 CN</div>
+            </div>
+          </div>
+          <div class="message received">
+            <img
+              alt="Profile picture of Đinh Nhật Quân"
+              class="avatar"
+              height="30"
+              src="https://placehold.co/30x30"
+              width="30"
+            />
+            <div>
+              <div class="text">
+                Làm mấy cái edx mấy bài quiz lấy bằng kiểu gì nhé
+              </div>
+              <div class="time-left">21:51 CN</div>
+            </div>
+          </div>
+          <div class="message received">
+            <img
+              alt="Profile picture of Đinh Nhật Quân"
+              class="avatar"
+              height="30"
+              src="https://placehold.co/30x30"
+              width="30"
+            />
+            <div>
+              <div class="text">
+                <img
+                  alt="Screenshot of a quiz on edX"
+                  height="400"
+                  src="https://placehold.co/200x400"
+                  width="200"
+                />
+              </div>
+              <div class="time-left">21:51 CN</div>
+            </div>
+          </div>
+          <div class="message received">
+            <img
+              alt="Profile picture of Đinh Nhật Quân"
+              class="avatar"
+              height="30"
+              src="https://placehold.co/30x30"
+              width="30"
+            />
+            <div>
+              <div class="text">Ko</div>
+              <div class="time-left">22:08 CN</div>
+            </div>
+          </div>
+          <div class="message received">
+            <img
+              alt="Profile picture of Đinh Nhật Quân"
+              class="avatar"
+              height="30"
+              src="https://placehold.co/30x30"
+              width="30"
+            />
+            <div>
+              <div class="text">Nó mất tiêu!</div>
+              <div class="time-left">22:08 CN</div>
+            </div>
+          </div>
+          <div class="message received">
+            <img
+              alt="Profile picture of Đinh Nhật Quân"
+              class="avatar"
+              height="30"
+              src="https://placehold.co/30x30"
+              width="30"
+            />
+            <div>
+              <div class="text">Mấy bài quiz cuối ý</div>
+              <div class="time-left">22:08 CN</div>
+            </div>
+          </div>
+          <div class="message received">
+            <img
+              alt="Profile picture of Đinh Nhật Quân"
+              class="avatar"
+              height="30"
+              src="https://placehold.co/30x30"
+              width="30"
+            />
+            <div>
+              <div class="text">Thế cuối làm xong là xong</div>
+              <div class="time-left">22:08 CN</div>
+            </div>
+          </div>
+          <div class="message received">
+            <img
+              alt="Profile picture of Đinh Nhật Quân"
+              class="avatar"
+              height="30"
+              src="https://placehold.co/30x30"
+              width="30"
+            />
+            <div>
+              <div class="text">Có cần phải nộp gì ko</div>
+              <div class="time-left">22:08 CN</div>
+            </div>
+          </div>
+          <div class="message sent">
+            <div>
+              <div class="text">Trả câu hỏi</div>
+              <div class="time-right">22:08 CN</div>
+            </div>
+          </div>
+          <div class="message sent">
+            <div>
+              <div class="text">Tìm quiz là nó có cả bài</div>
+              <div class="time-right">22:08 CN</div>
+            </div>
+          </div>
+          <div class="message sent">
+            <div>
+              <div class="text">Hình như thế</div>
+              <div class="time-right">22:08 CN</div>
+            </div>
+          </div>
+          <div class="message sent">
+            <div>
+              <div class="text">Thế k cần</div>
+              <div class="time-right">22:08 CN</div>
+            </div>
+          </div>
+          <div class="message sent">
+            <div>
+              <div class="text">Nó đc tầm 9 mấy</div>
+              <div class="time-right">22:08 CN</div>
+            </div>
+          </div>
+          <div class="message sent">
+            <div>
+              <div class="text">Là thầy cô chấp nhận r</div>
+              <div class="time-right">22:08 CN</div>
+            </div>
+          </div>
+          <div class="message sent">
+            <div>
+              <div class="text">K</div>
+              <div class="time-right">22:08 CN</div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-footer">
+          <input placeholder="Aa" type="text" />
+          <i class="fas fa-thumbs-up"> </i>
+          <i class="fas fa-heart"> </i>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

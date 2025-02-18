@@ -32,7 +32,6 @@
                 font-family: Arial, sans-serif;
                 background-color: #FFA384;
                 margin: 0;
-                padding: 20px;
             }
             .container {
                 max-width: 600px;

@@ -21,8 +21,9 @@ import java.sql.*;
  * @author admin
  */
 public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
+
     StaffDAO st = new StaffDAO();
-    
+
     @Override
     public int insert(Feedback fb) {
         int row = 0;
@@ -61,6 +62,7 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
 
     StaffDAO staff = new StaffDAO();
     ResidentDAO resident = new ResidentDAO();
+
     @Override
     public List<Feedback> selectAll() {
         List<Feedback> list = new ArrayList<>();
@@ -70,13 +72,13 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
-                        rs.getInt("FeedbackID"),
-                        rs.getString("Title"),
-                        rs.getString("Description"),
-                        rs.getDate("Date").toLocalDate(),
-                        rs.getInt("Rate"),
-                        staff.selectById(rs.getInt("StaffID")),
-                        resident.selectById(rs.getInt("ResidentID"))
+                          rs.getInt("FeedbackID"),
+                          rs.getString("Title"),
+                          rs.getString("Description"),
+                          rs.getDate("Date").toLocalDate(),
+                          rs.getInt("Rate"),
+                          staff.selectById(rs.getInt("StaffID")),
+                          resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -90,8 +92,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
     public Feedback selectById(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
-    public List<Feedback> getAllFeedbacksSortedByStaff(){
+
+    public List<Feedback> getAllFeedbacksSortedByStaff() {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedback ORDER BY StaffID";
 
@@ -99,13 +101,13 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
-                        rs.getInt("FeedbackID"),
-                        rs.getString("Title"),
-                        rs.getString("Description"),
-                        rs.getDate("Date").toLocalDate(),
-                        rs.getInt("Rate"),
-                        staff.selectById(rs.getInt("StaffID")),
-                        resident.selectById(rs.getInt("ResidentID"))
+                          rs.getInt("FeedbackID"),
+                          rs.getString("Title"),
+                          rs.getString("Description"),
+                          rs.getDate("Date").toLocalDate(),
+                          rs.getInt("Rate"),
+                          staff.selectById(rs.getInt("StaffID")),
+                          resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -114,8 +116,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         }
         return list;
     }
-    
-    public List<Feedback> getAllFeedbacksSortedByRating(){
+
+    public List<Feedback> getAllFeedbacksSortedByRating() {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedback ORDER BY Rate";
 
@@ -123,13 +125,13 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
-                        rs.getInt("FeedbackID"),
-                        rs.getString("Title"),
-                        rs.getString("Description"),
-                        rs.getDate("Date").toLocalDate(),
-                        rs.getInt("Rate"),
-                        staff.selectById(rs.getInt("StaffID")),
-                        resident.selectById(rs.getInt("ResidentID"))
+                          rs.getInt("FeedbackID"),
+                          rs.getString("Title"),
+                          rs.getString("Description"),
+                          rs.getDate("Date").toLocalDate(),
+                          rs.getInt("Rate"),
+                          staff.selectById(rs.getInt("StaffID")),
+                          resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -138,8 +140,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         }
         return list;
     }
-    
-    public List<Feedback> getAllFeedbacksSortedByDate(){
+
+    public List<Feedback> getAllFeedbacksSortedByDate() {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedback ORDER BY Date DESC";
 
@@ -147,13 +149,50 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
-                        rs.getInt("FeedbackID"),
-                        rs.getString("Title"),
-                        rs.getString("Description"),
-                        rs.getDate("Date").toLocalDate(),
-                        rs.getInt("Rate"),
-                        staff.selectById(rs.getInt("StaffID")),
-                        resident.selectById(rs.getInt("ResidentID"))
+                          rs.getInt("FeedbackID"),
+                          rs.getString("Title"),
+                          rs.getString("Description"),
+                          rs.getDate("Date").toLocalDate(),
+                          rs.getInt("Rate"),
+                          staff.selectById(rs.getInt("StaffID")),
+                          resident.selectById(rs.getInt("ResidentID"))
+                );
+                list.add(fb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public List<Feedback> getAllFeedbacksByTitleOrStaff(String key) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT f.FeedbackID\n"
+                  + "      ,f.Title\n"
+                  + "      ,f.Description\n"
+                  + "      ,f.Date\n"
+                  + "      ,f.Rate\n"
+                  + "      ,f.StaffID\n"
+                  + "	  ,r.RoleName\n"
+                  + "      ,f.ResidentID\n"
+                  + "  FROM [ApartmentManagement].[dbo].[Feedback] f \n"
+                  + "  join Staff s on f.StaffID = s.StaffID \n"
+                  + "  join Role r on s.RoleID = r.RoleID\n"
+                  + "  WHERE r.RoleName LIKE ? OR f.Title LIKE ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + key + "%");
+            ps.setString(2, "%" + key + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback fb = new Feedback(
+                          rs.getInt("FeedbackID"),
+                          rs.getString("Title"),
+                          rs.getString("Description"),
+                          rs.getDate("Date").toLocalDate(),
+                          rs.getInt("Rate"),
+                          staff.selectById(rs.getInt("StaffID")),
+                          resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
