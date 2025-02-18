@@ -88,13 +88,13 @@ public class AddNewInvoices extends HttpServlet {
 
         if (error != null) {
             request.setAttribute("error", error);
-    }
+        }
         if (dueDateError != null) {
             request.setAttribute("dueDateError", dueDateError);
         }
         if (amountError != null) {
             request.setAttribute("amountError", amountError);
-    }
+        }
         if (detailError != null) {
             request.setAttribute("detailError", detailError);
         }
