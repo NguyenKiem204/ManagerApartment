@@ -3,15 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/tet/ManagerApartment/web/changeprofile.jsp</file>
-            <file>file:/E:/tet/ManagerApartment/src/java/model/Resident.java</file>
-            <file>file:/E:/tet/ManagerApartment/src/java/controller/NewsDetailServlet.java</file>
-            <file>file:/E:/tet/ManagerApartment/src/java/controller/NewsServlet.java</file>
-            <file>file:/E:/tet/ManagerApartment/src/java/dao/ResidentDAO.java</file>
-            <file>file:/E:/tet/ManagerApartment/src/java/dao/Test.java</file>
-            <file>file:/E:/tet/ManagerApartment/web/WEB-INF/web.xml</file>
             <file>file:/E:/tet/ManagerApartment/src/java/dao/FeedbackDAO.java</file>
             <file>file:/E:/tet/ManagerApartment/src/java/controller/LoginServlet.java</file>
+            <file>file:/E:/tet/ManagerApartment/src/java/controller/NewsDetailServlet.java</file>
+            <file>file:/E:/tet/ManagerApartment/src/java/dao/Test.java</file>
+            <file>file:/E:/tet/ManagerApartment/web/WEB-INF/web.xml</file>
+            <file>file:/E:/tet/ManagerApartment/src/java/model/Resident.java</file>
+            <file>file:/E:/tet/ManagerApartment/src/java/dao/ResidentDAO.java</file>
+            <file>file:/E:/tet/ManagerApartment/web/changeprofile.jsp</file>
+            <file>file:/E:/tet/ManagerApartment/src/java/controller/NewsServlet.java</file>
         </group>
     </open-files>
 </project-private>

@@ -161,8 +161,8 @@
                             <img alt="Profile picture of ${user.fullName}" height="40" src="<%= request.getContextPath() %>/${user.image.imageURL}"
                              width="40" />
                         <div>${user.fullName}</div>
+                        <input type="hidden" name="emailSend" value="${sessionScope.staff!=null?sessionScope.staff.email:sessionScope.resident.email}"/>  
                         <input type="hidden" name="emailRecieved" value="${user.email}"/>
-                        <input type="hidden" name="emailsend" value="${sessionScope.staff!=null?sessionScope.staff.email:sessionScope.resident.email}"/>
                     </div>
                     <div>
                         <i class="fas fa-phone"> </i>
@@ -206,7 +206,7 @@
 
                 </div>
                 <div class="chat-footer">
-                    <input onclick="sendMessage()" placeholder="Aa" type="text" />
+                    <input placeholder="Aa" type="text" />
                     <i class="fas fa-thumbs-up"> </i>
                     <i class="fas fa-heart"> </i>
                 </div>
@@ -217,41 +217,68 @@
         var websocket = new WebSocket("ws://localhost:8080/ManagerApartment/chatRoomServer");
 
         websocket.onopen = function (message) {
-            var senderEmail = document.querySelector('input[name="emailsend"]').value;
+            var senderEmail = document.querySelector('input[name="emailSend"]').value;
             websocket.send(JSON.stringify({type: "connect", email: senderEmail}));
             console.log("Server connected...");
             processOpen(message);
         };
         websocket.onmessage = function (message) {
+            console.log("Message received: ", message.data); // Đảm bảo log này xuất hiện  
             processMessage(message);
         };
-        websocket.onclose = function (message) {
-            processClose(message);
+        websocket.onerror = function (event) {
+            console.error("WebSocket error: ", event);
         };
-        websocket.onerror = function (message) {
-            processError(message);
+
+        websocket.onclose = function (event) {
+            console.log("WebSocket connection closed: ", event);
         };
 
         function processOpen(message) {
-            console.log("Server connected...");
+            console.log("Server connected...: " + message);
         }
 
         function processMessage(message) {
-            var messageData = JSON.parse(message.data);
+            console.log("Raw message data:", message.data);
+            try {
+                var messageData = JSON.parse(message.data);
+                console.log("Parsed message data:", messageData);
+            } catch (error) {
+                console.error("Error parsing message data:", error);
+                return;
+            }
+
+            if (!messageData || !messageData.message) {
+                console.warn("No message property found in the data.");
+                return;
+            }
+
             var chatContent = document.querySelector('.chat-content');
             var newMessage = document.createElement('div');
-            newMessage.className = 'message ' + (messageData.sender === '${user.email}' ? 'sent' : 'received');
-            newMessage.innerHTML = `
-        <div>
-            <div class="text">${messageData.message}</div>
-            <div class="time-right">
-        <fmt:formatDate value="<%= new java.util.Date() %>" pattern="HH:mm:ss" />
-         </div>
-        </div>
-    `;
-            // Thêm tin nhắn vào khung chat
+            var senderEmail = document.querySelector('input[name="emailSend"]').value;
+            newMessage.className = 'message ' + (messageData.sender === senderEmail ? 'sent' : 'received');
+
+            var wrapperDiv = document.createElement('div');
+
+            var now = new Date();
+            var timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+
+            var textDiv = document.createElement('div');
+            textDiv.className = 'text';
+            textDiv.textContent = messageData.message;
+
+            var timeDiv = document.createElement('div');
+            timeDiv.className = 'time-right';
+            timeDiv.textContent = timeString;
+
+            wrapperDiv.appendChild(textDiv);
+            wrapperDiv.appendChild(timeDiv);
+            newMessage.appendChild(wrapperDiv);
+
             chatContent.appendChild(newMessage);
+            console.log("New message appended to chat content");
             chatContent.scrollTop = chatContent.scrollHeight;
+
         }
 
         function processClose(message) {
@@ -265,21 +292,47 @@
         function sendMessage() {
             var input = document.querySelector('.chat-footer input');
             var messageText = input.value;
-            if (messageText.trim() !== "") {
-                var senderEmail = document.querySelector('input[name="emailsend"]').value;
-                var receiverEmail = document.querySelector('input[name="emailRecieved"]').value;
 
-                var messageData = {
-                    sender: senderEmail,
-                    receiver: receiverEmail,
-                    message: messageText
-                };
-                if (typeof websocket != 'undefined' && websocket.readyState == WebSocket.OPEN) {
-                    websocket.send(JSON.stringify(messageData));
+            if (messageText.trim() !== "") {
+                var senderInput = document.querySelector('input[name="emailSend"]');
+                var receiverInput = document.querySelector('input[name="emailRecieved"]');
+
+                if (senderInput && receiverInput) {
+                    var senderEmail = senderInput.value;
+                    var receiverEmail = receiverInput.value;
+
+                    var messageData = {
+                        type: "message",
+                        sender: senderEmail,
+                        receiver: receiverEmail,
+                        message: messageText
+                    };
+
+                    if (typeof websocket !== 'undefined' && websocket.readyState === WebSocket.OPEN) {
+                        websocket.send(JSON.stringify(messageData));
+                        console.log("Sent message:", messageData);
+                        input.value = ""; // Clear input  
+                    } else {
+                        console.error("WebSocket is not open:", websocket.readyState);
+                    }
+                } else {
+                    console.error("Email elements are null.");
                 }
-                input.value = "";
+            } else {
+                console.log("Message is empty, not sending.");
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var sendMessageInput = document.querySelector('.chat-footer input');
+
+            sendMessageInput.addEventListener('keypress', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+        });
     </script>
 
 </html>

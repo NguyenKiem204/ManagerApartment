@@ -280,6 +280,9 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
+                                        <a href="managernews">Manager News</a>
+                                    </li>
+                                    <li class="submenu-item">
                                         <a href="addnews">Add News</a>
                                     </li>
                                     <li class="submenu-item">

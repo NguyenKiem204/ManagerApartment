@@ -72,12 +72,12 @@ public class NewsDAO implements DAOInterface<News, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 News news = new News(
-                          rs.getInt("NewsID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getTimestamp("SentDate").toLocalDateTime(),
-                          staffdao.selectById(rs.getInt("StaffID")),
-                          imagedao.selectById(rs.getInt("ImageID"))
+                        rs.getInt("NewsID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getTimestamp("SentDate").toLocalDateTime(),
+                        staffdao.selectById(rs.getInt("StaffID")),
+                        imagedao.selectById(rs.getInt("ImageID"))
                 );
                 list.add(news);
             }
@@ -96,12 +96,12 @@ public class NewsDAO implements DAOInterface<News, Integer> {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     news = new News(
-                              rs.getInt("NewsID"),
-                              rs.getString("Title"),
-                              rs.getString("Description"),
-                              rs.getTimestamp("SentDate").toLocalDateTime(),
-                              staffdao.selectById(rs.getInt("StaffID")),
-                              imagedao.selectById(rs.getInt("ImageID"))
+                            rs.getInt("NewsID"),
+                            rs.getString("Title"),
+                            rs.getString("Description"),
+                            rs.getTimestamp("SentDate").toLocalDateTime(),
+                            staffdao.selectById(rs.getInt("StaffID")),
+                            imagedao.selectById(rs.getInt("ImageID"))
                     );
                 }
             }
@@ -111,7 +111,6 @@ public class NewsDAO implements DAOInterface<News, Integer> {
         return news;
     }
 
-    
     public void insertNewsWithImage(News news) {
         String sqlInsertImage = "INSERT INTO Image (ImageURL) VALUES (?)";
         String sqlInsertNews = "INSERT INTO News (Title, Description, SentDate, StaffID, ImageID) VALUES (?, ?, ?, ?, ?)";
@@ -140,6 +139,39 @@ public class NewsDAO implements DAOInterface<News, Integer> {
 
         } catch (SQLException ex) {
             System.out.println("Lỗi khi thêm tin tức: " + ex.getMessage());
+        }
+    }
+
+    public void updateNewsWithImage(News news) {
+        String sqlUpdateImage = "UPDATE Image SET ImageURL = ? WHERE ImageID = ?";
+        String sqlUpdateNews = "UPDATE News SET Title = ?, Description = ?, SentDate = ?, StaffID = ?, ImageID = ? WHERE NewsID = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement psUpdateImage = connection.prepareStatement(sqlUpdateImage); PreparedStatement psUpdateNews = connection.prepareStatement(sqlUpdateNews)) {
+
+            connection.setAutoCommit(false);
+            int imageID = news.getImage().getImageID();
+
+            if (news.getImage().getImageURL() != null) {
+                if (imageID != 0) {
+                    psUpdateImage.setString(1, news.getImage().getImageURL());
+                    psUpdateImage.setInt(2, imageID);
+                    psUpdateImage.executeUpdate();
+                }
+            }
+
+            psUpdateNews.setString(1, news.getTitle());
+            psUpdateNews.setString(2, news.getDescription());
+            psUpdateNews.setTimestamp(3, Timestamp.valueOf(news.getSentDate()));
+            psUpdateNews.setInt(4, news.getStaff().getStaffId());
+            psUpdateNews.setInt(5, imageID);
+            psUpdateNews.setInt(6, news.getNewsID());
+            psUpdateNews.executeUpdate();
+
+            connection.commit();
+            System.out.println("Cập nhật tin tức thành công!");
+
+        } catch (SQLException ex) {
+            System.out.println("Lỗi khi cập nhật tin tức: " + ex.getMessage());
         }
     }
 

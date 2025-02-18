@@ -145,22 +145,35 @@
                                     <div class="row mb-3 align-items-center" >
 
                                         <div class="col-md-8">
-                                            <form action="manageResident" method="get" class="d-flex gap-2">
-                                                <select class="form-select">
-                                                    <option selected>All Apartments</option>
-                                                    <option>Apartment A</option>
-                                                    <option>Apartment B</option>
+                                            <form action="UpdateStatusInvoice" method="get" class="d-flex gap-2">
+                                                <select name="apartmentId" class="form-select" aria-label="Default select example">
+                                                    <option value="">All Department</option>
+                                                    <c:forEach items="${listApartment}" var="o">
+                                                        <option value="${o.apartmentId}" 
+                                                                ${selectedApartmentId == o.apartmentId ? 'selected' : ''}>
+                                                            ${o.apartmentName}
+                                                        </option>
+                                                    </c:forEach>
                                                 </select>
 
-                                                <input type="month" class="form-control">
-                                                <input type="date" class="form-control">
+                                                <label for="FromDate" class="form-label align-self-center">From:</label>
+                                                <input type="date" class="form-control" id="FromDate" name="FromDate" 
+                                                       value="${selectedFromDate}">
+                                                <label for="dueDate" class="form-label align-self-center">Due:</label>
+                                                <input type="date" class="form-control" id="dueDate" name="dueDate" 
+                                                       value="${selectedDueDate}">
+                                                <button type="submit" class="btn btn-primary" style="width: 70px;">Filter</button>
                                             </form>
                                         </div>
 
+
                                         <div class="col-md-4">
-                                            <form action="manageResident" method="get" class="d-flex">
-                                                <input type="text" name="searchKeyword" placeholder="Input Invoice Name..." value="${searchKeyword}" class="form-control me-2">
-                                                <button type="submit" class="btn btn-primary">Tìm</button>
+                                            <form action="UpdateStatusInvoice" method="get" class="d-flex gap-2">
+                                                <input type="text" name="search" placeholder="Search by title.." value="${search}" class="form-control me-2">
+                                                <input type="hidden" name="apartmentId" value="${selectedApartmentId}">  
+                                                <input type="hidden" name="FromDate" value="${selectedFromDate}">  
+                                                <input type="hidden" name="dueDate" value="${selectedDueDate}"> 
+                                                <button type="submit" class="btn btn-primary">Search</button>
                                             </form>
                                         </div>
                                     </div>

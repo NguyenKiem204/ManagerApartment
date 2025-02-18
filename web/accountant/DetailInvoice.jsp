@@ -111,7 +111,7 @@
                     <div class="card p-4 shadow-lg rounded-4" style="max-width: 1000px; margin: 0 auto;">
                         <h3 class="text-center mb-4">Invoice Details</h3>
                         <div class="mb-3">
-                            <H2>Invoice code:</h2> <c:out value="${invoice.apartment.apartmentName}" />
+                            <H2>Invoice code: <c:out value="${invoice.invoiceID}" /></h2> 
                         </div>
 
                         <div class="mb-3">
@@ -123,7 +123,7 @@
                         <div class="mb-3">
                             <strong>Description:</strong> <c:out value="${invoice.description}" />
                         </div>
-                        
+
                         <div class="mb-3">
                             <strong>Public Date:</strong> <c:out value="${invoice.publicDate}" />
                         </div>
@@ -169,7 +169,7 @@
                             </a>
 
                             <c:if test='${invoice.status eq "Unpaid"}'>
-                                <a href="<%= request.getContextPath() %>/editinvoice?id=${invoice.invoiceID}" class="btn btn-primary ms-2">Edit Invoice</a>
+                                <a href="<%= request.getContextPath() %>/editinvoice?invoiceID=${invoice.invoiceID}" class="btn btn-primary ms-2">Edit Invoice</a>
                             </c:if>
                         </div>
 
