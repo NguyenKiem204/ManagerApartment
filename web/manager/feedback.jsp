@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -96,6 +98,24 @@
                 margin-top: auto;
                 margin-bottom: auto;
             }
+            .filter-container {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .filter-row {
+                display: flex;
+                gap: 10px;
+            }
+
+            .filter-row select, .filter-row input {
+                flex: 1;
+            }
+
+            .date-filter {
+                width: 100%;
+            }
         </style>
     </head>
     <body>
@@ -105,18 +125,46 @@
                 <h2>Manager Feedback Dashboard</h2>
 
                 <div class="search-sort-container">
-                    <form id="searchForm" action="${pageContext.request.contextPath}/manager/feedback?search" method="get">
-                        <input type="text" id="searchBox" name="key" style="width: 100%;" placeholder="Search by title or staff member..." value="${param.key}">
-                    </form>
-                    <select id="sortBox" name="sortBox" onchange="sortProducts()">
-                        <option value="0" hidden selected>Sort by</option>
-                        <option value="1">Sort by Feedback for</option>
-                        <option value="2">Sort by Rating</option>
-                        <option value="3">Sort by Date</option>
-                    </select>
+                    <input type="text" id="searchBox" placeholder="Search by name of staff or title..." value="${param.keySearch}" style="width: 40%">
+
+                    <div class="filter-container" style="padding-left: 10px">
+                        <div class="filter-row">
+                            <select id="staffFilter">
+                                <option value="0">Filter by Staff</option>
+                                <c:forEach var="role" items="${listrole}" begin="1" end="4">
+                                    <option value="${role.roleID}" ${param.roleID == role.roleID ? 'selected' : ''}>${role.roleName}</option>
+                                </c:forEach>
+                            </select>
+
+                            <select id="ratingFilter">
+                                <option value="0">Filter by Rating</option>
+                                <option value="1" ${param.rating == '1' ? 'selected' : ''}>1 Star</option>
+                                <option value="2" ${param.rating == '2' ? 'selected' : ''}>2 Stars</option>
+                                <option value="3" ${param.rating == '3' ? 'selected' : ''}>3 Stars</option>
+                                <option value="4" ${param.rating == '4' ? 'selected' : ''}>4 Stars</option>
+                                <option value="5" ${param.rating == '5' ? 'selected' : ''}>5 Stars</option>
+                            </select>
+                        </div>
+
+                        <input type="date" id="dateFilter" class="date-filter" name="date" value="${param.date}">
+                    </div>
+                    <div style="padding-left: 10px">
+                        <select id="sortBox" style="width: 100%">
+                            <option value="0" ${param.sort == '0' ? 'selected' : ''}>Sort by</option>
+                            <option value="1" ${param.sort == '1' ? 'selected' : ''}>Sort by Feedback for</option>
+                            <option value="2" ${param.sort == '2' ? 'selected' : ''}>Sort by Rating</option>
+                            <option value="3" ${param.sort == '3' ? 'selected' : ''}>Sort by Date</option>
+                        </select>
+                    </div>
+                    <label for="itemsPerPage">Show:</label>
+                    <select id="itemsPerPage" style="width: 80px">
+                        <option value="5" ${param.pageSize == '5' ? 'selected' : ''}>5</option>
+                        <option value="10" ${param.pageSize == '10' ? 'selected' : ''}>10</option>
+                        <option value="20" ${param.pageSize == '20' ? 'selected' : ''}>20</option>
+                    </select> entries
                 </div>
 
-                <table id="feedbackTable">
+                <table>
                     <thead>
                         <tr>
                             <th>Title</th>
@@ -133,7 +181,7 @@
                                 <td>${fb.title}</td>
                                 <td>${fb.staff.fullName}</td>
                                 <td>${fb.staff.role.roleName}</td>
-                                <td class="rating">${"★".repeat(fb.rate)}${"☆".repeat(5 - fb.rate)}</td>
+                                <td>${fb.rate} Stars</td>
                                 <td>${fb.description}</td>
                                 <td>${fb.date}</td>
                             </tr>
@@ -141,83 +189,64 @@
                     </tbody>
                 </table>
 
-                <div class="pagination">
-                    <button onclick="prevPage()" id="prevBtn">Previous</button>
-                    <span id="pageNumber">Page 1</span>
-                    <button onclick="nextPage()" id="nextBtn">Next</button>
+                <!-- Pagination -->
+                <div class="pagination" style="justify-content: end">
+                    <ul style="list-style: none; display: flex; justify-content: center; padding: 0;">
+                        <c:forEach begin="1" end="${num}" var="i">
+                            <li style="margin: 0 5px;">
+                                <a class="page-link" href="" 
+                                   style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
+                                    ${i}
+                                </a>
+                            </li>
+                        </c:forEach>
+                    </ul>
                 </div>
             </div>
         </div>
-
         <script>
-            let currentPage = 1;
-            const rowsPerPage = 7;
-            let currentSort = {column: 'title', order: 'asc'};
+            function updateFilter() {
+                let params = new URLSearchParams(window.location.search);
 
-            function renderTable() {
-                const tableBody = document.getElementById("tableBody");
-                const rows = tableBody.getElementsByTagName("tr");
-                const totalRows = rows.length;
+                const searchBox = document.getElementById("searchBox").value.trim();
+                const staffFilter = document.getElementById("staffFilter").value;
+                const ratingFilter = document.getElementById("ratingFilter").value;
+                const dateFilter = document.getElementById("dateFilter").value;
+                const sortBox = document.getElementById("sortBox").value;
+                const pageSize = document.getElementById("itemsPerPage").value;
+                const currentPage = params.get("page") || 1;
 
-                for (let i = 0; i < totalRows; i++) {
-                    rows[i].style.display = (i >= (currentPage - 1) * rowsPerPage && i < currentPage * rowsPerPage) ? "" : "none";
-                }
+                params.set("keySearch", searchBox || "");
+                params.set("roleID", staffFilter || "");
+                params.set("rating", ratingFilter || "");
+                params.set("date", dateFilter || "");
+                params.set("sort", sortBox || "");
+                params.set("pageSize", pageSize || "");
+                params.set("page", currentPage);
 
-                document.getElementById("pageNumber").innerText = 'Page ' + currentPage;
-                document.getElementById("prevBtn").disabled = currentPage === 1;
-                document.getElementById("nextBtn").disabled = currentPage * rowsPerPage >= totalRows;
+                window.location.search = params.toString();
             }
 
-            function nextPage() {
-                const totalRows = document.getElementById("tableBody").getElementsByTagName("tr").length;
-                if ((currentPage * rowsPerPage) < totalRows) {
-                    currentPage++;
-                    renderTable();
-                }
-            }
-
-            function prevPage() {
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderTable();
-                }
-            }
-
-            function filterTable() {
-                const query = document.getElementById("searchBox").value.toLowerCase();
-                const rows = document.getElementById("tableBody").getElementsByTagName("tr");
-
-                for (let row of rows) {
-                    const cells = row.getElementsByTagName("td");
-                    const title = cells[0].innerText.toLowerCase();
-                    const staff = cells[1].innerText.toLowerCase();
-                    row.style.display = (title.includes(query) || staff.includes(query)) ? "" : "none";
-                }
-            }
-
-            document.addEventListener("DOMContentLoaded", () => {
-                renderTable();
-                updateSortIcons();
-            });
-            function sortProducts() {
-                const sortValue = document.getElementById('sortBox').value;
-                if (sortValue) {
-                    // Chuyển hướng đến servlet với tham số sort
-                    window.location.href = `${pageContext.request.contextPath}/manager/feedback?sort=` + sortValue;
-                }
-            }
-            
-            let typingTimer;
-            const typingDelay = 500; // Độ trễ trước khi gửi request
-
-            document.getElementById("searchBox").addEventListener("keyup", function () {
-                clearTimeout(typingTimer);
-                typingTimer = setTimeout(() => {
-                    document.getElementById("searchForm").submit();
-                }, typingDelay);
+            document.getElementById("searchBox").addEventListener("input", function () {
+                clearTimeout(this.delay);
+                this.delay = setTimeout(updateFilter, 500);
             });
 
+            document.getElementById("staffFilter").addEventListener("change", updateFilter);
+            document.getElementById("ratingFilter").addEventListener("change", updateFilter);
+            document.getElementById("dateFilter").addEventListener("change", updateFilter);
+            document.getElementById("sortBox").addEventListener("change", updateFilter);
+            document.getElementById("itemsPerPage").addEventListener("change", updateFilter);
+
+            // Xử lý phân trang
+            document.querySelectorAll(".page-link").forEach(pageLink => {
+                pageLink.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    let params = new URLSearchParams(window.location.search);
+                    params.set("page", this.textContent.trim()); // Cập nhật số trang
+                    window.location.search = params.toString();
+                });
+            });
         </script>
-
     </body>
 </html>

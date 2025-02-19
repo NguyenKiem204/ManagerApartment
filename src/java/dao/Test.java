@@ -4,11 +4,14 @@
  */
 package dao;
 
+import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import model.Apartment;
 import model.Feedback;
 import model.Image;
+import model.ImageFeedback;
 import model.Request;
 import model.Resident;
 import model.Role;
@@ -34,8 +37,29 @@ public class Test {
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
         
-        requestDAO.updateStatus(2, 2);
-        requestDAO.updateStatus(1, 1);
+        List<ImageFeedback> imageFeedbackList = new ArrayList<>();
+
+        // Ví dụ: thêm các đối tượng ImageFeedback vào danh sách
+        // Giả sử bạn đã có InputStream từ file và kích thước của ảnh (size)
+        InputStream imgStream1 = null;  // Thay bằng InputStream thực tế
+        long size1 = 1024L;
+
+        InputStream imgStream2 = null;  // Thay bằng InputStream thực tế
+        long size2 = 2048L;
+
+        // Thêm đối tượng vào danh sách
+        imageFeedbackList.add(new ImageFeedback(imgStream1, size1));
+        imageFeedbackList.add(new ImageFeedback(imgStream2, size2));
+        
+//        List<Request> list = requestDAO.getAllRequestsBySearchOrFilterOrSort("nguye", 0, null, 0, 0);
+//        for (Request request : list) {
+//            System.out.println(request.toString());
+//        }
+//        
+
+        
+//        requestDAO.updateStatus(2, 2);
+//        requestDAO.updateStatus(1, 1);
   
 //        Role role = new Role("OWNER", "Some Permission");
 //        Image image = new Image("./djhdjdhf/lo");
@@ -47,8 +71,8 @@ public class Test {
 //        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "1234560144", "0123944394", "nguyen05082004@gmail.com",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", new Image().builder().imageID(1).build(), new Role().builder().roleID(7).build());
 //        residentDAO.insert(resident);
 //        imageDAO.insert(image);
-        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0331653221", "1234846731194", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2004, 6, 27), "Male", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(1).build());
-        staffDAO.insert(staff);
+//        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0331653221", "1234846731194", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2004, 6, 27), "Male", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(1).build());
+//        staffDAO.insert(staff);
 
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);

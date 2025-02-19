@@ -287,22 +287,24 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
     }
 
     public List<TypeBill> getAllTypeBills() {
-        List<TypeBill> typeBills = new ArrayList<>();
-        String sql = "SELECT * FROM TypeBill";
+    List<TypeBill> typeBills = new ArrayList<>();
+    String sql = "SELECT * FROM TypeBill";
 
-        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
+    try (Connection connection = DBContext.getConnection(); 
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                int id = rs.getInt("TypeBillID");
-                String name = rs.getString("TypeName");
-                typeBills.add(new TypeBill(id, name));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        while (rs.next()) {
+            int id = rs.getInt("TypeBillID");
+            String name = rs.getString("TypeName");
+            typeBills.add(new TypeBill(id, name));
         }
-        return typeBills;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return null; // ❌ Trả về null thay vì danh sách rỗng -> Lỗi S1168
     }
+    return typeBills;
+}
 
     public void insertInvoice(Invoices invoice) {
         String sql = "INSERT INTO Invoice (ResidentID, TotalAmount, [Description], DueDate, [Status], StaffID,islate) "

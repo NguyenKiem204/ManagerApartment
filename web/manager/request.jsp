@@ -16,7 +16,7 @@
                 font-family: Arial, sans-serif;
                 background-color: #f4f4f4;
                 margin: 0;
-                
+
             }
             .container {
                 max-width: 900px;
@@ -118,6 +118,68 @@
                 box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
             }
 
+            .status[data-status-id="4"] { /* Canceled */
+                background-color: #B0BEC5; /* Màu xám cho trạng thái hủy */
+                border: 2px solid #78909C;
+                box-shadow: 0 0 5px rgba(176, 190, 197, 0.5);
+            }
+
+            .filter-container {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .filter-row {
+                display: flex;
+                gap: 10px;
+            }
+
+            .filter-row select, .filter-row input {
+                flex: 1;
+            }
+
+            .date-filter {
+                width: 100%;
+            }
+
+            .action-buttons {
+                display: flex;
+                gap: 10px;
+                margin-top: 5px;
+            }
+
+            .action-buttons button {
+                padding: 8px 16px;
+                border-radius: 5px;
+                border: none;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .approve-btn {
+                background-color: #4CAF50; /* Xanh lá */
+                color: white;
+            }
+
+            .reject-btn {
+                background-color: #FF5722; /* Cam đậm */
+                color: white;
+            }
+
+            .approve-btn:hover, .reject-btn:hover {
+                opacity: 0.8;
+            }
+
+            .approve-btn:focus, .reject-btn:focus {
+                outline: none;
+            }
+
+            .approve-btn:disabled, .reject-btn:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+
         </style>
     </head>
     <body>
@@ -127,14 +189,40 @@
                 <h2>Resident Requests Dashboard</h2>
 
                 <div class="search-sort-container">
-                    <input type="text" id="searchBox" placeholder="Search by resident name or service..." onkeyup="filterTable()">
-                    <select id="sortBox" name="sortBox" onchange="sortRequests()">
-                        <option value="0" hidden selected>Sort by</option>
+                    <input type="text" id="searchBox" placeholder="Search by apartment or resident name..." value="${param.keySearch}" style="width: 40%">
 
-                        <option value="1">Sort by Resident Name</option>
-                        <option value="2">Sort by Service</option>
-                        <option value="3">Sort by Status</option>
-                    </select>
+                    <div class="filter-container" style="padding-left: 10px">
+                        <div class="filter-row">
+                            <select id="staffFilter">
+                                <option value="0">Filter by Type Request</option>
+                                <c:forEach var="typerq" items="${listTypeRq}">
+                                    <option value="${typerq.typeRqID}" ${param.typeRequestID == typerq.typeRqID ? 'selected' : ''}>${typerq.typeName}</option>
+                                </c:forEach>
+                            </select>
+
+                            <select id="statusFilter">
+                                <option value="0">Filter by Status</option>
+                                <c:forEach var="status" items="${listStatus}">
+                                <option value="${status.statusID}" ${param.status == status.statusID ? 'selected' : ''}>${status.statusName}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+
+                        <input type="date" id="dateFilter" class="date-filter" name="date" value="${param.date}">
+                    </div>
+                    <div style="padding-left: 10px">
+                        <select id="sortBox" style="width: 100%">
+                            <option value="0" ${param.sort == '0' ? 'selected' : ''}>Sort by</option>
+                            <option value="1" ${param.sort == '1' ? 'selected' : ''}>Sort by Apartment</option>
+                            <option value="2" ${param.sort == '2' ? 'selected' : ''}>Sort by Date</option>
+                        </select>
+                    </div>
+                    <label for="itemsPerPage">Show:</label>
+                    <select id="itemsPerPage" style="width: 80px">
+                        <option value="5" ${param.pageSize == '5' ? 'selected' : ''}>5</option>
+                        <option value="10" ${param.pageSize == '10' ? 'selected' : ''}>10</option>
+                        <option value="20" ${param.pageSize == '20' ? 'selected' : ''}>20</option>
+                    </select> entries
                 </div>
 
                 <table id="requestTable">
@@ -160,85 +248,45 @@
                                     <span class="status" data-id="${rq.requestID}" data-status-id="${rq.status.statusID}" onclick="updateStatus(this)">
                                         ${rq.status.statusName}
                                     </span>
+                                    <div class="action-buttons" id="actionButtons-${rq.requestID}" style="display: none;">
+                                        <button class="approve-btn" onclick="approveRequest(${rq.requestID})">Approve</button>
+                                        <button class="reject-btn" onclick="rejectRequest(${rq.requestID})">Reject</button>
+                                    </div>
                                 </td>
                             </tr>
                         </c:forEach>
                     </tbody>
                 </table>
 
-                <div class="pagination">
-                    <button onclick="prevPage()" id="prevBtn">Previous</button>
-                    <span id="pageNumber">Page 1</span>
-                    <button onclick="nextPage()" id="nextBtn">Next</button>
+                <!-- Pagination -->
+                <div class="pagination" style="justify-content: end">
+                    <ul style="list-style: none; display: flex; justify-content: center; padding: 0;">
+                        <c:forEach begin="1" end="${num}" var="i">
+                            <li style="margin: 0 5px;">
+                                <a class="page-link" href="" 
+                                   style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
+                                    ${i}
+                                </a>
+                            </li>
+                        </c:forEach>
+                    </ul>
                 </div>
             </div>
         </div>
 
         <script>
-            let currentPage = 1;
-            const rowsPerPage = 5;
-
-            function renderTable() {
-                const tableBody = document.getElementById("tableBody");
-                const rows = tableBody.getElementsByTagName("tr");
-                const totalRows = rows.length;
-
-                for (let i = 0; i < totalRows; i++) {
-                    rows[i].style.display = (i >= (currentPage - 1) * rowsPerPage && i < currentPage * rowsPerPage) ? "" : "none";
-                }
-
-                document.getElementById("pageNumber").innerText = 'Page ' + currentPage;
-                document.getElementById("prevBtn").disabled = currentPage === 1;
-                document.getElementById("nextBtn").disabled = currentPage * rowsPerPage >= totalRows;
-            }
-
-            function nextPage() {
-                const totalRows = document.getElementById("tableBody").getElementsByTagName("tr").length;
-                if ((currentPage * rowsPerPage) < totalRows) {
-                    currentPage++;
-                    renderTable();
-                }
-            }
-
-            function prevPage() {
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderTable();
-                }
-            }
-
-            function filterTable() {
-                const query = document.getElementById("searchBox").value.toLowerCase();
-                const rows = document.getElementById("tableBody").getElementsByTagName("tr");
-
-                for (let row of rows) {
-                    const cells = row.getElementsByTagName("td");
-                    const resident = cells[0].innerText.toLowerCase();
-                    const service = cells[2].innerText.toLowerCase();
-                    row.style.display = (resident.includes(query) || service.includes(query)) ? "" : "none";
-                }
-            }
-
-            function sortRequests() {
-                const sortValue = document.getElementById('sortBox').value;
-                if (sortValue) {
-                    window.location.href = `${pageContext.request.contextPath}/manager/request?sort=` + sortValue;
-                }
-            }
-
-            document.addEventListener("DOMContentLoaded", () => {
-                renderTable();
-            });
-        </script>
-        <script>
             function updateStatus(element) {
                 const requestID = element.getAttribute("data-id");
                 let statusID = parseInt(element.getAttribute("data-status-id"));
 
-                // Chuyển đổi trạng thái ID theo vòng lặp: 1 => 2 => 3
+                // Nếu trạng thái là Pending, hiển thị các nút Duyệt và Không Duyệt
                 if (statusID === 1) {
-                    statusID = 2; // Pending → Processing
-                } else if (statusID === 2) {
+                    document.getElementById("actionButtons-" + requestID).style.display = "block";
+                    return; // Không tiếp tục xử lý vì đã có hành động ở đây
+                }
+
+                // Logic chuyển trạng thái cho các trạng thái khác
+                if (statusID === 2) {
                     statusID = 3; // Processing → Resolved
                 } else {
                     return; // Nếu đã là Resolved (3), không làm gì cả
@@ -256,30 +304,104 @@
                         .then(data => {
                             if (data.success) {
                                 element.setAttribute("data-status-id", statusID);
-
-                                // Cập nhật trạng thái hiển thị & màu sắc
-                                if (statusID === 1) {
-                                    element.innerText = "Pending";
-                                    element.style.backgroundColor = "#FF5722";
-                                    element.style.border = "2px solid #E64A19";
-                                    element.style.boxShadow = "0 0 5px rgba(255, 87, 34, 0.5)";
-                                } else if (statusID === 2) {
-                                    element.innerText = "Processing";
-                                    element.style.backgroundColor = "#03A9F4";
-                                    element.style.border = "2px solid #0288D1";
-                                    element.style.boxShadow = "0 0 5px rgba(3, 169, 244, 0.5)";
-                                } else if (statusID === 3) {
-                                    element.innerText = "Resolved";
-                                    element.style.backgroundColor = "#4CAF50";
-                                    element.style.border = "2px solid #388E3C";
-                                    element.style.boxShadow = "0 0 5px rgba(76, 175, 80, 0.5)";
-                                }
+                                updateStatusDisplay(element, statusID);
                             } else {
                                 alert("Lỗi cập nhật trạng thái!");
                             }
                         })
                         .catch(error => console.error('Lỗi:', error));
             }
+            function approveRequest(requestID) {
+                // Cập nhật trạng thái thành Processing khi "Duyệt"
+                updateRequestStatus(requestID, 2);
+            }
+
+            function rejectRequest(requestID) {
+                // Cập nhật trạng thái thành Cancel khi "Không Duyệt"
+                updateRequestStatus(requestID, 4); // Giả sử 4 là trạng thái Cancel
+            }
+
+            function updateRequestStatus(requestID, statusID) {
+                fetch('${pageContext.request.contextPath}/manager/updateRequestStatus', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({id: requestID, statusID: statusID})
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const statusElement = document.querySelector(`[data-id='${requestID}']`);
+                                statusElement.setAttribute("data-status-id", statusID);
+                                updateStatusDisplay(statusElement, statusID);
+                                document.getElementById("actionButtons-" + requestID).style.display = "none"; // Ẩn các nút sau khi lựa chọn
+                            } else {
+                                alert("Lỗi cập nhật trạng thái!");
+                            }
+                        })
+                        .catch(error => console.error('Lỗi:', error));
+            }
+
+            function updateStatusDisplay(element, statusID) {
+                if (statusID === 1) {
+                    element.innerText = "Pending";
+                    element.style.backgroundColor = "#FF5722";
+                } else if (statusID === 2) {
+                    element.innerText = "Processing";
+                    element.style.backgroundColor = "#03A9F4";
+                } else if (statusID === 3) {
+                    element.innerText = "Resolved";
+                    element.style.backgroundColor = "#4CAF50";
+                } else if (statusID === 4) {
+                    element.innerText = "Canceled";
+                    element.style.backgroundColor = "#B0BEC5"; // Màu xám cho trạng thái hủy
+                }
+            }
+        </script>
+        <script>
+            function updateFilter() {
+                let params = new URLSearchParams(window.location.search);
+
+                const searchBox = document.getElementById("searchBox").value.trim();
+                const staffFilter = document.getElementById("staffFilter").value;
+                const statusFilter = document.getElementById("statusFilter").value;
+                const dateFilter = document.getElementById("dateFilter").value;
+                const sortBox = document.getElementById("sortBox").value;
+                const pageSize = document.getElementById("itemsPerPage").value;
+                const currentPage = params.get("page") || 1;
+
+                params.set("keySearch", searchBox || "");
+                params.set("typeRequestID", staffFilter || "");
+                params.set("status", statusFilter || "");
+                params.set("date", dateFilter || "");
+                params.set("sort", sortBox || "");
+                params.set("pageSize", pageSize || "");
+                params.set("page", currentPage);
+
+                window.location.search = params.toString();
+            }
+
+            document.getElementById("searchBox").addEventListener("input", function () {
+                clearTimeout(this.delay);
+                this.delay = setTimeout(updateFilter, 500);
+            });
+
+            document.getElementById("staffFilter").addEventListener("change", updateFilter);
+            document.getElementById("statusFilter").addEventListener("change", updateFilter);
+            document.getElementById("dateFilter").addEventListener("change", updateFilter);
+            document.getElementById("sortBox").addEventListener("change", updateFilter);
+            document.getElementById("itemsPerPage").addEventListener("change", updateFilter);
+
+            // Xử lý phân trang
+            document.querySelectorAll(".page-link").forEach(pageLink => {
+                pageLink.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    let params = new URLSearchParams(window.location.search);
+                    params.set("page", this.textContent.trim()); // Cập nhật số trang
+                    window.location.search = params.toString();
+                });
+            });
         </script>
 
     </body>
