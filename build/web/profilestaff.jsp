@@ -7,6 +7,7 @@
 <%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem --%>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 
@@ -408,7 +409,7 @@
                             <div class="profile-card">
                                 <div class="row">
                                     <c:set var="staff" value="${sessionScope.staff}"/>
-                                        <c:set var="resident" value="${sessionScope.resident}"/>
+                                    <c:set var="resident" value="${sessionScope.resident}"/>
                                     <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
                                         <img src="<%= request.getContextPath() %>${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}"
                                              alt="Ảnh cá nhân" class="img-fluid rounded-circle profile-img" />
@@ -421,14 +422,17 @@
 
                                         <!-- Hiển thị vai trò nếu có -->
                                         <p class="user-role"> ${not empty staff ? staff.role.roleName : (not empty resident ? resident.role.roleName : 'Guest')}</p>
-                                       
+
                                         <!-- Hiển thị thông tin -->
                                         <div class="profile-info">
                                             <p><strong>Email:</strong> ${not empty staff ? staff.email : (not empty resident ? resident.email : 'N/A')}</p>
                                             <p><strong>Phone:</strong> ${not empty staff ? staff.phoneNumber : (not empty resident ? resident.phoneNumber : 'N/A')}</p>
                                             <p><strong>Address:</strong> Hà Nội</p>
                                             <p><strong>Status: </strong>Active</p>
-                                            <p><strong>Date Of Birth:</strong> ${not empty staff ? staff.dob : (not empty resident ? resident.dob : 'N/A')}</p>
+                                            <p><strong>Date Of Birth:</strong>
+                                                <fmt:formatDate pattern="dd-MM-yyyy" value="${not empty staff ? staff.dob : (not empty resident ? resident.dob : null)}" />
+                                                ${empty staff and empty resident ? 'N/A' : ''}
+                                            </p>
                                             <p><strong>Sex:</strong> ${not empty staff ? staff.sex : (not empty resident ? resident.sex : 'N/A')}</p>
                                         </div>
                                     </div>
@@ -443,31 +447,31 @@
                     </div>
                 </div>
             </div>
-                <!--==============================END================================-->
+            <!--==============================END================================-->
 
-                <footer>
-                    <div class="footer clearfix mb-0 text-muted">
-                        <div class="float-start">
-                            <p>2025 &copy; Kiemm</p>
-                        </div>
-                        <div class="float-end">
-                            <p>
-                                Crafted with
-                                <span class="text-danger"><i class="bi bi-heart"></i></span> by
-                                <a href="http://ahmadsaugi.com">NguyenKiem</a>
-                            </p>
-                        </div>
+            <footer>
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-start">
+                        <p>2025 &copy; Kiemm</p>
                     </div>
-                </footer>
-            </div>
+                    <div class="float-end">
+                        <p>
+                            Crafted with
+                            <span class="text-danger"><i class="bi bi-heart"></i></span> by
+                            <a href="http://ahmadsaugi.com">NguyenKiem</a>
+                        </p>
+                    </div>
+                </div>
+            </footer>
         </div>
-        <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
-        <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
+    </div>
+    <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
+    <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 
-        <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
+    <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
+    <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
 
-        <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
-    </body>
+    <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
+</body>
 
 </html>
