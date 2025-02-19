@@ -41,15 +41,15 @@ public class Test {
 
         // Ví dụ: thêm các đối tượng ImageFeedback vào danh sách
         // Giả sử bạn đã có InputStream từ file và kích thước của ảnh (size)
-        InputStream imgStream1 = null;  // Thay bằng InputStream thực tế
-        long size1 = 1024L;
-
-        InputStream imgStream2 = null;  // Thay bằng InputStream thực tế
-        long size2 = 2048L;
+//        InputStream imgStream1 = null;  // Thay bằng InputStream thực tế
+//        long size1 = 1024L;
+//
+//        InputStream imgStream2 = null;  // Thay bằng InputStream thực tế
+//        long size2 = 2048L;
 
         // Thêm đối tượng vào danh sách
-        imageFeedbackList.add(new ImageFeedback(imgStream1, size1));
-        imageFeedbackList.add(new ImageFeedback(imgStream2, size2));
+//        imageFeedbackList.add(new ImageFeedback(imgStream1, size1));
+//        imageFeedbackList.add(new ImageFeedback(imgStream2, size2));
         
 //        List<Request> list = requestDAO.getAllRequestsBySearchOrFilterOrSort("nguye", 0, null, 0, 0);
 //        for (Request request : list) {
@@ -66,13 +66,13 @@ public class Test {
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
-//        Resident resident = new Resident("Nguyễn Văn Kiểm", "kiem@12345", "0336780144", "3984934834394", "nkiem347@gmail.com",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", new Image().builder().imageID(3).build(), new Role().builder().roleID(6).build());
+//        Resident resident = new Resident("Nguyễn Văn B", "123", "0336784476", "3984932344394", "accountant1@gmail.com",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", new Image().builder().imageID(3).build(), new Role().builder().roleID(3).build());
 //        residentDAO.insert(resident);
 //        Resident resident = new Resident("Nguyễn Đăng Nguyên", "123", "1234560144", "0123944394", "nguyen05082004@gmail.com",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", new Image().builder().imageID(1).build(), new Role().builder().roleID(7).build());
 //        residentDAO.insert(resident);
 //        imageDAO.insert(image);
-//        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0331653221", "1234846731194", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2004, 6, 27), "Male", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(1).build());
-//        staffDAO.insert(staff);
+        Staff staff = new Staff("Nguyễn Văn A", "123", "0331652221", "1234841131194", "acc@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(3).build());
+        staffDAO.insert(staff);
 
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);

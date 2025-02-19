@@ -18,7 +18,7 @@ import model.Resident;
  *
  * @author fptshop
  */
-@WebServlet(name="DeleteResidentServlet", urlPatterns={"/deleteResident"})
+@WebServlet(name="DeleteResidentServlet", urlPatterns={"/manager/deleteResident"})
 public class DeleteResidentServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String residentId = request.getParameter("residentId");

@@ -3,10 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/src/java/controller/owner/RequestServlet.java</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/src/java/controller/owner/FeedbackServlet.java</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/owner/request.jsp</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/owner/feedback.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/src/java/controller/UpdateProfileServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/changeprofile.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/profile.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/owner/menuowner.jsp</file>
         </group>
     </open-files>
 </project-private>

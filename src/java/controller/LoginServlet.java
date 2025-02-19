@@ -135,7 +135,7 @@ public class LoginServlet extends HttpServlet {
                 redirectToPage(response, request,"/administrative/menuadministrative.jsp");
                 break;
             case 3:
-                redirectToPage(response, request,"menuaccountant.jsp");
+                redirectToPage(response, request,"/accountant/home");
                 break;
             case 4:
                 redirectToPage(response, request,"menutechnical.jsp");

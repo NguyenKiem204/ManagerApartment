@@ -16,6 +16,22 @@ public class Invoices {
     private Apartment apartment;
     private List<InvoiceDetail> details;
     private int muon;// muon =islate
+    private LocalDate paydate;
+
+    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment, int muon, LocalDate paydate) {
+        this.invoiceID = invoiceID;
+        this.totalAmount = totalAmount;
+        this.publicDate = publicDate;
+        this.status = status;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.resident = resident;
+        this.apartment = apartment;
+        this.muon = muon;
+        this.paydate = paydate;
+    }
+
+   
 
     
     public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment, List<InvoiceDetail> details, int muon) {
@@ -167,6 +183,14 @@ public class Invoices {
 
     public void setMuon(int muon) {
         this.muon = muon;
+    }
+
+    public LocalDate getPaydate() {
+        return paydate;
+    }
+
+    public void setPaydate(LocalDate paydate) {
+        this.paydate = paydate;
     }
 
    

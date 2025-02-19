@@ -147,27 +147,40 @@
                                     <div class="row mb-3 align-items-center" >
 
                                         <div class="col-md-8">
-                                            <form action="manageResident" method="get" class="d-flex gap-2">
-                                                <select class="form-select">
-                                                    <option selected>All Apartments</option>
-                                                    <option>Apartment A</option>
-                                                    <option>Apartment B</option>
+                                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
+                                                <select name="apartmentId" class="form-select" aria-label="Default select example">
+                                                    <option value="">All Department</option>
+                                                    <c:forEach items="${listApartment}" var="o">
+                                                        <option value="${o.apartmentId}" 
+                                                                ${selectedApartmentId == o.apartmentId ? 'selected' : ''}>
+                                                            ${o.apartmentName}
+                                                        </option>
+                                                    </c:forEach>
                                                 </select>
-                                                <select class="form-select">
-                                                    <option selected>All Status</option>
-                                                    <option>Paid</option>
-                                                    <option>Pending</option>
-                                                    <option>Overdue</option>
+                                                <select class="form-select" name="status">
+                                                    <option value="">All Status</option>
+                                                    <option value="Paid" ${selectedStatus == 'Paid' ? 'selected' : ''}>Paid</option>
+                                                    <option value="Unpaid" ${selectedStatus == 'Unpaid' ? 'selected' : ''}>Unpaid</option>
                                                 </select>
-                                                <input type="month" class="form-control">
-                                                <input type="date" class="form-control">
+                                                <label for="FromDate" class="form-label align-self-center">From:</label>
+                                                <input type="date" class="form-control" id="FromDate" name="FromDate" 
+                                                       value="${selectedFromDate}">
+                                                <label for="dueDate" class="form-label align-self-center">Due:</label>
+                                                <input type="date" class="form-control" id="dueDate" name="dueDate" 
+                                                       value="${selectedDueDate}">
+                                                <button type="submit" class="btn btn-primary" style="width: 70px;">Filter</button>
                                             </form>
                                         </div>
 
+
                                         <div class="col-md-4">
-                                            <form action="manageResident" method="get" class="d-flex">
-                                                <input type="text" name="searchKeyword" placeholder="Nhập tên hoặc email..." value="${searchKeyword}" class="form-control me-2">
-                                                <button type="submit" class="btn btn-primary">Tìm</button>
+                                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
+                                                <input type="text" name="search" placeholder="Search by title.." value="${search}" class="form-control me-2">
+                                                <input type="hidden" name="apartmentId" value="${selectedApartmentId}">  
+                                                <input type="hidden" name="status" value="${selectedStatus}">  
+                                                <input type="hidden" name="FromDate" value="${selectedFromDate}">  
+                                                <input type="hidden" name="dueDate" value="${selectedDueDate}"> 
+                                                <button type="submit" class="btn btn-primary">Search</button>
                                             </form>
                                         </div>
                                     </div>
@@ -191,6 +204,7 @@
                                     <th>Apartment</th>
                                     <th>Status</th>
                                     <th>Payment Term</th>
+                                    <th>Payment Date</th>
                                     <th>Public Date</th>
                                     <th>Late(2%)</th>
                                     <th>Actions</th>
@@ -198,7 +212,6 @@
                             </thead>
                             <tbody style="background:white">
                                 <c:forEach items="${sessionScope.ListInvoices}" var="l">
-
                                     <tr>
                                         <td>${l.invoiceID}</td>
                                         <td>${l.description}</td>
@@ -206,14 +219,13 @@
                                         <td>${l.apartment.apartmentName}</td>
                                         <td>${l.status}</td>
                                         <td>${l.dueDate}</td>
+                                        <td>${l.paydate}</td>
                                         <td>${l.publicDate}</td>
                                         <td>
                                             <c:if test="${l.muon == 1}">
-
                                                 <p>Islate</p>
                                             </c:if>
                                         </td>
-
                                         <td style="width:200px">
                                             <a href="<%= request.getContextPath() %>/DetailInvoice?invoiceID=${l.invoiceID}" class="btn btn-info btn-sm">Detail</a>
                                             <c:if test='${l.status eq "Unpaid"}'>
@@ -221,9 +233,7 @@
                                                 <button onclick="confirmDelete('${l.invoiceID}')" class="btn btn-danger btn-sm">Delete</button>
                                             </c:if>
                                         </td>
-
                                     </tr>
-
                                 </c:forEach>
                             </tbody>
                         </table>
