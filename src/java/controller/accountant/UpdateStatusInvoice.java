@@ -4,6 +4,7 @@
  */
 package controller.accountant;
 
+import dao.ApartmentDAO;
 import dao.InvoiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,8 +14,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import model.Apartment;
 import model.Invoices;
 
 /**
@@ -65,16 +68,51 @@ public class UpdateStatusInvoice extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
-        InvoiceDAO Idao = new InvoiceDAO();
-        List<Invoices> list = Idao.selectAll();
-        List<Invoices> listunpaid = new ArrayList();
-        for (Invoices ls : list) {
-            if (ls.getStatus().equals("Unpaid")) {
-                listunpaid.add(ls);
+
+        // Lấy các tham số từ request
+        String deID = request.getParameter("apartmentId");
+        String fromDateStr = request.getParameter("FromDate");
+        String dueDateStr = request.getParameter("dueDate");
+        String search = request.getParameter("search");
+
+        try {
+            InvoiceDAO Idao = new InvoiceDAO();
+            ApartmentDAO adao = new ApartmentDAO();
+            LocalDate fromDate = (fromDateStr != null && !fromDateStr.isEmpty())
+                    ? LocalDate.parse(fromDateStr)
+                    : null;
+            LocalDate dueDate = (dueDateStr != null && !dueDateStr.isEmpty())
+                    ? LocalDate.parse(dueDateStr)
+                    : null;
+
+            // Lọc hóa đơn dựa trên các tham số
+            int deIds = (deID == null || deID.isEmpty()) ? 0 : Integer.parseInt(deID);
+            List<Invoices> list = Idao.filterInvoices(deIds, "UnPaid", fromDate, dueDate);
+
+            // Áp dụng tìm kiếm nếu có
+            if (search != null && !search.isEmpty()) {
+                List<Invoices> searchResults = new ArrayList<>();
+                for (Invoices inv : list) {
+                    if (inv.getDescription().toLowerCase().contains(search.toLowerCase())) {
+                        searchResults.add(inv);
+                    }
+                }
+                list = searchResults;
             }
+
+            List<Apartment> la = adao.selectAllOcc();
+
+            request.setAttribute("search", search);
+            request.setAttribute("selectedApartmentId", deID);
+            request.setAttribute("selectedFromDate", fromDateStr);
+            request.setAttribute("selectedDueDate", dueDateStr);
+            request.setAttribute("listApartment", la);
+            session.setAttribute("ListInvoices", list);
+            request.getRequestDispatcher("accountant/UpdateStatusInvoice.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
-        session.setAttribute("ListInvoices", listunpaid);
-        response.sendRedirect("accountant/UpdateStatusInvoice.jsp");
     }
 
     /**

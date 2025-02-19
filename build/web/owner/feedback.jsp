@@ -110,109 +110,141 @@
     </head>
     <body>
         <%@include file="menuowner.jsp" %>
-            
 
-            <div id = "main">
-                <div class="container" id="feedbackContainer">
-                    <h2>Resident Feedback Form</h2>
-                    <form action="feedback" method="POST">
-                        <!--id="feedbackForm"-->
-                        <label for="title">Title</label>
-                        <input type="text" id="title" name="title" placeholder="Enter the title" required>
-                        <span class="error" id="titleError">Please enter a title</span>
 
-                        <label for="staff">Feedback for</label>
-                        <select id="staff" name="staff">
-                            <option value="" disabled selected>Select a staff member</option>
-                            <c:forEach var="role" items="${listrole}" begin="1" end="4">
-                                <option value="${role.roleID}">${role.roleName}</option>
-                            </c:forEach>
-                        </select>
-                        <span class="error" id="staffError">Please select a staff member</span>
+        <div id = "main">
+            <div class="container" id="feedbackContainer">
+                <h2>Resident Feedback Form</h2>
+                <form action="feedback" method="POST" enctype="multipart/form-data">
+                    <!--id="feedbackForm"-->
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" placeholder="Enter the title" required>
+                    <span class="error" id="titleError">Please enter a title</span>
 
-                        <label>Rating</label>
-                        <div class="rating">
-                            <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
-                            <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
-                            <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
-                            <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
-                            <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
-                        </div>
-                        <p class="result">You have not rated yet</p>
-                        <span class="error" id="ratingError">Please select a rating</span>
+                    <label for="staff">Feedback for</label>
+                    <select id="staff" name="staff">
+                        <option value="" disabled selected>Select a staff member</option>
+                        <c:forEach var="role" items="${listrole}" begin="1" end="4">
+                            <option value="${role.roleID}">${role.roleName}</option>
+                        </c:forEach>
+                    </select>
+                    <span class="error" id="staffError">Please select a staff member</span>
 
-                        <label for="feedback">Feedback</label>
-                        <textarea id="feedback" name="description" rows="4" placeholder="Write your feedback here..." required></textarea>
-                        <span class="error" id="feedbackError">Please enter your feedback</span>
+                    <label>Rating</label>
+                    <div class="rating">
+                        <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                        <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                        <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                        <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                        <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+                    </div>
+                    <p class="result">You have not rated yet</p>
+                    <span class="error" id="ratingError">Please select a rating</span>
 
-                        <button type="submit">Submit Feedback</button>
-                    </form>
-                </div>
+                    <label for="feedback">Feedback</label>
+                    <textarea id="feedback" name="description" rows="4" placeholder="Write your feedback here..." required></textarea>
+                    <span class="error" id="feedbackError">Please enter your feedback</span>
+                    
+                    <c:if test="${not empty error}">
+                        <p style="color: red;">${error}</p>
+                    </c:if>
 
-                <div class="container success-message" id="successMessage">
-                    <h2>Thank You!</h2>
-                    <p>Your feedback has been submitted successfully.</p>
-                    <button onclick="window.location.reload()">Submit Another Feedback</button>
-                </div>
+                    <button type="submit">Submit Feedback</button>
+                </form>
+            </div>
 
-                <script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const form = document.getElementById("feedbackForm");
-                        const resultText = document.querySelector(".result");
-                        const ratingInputs = document.querySelectorAll(".rating input");
-                        const feedbackContainer = document.getElementById("feedbackContainer");
-                        const successMessage = document.getElementById("successMessage");
+            <div class="container success-message" id="successMessage">
+                <h2>Thank You!</h2>
+                <p>Your feedback has been submitted successfully.</p>
+                <button onclick="window.location.reload()">Submit Another Feedback</button>
+            </div>
 
-                        // Ẩn success message ban đầu
-                        successMessage.style.display = "none";
+            <script>
+                window.onload = function () {
+                    fetch("feedback") // Gọi servlet để lấy FeedbackID mới nhất
+                            .then(response => response.text())
+                            .then(feedbackId => {
+                                document.getElementById("feedbackId").value = feedbackId; // Gán giá trị vào input ẩn
+                            })
+                            .catch(error => console.error("Lỗi khi lấy FeedbackID:", error));
+                };
+            </script>
 
-                        // Xử lý chọn rating
-                        ratingInputs.forEach(input => {
-                            input.addEventListener("change", function () {
-                                resultText.innerText = "You rated: " + this.value + " stars";
-                            });
-                        });
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const form = document.getElementById("feedbackForm");
+                    const resultText = document.querySelector(".result");
+                    const ratingInputs = document.querySelectorAll(".rating input");
+                    const feedbackContainer = document.getElementById("feedbackContainer");
+                    const successMessage = document.getElementById("successMessage");
 
-                        // Xử lý submit form
-                        form.addEventListener("submit", function (event) {
-                            event.preventDefault(); // Ngăn chặn gửi form thật
+                    // Ẩn success message ban đầu
+                    successMessage.style.display = "none";
 
-                            let isValid = true;
-
-                            function validateField(id, errorId) {
-                                const field = document.getElementById(id);
-                                const error = document.getElementById(errorId);
-                                if (!field.value.trim()) {
-                                    error.style.display = "block";
-                                    isValid = false;
-                                } else {
-                                    error.style.display = "none";
-                                }
-                            }
-
-                            validateField("title", "titleError");
-                            validateField("staff", "staffError");
-                            validateField("feedback", "feedbackError");
-
-                            // Kiểm tra xem có rating được chọn không
-                            const ratingSelected = [...ratingInputs].some(input => input.checked);
-                            document.getElementById("ratingError").style.display = ratingSelected ? "none" : "block";
-                            isValid = isValid && ratingSelected;
-
-                            // Nếu hợp lệ, hiển thị thông báo thành công
-                            if (isValid) {
-                                feedbackContainer.style.display = "none";
-                                successMessage.style.display = "block";
-                            }
+                    // Xử lý chọn rating
+                    ratingInputs.forEach(input => {
+                        input.addEventListener("change", function () {
+                            resultText.innerText = "You rated: " + this.value + " stars";
                         });
                     });
-                </script>
-            </div>
-            <script src="assets/js/bootstrap.bundle.min.js"></script>
 
-            <script src="assets/vendors/apexcharts/apexcharts.js"></script>
-            <script src="assets/js/pages/dashboard.js"></script>
+                    // Xử lý submit form
+                    form.addEventListener("submit", function (event) {
+                        event.preventDefault(); // Ngăn chặn gửi form thật
 
-            <script src="assets/js/main.js"></script>
+                        let isValid = true;
+
+                        function validateField(id, errorId) {
+                            const field = document.getElementById(id);
+                            const error = document.getElementById(errorId);
+                            if (!field.value.trim()) {
+                                error.style.display = "block";
+                                isValid = false;
+                            } else {
+                                error.style.display = "none";
+                            }
+                        }
+
+                        validateField("title", "titleError");
+                        validateField("staff", "staffError");
+                        validateField("feedback", "feedbackError");
+
+                        // Kiểm tra xem có rating được chọn không
+                        const ratingSelected = [...ratingInputs].some(input => input.checked);
+                        document.getElementById("ratingError").style.display = ratingSelected ? "none" : "block";
+                        isValid = isValid && ratingSelected;
+
+                        // Nếu hợp lệ, hiển thị thông báo thành công
+                        if (isValid) {
+                            feedbackContainer.style.display = "none";
+                            successMessage.style.display = "block";
+                        }
+                    });
+                });
+
+                document.getElementById("upload-photo").addEventListener("change", function (event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        if (!file.type.startsWith("image/")) {
+                            alert("Chỉ được chọn file ảnh!");
+                            event.target.value = "";
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.getElementById("preview-img").src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            </script>
+        </div>
+        <script src="assets/js/bootstrap.bundle.min.js"></script>
+
+        <script src="assets/vendors/apexcharts/apexcharts.js"></script>
+        <script src="assets/js/pages/dashboard.js"></script>
+
+        <script src="assets/js/main.js"></script>
     </body>
 </html>

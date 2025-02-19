@@ -175,21 +175,22 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
 
     public List<Request> getAllRequestsByResidentOrApartment(String key) {
         List<Request> list = new ArrayList<>();
-        String sql = "SELECT [RequestID]\n"
-                  + "      ,[Description]\n"
-                  + "      ,[Title]\n"
-                  + "      ,[Date]\n"
-                  + "      ,[StaffID]\n"
-                  + "      ,r.ResidentID\n"
-                  + "      ,[TypeRqID]\n"
-                  + "      ,r.StatusID\n"
-                  + "      ,r.ApartmentID\n"
-                  + "	  ,re.FullName\n"
-                  + "	  ,a.ApartmentName\n"
-                  + "  FROM [ApartmentManagement].[dbo].[Request] r \n"
-                  + "		join Resident re on r.ResidentID = re.ResidentID\n"
-                  + "		join Apartment a on a.ApartmentID = r.ApartmentID\n"
-                  + "  WHERE re.FullName LIKE ? OR a.ApartmentName LIKE ?";
+        String sql = """
+                     SELECT [RequestID]
+                           ,[Description]
+                           ,[Title]
+                           ,[Date]
+                           ,[StaffID]
+                           ,r.ResidentID
+                           ,[TypeRqID]
+                           ,r.StatusID
+                           ,r.ApartmentID
+                     \t   ,re.FullName
+                     \t   ,a.ApartmentName
+                       FROM [ApartmentManagement].[dbo].[Request] r 
+                     \t\tjoin Resident re on r.ResidentID = re.ResidentID
+                     \t\tjoin Apartment a on a.ApartmentID = r.ApartmentID
+                       WHERE re.FullName LIKE ? OR a.ApartmentName LIKE ?""";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, "%" + key + "%");
@@ -214,6 +215,109 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         return list;
     }
 
+    public List<Request> getAllRequestsBySearchOrFilterOrSort(String keySearch, int typeRequestID, LocalDate date, int statusID, int keySort) {
+        List<Request> list = new ArrayList<>();
+        String sql = """
+                     SELECT [RequestID]
+                                                  ,[Description]
+                                                  ,[Title]
+                                                  ,[Date]
+                                                  ,r.StaffID
+                                                  ,r.ResidentID
+                                            \t  ,res.FullName
+                                                  ,r.TypeRqID
+                                            \t  ,tr.TypeName
+                                                  ,r.StatusID
+                                            \t  ,sr.StatusName
+                                                  ,a.ApartmentID
+                                            \t  ,a.ApartmentName
+                                              FROM [ApartmentManagement].[dbo].[Request] r 
+                                            \t\tJOIN TypeRequest tr ON r.TypeRqID = tr.TypeRqID
+                                            \t\tJOIN Staff s ON r.StaffID = s.StaffID
+                                            \t\tJOIN Apartment a ON r.ApartmentID = a.ApartmentID
+                                            \t\tJOIN Resident res ON r.ResidentID = res.ResidentID
+                                            \t\tJOIN StatusRequest sr ON r.StatusID = sr.StatusID
+                                              WHERE 1 = 1""";
+
+        List<Object> params = new ArrayList<>();
+        try {
+//Xu ly search
+            if (keySearch != null && !keySearch.trim().isEmpty()) {
+                sql += " AND (res.FullName LIKE ? OR a.ApartmentName LIKE ?)";
+                params.add("%" + keySearch + "%");
+                params.add("%" + keySearch + "%");
+            }
+
+//Xu ly filter
+            //check roleName is null or not
+            if (typeRequestID != 0) {
+                sql += " AND r.TypeRqID = ?";
+                params.add(typeRequestID);
+            }
+
+            //check rating is null or not
+            if (statusID != 0) {
+                sql += " AND r.StatusID = ?";
+                params.add(statusID);
+            }
+
+            //check date is null or not
+            if (date != null) {
+                sql += " AND CAST([Date] AS DATE) = ?";
+                params.add(Date.valueOf(date));
+            }
+//------------------------------------------
+
+            //Xu ly sort
+            if (keySort != 0) {
+                switch (keySort) {
+                    case 1 ->
+                        sql += " ORDER BY a.ApartmentName";
+                    case 2 ->
+                        sql += " ORDER BY Date DESC";
+                    default ->
+                        throw new AssertionError();
+                }
+            } else {
+                sql += " ORDER BY Date DESC";
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Request rq = new Request(rs.getInt("ResidentID"),
+                          rs.getString("Description"),
+                          rs.getString("Title"),
+                          rs.getDate("Date").toLocalDate(),
+                          statusrequestdao.selectById(rs.getInt("statusID")),
+                          staffdao.selectById(rs.getInt("staffID")),
+                          residentdao.selectById(rs.getInt("residentID")),
+                          typerequestdao.selectById(rs.getInt("typeRqID")),
+                          apartmentdao.selectById(rs.getInt("apartmentID")));
+
+                list.add(rq);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public List<Request> getListByPage(List<Request> list, int start, int end) {
+        List<Request> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
+        }
+        return arr;
+    }
+
     public boolean updateStatus(int requestID, int newStatus) {
         String query = "update Request set StatusID = ? where RequestID = ?";
         try {
@@ -228,6 +332,5 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         }
         return false;
     }
-    
 
 }

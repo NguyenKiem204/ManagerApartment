@@ -71,7 +71,6 @@ public class RequestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
               throws ServletException, IOException {
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
-
         List<TypeRequest> listrq = typeRequestDAO.selectAll();
         request.setAttribute("listtyperq", listrq);
         request.getRequestDispatcher("request.jsp").forward(request, response);
@@ -96,23 +95,66 @@ public class RequestServlet extends HttpServlet {
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
         ApartmentDAO apartmentDAO = new ApartmentDAO();
         RequestDAO rqDAO = new RequestDAO();
+        
+        List<TypeRequest> listrq = typeRequestDAO.selectAll();
 
         String apartmentName = request.getParameter("apartment");
         String title = request.getParameter("title");
         String typerq_raw = request.getParameter("service");
         String description = request.getParameter("request");
-
+        String error = "error";
         //check apartment name is correct or not
         List<Apartment> apartments = apartmentDAO.selectAll();
         boolean isValidApartment = false;
         for (Apartment apartment : apartments) {
-            if (apartment.getApartmentName().equalsIgnoreCase(apartmentName)) {
+            if (apartment.getApartmentName().trim().replaceAll("\\s+", " ").equalsIgnoreCase(apartmentName)) {
                 isValidApartment = true;
                 break;
             }
         }
         if (!isValidApartment) {
-            request.setAttribute("error", "Apartment name incorrect. Please enter a valid apartment name.");
+            request.setAttribute(error, "Apartment name incorrect. Please enter a valid apartment name.");
+            request.setAttribute("listtyperq", listrq);
+            request.getRequestDispatcher("request.jsp").forward(request, response);
+            return;
+        }
+        
+        //check title empty or not
+        if (title != null) {
+            title = title.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
+        }
+
+        if (title == null || title.trim().isEmpty()) {
+            request.setAttribute(error, "Title cannot be empty!");
+            request.setAttribute("listtyperq", listrq);
+            request.getRequestDispatcher("request.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra độ dài title
+        if (title.length() < 5 || title.length() > 100) {
+            request.setAttribute(error, "Title must be between 5 and 100 characters!");
+            request.setAttribute("listtyperq", listrq);
+            request.getRequestDispatcher("request.jsp").forward(request, response);
+            return;
+        }
+        
+        // Kiểm tra ký tự đặc biệt (chỉ cho phép chữ, số, khoảng trắng, và một số dấu câu)
+        if (!title.matches("^[a-zA-Z0-9 .,!?()-]+$")) {
+            request.setAttribute(error, "Title contains invalid characters!");
+            request.setAttribute("listtyperq", listrq);
+            request.getRequestDispatcher("request.jsp").forward(request, response);
+            return;
+        }
+        
+        //check description empty or not
+        if (description != null) {
+            description = description.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
+        }
+        //check description null or not
+        if (description == null || description.trim().isEmpty()) {
+            request.setAttribute(error, "Description cannot be empty!");
+            request.setAttribute("listtyperq", listrq);
             request.getRequestDispatcher("request.jsp").forward(request, response);
             return;
         }
@@ -131,6 +173,7 @@ public class RequestServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Invalid service type");
         }
+        request.setAttribute("listtyperq", listrq);
         request.getRequestDispatcher("request.jsp").forward(request, response);
     }
 

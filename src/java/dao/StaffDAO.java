@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Image;
 
 /**
  *
@@ -36,7 +37,7 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             ps.setString(5, staff.getEmail());
             ps.setDate(6, Date.valueOf(staff.getDob()));
             ps.setString(7, staff.getSex());
-            ps.setInt(8, staff.getImage().getImageID());
+            ps.setInt(8, imageDAO.insert1(new Image(null)));
             ps.setString(9, staff.getStatus());
             ps.setInt(10, staff.getRole().getRoleID());
 

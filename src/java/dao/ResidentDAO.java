@@ -19,6 +19,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
 
     @Override
     public int insert(Resident resident) {
+        //int insertImg = imageDAO.insert(new Image(null));
         int row = 0;
         String sqlInsert = "INSERT INTO Resident (FullName, Password, PhoneNumber, CCCD, Email, DOB, Sex, ImageID, Status, RoleID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -30,7 +31,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
             ps.setString(5, resident.getEmail());
             ps.setDate(6, Date.valueOf(resident.getDob()));
             ps.setString(7, resident.getSex());
-            ps.setInt(8, resident.getImage().getImageID());
+            ps.setInt(8, imageDAO.insert1(new Image(null)));
             ps.setString(9, resident.getStatus());
             ps.setInt(10, resident.getRole().getRoleID());
 

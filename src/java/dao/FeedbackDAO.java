@@ -93,11 +93,77 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public List<Feedback> getAllFeedbacksSortedByStaff() {
+    public List<Feedback> getAllFeedbacksBySearchOrFilterOrSort(String keySearch, int roleID, int rating, LocalDate date, int keySort) {
         List<Feedback> list = new ArrayList<>();
-        String sql = "SELECT * FROM Feedback ORDER BY StaffID";
+        String sql = """
+                     SELECT [FeedbackID]
+                           ,[Title]
+                           ,f.Description
+                           ,[Date]
+                           ,[Rate]
+                           ,f.StaffID
+                           ,[ResidentID]
+                           ,s.FullName
+                     ,s.RoleID
+                           ,r.RoleName
+                       FROM [dbo].[Feedback] f 
+                     JOIN Staff s on f.StaffID = s.StaffID
+                                join Role r on s.RoleID = r.RoleID
+                       WHERE 1 = 1""";
+
+        List<Object> params = new ArrayList<>();
+        try {
+//Xu ly search
+            if (keySearch != null && !keySearch.trim().isEmpty()) {
+                sql += " AND (r.RoleName LIKE ? OR Title LIKE ? OR s.FullName LIKE ?)";
+                params.add("%"+ keySearch +"%");
+                params.add("%"+ keySearch +"%");
+                params.add("%"+ keySearch +"%");
+            }
+
+//Xu ly filter
+            //check roleName is null or not
+            if (roleID != 0) {
+                sql += " AND r.RoleID = ?";
+                params.add(roleID);
+            }
+
+            //check rating is null or not
+            if (rating != 0) {
+                sql += " AND Rate = ?";
+                params.add(rating);
+            }
+
+            //check date is null or not
+            if (date != null) {
+                sql += " AND CAST([Date] AS DATE) = ?";
+                params.add(Date.valueOf(date));
+            }
+//------------------------------------------
+
+    //Xu ly sort
+            if (keySort != 0) {
+                switch (keySort) {
+                    case 2 ->
+                        sql += " ORDER BY Rate";
+                    case 1 ->
+                        sql += " ORDER BY StaffID";
+                    case 3 ->
+                        sql += " ORDER BY Date DESC";
+                    default ->
+                        throw new AssertionError();
+                }
+            } else {
+                sql += " ORDER BY Date DESC";
+            }
+        } catch (Exception e) {
+        }
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
@@ -116,89 +182,26 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         }
         return list;
     }
-
-    public List<Feedback> getAllFeedbacksSortedByRating() {
-        List<Feedback> list = new ArrayList<>();
-        String sql = "SELECT * FROM Feedback ORDER BY Rate";
-
-        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Feedback fb = new Feedback(
-                          rs.getInt("FeedbackID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getDate("Date").toLocalDate(),
-                          rs.getInt("Rate"),
-                          staff.selectById(rs.getInt("StaffID")),
-                          resident.selectById(rs.getInt("ResidentID"))
-                );
-                list.add(fb);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+    
+    public List<Feedback> getListByPage(List<Feedback> list, int start, int end) {
+        List<Feedback> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
         }
-        return list;
+        return arr;
     }
-
-    public List<Feedback> getAllFeedbacksSortedByDate() {
-        List<Feedback> list = new ArrayList<>();
-        String sql = "SELECT * FROM Feedback ORDER BY Date DESC";
-
+    
+    public int getLatestFeedbackID(){
+        int latestFeedbackID = 1; // Giá trị mặc định nếu không có feedback nào
+        String sql = "SELECT MAX(FeedbackID) FROM Feedback"; 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Feedback fb = new Feedback(
-                          rs.getInt("FeedbackID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getDate("Date").toLocalDate(),
-                          rs.getInt("Rate"),
-                          staff.selectById(rs.getInt("StaffID")),
-                          resident.selectById(rs.getInt("ResidentID"))
-                );
-                list.add(fb);
+            if (rs.next() && rs.getInt(1) > 0) {
+                latestFeedbackID = rs.getInt(1) + 1;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ImageDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return list;
-    }
-
-    public List<Feedback> getAllFeedbacksByTitleOrStaff(String key) {
-        List<Feedback> list = new ArrayList<>();
-        String sql = "SELECT f.FeedbackID\n"
-                  + "      ,f.Title\n"
-                  + "      ,f.Description\n"
-                  + "      ,f.Date\n"
-                  + "      ,f.Rate\n"
-                  + "      ,f.StaffID\n"
-                  + "	  ,r.RoleName\n"
-                  + "      ,f.ResidentID\n"
-                  + "  FROM [ApartmentManagement].[dbo].[Feedback] f \n"
-                  + "  join Staff s on f.StaffID = s.StaffID \n"
-                  + "  join Role r on s.RoleID = r.RoleID\n"
-                  + "  WHERE r.RoleName LIKE ? OR f.Title LIKE ?";
-
-        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, "%" + key + "%");
-            ps.setString(2, "%" + key + "%");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Feedback fb = new Feedback(
-                          rs.getInt("FeedbackID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getDate("Date").toLocalDate(),
-                          rs.getInt("Rate"),
-                          staff.selectById(rs.getInt("StaffID")),
-                          resident.selectById(rs.getInt("ResidentID"))
-                );
-                list.add(fb);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
+        return latestFeedbackID;
     }
 }

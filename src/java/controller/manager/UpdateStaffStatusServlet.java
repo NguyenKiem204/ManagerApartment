@@ -18,10 +18,11 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author fptshop
  */
-@WebServlet(name="UpdateStaffStatusServlet", urlPatterns={"/updateStaffStatus"})
+@WebServlet(name="UpdateStaffStatusServlet", urlPatterns={"/manager/updateStaffStatus"})
 public class UpdateStaffStatusServlet extends HttpServlet {
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
+
         PrintWriter out = response.getWriter();
 
         try {
