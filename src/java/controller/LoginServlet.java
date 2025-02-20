@@ -81,6 +81,13 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String remember = request.getParameter("remember_me");
+        
+        HttpSession session = request.getSession();
+        if(session.getAttribute("staff")!=null){
+            session.removeAttribute("staff");
+        }else if(session.getAttribute("resident")!=null){
+            session.removeAttribute("resident");
+        }
 
         handleCookies(response, email, password, remember, userType);
         handleLogin(request, response, userType, email, password);

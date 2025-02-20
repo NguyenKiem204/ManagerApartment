@@ -21,6 +21,10 @@ import model.Resident;
 import model.Role;
 import java.util.List;
 import jakarta.servlet.http.Part;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import validation.Validate;
 
 /**
  *
@@ -99,58 +103,104 @@ public class UpdateProfileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String userIDParam = request.getParameter("userID");
-        String imageURL = request.getParameter("imageURL");
         String fullName = request.getParameter("fullName");
-        String email = request.getParameter("email");
         String phoneNumber = request.getParameter("phoneNumber");
         String dobParam = request.getParameter("dob");
         String sex = request.getParameter("sex");
 
-        Integer userID = (userIDParam != null) ? Integer.parseInt(userIDParam) : null;
-        LocalDate dob = LocalDate.parse(dobParam);
-        Part filePart = request.getPart("imgURL");
+        List<String> errorMessages = new ArrayList<>();
 
+        validateInput(fullName, phoneNumber, dobParam, errorMessages);
+
+        String newImageURL = null;
+        try {
+            newImageURL = handleFileUpload(request, userIDParam, errorMessages);
+        } catch (ServletException e) {
+            errorMessages.add(e.getMessage());
+        }
+
+        Integer userID = parseUserId(userIDParam);
+        ResidentDAO residentDAO = new ResidentDAO();
+        Resident oldResident = residentDAO.selectById(userID);
+        if (phoneNumber.equals(oldResident.getPhoneNumber())) {
+            System.out.println("Nothing!");
+        } else if (residentDAO.existPhoneNumber(phoneNumber)) {
+            errorMessages.add("PhoneNumber to exist!");
+        }
+
+        if (!errorMessages.isEmpty()) {
+            request.setAttribute("errors", errorMessages);
+            request.getRequestDispatcher("changeprofile.jsp").forward(request, response);
+            return;
+        }
+        LocalDate dob = LocalDate.parse(dobParam);
+        fullName = fullName.trim().replaceAll("\\s+", " ");
+        HttpSession session = request.getSession();
+
+        if (oldResident != null) {
+            Resident resident = createResident(oldResident, fullName, phoneNumber, dob, sex, newImageURL);
+            residentDAO.updateProfileResident(resident);
+            session.setAttribute("resident", resident);
+        }
+        response.sendRedirect("profile");
+    }
+
+    private void validateInput(String fullName, String phoneNumber, String dobParam, List<String> errorMessages) {
+        String fullNameError = Validate.validateFullName(fullName);
+        if (fullNameError != null) {
+            errorMessages.add(fullNameError);
+        }
+
+        String phoneNumberError = Validate.validatePhoneNumber(phoneNumber);
+        if (phoneNumberError != null) {
+            errorMessages.add(phoneNumberError);
+        }
+
+        String dobError = Validate.validateDob(dobParam);
+        if (dobError != null) {
+            errorMessages.add(dobError);
+        }
+    }
+
+    private String handleFileUpload(HttpServletRequest request, String userIDParam, List<String> errorMessages) throws IOException, ServletException {
+        Part filePart = request.getPart("imgURL");
         List<String> allowedMimeTypes = List.of("image/jpeg", "image/png", "image/gif", "image/webp");
         List<String> allowedExtensions = List.of("jpg", "jpeg", "png", "gif", "webp");
 
         if (filePart != null && filePart.getSize() > 0) {
             String mimeType = filePart.getContentType();
             String fileName = getSubmittedFileName(filePart);
-            String fileExtension = getFileExtension(fileName);
+            String fileExtension = getFileExtension(fileName).toLowerCase();
 
             if (allowedMimeTypes.contains(mimeType) && allowedExtensions.contains(fileExtension)) {
-                String newImageURL = FileUploadUtil.uploadAvatarImage(request, userIDParam);
-                if (newImageURL != null) {
-                    imageURL = newImageURL;
-                }
+                return FileUploadUtil.uploadAvatarImage(request, userIDParam);
+            } else {
+                errorMessages.add("Invalid file type. Allowed types are: " + String.join(", ", allowedExtensions));
             }
         }
+        return null;
+    }
 
-        ResidentDAO residentDAO = new ResidentDAO();
-        HttpSession session = request.getSession();
-
-        Resident oldResident = residentDAO.selectById(userID);
-        if (oldResident != null) {
-            Resident resident = Resident.builder()
-                    .residentId(userID)
-                    .image(new Image(oldResident.getImage().getImageID(), imageURL))
-                    .fullName(fullName)
-                    .email(email)
-                    .phoneNumber(phoneNumber)
-                    .dob(dob)
-                    .role(new Role(oldResident.getRole().getRoleID(), oldResident.getRole().getRoleName(), ""))
-                    .sex(sex)
-                    .build();
-            residentDAO.updateProfileResident(resident);
-
-            if (imageURL == null || imageURL.isEmpty()) {
-                imageURL = oldResident.getImage().getImageURL();
-            }
-            resident.getImage().setImageURL(imageURL);
-            session.setAttribute("resident", resident);
+    private Integer parseUserId(String userIDParam) {
+        try {
+            return userIDParam != null ? Integer.valueOf(userIDParam) : null;
+        } catch (NumberFormatException e) {
+            return null;
         }
+    }
 
-        response.sendRedirect("profile");
+    private Resident createResident(Resident oldResident, String fullName, String phoneNumber, LocalDate dob, String sex, String newImageURL) {
+        String finalImageURL = (newImageURL != null && !newImageURL.isEmpty()) ? newImageURL : oldResident.getImage().getImageURL();
+        return Resident.builder()
+                .residentId(oldResident.getResidentId())
+                .image(new Image(oldResident.getImage().getImageID(), finalImageURL))
+                .fullName(fullName)
+                .phoneNumber(phoneNumber)
+                .dob(dob)
+                .email(oldResident.getEmail())
+                .role(new Role(oldResident.getRole().getRoleID(), oldResident.getRole().getRoleName(), ""))
+                .sex(sex)
+                .build();
     }
 
     /**

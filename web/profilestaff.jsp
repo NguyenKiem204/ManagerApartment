@@ -8,6 +8,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="model.Staff" %>  
+<%@ page import="model.Resident" %> 
+<%@ page import="java.time.LocalDate" %>  
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <!DOCTYPE html>
 <html>
 
@@ -429,9 +433,17 @@
                                             <p><strong>Phone:</strong> ${not empty staff ? staff.phoneNumber : (not empty resident ? resident.phoneNumber : 'N/A')}</p>
                                             <p><strong>Address:</strong> Hà Nội</p>
                                             <p><strong>Status: </strong>Active</p>
-                                            <p><strong>Date Of Birth:</strong>
-                                                <fmt:formatDate pattern="dd-MM-yyyy" value="${not empty staff ? staff.dob : (not empty resident ? resident.dob : null)}" />
-                                                ${empty staff and empty resident ? 'N/A' : ''}
+                                            <%  
+                                              LocalDate dob = null;
+                                              Staff staff = (Staff) session.getAttribute("staff");
+                                              if (staff != null) {  
+                                                  dob = staff.getDob();
+                                              } 
+                                              String dobString = (dob != null) ? dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) : "N/A";   
+                                            %>   
+
+                                            <p><strong>Date Of Birth:</strong> 
+                                                <%= dobString %>  
                                             </p>
                                             <p><strong>Sex:</strong> ${not empty staff ? staff.sex : (not empty resident ? resident.sex : 'N/A')}</p>
                                         </div>
