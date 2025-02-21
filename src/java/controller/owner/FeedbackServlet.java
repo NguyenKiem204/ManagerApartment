@@ -133,12 +133,12 @@ public class FeedbackServlet extends HttpServlet {
         }
 
         // Kiểm tra ký tự đặc biệt (chỉ cho phép chữ, số, khoảng trắng, và một số dấu câu)
-        if (!title.matches("^[a-zA-Z0-9 .,!?()-]+$")) {
-            request.setAttribute(error, "Title contains invalid characters!");
-            request.setAttribute("listrole", listrole);
-            request.getRequestDispatcher("feedback.jsp").forward(request, response);
-            return;
-        }
+//        if (!title.matches("^[a-zA-Z0-9 .,!?()-]+$")) {
+//            request.setAttribute(error, "Title contains invalid characters!");
+//            request.setAttribute("listrole", listrole);
+//            request.getRequestDispatcher("feedback.jsp").forward(request, response);
+//            return;
+//        }
 
         //validate description
         if (description != null) {

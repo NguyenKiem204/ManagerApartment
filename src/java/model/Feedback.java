@@ -39,5 +39,8 @@ public class Feedback {
         this.staff = staff;
         this.resident = resident;
     }
+    public Date getFormattedDate() {
+        return Date.valueOf(date); // Chuyển LocalDate -> SQL Date
+    }
     
 }

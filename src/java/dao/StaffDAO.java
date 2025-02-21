@@ -296,7 +296,6 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
     public Staff checkLogin(String email, String password) {
         Staff staff = null;
         String sql = "SELECT * FROM Staff WHERE Email = ?";
-        System.out.println(sql);
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {

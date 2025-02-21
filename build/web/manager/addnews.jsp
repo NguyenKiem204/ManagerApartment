@@ -141,7 +141,7 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
+                                <a href="menumanager"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
                                                                alt="Logo" /></a>
                             </div>
                             <div class="toggler">
