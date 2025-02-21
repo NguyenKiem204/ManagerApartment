@@ -43,34 +43,10 @@
                 text-overflow: ellipsis;
             }
             .image-news{
-                width: 130px;
-                height: 130px;
+                width: 120px;
+                height: 120px;
                 object-fit: cover;
                 object-position: center;
-            }
-            .btn a{
-                display: inline-block !important;
-                border-radius: 5px !important;
-                width: 75px !important;
-                height: 35px!important;
-                text-decoration: none!important;
-                padding: 5px 10px !important;
-                border: 1px solid #ccc !important;
-
-            }
-            .btn a:first-child{
-                background-color: #4CAF50 !important;
-                color: #fff !important;
-            }
-            .btn a:last-child{
-                background-color: #f44336 !important;
-                color: #fff !important;
-            }
-            .btn-add{
-                display: inline-block !important;
-                width: 70px !important;
-                padding: 5px 10px !important;
-                border-radius: 8px !important;
             }
 
             .btn1 {
@@ -192,7 +168,7 @@
 
     <body>
         <%@include file="menumanager.jsp" %>
-        <div id="main">
+        <div id="main" style="margin-top: -70px !important">
             <div>
                 <table class="table bg-light table-striped table-hover table-bordered caption-top table-responsive-md">
                     <thead>
@@ -206,7 +182,7 @@
                     </thead>
                     <tbody>
                         <c:set var="i" value="0"></c:set>
-                        <c:forEach var="news" items="${list}">
+                        <c:forEach var="news" items="${newsList}">
                             <tr>
                                 <td>${i+1}</td>
                                 <td class="title">${news.title}</th>
@@ -225,7 +201,18 @@
                             <c:set var="i" value="${i + 1}"></c:set>
                         </c:forEach>
                     </tbody>
-                </table>  
+                </table>
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <c:forEach var="i" begin="1" end="${totalPages}">
+                            <li class="page-item">
+                                <a class="page-link" href="?page=${i}">${i}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </nav>
             </div>
             <div class="container">
                 <div class="row justify-content-center">

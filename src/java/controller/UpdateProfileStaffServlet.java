@@ -21,6 +21,8 @@ import model.Role;
 import model.Staff;
 import java.util.List;
 import jakarta.servlet.http.Part;
+import java.util.ArrayList;
+import validation.Validate;
 
 /**
  *
@@ -99,57 +101,101 @@ public class UpdateProfileStaffServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String userIDParam = request.getParameter("userID");
-        String imageURL = request.getParameter("imageURL");
         String fullName = request.getParameter("fullName");
-        String email = request.getParameter("email");
         String phoneNumber = request.getParameter("phoneNumber");
         String dobParam = request.getParameter("dob");
         String sex = request.getParameter("sex");
 
-        Integer userID = (userIDParam != null) ? Integer.parseInt(userIDParam) : null;
-        LocalDate dob = LocalDate.parse(dobParam);
-        Part filePart = request.getPart("imgURL");
+        List<String> errorMessages = new ArrayList<>();
+        validateInput(fullName, phoneNumber, dobParam, errorMessages);
+        String newImageURL = null;
+        try {
+            newImageURL = handleFileUpload(request, userIDParam, errorMessages);
+        } catch (ServletException e) {
+            errorMessages.add(e.getMessage());
+        }
+        StaffDAO staffDAO = new StaffDAO();
+        Integer userID = parseUserId(userIDParam);
+        Staff oldStaff = staffDAO.selectById(userID);
+        if (phoneNumber.equals(oldStaff.getPhoneNumber())) {
+            System.out.println("Nothing!");
+        } else if (staffDAO.existPhoneNumber(phoneNumber)) {
+            errorMessages.add("PhoneNumber to exist!");
+        }
 
+        if (!errorMessages.isEmpty()) {
+            request.setAttribute("errors", errorMessages);
+            request.getRequestDispatcher("changeprofilestaff.jsp").forward(request, response);
+            return;
+        }
+        LocalDate dob = LocalDate.parse(dobParam);
+        fullName = fullName.trim().replaceAll("\\s+", " ");
+        
+        HttpSession session = request.getSession();
+        if (oldStaff != null) {
+            Staff staff = createStaff(oldStaff, fullName, phoneNumber, dob, sex, newImageURL);
+            staffDAO.updateProfileStaff(staff);
+            session.setAttribute("staff", staff);
+        }
+        response.sendRedirect("profile-staff");
+    }
+
+    private void validateInput(String fullName, String phoneNumber, String dobParam, List<String> errorMessages) {
+        String fullNameError = Validate.validateFullName(fullName);
+        if (fullNameError != null) {
+            errorMessages.add(fullNameError);
+        }
+
+        String phoneNumberError = Validate.validatePhoneNumber(phoneNumber);
+        if (phoneNumberError != null) {
+            errorMessages.add(phoneNumberError);
+        }
+
+        String dobError = Validate.validateDob(dobParam);
+        if (dobError != null) {
+            errorMessages.add(dobError);
+        }
+    }
+
+    private String handleFileUpload(HttpServletRequest request, String userIDParam, List<String> errorMessages) throws IOException, ServletException {
+        Part filePart = request.getPart("imgURL");
         List<String> allowedMimeTypes = List.of("image/jpeg", "image/png", "image/gif", "image/webp");
         List<String> allowedExtensions = List.of("jpg", "jpeg", "png", "gif", "webp");
 
         if (filePart != null && filePart.getSize() > 0) {
             String mimeType = filePart.getContentType();
             String fileName = getSubmittedFileName(filePart);
-            String fileExtension = getFileExtension(fileName);
+            String fileExtension = getFileExtension(fileName).toLowerCase();
 
             if (allowedMimeTypes.contains(mimeType) && allowedExtensions.contains(fileExtension)) {
-                String newImageURL = FileUploadUtil.uploadAvatarImage(request, userIDParam);
-                if (newImageURL != null) {
-                    imageURL = newImageURL;
-                }
+                return FileUploadUtil.uploadAvatarImage(request, userIDParam);
+            } else {
+                errorMessages.add("Invalid file type. Allowed types are: " + String.join(", ", allowedExtensions));
             }
         }
+        return null;
+    }
 
-        StaffDAO staffDAO = new StaffDAO();
-        HttpSession session = request.getSession();
-        Staff oldStaff = staffDAO.selectById(userID);
-        if (oldStaff != null) {
-            Staff staff = Staff.builder()
-                    .staffId(userID)
-                    .image(new Image(oldStaff.getImage().getImageID(), imageURL))
-                    .fullName(fullName)
-                    .email(email)
-                    .phoneNumber(phoneNumber)
-                    .dob(dob)
-                    .role(new Role(oldStaff.getRole().getRoleID(), oldStaff.getRole().getRoleName(), ""))
-                    .sex(sex)
-                    .build();
-            staffDAO.updateProfileStaff(staff);
-            session.removeAttribute("staff");
-            if (imageURL == null || imageURL.isEmpty()) {
-                imageURL = oldStaff.getImage().getImageURL();
-            }
-            staff.getImage().setImageURL(imageURL);
-            session.setAttribute("staff", staff);
+    private Integer parseUserId(String userIDParam) {
+        try {
+            return userIDParam != null ? Integer.valueOf(userIDParam) : null;
+        } catch (NumberFormatException e) {
+            return null;
         }
+    }
 
-        response.sendRedirect("profile-staff");
+    private Staff createStaff(Staff oldStaff, String fullName, String phoneNumber, LocalDate dob, String sex, String newImageURL) {
+        String finalImageURL = (newImageURL != null && !newImageURL.isEmpty()) ? newImageURL : oldStaff.getImage().getImageURL();
+        return Staff.builder()
+                .staffId(oldStaff.getStaffId())
+                .image(new Image(oldStaff.getImage().getImageID(), finalImageURL))
+                .fullName(fullName)
+                .phoneNumber(phoneNumber)
+                .dob(dob)
+                .email(oldStaff.getEmail())
+                .role(new Role(oldStaff.getRole().getRoleID(), oldStaff.getRole().getRoleName(), ""))
+                .sex(sex)
+                .build();
     }
 
     /**

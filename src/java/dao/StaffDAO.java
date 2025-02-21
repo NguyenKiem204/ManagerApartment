@@ -75,7 +75,7 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
 
     public int updateProfileStaff(Staff staff) {
         int row = 0;
-        String updateStaffSQL = "UPDATE Staff SET FullName = ?,PhoneNumber = ?, Email = ?, DOB = ?, Sex = ?, ImageID = ? WHERE StaffID = ?";
+        String updateStaffSQL = "UPDATE Staff SET FullName = ?,PhoneNumber = ?, DOB = ?, Sex = ?, ImageID = ? WHERE StaffID = ?";
         String updateImageSQL = "UPDATE Image SET ImageURL = ? WHERE ImageID = ?";
 
         try (Connection connection = DBContext.getConnection()) {
@@ -91,11 +91,10 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             try (PreparedStatement ps = connection.prepareStatement(updateStaffSQL)) {
                 ps.setString(1, staff.getFullName());
                 ps.setString(2, staff.getPhoneNumber());
-                ps.setString(3, staff.getEmail());
-                ps.setDate(4, Date.valueOf(staff.getDob()));
-                ps.setString(5, staff.getSex());
-                ps.setInt(6, staff.getImage().getImageID());
-                ps.setInt(7, staff.getStaffId());
+                ps.setDate(3, Date.valueOf(staff.getDob()));
+                ps.setString(4, staff.getSex());
+                ps.setInt(5, staff.getImage().getImageID());
+                ps.setInt(6, staff.getStaffId());
 
                 row = ps.executeUpdate();
             }
@@ -267,6 +266,22 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    public boolean existPhoneNumber(String phone) {
+        String sql = "SELECT * FROM Staff WHERE PhoneNumber = ?";
+        System.out.println(sql);
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, phone);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return true;

@@ -156,6 +156,7 @@
                             </select>
                         </div>
 
+                        <%--<fmt:parseDate value="${param.date}" pattern="yyyy-MM-dd" var="formattedDate" type="date"/>--%>
                         <input type="date" id="dateFilter" class="date-filter" name="date" value="${param.date}">
                     </div>
                     <div style="padding-left: 10px">
@@ -181,7 +182,6 @@
                             <th>Feedback for</th>
                             <th>Staff</th>
                             <th>Rating</th>
-                            <!--<th>Feedback</th>-->
                             <th>Date</th>
                         </tr>
                     </thead>
@@ -192,28 +192,11 @@
                                 <td>${fb.staff.fullName}</td>
                                 <td>${fb.staff.role.roleName}</td>
                                 <td>${fb.rate} Stars</td>
-                                <!--<td>${fb.description}</td>-->
                                 <td><fmt:formatDate value="${fb.formattedDate}" pattern="dd/MM/yyyy" /></td>
-                                <%--<fmt:formatDate value="${fb.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate>--%>
-                                <!--<td>${fb.date}</td>-->
                             </tr>
                         </c:forEach>
                     </tbody>
                 </table>
-
-                <!-- Pagination -->
-                <!-- <div class="pagination" style="justify-content: end">
-                    <ul style="list-style: none; display: flex; justify-content: center; padding: 0;">
-                        <c:forEach begin="1" end="${num}" var="i">
-                            <li style="margin: 0 5px;">
-                                <a class="page-link" href="" 
-                                   style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
-                                    ${i}
-                                </a>
-                            </li>
-                        </c:forEach>
-                    </ul>
-                </div> -->
 
                 <div class="pagination" style="justify-content: end">
                     <ul style="list-style: none; display: flex; justify-content: center; padding: 0;">
@@ -224,7 +207,7 @@
                                 <li style="margin: 0 5px;">
                                     <a class="page-link" href="?page=1"
                                        style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
-                                        First
+                                        First11
                                     </a>
                                 </li>
                             </c:if>

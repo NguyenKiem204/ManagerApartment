@@ -3,9 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
+
 import java.time.LocalDate;
+import java.sql.Date;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 /**
  *
  * @author nkiem
@@ -16,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Staff {
+
     int staffId;
     String fullName;
     String password;
@@ -41,6 +45,8 @@ public class Staff {
         this.role = role;
     }
 
-    
-}
+    public Date getFormattedDate() {
+        return Date.valueOf(dob);
+    }
 
+}

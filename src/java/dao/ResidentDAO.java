@@ -69,7 +69,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
 
     public int updateProfileResident(Resident resident) {
         int row = 0;
-        String updateRessidentSQL = "UPDATE Resident SET FullName = ?,PhoneNumber = ?, Email = ?, DOB = ?, Sex = ?, ImageID = ? WHERE ResidentID = ?";
+        String updateRessidentSQL = "UPDATE Resident SET FullName = ?,PhoneNumber = ?, DOB = ?, Sex = ?, ImageID = ? WHERE ResidentID = ?";
         String updateImageSQL = "UPDATE Image SET ImageURL = ? WHERE ImageID = ?";
 
         try (Connection connection = DBContext.getConnection()) {
@@ -85,11 +85,10 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
             try (PreparedStatement ps = connection.prepareStatement(updateRessidentSQL)) {
                 ps.setString(1, resident.getFullName());
                 ps.setString(2, resident.getPhoneNumber());
-                ps.setString(3, resident.getEmail());
-                ps.setDate(4, Date.valueOf(resident.getDob()));
-                ps.setString(5, resident.getSex());
-                ps.setInt(6, resident.getImage().getImageID());
-                ps.setInt(7, resident.getResidentId());
+                ps.setDate(3, Date.valueOf(resident.getDob()));
+                ps.setString(4, resident.getSex());
+                ps.setInt(5, resident.getImage().getImageID());
+                ps.setInt(6, resident.getResidentId());
 
                 row = ps.executeUpdate();
             }
@@ -225,6 +224,18 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         String sql = "SELECT * FROM Resident WHERE Email = ?";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    public boolean existPhoneNumber(String phone) {
+        String sql = "SELECT * FROM Resident WHERE PhoneNumber = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, phone);
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
             }

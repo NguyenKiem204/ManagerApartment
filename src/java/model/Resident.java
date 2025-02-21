@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -61,5 +62,8 @@ public class Resident {
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.email = email;
+    }
+    public Date getFormattedDate() {
+        return Date.valueOf(dob);
     }
 }

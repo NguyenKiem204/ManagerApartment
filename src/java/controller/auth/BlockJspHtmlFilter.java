@@ -106,14 +106,14 @@ public class BlockJspHtmlFilter implements Filter {
         }
         
         doBeforeProcessing(request, response);
-//        HttpServletRequest httpRequest = (HttpServletRequest) request;
-//        HttpServletResponse httpResponse = (HttpServletResponse) response;
-//
-//        String requestURI = httpRequest.getRequestURI();
-//        if (requestURI.endsWith(".jsp") || requestURI.endsWith(".html")) {
-//            httpResponse.sendRedirect(httpRequest.getContextPath() + "/error-403");
-//            return;
-//        }
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        String requestURI = httpRequest.getRequestURI();
+        if (requestURI.endsWith(".jsp") || requestURI.endsWith(".html")) {
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/error-403");
+            return;
+        }
         Throwable problem = null;
         try {
             chain.doFilter(request, response);

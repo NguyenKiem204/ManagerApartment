@@ -46,7 +46,9 @@
             <form action="send-reset-link" method="POST">
                 <div class="mb-3">
                     <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                    <input type="email" class="form-control" onfocus="hideError()" id="email" name="email" placeholder="Enter your email" style="margin-bottom: 10px" required>
+                    <p style="font-size: 15px; margin-top: 15px; margin-bottom: -10px; font-weight: 500; color: red;"
+               class="error" id="error-message">${requestScope.error}</p>
                 </div>
                 <button type="submit" class="btn btn-custom w-100">Send Reset Link</button>
             </form>
@@ -54,6 +56,11 @@
                 <a href="/login">Back to Login</a>
             </div>
         </div>
+         <script type="text/javascript">
+            function hideError() {
+                document.getElementById('error-message').style.visibility = 'hidden';
+            }
+        </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
