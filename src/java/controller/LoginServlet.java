@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -62,7 +62,7 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
@@ -76,11 +76,17 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         String userType = request.getParameter("userType");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String remember = request.getParameter("remember_me");
+        HttpSession session = request.getSession();
+        if (session.getAttribute("staff") != null) {
+            session.removeAttribute("staff");
+        } else if (session.getAttribute("resident") != null) {
+            session.removeAttribute("resident");
+        }
 
         handleCookies(response, email, password, remember, userType);
         handleLogin(request, response, userType, email, password);
@@ -102,7 +108,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void handleLogin(HttpServletRequest request, HttpServletResponse response, String userType, String email, String password)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         StaffDAO staffDAO = new StaffDAO();
         ResidentDAO residentDAO = new ResidentDAO();
         HttpSession session = request.getSession();
@@ -129,28 +135,28 @@ public class LoginServlet extends HttpServlet {
     private void redirectBasedOnRole(HttpServletResponse response, HttpServletRequest request, int roleID) throws IOException {
         switch (roleID) {
             case 1:
-                redirectToPage(response, request,"/manager/home");
+                redirectToPage(response, request, "/manager/home");
                 break;
             case 2:
-                redirectToPage(response, request,"/administrative/menuadministrative.jsp");
+                redirectToPage(response, request, "/administrative/menuadministrative.jsp");
                 break;
             case 3:
-                redirectToPage(response, request,"/accountant/home");
+                redirectToPage(response, request, "/accountant/home");
                 break;
             case 4:
-                redirectToPage(response, request,"menutechnical.jsp");
+                redirectToPage(response, request, "menutechnical.jsp");
                 break;
             case 5:
-                redirectToPage(response, request,"menuservice.jsp");
+                redirectToPage(response, request, "menuservice.jsp");
                 break;
             case 6:
-                redirectToPage(response, request,"/tenant/home");
+                redirectToPage(response, request, "/tenant/home");
                 break;
             case 7:
-                redirectToPage(response, request,"/owner/home");
+                redirectToPage(response, request, "/owner/home");
                 break;
             default:
-                redirectToPage(response, request,"error-403");
+                redirectToPage(response, request, "error-403");
                 break;
         }
     }
@@ -160,7 +166,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void handleLoginFailure(HttpServletRequest request, HttpServletResponse response, String userType, String email, String password)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         request.setAttribute("userType", userType);
         request.setAttribute("email", email);
         request.setAttribute("password", password);

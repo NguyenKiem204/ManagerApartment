@@ -27,6 +27,11 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -106,6 +111,12 @@
                 font-size: 14px;
                 display: none;
             }
+            .note-btn-group {
+                display: flex !important;
+            }
+            .note-toolbar{
+                display: flex !important;
+            }
         </style>
     </head>
     <body>
@@ -141,10 +152,14 @@
                     <p class="result">You have not rated yet</p>
                     <span class="error" id="ratingError">Please select a rating</span>
 
-                    <label for="feedback">Feedback</label>
-                    <textarea id="feedback" name="description" rows="4" placeholder="Write your feedback here..." required></textarea>
+                    <!--<label for="feedback">Feedback</label>-->
+                    <!--<textarea class="detail" id="feedback" name="description" rows="4" placeholder="Write your feedback here..." required></textarea>-->
+                    <div class="mb-3">
+                        <label for="detail" class="form-label"><i class="fas fa-file-alt"></i> Feedback</label>
+                        <textarea id="feedback" name="description" class="form-control"></textarea>
+                    </div>
                     <span class="error" id="feedbackError">Please enter your feedback</span>
-                    
+
                     <c:if test="${not empty error}">
                         <p style="color: red;">${error}</p>
                     </c:if>
@@ -240,6 +255,15 @@
                 });
             </script>
         </div>
+        <script>
+            $(document).ready(function () {
+                $('#feedback').summernote({
+                    height: 300,
+                    tabsize: 2,
+                    placeholder: "Write your feedback here..."
+                });
+            });
+        </script>
         <script src="assets/js/bootstrap.bundle.min.js"></script>
 
         <script src="assets/vendors/apexcharts/apexcharts.js"></script>

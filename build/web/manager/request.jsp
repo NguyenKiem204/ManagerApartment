@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -231,7 +232,6 @@
                             <th>Resident Name</th>
                             <th>Apartment</th>
                             <th>Service</th>
-                            <th>Request Detail</th>
                             <th>Date</th>
                             <th>Status</th>
                         </tr>
@@ -242,8 +242,7 @@
                                 <td>${rq.resident.fullName}</td>
                                 <td>${rq.apartment.apartmentName}</td>
                                 <td>${rq.typeRq.typeName}</td>
-                                <td>${rq.description}</td>
-                                <td>${rq.date}</td>
+                                <td><fmt:formatDate value="${rq.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate></td>
                                 <td>
                                     <span class="status" data-id="${rq.requestID}" data-status-id="${rq.status.statusID}" onclick="updateStatus(this)">
                                         ${rq.status.statusName}

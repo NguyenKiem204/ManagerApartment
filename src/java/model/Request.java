@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -44,6 +45,8 @@ public class Request {
         this.apartment = apartment;
     }
 
-    
+    public Date getFormattedDate() {
+        return Date.valueOf(date); // Chuyển LocalDate -> SQL Date
+    }
     
 }

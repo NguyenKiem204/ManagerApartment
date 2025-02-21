@@ -116,6 +116,16 @@
             .date-filter {
                 width: 100%;
             }
+            tbody tr:hover {
+                background-color: #ffe0b2;
+                cursor: pointer;
+            }
+            .truncate {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 200px; /* Adjust the width as needed */
+            }
         </style>
     </head>
     <body>
@@ -171,26 +181,28 @@
                             <th>Feedback for</th>
                             <th>Staff</th>
                             <th>Rating</th>
-                            <th>Feedback</th>
+                            <!--<th>Feedback</th>-->
                             <th>Date</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
                         <c:forEach var="fb" items="${listfb}">
-                            <tr>
-                                <td>${fb.title}</td>
+                            <tr data-feedback-id="${fb.feedbackID}">
+                                <td class="truncate">${fb.title}</td>
                                 <td>${fb.staff.fullName}</td>
                                 <td>${fb.staff.role.roleName}</td>
                                 <td>${fb.rate} Stars</td>
-                                <td>${fb.description}</td>
-                                <td>${fb.date}</td>
+                                <!--<td>${fb.description}</td>-->
+                                <td><fmt:formatDate value="${fb.formattedDate}" pattern="dd/MM/yyyy" /></td>
+                                <%--<fmt:formatDate value="${fb.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate>--%>
+                                <!--<td>${fb.date}</td>-->
                             </tr>
                         </c:forEach>
                     </tbody>
                 </table>
 
                 <!-- Pagination -->
-                <div class="pagination" style="justify-content: end">
+                <!-- <div class="pagination" style="justify-content: end">
                     <ul style="list-style: none; display: flex; justify-content: center; padding: 0;">
                         <c:forEach begin="1" end="${num}" var="i">
                             <li style="margin: 0 5px;">
@@ -201,7 +213,76 @@
                             </li>
                         </c:forEach>
                     </ul>
+                </div> -->
+
+                <div class="pagination" style="justify-content: end">
+                    <ul style="list-style: none; display: flex; justify-content: center; padding: 0;">
+                        <c:set var="currentPage" value="${empty param.page ? 1 : param.page}" />
+                        <c:if test="${num > 1}">
+                            <%-- Nút First --%>
+                            <c:if test="${currentPage > 1}">
+                                <li style="margin: 0 5px;">
+                                    <a class="page-link" href="?page=1"
+                                       style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
+                                        First
+                                    </a>
+                                </li>
+                            </c:if>
+                
+                            <%-- Nếu tổng số trang nhỏ hơn hoặc bằng 3, hiển thị tất cả --%>
+                            <c:choose>
+                                <c:when test="${num <= 3}">
+                                    <c:forEach begin="1" end="${num}" var="i">
+                                        <li style="margin: 0 5px;">
+                                            <a class="page-link ${i == currentPage ? 'active' : ''}" href="?page=${i}" 
+                                               style="padding: 8px 12px; background: ${i == currentPage ? '#d35400' : '#ff9800'}; color: white; text-decoration: none; border-radius: 4px;">
+                                                ${i}
+                                            </a>
+                                        </li>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <%-- Hiển thị trang trước, trang hiện tại và trang sau --%>
+                                    <c:if test="${currentPage > 1}">
+                                        <li style="margin: 0 5px;">
+                                            <a class="page-link" href="?page=${currentPage - 1}"
+                                               style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
+                                                ${currentPage - 1}
+                                            </a>
+                                        </li>
+                                    </c:if>
+                
+                                    <li style="margin: 0 5px;">
+                                        <a class="page-link active" href="?page=${currentPage}"
+                                           style="padding: 8px 12px; background: #d35400; color: white; text-decoration: none; border-radius: 4px;">
+                                            ${currentPage}
+                                        </a>
+                                    </li>
+                
+                                    <c:if test="${currentPage < num}">
+                                        <li style="margin: 0 5px;">
+                                            <a class="page-link" href="?page=${currentPage + 1}"
+                                               style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
+                                                ${currentPage + 1}
+                                            </a>
+                                        </li>
+                                    </c:if>
+                                </c:otherwise>
+                            </c:choose>
+                
+                            <%-- Nút Last --%>
+                            <c:if test="${currentPage < num}">
+                                <li style="margin: 0 5px;">
+                                    <a class="page-link" href="?page=${num}"
+                                       style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
+                                        Last
+                                    </a>
+                                </li>
+                            </c:if>
+                        </c:if>
+                    </ul>
                 </div>
+                
             </div>
         </div>
         <script>
@@ -245,6 +326,14 @@
                     let params = new URLSearchParams(window.location.search);
                     params.set("page", this.textContent.trim()); // Cập nhật số trang
                     window.location.search = params.toString();
+                });
+            });
+            document.querySelectorAll("#tableBody tr").forEach(row => {
+                row.addEventListener("click", function () {
+                    const feedbackId = this.getAttribute("data-feedback-id");
+                    if (feedbackId) {
+                        window.location.href = 'feedbackdetail?feedbackID=' + feedbackId;
+                    }
                 });
             });
         </script>

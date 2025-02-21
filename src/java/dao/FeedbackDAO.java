@@ -90,7 +90,27 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
 
     @Override
     public Feedback selectById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "SELECT * FROM [Feedback] WHERE FeedbackID = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Feedback f = new Feedback(
+                            rs.getInt("FeedbackID"),
+                          rs.getString("Title"),
+                          rs.getString("Description"),
+                          rs.getDate("Date").toLocalDate(),
+                          rs.getInt("Rate"),
+                          staff.selectById(rs.getInt("StaffID")),
+                          resident.selectById(rs.getInt("ResidentID"))
+                    );
+                    return f;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public List<Feedback> getAllFeedbacksBySearchOrFilterOrSort(String keySearch, int roleID, int rating, LocalDate date, int keySort) {
