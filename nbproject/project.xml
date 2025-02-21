@@ -81,6 +81,7 @@
                 <library dirs="200">
                     <file>${file.reference.jakarta.websocket-api-2.1.0.jar}</file>
                 </library>
+<<<<<<< HEAD
                 <library dirs="200">
                     <file>${file.reference.jakarta.servlet-api-6.1.0.jar}</file>
                 </library>
@@ -92,6 +93,8 @@
                     <file>${file.reference.json-20250107.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
+=======
+>>>>>>> 93e1a1cd1ab4869f03ddc6e8266f5cc2fc5c7816
             </web-module-libraries>
             <web-module-additional-libraries/>
             <source-roots>
