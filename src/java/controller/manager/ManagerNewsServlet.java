@@ -60,24 +60,21 @@ public class ManagerNewsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         int pageSize = 2;
         int page = 1;
-        int newsPerPage = 5;
-
-        if (request.getParameter("page") != null) {
-            page = Integer.parseInt(request.getParameter("page"));
-        }
-        NewsDAO newsDAO = new NewsDAO();
-        List<News> list = newsDAO.selectAll();
-        int totalNews = list.size();
-        int totalPages = (int) Math.ceil((double) totalNews / newsPerPage);
-
-        int startIndex = (page - 1) * newsPerPage;
-        int endIndex = Math.min(startIndex + newsPerPage, totalNews);
-
-        List<News> newsForPage = list.subList(startIndex, endIndex);
-
-        request.setAttribute("newsList", newsForPage);
-        request.setAttribute("totalPages", totalPages);
+        String pageParam = request.getParameter("page");  
+        if (pageParam != null) {  
+            page = Integer.parseInt(pageParam);  
+        }  
+        
+        NewsDAO newsDAO = new NewsDAO();  
+        List<News> newsList = newsDAO.selectAll(page, pageSize);  
+        int totalRecords = newsDAO.getTotalRecords();  
+        int totalPages = (int) Math.ceil((double) totalRecords / pageSize);  
+        
+        request.setAttribute("newsList", newsList);  
+        request.setAttribute("currentPage", page);  
+        request.setAttribute("totalPages", totalPages);  
         request.getRequestDispatcher("managernews.jsp").forward(request, response);
 
     }

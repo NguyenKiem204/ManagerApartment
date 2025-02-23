@@ -87,6 +87,46 @@ public class NewsDAO implements DAOInterface<News, Integer> {
         return list;
     }
 
+    public List<News> selectAll(int page, int pageSize) {
+        List<News> list = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+        String sql = "SELECT * FROM [News] ORDER BY [NewsID] OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, offset);
+            ps.setInt(2, pageSize);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                News news = new News(
+                        rs.getInt("NewsID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getTimestamp("SentDate").toLocalDateTime(),
+                        staffdao.selectById(rs.getInt("StaffID")),
+                        imagedao.selectById(rs.getInt("ImageID"))
+                );
+                list.add(news);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public int getTotalRecords() {
+        int totalRecords = 0;
+        String sql = "SELECT COUNT(*) FROM [News]";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                totalRecords = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return totalRecords;
+    }
+
     @Override
     public News selectById(Integer id) {
         News news = null;

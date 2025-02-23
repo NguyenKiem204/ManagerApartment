@@ -163,134 +163,184 @@
                 font-size: 20px !important;
                 font-weight: 600 !important;
             }
-        </style>
-    </head>
 
-    <body>
-        <%@include file="menumanager.jsp" %>
-        <div id="main" style="margin-top: -70px !important">
-            <div>
-                <table class="table bg-light table-striped table-hover table-bordered caption-top table-responsive-md">
-                    <thead>
-                        <tr class="table-dark">
-                            <th class="col-1">STT</th>
-                            <th class="col-4">Title</th>
-                            <th class="col-2">SentDate</th>
-                            <th class="col-2">Image</th>
-                            <th class="col-2">Edit</th>
+            /* Định dạng cho khối phân trang */
+            .pagination {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 20px 0;
+            }
+
+            /* Định dạng cho các nút phân trang */
+            .pagination a,
+            .pagination strong {
+                text-decoration: none;
+                color: #007bff; /* Màu xanh cho các nút */
+                padding: 8px 12px;
+                margin: 0 5px;
+                border: 1px solid #007bff; /* Viền cho nút */
+                border-radius: 4px; /* Bo góc */
+                transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển tiếp */
+            }
+
+            /* Hiệu ứng khi di chuột qua nút */
+            .pagination a:hover {
+                background-color: #007bff; /* Màu nền khi hover */
+                color: white; /* Màu chữ khi hover */
+            }
+
+            /* Định dạng cho trang hiện tại */
+            .pagination strong {
+                background-color: #007bff; /* Màu nền cho trang hiện tại */
+                color: white; /* Màu chữ cho trang hiện tại */
+                border: none; /* Không viền */
+            }
+    </style>
+</head>
+
+<body>
+    <%@include file="menumanager.jsp" %>
+    <div id="main" style="margin-top: -70px !important">
+        <div>
+            <table class="table bg-light table-striped table-hover table-bordered caption-top table-responsive-md">
+                <thead>
+                    <tr class="table-dark">
+                        <th class="col-1">STT</th>
+                        <th class="col-4">Title</th>
+                        <th class="col-2">SentDate</th>
+                        <th class="col-2">Image</th>
+                        <th class="col-2">Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:set var="i" value="0"></c:set>
+                    <c:forEach var="news" items="${newsList}">
+                        <tr>
+                            <td>${i+1}</td>
+                            <td class="title">${news.title}</th>
+                            <td>${news.sentDate}</td>
+                            <td><img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="image-news shadow" alt="${news.title}" /></td>
+                            <td><div class="btn1">  
+                                    <button onclick="updateNews(
+                                                    '${news.newsID}',
+                                                    '${fn:escapeXml(news.title)}',
+                                                    '${fn:escapeXml(news.description)}',
+                                                    '${news.sentDate}',
+                                                    '${sessionScope.staff.staffId}')">Update</button>  
+                                    <button onclick="deleteNews('${news.newsID}', '${fn:escapeXml(news.title)}')">Delete</button>  
+                                </div></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <c:set var="i" value="0"></c:set>
-                        <c:forEach var="news" items="${newsList}">
-                            <tr>
-                                <td>${i+1}</td>
-                                <td class="title">${news.title}</th>
-                                <td>${news.sentDate}</td>
-                                <td><img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="image-news shadow" alt="${news.title}" /></td>
-                                <td><div class="btn1">  
-                                        <button onclick="updateNews(
-                                                        '${news.newsID}',
-                                                        '${fn:escapeXml(news.title)}',
-                                                        '${fn:escapeXml(news.description)}',
-                                                        '${news.sentDate}',
-                                                        '${sessionScope.staff.staffId}')">Update</button>  
-                                        <button onclick="deleteNews('${news.newsID}', '${fn:escapeXml(news.title)}')">Delete</button>  
-                                    </div></td>
-                            </tr>
-                            <c:set var="i" value="${i + 1}"></c:set>
-                        </c:forEach>
-                    </tbody>
-                </table>
+                        <c:set var="i" value="${i + 1}"></c:set>
+                    </c:forEach>
+                </tbody>
+            </table>
 
-                <!-- Pagination -->
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <c:forEach var="i" begin="1" end="${totalPages}">
-                            <li class="page-item">
-                                <a class="page-link" href="?page=${i}">${i}</a>
-                            </li>
-                        </c:forEach>
-                    </ul>
-                </nav>
+            <div class="pagination">  
+                <c:set var="currentPage" value="${currentPage}" />  
+                <c:set var="totalPages" value="${totalPages}" />  
+                <c:set var="prevPage" value="${currentPage - 1}" />  
+                <c:set var="nextPage" value="${currentPage + 1}" />  
+
+                <c:if test="${currentPage > 1}">  
+                    <a href="?page=1">First Page</a>  
+                    <a href="?page=${prevPage}">Previous</a>  
+                </c:if>  
+
+                <c:forEach var="i" begin="1" end="${totalPages}">  
+                    <c:choose>  
+                        <c:when test="${i == currentPage}">  
+                            <strong>${i}</strong>  
+                        </c:when>  
+                        <c:otherwise>  
+                            <a href="?page=${i}">${i}</a>  
+                        </c:otherwise>  
+                    </c:choose>  
+                </c:forEach>  
+
+                <c:if test="${currentPage < totalPages}">  
+                    <a href="?page=${nextPage}">Next</a>  
+                    <a href="?page=${totalPages}">Last Page</a>  
+                </c:if>  
             </div>
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <div class="updateForm">
-                            <form action="updatenews" method="post" enctype="multipart/form-data" onsubmit="return confirmUpdateNews()">
-                                <input type="hidden" name="newsID" id="newsID">
-                                <input type="hidden" name="staffId" id="staffId">
-                                <div class="form-group">
-                                    <label for="name">Title</label>
-                                    <input type="text" class="form-control title-xl" id="title" name="title" placeholder="Enter Title">
-                                </div>
-                                <div class="form-group">
-                                    <label for="detail">Description</label>
-                                    <textarea id="detail" name="description" class="form-control"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="price">SentDate</label>
-                                    <input type="text" class="form-control" id="sentDate" name="sentDate" placeholder="Enter Date Create">
-                                </div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="updateForm">
+                        <form action="updatenews" method="post" enctype="multipart/form-data" onsubmit="return confirmUpdateNews()">
+                            <input type="hidden" name="newsID" id="newsID">
+                            <input type="hidden" name="staffId" id="staffId">
+                            <div class="form-group">
+                                <label for="name">Title</label>
+                                <input type="text" class="form-control title-xl" id="title" name="title" placeholder="Enter Title">
+                            </div>
+                            <div class="form-group">
+                                <label for="detail">Description</label>
+                                <textarea id="detail" name="description" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="price">SentDate</label>
+                                <input type="text" class="form-control" id="sentDate" name="sentDate" placeholder="Enter Date Create">
+                            </div>
 
-                                <div class="form-group">
-                                    <label for="imgURL">Image URL</label>
-                                    <input type="file" class="form-control" id="imgURL" name="imageURL">
-                                </div>
+                            <div class="form-group">
+                                <label for="imgURL">Image URL</label>
+                                <input type="file" class="form-control" id="imgURL" name="imageURL">
+                            </div>
 
-                                <button id="submit" type="submit" class="btn btn-primary mt-3 submit">Update Product</button>
-                            </form>
-                            <div id="close" onclick="closeForm()"><i class="fa-solid fa-circle-xmark"></i></div>
-                        </div>
+                            <button id="submit" type="submit" class="btn btn-primary mt-3 submit">Update Product</button>
+                        </form>
+                        <div id="close" onclick="closeForm()"><i class="fa-solid fa-circle-xmark"></i></div>
                     </div>
                 </div>
             </div>
-            <div onclick="closeForm()" class="overlay"></div>
         </div>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#detail').summernote({
-                    height: 300,
-                    tabsize: 2,
-                    placeholder: "Nhập nội dung bài viết..."
-                });
+        <div onclick="closeForm()" class="overlay"></div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#detail').summernote({
+                height: 300,
+                tabsize: 2,
+                placeholder: "Nhập nội dung bài viết..."
             });
-            let titlee = "";
-            function updateNews(newsID, title, description, sentDate, staffId) {
-                titlee = title;
-                document.getElementById('newsID').value = newsID;
-                document.getElementById('title').value = title;
-                $('#detail').summernote('code', description);
-                document.getElementById('sentDate').value = sentDate;
-                document.getElementById('staffId').value = staffId;
-                document.getElementById("imgURL").value = '';
-                document.querySelector(".updateForm").classList.add("active");
-                document.querySelector(".overlay").classList.add("active");
+        });
+        let titlee = "";
+        function updateNews(newsID, title, description, sentDate, staffId) {
+            titlee = title;
+            document.getElementById('newsID').value = newsID;
+            document.getElementById('title').value = title;
+            $('#detail').summernote('code', description);
+            document.getElementById('sentDate').value = sentDate;
+            document.getElementById('staffId').value = staffId;
+            document.getElementById("imgURL").value = '';
+            document.querySelector(".updateForm").classList.add("active");
+            document.querySelector(".overlay").classList.add("active");
+        }
+        function confirmUpdateNews() {
+            return confirm("Bạn có chắc chắn cập nhật " + titlee + " không?");
+        }
+        function closeForm() {
+            document.querySelector(".updateForm").classList.remove("active");
+            document.querySelector(".overlay").classList.remove("active");
+            document.querySelector(".form-container").classList.remove("active");
+        }
+        function deleteNews(newsID, title) {
+            if (confirm("Bạn có chắc chắn xóa sản phẩm  " + title + " không?")) {
+                window.location.href = "deletenews?newsID=" + newsID;
             }
-            function confirmUpdateNews() {
-                return confirm("Bạn có chắc chắn cập nhật " + titlee + " không?");
-            }
-            function closeForm() {
-                document.querySelector(".updateForm").classList.remove("active");
-                document.querySelector(".overlay").classList.remove("active");
-                document.querySelector(".form-container").classList.remove("active");
-            }
-            function deleteNews(newsID, title) {
-                if (confirm("Bạn có chắc chắn xóa sản phẩm  " + title + " không?")) {
-                    window.location.href = "deletenews?newsID=" + newsID;
-                }
-            }
+        }
 
-        </script>
+    </script>
 
-        <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 
-        <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
+    <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
+    <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
 
-        <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
-    </body>
+    <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
+</body>
 
 </html>
 
