@@ -203,12 +203,31 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         return list;
     }
     
-    public List<Feedback> getListByPage(List<Feedback> list, int start, int end) {
-        List<Feedback> arr = new ArrayList<>();
-        for (int i = start; i < end; i++) {
-            arr.add(list.get(i));
+    public List<Feedback> getListByPage(int page, int pageSize) {
+        List<Feedback> list = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+        String sql = "SELECT * FROM [Feedback] ORDER BY [FeedbackID] OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, offset);
+            ps.setInt(2, pageSize);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback fb = new Feedback(
+                          rs.getInt("FeedbackID"),
+                          rs.getString("Title"),
+                          rs.getString("Description"),
+                          rs.getDate("Date").toLocalDate(),
+                          rs.getInt("Rate"),
+                          staff.selectById(rs.getInt("StaffID")),
+                          resident.selectById(rs.getInt("ResidentID"))
+                );
+                list.add(fb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FeedbackDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return arr;
+        return list;
     }
     
     public int getLatestFeedbackID(){

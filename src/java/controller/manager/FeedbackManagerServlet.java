@@ -90,27 +90,25 @@ public class FeedbackManagerServlet extends HttpServlet {
 
         //Phân trang
         // Lấy tham số từ request
-        String numberpage_raw = request.getParameter("pageSize");
+        String pageSize_raw = request.getParameter("pageSize");
         String xpage = request.getParameter("page");
 
         // Khai báo biến
         int page = 1; // Trang mặc định
-        int numberpage = 5; // Giá trị mặc định nếu không có tham số pageSize
+        int pageSize = 5; // Giá trị mặc định nếu không có tham số pageSize
         int size = list.size();
-        int start = 0;
-        int end = 0;
         int num = 1;
 
         try {
             // Kiểm tra và parse pageSize nếu có giá trị hợp lệ
-            if (numberpage_raw != null && !numberpage_raw.isEmpty()) {
-                numberpage = Integer.parseInt(numberpage_raw);
-                if (numberpage <= 0) {
-                    numberpage = 5; // Tránh chia cho 0
+            if (pageSize_raw != null && !pageSize_raw.isEmpty()) {
+                pageSize = Integer.parseInt(pageSize_raw);
+                if (pageSize <= 0) {
+                    pageSize = 5; // Tránh chia cho 0
                 }
             }
             // Tính tổng số trang
-            num = (size % numberpage == 0) ? (size / numberpage) : (size / numberpage + 1);
+            num = (size % pageSize == 0) ? (size / pageSize) : (size / pageSize + 1);
 
             // Kiểm tra và parse page nếu có giá trị hợp lệ
             if (xpage != null && !xpage.isEmpty()) {
@@ -121,19 +119,12 @@ public class FeedbackManagerServlet extends HttpServlet {
                     page = num; // Giữ trang trong phạm vi hợp lệ
                 }
             }
-
-            // Xác định phạm vi dữ liệu của trang hiện tại
-            start = (page - 1) * numberpage;
-            end = Math.min(page * numberpage, size);
         } catch (NumberFormatException e) {
             System.out.println("Lỗi parse số: " + e.getMessage());
             page = 1;
-            numberpage = 5;
-            start = 0;
-            end = Math.min(numberpage, size);
         }
 
-        List<Feedback> listPage = fbDAO.getListByPage(list, start, end);
+        List<Feedback> listPage = fbDAO.getListByPage(page, pageSize);
         for (Feedback feedback : listPage) {
             System.out.println(feedback.toString());
         }
