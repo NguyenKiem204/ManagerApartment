@@ -85,11 +85,11 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Apartment apartment = new Apartment(
-                        rs.getInt("ApartmentID"),
-                        rs.getString("ApartmentName"),
-                        rs.getString("Block"),
-                        rs.getString("Status"),
-                        rs.getString("Type")
+                          rs.getInt("ApartmentID"),
+                          rs.getString("ApartmentName"),
+                          rs.getString("Block"),
+                          rs.getString("Status"),
+                          rs.getString("Type")
                 );
                 list.add(apartment);
             }
@@ -110,11 +110,11 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     apartment = new Apartment(
-                            rs.getInt("ApartmentID"),
-                            rs.getString("ApartmentName"),
-                            rs.getString("Block"),
-                            rs.getString("Status"),
-                            rs.getString("Type")
+                              rs.getInt("ApartmentID"),
+                              rs.getString("ApartmentName"),
+                              rs.getString("Block"),
+                              rs.getString("Status"),
+                              rs.getString("Type")
                     );
                 }
             }
@@ -134,11 +134,11 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     apartment = new Apartment(
-                            rs.getInt("ApartmentID"),
-                            rs.getString("ApartmentName"),
-                            rs.getString("Block"),
-                            rs.getString("Status"),
-                            rs.getString("Type")
+                              rs.getInt("ApartmentID"),
+                              rs.getString("ApartmentName"),
+                              rs.getString("Block"),
+                              rs.getString("Status"),
+                              rs.getString("Type")
                     );
                 }
             }
@@ -151,17 +151,16 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
     public List<Apartment> selectAllOcc() {
         List<Apartment> list = new ArrayList<>();
         String sql = "SELECT * FROM Apartment a where a.Status='Occupied'";
-        System.out.println(sql);
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Apartment apartment = new Apartment(
-                        rs.getInt("ApartmentID"),
-                        rs.getString("ApartmentName"),
-                        rs.getString("Block"),
-                        rs.getString("Status"),
-                        rs.getString("Type")
+                          rs.getInt("ApartmentID"),
+                          rs.getString("ApartmentName"),
+                          rs.getString("Block"),
+                          rs.getString("Status"),
+                          rs.getString("Type")
                 );
                 list.add(apartment);
             }
@@ -169,5 +168,21 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
+    }
+
+    public List<String> getApartmentNames(String searchQuery) {
+        List<String> apartments = new ArrayList<>();
+        String sql = "SELECT TOP 5 ApartmentName FROM Apartment WHERE ApartmentName LIKE ?"; // Giới hạn kết quả
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, searchQuery + "%"); // Tìm kiếm theo tiền tố
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                apartments.add(rs.getString("ApartmentName"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apartments;
     }
 }

@@ -27,6 +27,7 @@ import model.Feedback;
 import model.ImageFeedback;
 import model.Resident;
 import model.Role;
+import org.jsoup.Jsoup;
 
 /**
  *
@@ -107,6 +108,8 @@ public class FeedbackServlet extends HttpServlet {
         String staffID_raw = request.getParameter("staff");
         String rating_raw = request.getParameter("rating");
         String description = request.getParameter("description");
+        // Loại bỏ HTML & ký tự khoảng trắng
+        String cleanText = Jsoup.parse(description).text().trim();
         String error = "error";
 
         RoleDAO rdao = new RoleDAO();
@@ -140,12 +143,19 @@ public class FeedbackServlet extends HttpServlet {
 //            return;
 //        }
 
+        //check number star
+        if (rating_raw == null || rating_raw.trim().isEmpty()) {
+            request.setAttribute(error, "Please choose number star");
+            request.setAttribute("listrole", listrole);
+            request.getRequestDispatcher("feedback.jsp").forward(request, response);
+        }
+
         //validate description
         if (description != null) {
             description = description.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
         }
         //check description null or not
-        if (description == null || description.trim().isEmpty()) {
+        if (cleanText == null || cleanText.trim().isEmpty()) {
             request.setAttribute(error, "Description cannot be empty!");
             request.setAttribute("listrole", listrole);
             request.getRequestDispatcher("feedback.jsp").forward(request, response);

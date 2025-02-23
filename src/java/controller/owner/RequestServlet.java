@@ -24,6 +24,7 @@ import model.Apartment;
 import model.Request;
 import model.Resident;
 import model.TypeRequest;
+import org.jsoup.Jsoup;
 
 /**
  *
@@ -101,13 +102,23 @@ public class RequestServlet extends HttpServlet {
         String apartmentName = request.getParameter("apartment");
         String title = request.getParameter("title");
         String typerq_raw = request.getParameter("service");
-        String description = request.getParameter("request");
+        String description = request.getParameter("description");
+        // Loại bỏ HTML & ký tự khoảng trắng
+        String cleanText = Jsoup.parse(description).text().trim();
         String error = "error";
         //check apartment name is correct or not
         List<Apartment> apartments = apartmentDAO.selectAll();
+        
+        if (apartmentName == null || apartmentName.trim().isEmpty()) {
+            request.setAttribute(error, "Apartment Name cannot be empty!");
+            request.setAttribute("listtyperq", listrq);
+            request.getRequestDispatcher("request.jsp").forward(request, response);
+            return;
+        }
+        
         boolean isValidApartment = false;
         for (Apartment apartment : apartments) {
-            if (apartment.getApartmentName().trim().replaceAll("\\s+", " ").equalsIgnoreCase(apartmentName)) {
+            if (apartment.getApartmentName().trim().replaceAll("\\s+", " ").equalsIgnoreCase(apartmentName.trim().replaceAll("\\s+", " "))) {
                 isValidApartment = true;
                 break;
             }
@@ -139,20 +150,12 @@ public class RequestServlet extends HttpServlet {
             return;
         }
         
-        // Kiểm tra ký tự đặc biệt (chỉ cho phép chữ, số, khoảng trắng, và một số dấu câu)
-        if (!title.matches("^[a-zA-Z0-9 .,!?()-]+$")) {
-            request.setAttribute(error, "Title contains invalid characters!");
-            request.setAttribute("listtyperq", listrq);
-            request.getRequestDispatcher("request.jsp").forward(request, response);
-            return;
-        }
-        
         //check description empty or not
         if (description != null) {
             description = description.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
         }
         //check description null or not
-        if (description == null || description.trim().isEmpty()) {
+        if (cleanText == null || cleanText.trim().isEmpty()) {
             request.setAttribute(error, "Description cannot be empty!");
             request.setAttribute("listtyperq", listrq);
             request.getRequestDispatcher("request.jsp").forward(request, response);

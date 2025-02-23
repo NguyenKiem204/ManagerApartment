@@ -38,6 +38,11 @@ public class Test {
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
         
         List<ImageFeedback> imageFeedbackList = new ArrayList<>();
+        
+        List<String> list = apartmentDAO.getApartmentNames("a");
+        for (String string : list) {
+            System.out.println(string);
+        }
 
         // Ví dụ: thêm các đối tượng ImageFeedback vào danh sách
         // Giả sử bạn đã có InputStream từ file và kích thước của ảnh (size)
