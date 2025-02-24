@@ -21,6 +21,24 @@ public class Validate {
     private static final Pattern USER_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{5,20}$");
     private static final Pattern PHONE_PATTERN = Pattern.compile("^\\d{10}$");
 
+    public static String normalizeString(String input) {
+        if (input == null) {
+            return null;
+        }
+        String normalized = input.trim();
+        normalized = normalized.replaceAll("\\s+", " ");
+        normalized = normalized.replaceAll("[^a-zA-Z0-9\\s\\p{L}]", "");
+
+        return normalized;
+    }
+public static String trim(String input) {
+        if (input == null || input.isBlank()) {
+            return null;
+        }
+        String normalized = input.trim();
+        normalized = normalized.replaceAll("\\s+", " ");
+        return normalized;
+    }
     public static String validateUserID(String userID) {
         if (userID == null || userID.isBlank()) {
             return "User ID cannot be empty.";

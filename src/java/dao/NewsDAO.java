@@ -87,11 +87,113 @@ public class NewsDAO implements DAOInterface<News, Integer> {
         return list;
     }
 
+    public List<News> searchNews(String title, String startDate, String endDate, int page, int pageSize) {
+        List<News> list = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM [News] WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+        if (title != null && !title.trim().isEmpty()) {
+            sql.append(" AND Title LIKE ?");
+            params.add("%" + title + "%");
+        }
+        boolean hasStartDate = startDate != null && !startDate.trim().isEmpty();
+        boolean hasEndDate = endDate != null && !endDate.trim().isEmpty();
+
+        if (hasStartDate) {
+            sql.append(" AND CAST(SentDate AS DATE) >= ?");
+            params.add(startDate);
+        }
+        if (hasEndDate) {
+            sql.append(" AND CAST(SentDate AS DATE) <= ?");
+            params.add(endDate);
+        }
+        if (hasStartDate && hasEndDate) {
+            sql.append(" ORDER BY ABS(DATEDIFF(DAY, CAST(SentDate AS DATE), DATEADD(DAY, DATEDIFF(DAY, CAST(? AS DATE), CAST(? AS DATE)) / 2, CAST(? AS DATE))))");
+            params.add(startDate);
+            params.add(endDate);
+            params.add(startDate);
+        } else if (hasStartDate) {
+            sql.append(" ORDER BY ABS(DATEDIFF(DAY, CAST(SentDate AS DATE), CAST(? AS DATE)))");
+            params.add(startDate);
+        } else if (hasEndDate) {
+            sql.append(" ORDER BY ABS(DATEDIFF(DAY, CAST(SentDate AS DATE), CAST(? AS DATE)))");
+            params.add(endDate);
+        } else {
+            sql.append(" ORDER BY ABS(DATEDIFF(DAY, CAST(SentDate AS DATE), GETDATE()))");
+        }
+        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            for (Object param : params) {
+                ps.setObject(paramIndex++, param);
+            }
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, pageSize);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                News news = new News(
+                        rs.getInt("NewsID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getTimestamp("SentDate").toLocalDateTime(),
+                        staffdao.selectById(rs.getInt("StaffID")),
+                        imagedao.selectById(rs.getInt("ImageID"))
+                );
+                list.add(news);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public int getTotalSearchRecords(String title, String startDate, String endDate) {
+        int totalRecords = 0;
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM [News] WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (title != null && !title.trim().isEmpty()) {
+            sql.append(" AND Title LIKE ?");
+            params.add("%" + title + "%");
+        }
+
+        if ((startDate != null && !startDate.trim().isEmpty()) || (endDate != null && !endDate.trim().isEmpty())) {
+            if (startDate != null && !startDate.trim().isEmpty()) {
+                sql.append(" AND CAST(SentDate AS DATE) >= ?");
+                params.add(startDate);
+            }
+            if (endDate != null && !endDate.trim().isEmpty()) {
+                sql.append(" AND CAST(SentDate AS DATE) <= ?");
+                params.add(endDate);
+            }
+        }
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            for (Object param : params) {
+                ps.setObject(paramIndex++, param);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                totalRecords = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return totalRecords;
+    }
+
     public List<News> selectAll(int page, int pageSize) {
         List<News> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        String sql = "SELECT * FROM [News] ORDER BY [NewsID] OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT * FROM [News] ORDER BY [SentDate] DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+
             ps.setInt(1, offset);
             ps.setInt(2, pageSize);
 
@@ -184,7 +286,7 @@ public class NewsDAO implements DAOInterface<News, Integer> {
 
     public void updateNewsWithImage(News news) {
         String sqlUpdateImage = "UPDATE Image SET ImageURL = ? WHERE ImageID = ?";
-        String sqlUpdateNews = "UPDATE News SET Title = ?, Description = ?, SentDate = ?, StaffID = ?, ImageID = ? WHERE NewsID = ?";
+        String sqlUpdateNews = "UPDATE News SET Title = ?, Description = ?, StaffID = ?, ImageID = ? WHERE NewsID = ?";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement psUpdateImage = connection.prepareStatement(sqlUpdateImage); PreparedStatement psUpdateNews = connection.prepareStatement(sqlUpdateNews)) {
 
@@ -201,10 +303,9 @@ public class NewsDAO implements DAOInterface<News, Integer> {
 
             psUpdateNews.setString(1, news.getTitle());
             psUpdateNews.setString(2, news.getDescription());
-            psUpdateNews.setTimestamp(3, Timestamp.valueOf(news.getSentDate()));
-            psUpdateNews.setInt(4, news.getStaff().getStaffId());
-            psUpdateNews.setInt(5, imageID);
-            psUpdateNews.setInt(6, news.getNewsID());
+            psUpdateNews.setInt(3, news.getStaff().getStaffId());
+            psUpdateNews.setInt(4, imageID);
+            psUpdateNews.setInt(5, news.getNewsID());
             psUpdateNews.executeUpdate();
 
             connection.commit();

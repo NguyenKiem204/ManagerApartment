@@ -4,6 +4,23 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/PR2/ManagerApartment/src/java/controller/ResetPasswordServlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/css/managernews.css</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/ChatServlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/manager/addnews.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/DBContext.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/chatinterface.html</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/EditInvoice.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/Test.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/changepasswordsuccess.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/web/manager/request.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/ApartmentDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/tenant/menutenant.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/css/changeprofile.css</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/ResidentDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/UpdateStatusInvoice.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/changeprofile.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/manager/UpdateNewsServlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/owner/feedback.jsp</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/model/Staff.java</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/controller/LoginServlet.java</file>
             <file>file:/D:/PR2/ManagerApartment/web/assets/css/newsdetail.css</file>

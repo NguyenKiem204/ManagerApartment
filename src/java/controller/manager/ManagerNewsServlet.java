@@ -60,26 +60,40 @@ public class ManagerNewsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         int pageSize = 2;
+        int pageSize = 2;
         int page = 1;
-        String pageParam = request.getParameter("page");  
-        if (pageParam != null) {  
-            page = Integer.parseInt(pageParam);  
-        }  
-        
-        NewsDAO newsDAO = new NewsDAO();  
-        List<News> newsList = newsDAO.selectAll(page, pageSize);  
-        int totalRecords = newsDAO.getTotalRecords();  
-        int totalPages = (int) Math.ceil((double) totalRecords / pageSize);  
-        
-        request.setAttribute("newsList", newsList);  
-        request.setAttribute("currentPage", page);  
-        request.setAttribute("totalPages", totalPages);  
-        request.getRequestDispatcher("managernews.jsp").forward(request, response);
+        String pageParam = request.getParameter("page");
+        if (pageParam != null) {
+            page = Integer.parseInt(pageParam);
+        }
 
+        String searchTitle = validation.Validate.normalizeString(request.getParameter("searchTitle"));
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+
+        NewsDAO newsDAO = new NewsDAO();
+        List<News> newsList;
+        int totalRecords;
+
+        if (searchTitle != null || startDate != null || endDate != null) {
+            newsList = newsDAO.searchNews(searchTitle, startDate, endDate, page, pageSize);
+            totalRecords = newsDAO.getTotalSearchRecords(searchTitle, startDate, endDate);
+        } else {
+            newsList = newsDAO.selectAll(page, pageSize);
+            totalRecords = newsDAO.getTotalRecords();
+        }
+        int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+
+        request.setAttribute("newsList", newsList);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("searchTitle", searchTitle);
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
+
+        request.getRequestDispatcher("managernews.jsp").forward(request, response);
     }
 
-    
     /**
      * Handles the HTTP <code>POST</code> method.
      *
