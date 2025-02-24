@@ -204,7 +204,7 @@
                             <select id="statusFilter">
                                 <option value="0">Filter by Status</option>
                                 <c:forEach var="status" items="${listStatus}">
-                                <option value="${status.statusID}" ${param.status == status.statusID ? 'selected' : ''}>${status.statusName}</option>
+                                    <option value="${status.statusID}" ${param.status == status.statusID ? 'selected' : ''}>${status.statusName}</option>
                                 </c:forEach>
                             </select>
                         </div>
@@ -243,8 +243,8 @@
                                 <td>${rq.apartment.apartmentName}</td>
                                 <td>${rq.typeRq.typeName}</td>
                                 <td><fmt:formatDate value="${rq.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate></td>
-                                <td>
-                                    <span class="status" data-id="${rq.requestID}" data-status-id="${rq.status.statusID}" onclick="updateStatus(this)">
+                                    <td>
+                                        <span class="status" data-id="${rq.requestID}" data-status-id="${rq.status.statusID}" onclick="updateStatus(this)">
                                         ${rq.status.statusName}
                                     </span>
                                     <div class="action-buttons" id="actionButtons-${rq.requestID}" style="display: none;">
@@ -260,14 +260,69 @@
                 <!-- Pagination -->
                 <div class="pagination" style="justify-content: end">
                     <ul style="list-style: none; display: flex; justify-content: center; padding: 0;">
-                        <c:forEach begin="1" end="${num}" var="i">
-                            <li style="margin: 0 5px;">
-                                <a class="page-link" href="" 
-                                   style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
-                                    ${i}
-                                </a>
-                            </li>
-                        </c:forEach>
+                        <c:set var="currentPage" value="${empty param.page ? 1 : param.page}" />
+                        <c:if test="${num > 1}">
+                            <%-- Nút First --%>
+                            <c:if test="${currentPage > 1}">
+                                <li style="margin: 0 5px;">
+                                    <a class="page-link" href="?page=1"
+                                       style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
+                                        First
+                                    </a>
+                                </li>
+                            </c:if>
+
+                            <%-- Nếu tổng số trang nhỏ hơn hoặc bằng 3, hiển thị tất cả --%>
+                            <c:choose>
+                                <c:when test="${num <= 3}">
+                                    <c:forEach begin="1" end="${num}" var="i">
+                                        <li style="margin: 0 5px;">
+                                            <a class="page-link ${i == currentPage ? 'active' : ''}" href="?page=${i}" 
+                                               style="padding: 8px 12px; background: ${i == currentPage ? '#d35400' : '#ff9800'}; color: white; text-decoration: none; border-radius: 4px;">
+                                                ${i}
+                                            </a>
+                                        </li>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <%-- Hiển thị trang trước, trang hiện tại và trang sau --%>
+                                    <c:if test="${currentPage > 1}">
+                                        <li style="margin: 0 5px;">
+                                            <a class="page-link" href="?page=${currentPage - 1}"
+                                               style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
+                                                ${currentPage - 1}
+                                            </a>
+                                        </li>
+                                    </c:if>
+
+                                    <li style="margin: 0 5px;">
+                                        <a class="page-link active" href="?page=${currentPage}"
+                                           style="padding: 8px 12px; background: #d35400; color: white; text-decoration: none; border-radius: 4px;">
+                                            ${currentPage}
+                                        </a>
+                                    </li>
+
+                                    <c:if test="${currentPage < num}">
+                                        <li style="margin: 0 5px;">
+                                            <a class="page-link" href="?page=${currentPage + 1}"
+                                               style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
+                                                ${currentPage + 1}
+                                            </a>
+                                        </li>
+                                    </c:if>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <%-- Nút Last --%>
+                            <c:if test="${currentPage < num}">
+                                <li style="margin: 0 5px;">
+                                    <a class="page-link" href="?page=${num}"
+                                       style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
+                                        Last
+                                    </a>
+                                </li>
+                            </c:if>
+                        </c:if>
                     </ul>
                 </div>
             </div>
@@ -368,17 +423,52 @@
                 const dateFilter = document.getElementById("dateFilter").value;
                 const sortBox = document.getElementById("sortBox").value;
                 const pageSize = document.getElementById("itemsPerPage").value;
-                const currentPage = params.get("page") || 1;
+                
+                if (searchBox) {
+                    params.set("keySearch", searchBox);
+                } else {
+                    params.delete("keySearch");
+                }
+                
+                if (staffFilter !== "0") {
+                    params.set("typeRequestID", staffFilter);
+                } else {
+                    params.delete("typeRequestID");
+                }
+                
+                if (statusFilter !== "0") {
+                    params.set("status", statusFilter);
+                } else {
+                    params.delete("status");
+                }
+                
+                if (dateFilter) {
+                    params.set("date", dateFilter);
+                } else {
+                    params.delete("date");
+                }
+                
+                if (sortBox !== "0") {
+                    params.set("sort", sortBox);
+                } else {
+                    params.delete("sort");
+                }
+                
+                if (pageSize !== "5") {
+                    params.set("pageSize", pageSize);
+                } else {
+                    params.delete("pageSize");
+                }
+                
+                if (params.toString()) {
+                    params.set("page", "1");
+                } else {
+                    params.delete("page");
+                }
 
-                params.set("keySearch", searchBox || "");
-                params.set("typeRequestID", staffFilter || "");
-                params.set("status", statusFilter || "");
-                params.set("date", dateFilter || "");
-                params.set("sort", sortBox || "");
-                params.set("pageSize", pageSize || "");
-                params.set("page", currentPage);
-
-                window.location.search = params.toString();
+                const newUrl = params.toString() ? "?" + params.toString() : window.location.pathname;
+                window.history.pushState({}, "", newUrl);
+                window.location.reload();
             }
 
             document.getElementById("searchBox").addEventListener("input", function () {
@@ -397,7 +487,14 @@
                 pageLink.addEventListener("click", function (event) {
                     event.preventDefault();
                     let params = new URLSearchParams(window.location.search);
-                    params.set("page", this.textContent.trim()); // Cập nhật số trang
+                    let pageText = this.textContent.trim().toLowerCase();
+                    if (pageText === "first") {
+                        params.set("page", "1");  // Nếu click vào "First" → page = 1
+                    } else if (pageText === "last") {
+                        params.set("page", "${num}"); // Nếu click vào "Last" → page = num
+                    } else {
+                        params.set("page", pageText); // Các trang số bình thường
+                    }
                     window.location.search = params.toString();
                 });
             });

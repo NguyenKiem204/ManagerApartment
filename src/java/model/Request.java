@@ -29,21 +29,49 @@ public class Request {
     String title;
     LocalDate date;
     StatusRequest status;
-    Staff staff;
     Resident resident;
     TypeRequest typeRq;
     Apartment apartment;
+    LocalDate completedAt;
+    LocalDate viewedDate;
 
-    public Request(String description, String title, LocalDate date, StatusRequest status, Staff staff, Resident resident, TypeRequest typeRq, Apartment apartment) {
+//    public Request(int requestID, String description, String title, LocalDate date, StatusRequest status, Resident resident, TypeRequest typeRq, Apartment apartment, LocalDate completedAt, LocalDate viewedDate) {
+//        this.requestID = requestID;
+//        this.description = description;
+//        this.title = title;
+//        this.date = date;
+//        this.status = status;
+//        this.resident = resident;
+//        this.typeRq = typeRq;
+//        this.apartment = apartment;
+//        this.completedAt = completedAt;
+//        this.viewedDate = viewedDate;
+//    }
+
+    public Request(String description, String title, LocalDate date, StatusRequest status, Resident resident, TypeRequest typeRq, Apartment apartment) {
         this.description = description;
         this.title = title;
         this.date = date;
         this.status = status;
-        this.staff = staff;
         this.resident = resident;
         this.typeRq = typeRq;
         this.apartment = apartment;
     }
+    
+
+    public Request(String description, String title, LocalDate date, StatusRequest status, Resident resident, TypeRequest typeRq, Apartment apartment, LocalDate completedAt, LocalDate viewedDate) {
+        this.description = description;
+        this.title = title;
+        this.date = date;
+        this.status = status;
+        this.resident = resident;
+        this.typeRq = typeRq;
+        this.apartment = apartment;
+        this.completedAt = completedAt;
+        this.viewedDate = viewedDate;
+    }
+
+    
 
     public Date getFormattedDate() {
         return Date.valueOf(date); // Chuyển LocalDate -> SQL Date

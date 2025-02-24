@@ -39,9 +39,9 @@ public class Test {
         
         List<ImageFeedback> imageFeedbackList = new ArrayList<>();
         
-        List<String> list = apartmentDAO.getApartmentNames("a");
-        for (String string : list) {
-            System.out.println(string);
+        List<Request> list = requestDAO.selectFirstPage();
+        for (Request request : list) {
+            System.out.println(request.toString());
         }
 
         // Ví dụ: thêm các đối tượng ImageFeedback vào danh sách
@@ -71,11 +71,11 @@ public class Test {
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
-//        Resident resident = new Resident("Nguyễn Văn B", "123", "0336784476", "3984932344394", "accountant1@gmail.com",  LocalDate.of(2020, 12, 12), "Female", "ACTIVE", new Image().builder().imageID(3).build(), new Role().builder().roleID(3).build());
+//        Resident resident = new Resident("Nguyễn Văn b", "123", "03314710223", "3984132344394", "b@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
 //        residentDAO.insert(resident);
 //       /
 //        imageDAO.insert(image);
-//        Staff staff = new Staff("Nguyễn Văn A", "123", "0331652221", "12348841131194", "nkiem347@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(3).build());
+//        Staff staff = new Staff("Nguyễn Văn A", "123", "0331651221", "12348847731194", "a@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "ACTIVE", new Image().builder().imageID(1).build(), new Role().builder().roleID(1).build());
 //        staffDAO.insert(staff);
 
 

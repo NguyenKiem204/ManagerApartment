@@ -64,53 +64,29 @@ public class RequestManagerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         RequestDAO requestDAO = new RequestDAO();
-        List<Request> list = requestDAO.selectAll();
-
-        try {
-            // Lấy tham số từ request
-            String keySort_raw = request.getParameter("sort");
-            String keySearch = request.getParameter("keySearch");
-            String status_raw = request.getParameter("status");
-            String typeRequestID_raw = request.getParameter("typeRequestID");
-            String date_raw = request.getParameter("date");
-
-            // Chuyển đổi giá trị, xử lý null và exception
-            int status = (status_raw != null && !status_raw.isEmpty()) ? Integer.parseInt(status_raw) : 0;
-            int typeRequestID = (typeRequestID_raw != null && !typeRequestID_raw.isEmpty()) ? Integer.parseInt(typeRequestID_raw) : 0;
-            int keySort = (keySort_raw != null && !keySort_raw.isEmpty()) ? Integer.parseInt(keySort_raw) : 0;
-            LocalDate date = (date_raw != null && !date_raw.isEmpty()) ? LocalDate.parse(date_raw) : null;
-
-            // Nếu có tham số lọc, thực hiện tìm kiếm
-            if (keySearch != null || status != 0 || typeRequestID != 0 || date != null || keySort != 0) {
-                list = requestDAO.getAllRequestsBySearchOrFilterOrSort(keySearch, typeRequestID, date, status, keySort);
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Loi o exception!");
-        }
+        List<Request> listFirstPage = requestDAO.selectFirstPage();
         
-        //Phân trang
+//Phân trang
         // Lấy tham số từ request
-        String numberpage_raw = request.getParameter("pageSize");
+        String pageSize_raw = request.getParameter("pageSize");
         String xpage = request.getParameter("page");
 
         // Khai báo biến
         int page = 1; // Trang mặc định
-        int numberpage = 5; // Giá trị mặc định nếu không có tham số pageSize
-        int size = list.size();
-        int start = 0;
-        int end = 0;
+        int pageSize = 5; // Giá trị mặc định nếu không có tham số pageSize
+        int size = requestDAO.selectAll().size();
         int num = 1;
 
         try {
             // Kiểm tra và parse pageSize nếu có giá trị hợp lệ
-            if (numberpage_raw != null && !numberpage_raw.isEmpty()) {
-                numberpage = Integer.parseInt(numberpage_raw);
-                if (numberpage <= 0) {
-                    numberpage = 5; // Tránh chia cho 0
+            if (pageSize_raw != null && !pageSize_raw.isEmpty()) {
+                pageSize = Integer.parseInt(pageSize_raw);
+                if (pageSize <= 0) {
+                    pageSize = 5; // Tránh chia cho 0
                 }
             }
             // Tính tổng số trang
-            num = (size % numberpage == 0) ? (size / numberpage) : (size / numberpage + 1);
+            num = (size % pageSize == 0) ? (size / pageSize) : (size / pageSize + 1);
 
             // Kiểm tra và parse page nếu có giá trị hợp lệ
             if (xpage != null && !xpage.isEmpty()) {
@@ -122,17 +98,40 @@ public class RequestManagerServlet extends HttpServlet {
                 }
             }
 
-            // Xác định phạm vi dữ liệu của trang hiện tại
-            start = (page - 1) * numberpage;
-            end = Math.min(page * numberpage, size);
         } catch (NumberFormatException e) {
             System.out.println("Lỗi parse số: " + e.getMessage());
             page = 1;
-            numberpage = 5;
-            start = 0;
-            end = Math.min(numberpage, size);
+            pageSize = 5;
         }
-        List<Request> listPage = requestDAO.getListByPage(list, start, end);
+
+        try {
+            // Lấy tham số từ request
+            String keySort_raw = request.getParameter("sort");
+            String keySearch_raw = request.getParameter("keySearch");
+            String status_raw = request.getParameter("status");
+            String typeRequestID_raw = request.getParameter("typeRequestID");
+            String date_raw = request.getParameter("date");
+            String keySearch = (keySearch_raw != null) ? keySearch_raw.replaceAll("\\s+", " ").trim() : null;
+            if (keySearch != null && keySearch.isEmpty()) {
+                keySearch = null;
+            }
+            
+            // Chuyển đổi giá trị, xử lý null và exception
+            int status = (status_raw != null && !status_raw.isEmpty()) ? Integer.parseInt(status_raw) : 0;
+            int typeRequestID = (typeRequestID_raw != null && !typeRequestID_raw.isEmpty()) ? Integer.parseInt(typeRequestID_raw) : 0;
+            int keySort = (keySort_raw != null && !keySort_raw.isEmpty()) ? Integer.parseInt(keySort_raw) : 0;
+            LocalDate date = (date_raw != null && !date_raw.isEmpty()) ? LocalDate.parse(date_raw) : null;
+
+            // Nếu có tham số lọc, thực hiện tìm kiếm
+            if (keySearch_raw != null || status != 0 || typeRequestID != 0 || date != null || keySort != 0 || xpage != null) {
+                listFirstPage = requestDAO.getAllRequestsBySearchOrFilterOrSort(keySearch, typeRequestID, date, status, keySort, page, pageSize);
+                int numberOfLine = requestDAO.getNumberOfRequestsBySearchOrFilterOrSort(keySearch, typeRequestID, date, status, keySort);
+                num = (numberOfLine % pageSize == 0) ? (numberOfLine / pageSize) : (numberOfLine / pageSize + 1);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Loi o exception!");
+        }
+        
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
         List<TypeRequest> listTypeRq = typeRequestDAO.selectAll();
@@ -140,7 +139,7 @@ public class RequestManagerServlet extends HttpServlet {
         
         request.setAttribute("page", page);
         request.setAttribute("num", num);
-        request.setAttribute("listrq", listPage);
+        request.setAttribute("listrq", listFirstPage);
         request.setAttribute("listTypeRq", listTypeRq);
         request.setAttribute("listStatus", listStatus);
         request.getRequestDispatcher("request.jsp").forward(request, response);
