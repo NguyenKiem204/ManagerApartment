@@ -68,9 +68,6 @@ public class UpdateStatusInvoice extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
-
-        // Lấy các tham số từ request
-        String deID = request.getParameter("apartmentId");
         String fromDateStr = request.getParameter("FromDate");
         String dueDateStr = request.getParameter("dueDate");
         String search = request.getParameter("search");
@@ -85,11 +82,8 @@ public class UpdateStatusInvoice extends HttpServlet {
                     ? LocalDate.parse(dueDateStr)
                     : null;
 
-            // Lọc hóa đơn dựa trên các tham số
-            int deIds = (deID == null || deID.isEmpty()) ? 0 : Integer.parseInt(deID);
-            List<Invoices> list = Idao.filterInvoices(deIds, "UnPaid", fromDate, dueDate);
+            List<Invoices> list = Idao.filterInvoices("UnPaid", fromDate, dueDate);
 
-            // Áp dụng tìm kiếm nếu có
             if (search != null && !search.isEmpty()) {
                 List<Invoices> searchResults = new ArrayList<>();
                 for (Invoices inv : list) {
@@ -99,14 +93,27 @@ public class UpdateStatusInvoice extends HttpServlet {
                 }
                 list = searchResults;
             }
+            String page = request.getParameter("page");
+            if (page == null) {
+                page = "1";
+            }
+            InvoiceDAO u = new InvoiceDAO();
+            int totalPage = u.getTotalPage(list, 8);
 
-            List<Apartment> la = adao.selectAllOcc();
-
+            if (list.size() != 0) {
+                list = u.getListPerPage(list, 8, page);
+                request.setAttribute("apartmentes", list);
+                request.setAttribute("totalPage", totalPage);
+                request.setAttribute("currentPage", Integer.parseInt(page));
+                request.setAttribute("isFilter", "true");
+            } else {
+                request.setAttribute("totalPage", 1);
+                request.setAttribute("currentPage", 1);
+                request.setAttribute("message", "No result");
+            }
             request.setAttribute("search", search);
-            request.setAttribute("selectedApartmentId", deID);
             request.setAttribute("selectedFromDate", fromDateStr);
             request.setAttribute("selectedDueDate", dueDateStr);
-            request.setAttribute("listApartment", la);
             session.setAttribute("ListInvoices", list);
             request.getRequestDispatcher("accountant/UpdateStatusInvoice.jsp").forward(request, response);
 

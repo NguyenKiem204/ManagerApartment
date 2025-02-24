@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +16,10 @@ public class Invoices {
     private Resident resident;
     private Apartment apartment;
     private List<InvoiceDetail> details;
-    private int muon;// muon =islate
+    private double muon;// muon =islate
     private LocalDate paydate;
 
-    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment, int muon, LocalDate paydate) {
+    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment,double muon, LocalDate paydate) {
         this.invoiceID = invoiceID;
         this.totalAmount = totalAmount;
         this.publicDate = publicDate;
@@ -31,10 +32,7 @@ public class Invoices {
         this.paydate = paydate;
     }
 
-   
-
-    
-    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment, List<InvoiceDetail> details, int muon) {
+    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment, List<InvoiceDetail> details, double muon) {
         this.invoiceID = invoiceID;
         this.totalAmount = totalAmount;
         this.publicDate = publicDate;
@@ -50,7 +48,7 @@ public class Invoices {
     public Invoices() {
     }
 
-    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment, int muon) {
+    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment, double muon) {
         this.invoiceID = invoiceID;
         this.totalAmount = totalAmount;
         this.publicDate = publicDate;
@@ -114,7 +112,6 @@ public class Invoices {
         this.totalAmount = totalAmount;
     }
 
-  
     public String getStatus() {
         return status;
     }
@@ -147,8 +144,6 @@ public class Invoices {
         this.dueDate = dueDate;
     }
 
- 
-
     public Resident getResident() {
         return resident;
     }
@@ -177,13 +172,16 @@ public class Invoices {
         this.details = details;
     }
 
-    public int getMuon() {
+    public double getMuon() {
         return muon;
     }
 
-    public void setMuon(int muon) {
+    public void setMuon(double muon) {
         this.muon = muon;
     }
+
+
+
 
     public LocalDate getPaydate() {
         return paydate;
@@ -193,5 +191,28 @@ public class Invoices {
         this.paydate = paydate;
     }
 
-   
+    public String getPublicDateft() {
+        if (publicDate == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return publicDate.format(formatter);
+    }
+
+    public String getPaydateft() {
+        if (paydate == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return paydate.format(formatter);
+    }
+
+    public String getDueDateft() {
+        if (dueDate == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return dueDate.format(formatter);
+    }
+
 }

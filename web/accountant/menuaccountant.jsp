@@ -33,10 +33,98 @@
     </head>
 
     <body>
+
         <div id="app">
-            <div id="app">
+            <nav class="app-header navbar navbar-expand bg-body">
+                <div class="container-fluid">
+                    <!-- Navbar Links -->
+                    <ul class="navbar-nav kiem_can_trai">
+                        <li class="nav-item d-none d-md-block">
+                            <a href="home" class="nav-link">Home</a>
+                        </li>
+                        <li class="nav-item d-none d-md-block">
+                            <a href="#" class="nav-link">Contact</a>
+                        </li>
+                    </ul>
+
+                    <!-- User and Notification Dropdowns -->
+                    <ul class="navbar-nav ms-auto">
+                        <!-- User Menu -->
+                        <c:set var="staff" value="${sessionScope.staff}" />
+                        <li class="nav-item dropdown user-menu">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" class="user-image rounded-circle shadow"
+                                     alt="User Image" />
+                                <span class="d-none d-md-inline">${staff.fullName}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                                <li class="user-header text-bg-primary img-drop">
+                                    <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" class="rounded-circle shadow"
+                                         alt="User Image" />
+                                    <p>
+                                        ${staff.fullName} - Web Developer
+                                        <small>Member since Nov. 2024</small>
+                                    </p>
+                                </li>
+                                <li class="user-footer d-flex justify-content-between">
+                                    <a href="profile" class="btn btn-default btn-flat">Profile</a>
+                                    <a href="#" class="btn btn-default btn-flat">Setting</a>
+                                    <a href="<%= request.getContextPath() %>/logout" class="btn btn-default btn-flat">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Notification Menu -->
+                        <li class="nav-item dropdown user-menu">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fa-solid fa-bell" style="font-size: 1.5rem; margin-top: 10px"></i>
+                            </a>
+                            <ul class="notify-menu dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                                <li class="notify">
+                                    <a href="!#">
+                                        <div class="user-alert">
+                                            <img src="./assets/images/faces/nguyenkiem.jpg"
+                                                 class="user-image rounded-circle shadow" alt="User Image" />
+                                        </div>
+                                        <p class="text-alert">
+                                            <strong>Dinh Tung</strong> mentioned you in a comment in
+                                            the Spring-boot Java web Vietnam group.
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="notify">
+                                    <a href="#!">
+                                        <div class="user-alert">
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
+                                                 class="user-image rounded-circle shadow" alt="User Image" />
+                                        </div>
+                                        <p class="text-alert">
+                                            <strong>Dinh Tung</strong> mentioned you in a comment in
+                                            the Spring-boot Java web Vietnam group.
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="notify">
+                                    <a href="#!">
+                                        <div class="user-alert">
+                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
+                                                 class="user-image rounded-circle shadow" alt="User Image" />
+                                        </div>
+                                        <p class="text-alert">
+                                            <strong>Dinh Tung</strong> mentioned you in a comment in
+                                            the Spring-boot Java web Vietnam group.
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
             <div id="sidebar" class="active">
-                <div class="sidebar-wrapper active" style="border: 2px solid orangered; border-radius: 0 20px 20px 0">
+                <div class="sidebar-wrapper active" style="border: 2px solid orangered;">
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
@@ -52,13 +140,13 @@
                             <li class="sidebar-title">Menu</li>
 
                             <li class="sidebar-item active">
-                                <a href="index.html" class="sidebar-link">
+                                <a " class="sidebar-link">
                                     <i class="bi bi-house-door-fill"></i>
                                     <span>Home</span>
                                 </a>
                             </li>
                             <li class="sidebar-item ">
-                                <a href="index.html" class="sidebar-link">
+                                <a href="<%= request.getContextPath() %>/InvoicesManager" class="sidebar-link">
                                     <i class="bi bi-receipt-cutoff"></i>
                                     <span>Invoice Management</span>
                                 </a>
@@ -101,27 +189,33 @@
                     </button>
                 </div>
             </div>
+
+            <div id="main">
+                <a href="#" class="burger-btn d-inline-block d-xl-none kiem_button">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
                 <!--=============================CONTENT HERE=======================-->
-                
+
                 <!--==============================END================================-->
 
-                <footer>
-                    <div class="footer clearfix mb-0 text-muted">
-                        <div class="float-start">
-                            <p>2025 &copy; Kiemm</p>
-                        </div>
-                        <div class="float-end">
-                            <p>
-                                Crafted with
-                                <span class="text-danger"><i class="bi bi-heart"></i></span> by
-                                <a href="http://ahmadsaugi.com">NguyenKiem</a>
-                            </p>
-                        </div>
-                    </div>
-                </footer>
+                <!--                <footer>
+                                    <div class="footer clearfix mb-0 text-muted">
+                                        <div class="float-start">
+                                            <p>2025 &copy; Kiemm</p>
+                                        </div>
+                                        <div class="float-end">
+                                            <p>
+                                                Crafted with
+                                                <span class="text-danger"><i class="bi bi-heart"></i></span> by
+                                                <a href="http://ahmadsaugi.com">NguyenKiem</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </footer>-->
             </div>
+
         </div>
-        <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
+
         <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 
         <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
