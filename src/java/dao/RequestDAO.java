@@ -233,8 +233,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                            ,[Description]
                            ,[Title]
                            ,[Date]
-                           ,[StaffID]
-                           ,r.ResidentID
+                           ,r.ResidentID, CompletedAt, ViewedAt
                            ,[TypeRqID]
                            ,r.StatusID
                            ,r.ApartmentID
@@ -287,8 +286,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                         ,[Description]
                         ,[Title]
                         ,[Date]
-                        ,r.StaffID
-                        ,r.ResidentID
+                        ,r.ResidentID, CompletedAt, ViewedAt
                         ,res.FullName
                         ,r.TypeRqID
                         ,r.StatusID
@@ -394,8 +392,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                         ,[Description]
                         ,[Title]
                         ,[Date]
-                        ,r.StaffID
-                        ,r.ResidentID
+                        ,r.ResidentID, CompletedAt, ViewedAt
                         ,res.FullName
                         ,r.TypeRqID
                         ,r.StatusID
@@ -503,8 +500,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                                                   ,[Description]
                                                   ,[Title]
                                                   ,[Date]
-                                                  ,r.StaffID
-                                                  ,r.ResidentID
+                                                  ,r.ResidentID, CompletedAt, ViewedAt
                                                   ,res.FullName
                                                   ,r.TypeRqID
                                                   ,r.StatusID
@@ -533,7 +529,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
 
             //check rating is null or not
             if (statusID != 0) {
-                sql += " AND r.StatusID = ?";
+                sql += " AND r.Stat usID = ?";
                 params.add(statusID);
             }
 
@@ -582,8 +578,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                                                   ,[Description]
                                                   ,[Title]
                                                   ,[Date]
-                                                  ,r.StaffID
-                                                  ,r.ResidentID
+                                                  ,r.ResidentID, CompletedAt, ViewedAt
                                                   ,res.FullName
                                                   ,r.TypeRqID
                                                   ,r.StatusID

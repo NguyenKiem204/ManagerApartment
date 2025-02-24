@@ -75,7 +75,8 @@ public class Test {
 //        residentDAO.insert(resident);
 //       /
 //        imageDAO.insert(image);
-//        Staff staff = new Staff("Nguyễn Văn A", "123", "0331651221", "12348847731194", "a@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "ACTIVE", new Image().builder().imageID(1).build(), new Role().builder().roleID(1).build());
+
+//        Staff staff = new Staff("Nguyễn Văn A", "123", "0331652222", "12349841131194", "nguyenmanhc151@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(3).build());
 //        staffDAO.insert(staff);
 
 

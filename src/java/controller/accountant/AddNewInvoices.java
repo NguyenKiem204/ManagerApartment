@@ -120,6 +120,7 @@ public class AddNewInvoices extends HttpServlet {
             String apartmentIdStr = request.getParameter("apartmentId");
             String description = request.getParameter("description");
             String dueDateStr = request.getParameter("dueDate");
+            description = description.trim().replaceAll("\\s+", " ");
             if (apartmentIdStr == null || apartmentIdStr.isEmpty()
                     || description == null || description.trim().isEmpty()
                     || dueDateStr == null || dueDateStr.isEmpty()) {
@@ -127,6 +128,7 @@ public class AddNewInvoices extends HttpServlet {
                 doGet(request, response);
                 return;
             }
+
             int apartmentId;
             LocalDate dueDate;
             try {
@@ -146,7 +148,6 @@ public class AddNewInvoices extends HttpServlet {
 
             ApartmentDAO adao = new ApartmentDAO();
             ResidentDAO rdao = new ResidentDAO();
-
             Apartment apartment = adao.selectById(apartmentId);
             Resident resident = rdao.getApartmentOwnerByDepartment(apartmentId);
 
@@ -169,8 +170,15 @@ public class AddNewInvoices extends HttpServlet {
             for (int i = 0; i < typeBillIds.length; i++) {
                 try {
                     int typeBillId = Integer.parseInt(typeBillIds[i]);
+                    if (!amounts[i].matches("^[0-9]+(\\.[0-9]+)?$")) {
+                        request.setAttribute("amountError", "Invalid amount format. Example: 10.5, 100");
+                        doGet(request, response);
+                        return;
+                    }
+
                     double amount = Double.parseDouble(amounts[i]);
-                    String desc = descriptions[i];
+
+                    String desc = descriptions[i].trim().replaceAll("\\s+", " ");
                     if (desc.trim().isEmpty()) {
                         request.setAttribute("detailError", "Description detail mustn't empty or only space");
                         doGet(request, response);

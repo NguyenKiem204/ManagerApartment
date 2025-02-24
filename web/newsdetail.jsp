@@ -416,7 +416,7 @@
                                 </div>
                                 <div class="author-details">
                                     <span class="author-name">${news.staff.fullName}</span>
-                                    <span class="post-date">Ngày đăng: ${news.sentDate}</span>
+                                    <span class="post-date">Ngày đăng: ${news.formattedDate}</span>
                                 </div>
                             </div>
                             <div class="card-text">

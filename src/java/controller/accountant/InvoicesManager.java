@@ -68,9 +68,6 @@ public class InvoicesManager extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
-
-        // Lấy các tham số từ request
-        String deID = request.getParameter("apartmentId");
         String status = request.getParameter("status");
         String fromDateStr = request.getParameter("FromDate");
         String dueDateStr = request.getParameter("dueDate");
@@ -86,35 +83,44 @@ public class InvoicesManager extends HttpServlet {
                     ? LocalDate.parse(dueDateStr)
                     : null;
 
-            // Lọc hóa đơn dựa trên các tham số
-            int deIds = (deID == null || deID.isEmpty()) ? 0 : Integer.parseInt(deID);
-            List<Invoices> list = Idao.filterInvoices(deIds, status, fromDate, dueDate);
+            List<Invoices> list = Idao.filterInvoices(status, fromDate, dueDate);
 
-            // Áp dụng tìm kiếm nếu có
             if (search != null && !search.isEmpty()) {
+                search = search.trim().replaceAll("\\s+", " ");
                 List<Invoices> searchResults = new ArrayList<>();
                 for (Invoices inv : list) {
-                    if (inv.getDescription().toLowerCase().contains(search.toLowerCase())) {
+                    if (inv.getDescription().toLowerCase().contains(search.toLowerCase()) || inv.getApartment().getApartmentName().toLowerCase().contains(search.toLowerCase())) {
                         searchResults.add(inv);
                     }
                 }
                 list = searchResults;
             }
+            String page = request.getParameter("page");
+            if (page == null) {
+                page = "1";
+            }
+            InvoiceDAO u = new InvoiceDAO();
+            int totalPage = u.getTotalPage(list, 8);
 
-            List<Apartment> la = adao.selectAllOcc();
-
+            if (list.size() != 0) {
+                list = u.getListPerPage(list, 8, page);
+                request.setAttribute("totalPage", totalPage);
+                request.setAttribute("currentPage", Integer.parseInt(page));
+            } else {
+                request.setAttribute("message", "No result");
+            }
             request.setAttribute("search", search);
-            request.setAttribute("selectedApartmentId", deID);
             request.setAttribute("selectedStatus", status);
             request.setAttribute("selectedFromDate", fromDateStr);
             request.setAttribute("selectedDueDate", dueDateStr);
-            request.setAttribute("listApartment", la);
             session.setAttribute("ListInvoices", list);
             request.getRequestDispatcher("accountant/InvoiceManager.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
+        // phan trang
+
     }
 
     /**
