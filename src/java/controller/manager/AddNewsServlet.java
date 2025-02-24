@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,26 +94,22 @@ public class AddNewsServlet extends HttpServlet {
 
         Integer staffId = parseStaffId(staffIdParam, errors);
         validateInputs(title, description, errors);
-
-        String newImageURL = FileUploadUtil.insertNewsImage(request);
-        if (newImageURL != null) {
-            if (!isValidImage(newImageURL)) {
-                errors.add("Invalid image format. Only JPG, PNG, and JPEG, GIF, WEBP are allowed.");
-            } else {
+        Part filePart = request.getPart("imageURL");
+        if (filePart == null || filePart.getSize() == 0) {
+            if (imageURL == null || imageURL.trim().isEmpty()) {
+                errors.add("Image cannot be empty!");
+            }
+        } else {
+            String newImageURL = handleFileUpload(request, errors);
+            if (newImageURL != null) {
                 imageURL = newImageURL;
             }
         }
-
-        if (imageURL == null || imageURL.trim().isEmpty()) {
-            errors.add("Image cannot be empty!");
-        }
-
         if (!errors.isEmpty()) {
             request.setAttribute("errors", errors);
             request.getRequestDispatcher("addnews.jsp").forward(request, response);
             return;
         }
-
         News news = News.builder()
                 .staff(new StaffDAO().selectById(staffId))
                 .image(new Image(imageURL))
@@ -147,10 +144,32 @@ public class AddNewsServlet extends HttpServlet {
         }
     }
 
-    private boolean isValidImage(String imageUrl) {
-        String extension = getFileExtension(imageUrl);
-        return extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png")
-                || extension.equals("gif") || extension.equals("webp");
+    private String handleFileUpload(HttpServletRequest request, List<String> errors) throws IOException, ServletException {
+        Part filePart = request.getPart("imageURL");
+        List<String> allowedMimeTypes = List.of("image/jpeg", "image/png", "image/gif", "image/webp");
+        List<String> allowedExtensions = List.of("jpg", "jpeg", "png", "gif", "webp");
+
+        if (filePart != null && filePart.getSize() > 0) {
+            String mimeType = filePart.getContentType();
+            String fileName = getSubmittedFileName(filePart);
+            String fileExtension = getFileExtension(fileName).toLowerCase();
+
+            if (!allowedMimeTypes.contains(mimeType) || !allowedExtensions.contains(fileExtension)) {
+                errors.add("Invalid file type. Allowed types are: " + String.join(", ", allowedExtensions));
+                return null;
+            }
+            return FileUploadUtil.insertNewsImage(request);
+        }
+        return null;
+    }
+
+    private String getSubmittedFileName(Part part) {
+        for (String content : part.getHeader("content-disposition").split(";")) {
+            if (content.trim().startsWith("filename")) {
+                return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return null;
     }
 
     private String getFileExtension(String fileName) {

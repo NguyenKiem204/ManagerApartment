@@ -5,7 +5,6 @@
 package controller.manager;
 
 import config.FileUploadUtil;
-import dao.ImageDAO;
 import dao.NewsDAO;
 import dao.StaffDAO;
 import java.io.IOException;
@@ -16,7 +15,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
+import jakarta.servlet.http.Part;
 import java.util.ArrayList;
 import java.util.List;
 import model.Image;
@@ -82,74 +81,90 @@ public class UpdateNewsServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String newsIDParam = request.getParameter("newsID");
-        String title = request.getParameter("title");
-        String imageURL = request.getParameter("imageURL");
-        String description = request.getParameter("description");
-        String staffIdParam = request.getParameter("staffId");
-        String url = request.getParameter("url");
-        System.out.println(url);
-        Integer newsID = null;
-        Integer staffId = null;
-        NewsDAO newsDAO = new NewsDAO();
-        StaffDAO staffDAO = new StaffDAO();
-        if (newsIDParam != null) {
-            newsID = Integer.parseInt(newsIDParam);
-        }
-        if (staffIdParam != null && !staffIdParam.isEmpty()) {
-            staffId = Integer.parseInt(staffIdParam);
-        }
-        List<String> errors = new ArrayList<>();
+        throws ServletException, IOException {
+    String newsIDParam = request.getParameter("newsID");
+    String title = request.getParameter("title");
+    String description = request.getParameter("description");
+    String staffIdParam = request.getParameter("staffId");
+    String url = request.getParameter("url");
 
-        if (title == null || title.trim().isEmpty()) {
-            errors.add("Title cannot be empty!");
-        }
+    Integer newsID = (newsIDParam != null && !newsIDParam.isEmpty()) ? Integer.parseInt(newsIDParam) : null;
+    Integer staffId = (staffIdParam != null && !staffIdParam.isEmpty()) ? Integer.parseInt(staffIdParam) : null;
 
-        if (description == null || description.isBlank() || description.isEmpty()) {
-            errors.add("Description cannot empty!");
-        }
+    NewsDAO newsDAO = new NewsDAO();
+    StaffDAO staffDAO = new StaffDAO();
+    List<String> errors = new ArrayList<>();
 
-        String newImageURL = FileUploadUtil.insertNewsImage(request);
-        News oldNews = newsDAO.selectById(newsID);
-        if (newImageURL != null) {
-            if (!isValidImage(newImageURL)) {
-                errors.add("Invalid image format. Only JPG, PNG, and JPEG, GIF, WEBP are allowed.");
-            } else {
-                imageURL = newImageURL;
-            }
-        }
-        if (!errors.isEmpty()) {
-            request.getSession().setAttribute("errors", errors);
+    if (title == null || title.trim().isEmpty()) {
+        errors.add("Title cannot be empty!");
+    }
 
-            response.sendRedirect(url);
-            return;
-        } else {
-            request.getSession().removeAttribute("errors");
-        }
-        News news = News.builder()
-                .newsID(newsID)
-                .staff(staffDAO.selectById(staffId))
-                .image(new Image(oldNews.getImage().getImageID(), imageURL))
-                .title(Validate.trim(title))
-                .description(description)
-                .build();
-        newsDAO.updateNewsWithImage(news);
+    if (description == null || description.isBlank()) {
+        errors.add("Description cannot be empty!");
+    }
+    String imageURL = null;
+    try {
+        imageURL = handleFileUpload(request, errors);
+    } catch (ServletException e) {
+        errors.add(e.getMessage());
+    }
+
+    if (!errors.isEmpty()) {
+        request.getSession().setAttribute("errors", errors);
+
         response.sendRedirect(url);
+        return;
+    } else {
+        request.getSession().removeAttribute("errors");
     }
+    News oldNews = newsDAO.selectById(newsID);
+    News news = News.builder()
+            .newsID(newsID)
+            .staff(staffDAO.selectById(staffId))
+                .image(new Image(oldNews.getImage().getImageID(), imageURL))
+            .title(Validate.trim(title))
+            .description(description)
+            .build();
 
-    private boolean isValidImage(String imageUrl) {
-        String extension = getFileExtension(imageUrl);
-        return extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png")
-                || extension.equals("gif") || extension.equals("webp");
-    }
+    newsDAO.updateNewsWithImage(news);
+    response.sendRedirect(url);
+}
 
-    private String getFileExtension(String fileName) {
-        if (fileName == null || !fileName.contains(".")) {
-            return "";
+private String handleFileUpload(HttpServletRequest request, List<String> errors) throws IOException, ServletException {
+    Part filePart = request.getPart("imageURL");
+    List<String> allowedMimeTypes = List.of("image/jpeg", "image/png", "image/gif", "image/webp");
+    List<String> allowedExtensions = List.of("jpg", "jpeg", "png", "gif", "webp");
+
+    if (filePart != null && filePart.getSize() > 0) {
+        String mimeType = filePart.getContentType();
+        String fileName = getSubmittedFileName(filePart);
+        String fileExtension = getFileExtension(fileName).toLowerCase();
+
+        if (!allowedMimeTypes.contains(mimeType) || !allowedExtensions.contains(fileExtension)) {
+            errors.add("Invalid file type. Allowed types are: " + String.join(", ", allowedExtensions));
+            return null;
         }
-        return fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        return FileUploadUtil.insertNewsImage(request);
     }
+    return null;
+}
+
+private String getSubmittedFileName(Part part) {
+    for (String content : part.getHeader("content-disposition").split(";")) {
+        if (content.trim().startsWith("filename")) {
+            return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
+        }
+    }
+    return null;
+}
+
+private String getFileExtension(String fileName) {
+    if (fileName == null || !fileName.contains(".")) {
+        return "";
+    }
+    return fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+}
+
 
     /**
      * Returns a short description of the servlet.
