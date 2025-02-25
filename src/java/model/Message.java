@@ -5,6 +5,7 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,4 +29,8 @@ public class Message {
     String messageText;
     LocalDateTime timestamp;
     String status;
+     public String getFormattedDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return timestamp.format(formatter);
+    }
 }

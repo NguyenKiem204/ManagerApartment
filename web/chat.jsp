@@ -7,7 +7,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Chat Messenger</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/assets/css/chat.css" rel="stylesheet" />
     </head>
@@ -22,221 +22,105 @@
                 <div class="sidebar-content">
                     <c:forEach var="user" items="${list}">
                         <a href="chat?email=${user.email}">
-                            <div class="contact">
+                            <div class="contact ${user.email == chatwith.email ? 'active' : ''}">
                                 <img alt="Profile picture of ${user.fullName}" height="40" src="<%= request.getContextPath() %>/${user.image.imageURL}"
                                      width="40" />
                                 <div>
                                     <div class="name">${user.fullName}</div>
-                                    <div class="time">Đã đọc cho hết ❤️ 1 giờ</div>
+                                    <div class="time">
+                                        <c:choose>
+                                            <c:when test="${user.lastMessage != null}">
+                                                ${user.lastMessage}
+                                            </c:when>
+                                            <c:otherwise>
+                                                Bắt đầu cuộc trò chuyện
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
                                 </div>
                             </div>
                         </a>
                     </c:forEach>
-                    <!--                        <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of Đinh Nhật Quân" height="40"
-                                                        src="https://placehold.co/40x40" width="40" />
-                                                    <div>
-                                                        <div class="name">Đinh Nhật Quân</div>
-                                                        <div class="time">Đã bày tỏ cảm xúc ❤️ 2 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of Tuyển dụng NodeJS/ReactJS ViệtNam" height="40"
-                                                        src="https://placehold.co/40x40" width="40" />
-                                                    <div>
-                                                        <div class="name">Tuyển dụng NodeJS/ReactJS ViệtNam</div>
-                                                        <div class="time">Tony: 😆 2 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of Bảo Đào" height="40" src="https://placehold.co/40x40"
-                                                        width="40" />
-                                                    <div>
-                                                        <div class="name">Bảo Đào</div>
-                                                        <div class="time">Đã xác nhận 2 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of Tuyển dụng NodeJS/ReactJS ViệtNam" height="40"
-                                                        src="https://placehold.co/40x40" width="40" />
-                                                    <div>
-                                                        <div class="name">Tuyển dụng NodeJS/ReactJS ViệtNam</div>
-                                                        <div class="time">Minh: Tố Hậu - HN) MOR ch... 3 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of Nguyễn Chương" height="40" src="https://placehold.co/40x40"
-                                                        width="40" />
-                                                    <div>
-                                                        <div class="name">Nguyễn Chương</div>
-                                                        <div class="time">Chương đã gọi 1 lần 4 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of K15 CP Phanxico Assisi" height="40"
-                                                        src="https://placehold.co/40x40" width="40" />
-                                                    <div>
-                                                        <div class="name">K15 CP Phanxico Assisi</div>
-                                                        <div class="time">Lan Anh: Cả nhà nhớ lịch ... 5 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of Nguyễn Đăng Nguyễn" height="40"
-                                                        src="https://placehold.co/40x40" width="40" />
-                                                    <div>
-                                                        <div class="name">Nguyễn Đăng Nguyễn</div>
-                                                        <div class="time">5 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of Dũng Alan" height="40" src="https://placehold.co/40x40"
-                                                        width="40" />
-                                                    <div>
-                                                        <div class="name">Dũng Alan</div>
-                                                        <div class="time">Bạn: Mai này có 5 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of Thơ" height="40" src="https://placehold.co/40x40"
-                                                        width="40" />
-                                                    <div>
-                                                        <div class="name">Thơ</div>
-                                                        <div class="time">Bạn: 1 ngày 5 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of Nguyễn Trà My" height="40" src="https://placehold.co/40x40"
-                                                        width="40" />
-                                                    <div>
-                                                        <div class="name">Nguyễn Trà My</div>
-                                                        <div class="time">Bạn: Đã đọc báo cáo 5 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of Rèn luyện sức khỏe và thi giác" height="40"
-                                                        src="https://placehold.co/40x40" width="40" />
-                                                    <div>
-                                                        <div class="name">Rèn luyện sức khỏe và thi giác</div>
-                                                        <div class="time">Bạn: 5 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="">
-                                                <div class="contact">
-                                                    <img alt="Profile picture of Vinh" height="40" src="https://placehold.co/40x40"
-                                                        width="40" />
-                                                    <div>
-                                                        <div class="name">Vinh</div>
-                                                        <div class="time">Bạn: 5 giờ</div>
-                                                    </div>
-                                                </div>
-                                            </a>-->
                 </div>
             </div>
             <div class="chat-area">
                 <div class="chat-header">
-                    <c:set value="${chatwith}" var="user"></c:set>
+                    <c:if test="${not empty chatwith}">
+                        <c:set var="user" value="${chatwith}" />
                         <div class="user-info">
-                            <img alt="Profile picture of ${user.fullName}" height="40" src="<%= request.getContextPath() %>/${user.image.imageURL}"
-                             width="40" />
-                        <div>${user.fullName}</div>
-                        <input type="hidden" name="emailSend" value="${sessionScope.staff!=null?sessionScope.staff.email:sessionScope.resident.email}"/>  
-                        <input type="hidden" name="emailRecieved" value="${user.email}"/>
-                    </div>
-                    <div>
-                        <i class="fas fa-phone"> </i>
-                        <i class="fas fa-video"> </i>
-                        <i class="fas fa-info-circle"> </i>
-                    </div>
+                            <img alt="Profile picture of ${user.fullName}" height="40" 
+                                 src="<%= request.getContextPath() %>/${user.image.imageURL}" width="40" />
+                            <div>
+                                ${user.fullName} 
+                                <c:if test="${chatwithType == 'staff'}">(Staff)</c:if>
+                                <c:if test="${chatwithType == 'resident'}">(Resident)</c:if>
+                                </div>
+                                <input type="hidden" id="emailSend" name="emailSend"
+                                       value="${sessionScope.staff != null ? sessionScope.staff.email : sessionScope.resident.email}" />
+                            <input type="hidden" id="emailRecieved" name="emailRecieved" value="${user.email}" />
+                        </div>
+                        <div>
+                            <i class="fas fa-phone"></i>
+                            <i class="fas fa-video"></i>
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                    </c:if>
                 </div>
-                <div class="chat-content">
-                    <div class="message received">
-                        <img alt="Profile picture of Đinh Nhật Quân" class="avatar" height="30"
-                             src="https://placehold.co/30x30" width="30" />
-                        <div>
-                            <div class="text">
-                                <img alt="Screenshot of a quiz on edX" height="400"
-                                     src="https://placehold.co/200x400" width="200" />
+
+
+                <div class="chat-content" id="chat-content">
+                    <c:forEach var="message" items="${messageHistory}">
+                        <c:set var="currentUserEmail" value="${sessionScope.staff != null ? sessionScope.staff.email : sessionScope.resident.email}" />
+                        <div class="message ${message.senderEmail eq currentUserEmail ? 'sent' : 'received'}">
+                            <c:if test="${message.senderEmail ne currentUserEmail}">
+                                <img alt="Profile picture" class="avatar" height="30"
+                                     src="<%= request.getContextPath() %>/${chatwith.image.imageURL}" width="30" />
+                            </c:if>
+                            <div>
+                                <div class="text">${message.messageText}</div>
+                                <div class="${message.senderEmail eq currentUserEmail ? 'time-right' : 'time-left'}">
+                                    ${message.formattedDate}
+                                </div>
                             </div>
-                            <div class="time-left">21:51 CN</div>
                         </div>
-                    </div>
-                    <div class="message received">
-                        <img alt="Profile picture of Đinh Nhật Quân" class="avatar" height="30"
-                             src="https://placehold.co/30x30" width="30" />
-                        <div>
-                            <div class="text">Ko</div>
-                            <div class="time-left">22:08 CN</div>
-                        </div>
-                    </div>
-
-                    <div class="message sent">
-                        <div>
-                            <div class="text">Trả câu hỏi</div>
-                            <div class="time-right">22:08 CN</div>
-                        </div>
-                    </div>
-                    <div class="message sent">
-                        <div>
-                            <div class="text">Tìm quiz là nó có cả bài</div>
-                            <div class="time-right">22:08 CN</div>
-                        </div>
-                    </div>
-
+                    </c:forEach>
                 </div>
                 <div class="chat-footer">
-                    <input placeholder="Aa" type="text" />
-                    <i class="fas fa-thumbs-up"> </i>
-                    <i class="fas fa-heart"> </i>
+                    <input id="message-input" placeholder="Aa" type="text" />
+                    <button id="send-button" type="button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </body>
     <script type="text/javascript">
         var websocket = new WebSocket("ws://localhost:8080/ManagerApartment/chatRoomServer");
+        var isConnected = false;
 
         websocket.onopen = function (message) {
-            var senderEmail = document.querySelector('input[name="emailSend"]').value;
+            isConnected = true;
+            var senderEmail = document.getElementById('emailSend').value;
             websocket.send(JSON.stringify({type: "connect", email: senderEmail}));
             console.log("Server connected...");
-            processOpen(message);
+
+            scrollToBottom();
         };
+
         websocket.onmessage = function (message) {
-            console.log("Message received: ", message.data); // Đảm bảo log này xuất hiện  
+            console.log("Message received: ", message.data);
             processMessage(message);
         };
+
         websocket.onerror = function (event) {
             console.error("WebSocket error: ", event);
+            isConnected = false;
         };
 
         websocket.onclose = function (event) {
             console.log("WebSocket connection closed: ", event);
+            isConnected = false;
         };
-
-        function processOpen(message) {
-            console.log("Server connected...: " + message);
-        }
 
         function processMessage(message) {
             console.log("Raw message data:", message.data);
@@ -253,12 +137,30 @@
                 return;
             }
 
-            var chatContent = document.querySelector('.chat-content');
+            var chatContent = document.getElementById('chat-content');
             var newMessage = document.createElement('div');
-            var senderEmail = document.querySelector('input[name="emailSend"]').value;
+            var senderEmail = document.getElementById('emailSend').value;
+            var receiverEmail = document.getElementById('emailRecieved').value;
+
+            if (messageData.sender !== senderEmail && messageData.sender !== receiverEmail &&
+                    messageData.receiver !== senderEmail && messageData.receiver !== receiverEmail) {
+                console.log("Message not for this conversation");
+                return;
+            }
+
             newMessage.className = 'message ' + (messageData.sender === senderEmail ? 'sent' : 'received');
 
-            var wrapperDiv = document.createElement('div');
+            var messageContent = document.createElement('div');
+
+            if (messageData.sender !== senderEmail) {
+                var avatar = document.createElement('img');
+                avatar.className = 'avatar';
+                avatar.alt = 'Profile picture';
+                avatar.height = 30;
+                avatar.width = 30;
+                avatar.src = document.querySelector('.user-info img').src;
+                newMessage.appendChild(avatar);
+            }
 
             var now = new Date();
             var timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
@@ -268,39 +170,43 @@
             textDiv.textContent = messageData.message;
 
             var timeDiv = document.createElement('div');
-            timeDiv.className = 'time-right';
+            timeDiv.className = messageData.sender === senderEmail ? 'time-right' : 'time-left';
             timeDiv.textContent = timeString;
 
-            wrapperDiv.appendChild(textDiv);
-            wrapperDiv.appendChild(timeDiv);
-            newMessage.appendChild(wrapperDiv);
+            messageContent.appendChild(textDiv);
+            messageContent.appendChild(timeDiv);
+            newMessage.appendChild(messageContent);
 
             chatContent.appendChild(newMessage);
-            console.log("New message appended to chat content");
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            var chatContent = document.getElementById('chat-content');
             chatContent.scrollTop = chatContent.scrollHeight;
-
-        }
-
-        function processClose(message) {
-            console.log("Server disconnected...");
-        }
-
-        function processError(message) {
-            console.log("Error: " + message);
         }
 
         function sendMessage() {
-            var input = document.querySelector('.chat-footer input');
+            var input = document.getElementById('message-input');
             var messageText = input.value;
 
             if (messageText.trim() !== "") {
-                var senderInput = document.querySelector('input[name="emailSend"]');
-                var receiverInput = document.querySelector('input[name="emailRecieved"]');
+                if (!isConnected) {
+                    reconnectWebSocket();
+                    setTimeout(function () {
+                        if (isConnected) {
+                            sendMessage();
+                        } else {
+                            alert("Cannot connect to the chat server. Please try again later.");
+                        }
+                    }, 1000);
+                    return;
+                }
 
-                if (senderInput && receiverInput) {
-                    var senderEmail = senderInput.value;
-                    var receiverEmail = receiverInput.value;
+                var senderEmail = document.getElementById('emailSend').value;
+                var receiverEmail = document.getElementById('emailRecieved').value;
 
+                if (senderEmail && receiverEmail) {
                     var messageData = {
                         type: "message",
                         sender: senderEmail,
@@ -308,15 +214,11 @@
                         message: messageText
                     };
 
-                    if (typeof websocket !== 'undefined' && websocket.readyState === WebSocket.OPEN) {
-                        websocket.send(JSON.stringify(messageData));
-                        console.log("Sent message:", messageData);
-                        input.value = ""; // Clear input  
-                    } else {
-                        console.error("WebSocket is not open:", websocket.readyState);
-                    }
+                    websocket.send(JSON.stringify(messageData));
+                    console.log("Sent message:", messageData);
+                    input.value = "";
                 } else {
-                    console.error("Email elements are null.");
+                    console.error("Email elements not found.");
                 }
             } else {
                 console.log("Message is empty, not sending.");
@@ -324,15 +226,54 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            var sendMessageInput = document.querySelector('.chat-footer input');
+            var messageInput = document.getElementById('message-input');
+            var sendButton = document.getElementById('send-button');
 
-            sendMessageInput.addEventListener('keypress', function (event) {
+            messageInput.addEventListener('keypress', function (event) {
                 if (event.key === 'Enter') {
                     event.preventDefault();
                     sendMessage();
                 }
             });
-        });
-    </script>
 
+            sendButton.addEventListener('click', function () {
+                sendMessage();
+            });
+
+            scrollToBottom();
+        });
+        function reconnectWebSocket() {
+            if (!isConnected) {
+                console.log("Attempting to reconnect...");
+                if (websocket) {
+                    websocket.close();
+                }
+                websocket = new WebSocket("ws://localhost:8080/ManagerApartment/chatRoomServer");
+
+                websocket.onopen = function (message) {
+                    isConnected = true;
+                    var senderEmail = document.getElementById('emailSend').value;
+                    websocket.send(JSON.stringify({type: "connect", email: senderEmail}));
+                    console.log("Server reconnected successfully");
+                };
+
+                websocket.onmessage = function (message) {
+                    console.log("Message received: ", message.data);
+                    processMessage(message);
+                };
+
+                websocket.onerror = function (event) {
+                    console.error("WebSocket error: ", event);
+                    isConnected = false;
+                    setTimeout(reconnectWebSocket, 5000);
+                };
+
+                websocket.onclose = function (event) {
+                    console.log("WebSocket connection closed: ", event);
+                    isConnected = false;
+                    setTimeout(reconnectWebSocket, 5000);
+                };
+            }
+        }
+    </script>
 </html>
