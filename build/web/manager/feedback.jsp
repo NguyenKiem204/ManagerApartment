@@ -156,8 +156,7 @@
                             </select>
                         </div>
 
-                        <%--<fmt:parseDate value="${param.date}" pattern="yyyy-MM-dd" var="formattedDate" type="date"/>--%>
-                        <input type="date" id="dateFilter" class="date-filter" name="date" value="${param.date}">
+                        <!--<input type="date" id="dateFilter" class="date-filter" name="date" value="${param.date}">-->
                     </div>
                     <div style="padding-left: 10px">
                         <select id="sortBox" style="width: 100%">
@@ -207,11 +206,11 @@
                                 <li style="margin: 0 5px;">
                                     <a class="page-link" href="?page=1"
                                        style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
-                                        First11
+                                        First
                                     </a>
                                 </li>
                             </c:if>
-                
+
                             <%-- Nếu tổng số trang nhỏ hơn hoặc bằng 3, hiển thị tất cả --%>
                             <c:choose>
                                 <c:when test="${num <= 3}">
@@ -234,14 +233,14 @@
                                             </a>
                                         </li>
                                     </c:if>
-                
+
                                     <li style="margin: 0 5px;">
                                         <a class="page-link active" href="?page=${currentPage}"
                                            style="padding: 8px 12px; background: #d35400; color: white; text-decoration: none; border-radius: 4px;">
                                             ${currentPage}
                                         </a>
                                     </li>
-                
+
                                     <c:if test="${currentPage < num}">
                                         <li style="margin: 0 5px;">
                                             <a class="page-link" href="?page=${currentPage + 1}"
@@ -252,11 +251,11 @@
                                     </c:if>
                                 </c:otherwise>
                             </c:choose>
-                
+
                             <%-- Nút Last --%>
                             <c:if test="${currentPage < num}">
                                 <li style="margin: 0 5px;">
-                                    <a class="page-link" href="?page=${num}"
+                                    <a class="page-link" href="?news=${num}"
                                        style="padding: 8px 12px; background: #ff9800; color: white; text-decoration: none; border-radius: 4px;">
                                         Last
                                     </a>
@@ -265,7 +264,7 @@
                         </c:if>
                     </ul>
                 </div>
-                
+
             </div>
         </div>
         <script>
@@ -275,20 +274,48 @@
                 const searchBox = document.getElementById("searchBox").value.trim();
                 const staffFilter = document.getElementById("staffFilter").value;
                 const ratingFilter = document.getElementById("ratingFilter").value;
-                const dateFilter = document.getElementById("dateFilter").value;
                 const sortBox = document.getElementById("sortBox").value;
                 const pageSize = document.getElementById("itemsPerPage").value;
-                const currentPage = params.get("page") || 1;
 
-                params.set("keySearch", searchBox || "");
-                params.set("roleID", staffFilter || "");
-                params.set("rating", ratingFilter || "");
-                params.set("date", dateFilter || "");
-                params.set("sort", sortBox || "");
-                params.set("pageSize", pageSize || "");
-                params.set("page", currentPage);
+                if (searchBox) {
+                    params.set("keySearch", searchBox);
+                } else {
+                    params.delete("keySearch");
+                }
 
-                window.location.search = params.toString();
+                if (staffFilter !== "0") {
+                    params.set("roleID", staffFilter);
+                } else {
+                    params.delete("roleID");
+                }
+
+                if (ratingFilter !== "0") {
+                    params.set("rating", ratingFilter);
+                } else {
+                    params.delete("rating");
+                }
+
+                if (sortBox !== "0") {
+                    params.set("sort", sortBox);
+                } else {
+                    params.delete("sort");
+                }
+
+                if (pageSize !== "5") {
+                    params.set("pageSize", pageSize);
+                } else {
+                    params.delete("pageSize");
+                }
+
+                if (params.toString()) {
+                    params.set("page", "1");
+                } else {
+                    params.delete("page");
+                }
+
+                const newUrl = params.toString() ? "?" + params.toString() : window.location.pathname;
+                window.history.pushState({}, "", newUrl);
+                window.location.reload();
             }
 
             document.getElementById("searchBox").addEventListener("input", function () {
@@ -298,7 +325,6 @@
 
             document.getElementById("staffFilter").addEventListener("change", updateFilter);
             document.getElementById("ratingFilter").addEventListener("change", updateFilter);
-            document.getElementById("dateFilter").addEventListener("change", updateFilter);
             document.getElementById("sortBox").addEventListener("change", updateFilter);
             document.getElementById("itemsPerPage").addEventListener("change", updateFilter);
 
@@ -307,7 +333,14 @@
                 pageLink.addEventListener("click", function (event) {
                     event.preventDefault();
                     let params = new URLSearchParams(window.location.search);
-                    params.set("page", this.textContent.trim()); // Cập nhật số trang
+                    let pageText = this.textContent.trim().toLowerCase();
+                    if (pageText === "first") {
+                        params.set("page", "1");  // Nếu click vào "First" → page = 1
+                    } else if (pageText === "last") {
+                        params.set("page", "${num}"); // Nếu click vào "Last" → page = num
+                    } else {
+                        params.set("page", pageText); // Các trang số bình thường
+                    }
                     window.location.search = params.toString();
                 });
             });

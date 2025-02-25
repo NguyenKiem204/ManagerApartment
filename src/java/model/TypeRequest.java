@@ -23,4 +23,5 @@ import lombok.experimental.FieldDefaults;
 public class TypeRequest {
     int typeRqID;
     String typeName;
+    Staff staff;
 }

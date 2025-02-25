@@ -4,7 +4,6 @@
  */
 package controller.owner;
 
-import com.oracle.wls.shaded.org.apache.xalan.transformer.MsgMgr;
 import dao.ApartmentDAO;
 import dao.RequestDAO;
 import dao.StaffDAO;
@@ -167,7 +166,7 @@ public class RequestServlet extends HttpServlet {
         try {
             typerq = Integer.parseInt(typerq_raw);
             Apartment apartment = apartmentDAO.getApartmentByName(apartmentName);
-            Request rq = new Request(description, title, LocalDate.now(), statusRequestDAO.selectById(1), staffDAO.selectById(1), resident, typeRequestDAO.selectById(typerq), apartmentDAO.getApartmentByName(apartmentName));
+            Request rq = new Request(description, title, LocalDate.now(), statusRequestDAO.selectById(1), resident, typeRequestDAO.selectById(typerq), apartmentDAO.getApartmentByName(apartmentName));
             System.out.println(rq.toString());
             int row = rqDAO.insert(rq);
             if (row != 0) {

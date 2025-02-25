@@ -1,9 +1,3 @@
-<%-- 
-    Document   : requestadministrative
-    Created on : Feb 11, 2025, 5:19:31 AM
-    Author     : admin
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -184,7 +178,7 @@
         </style>
     </head>
     <body>
-        <%@include file="menumanager.jsp" %>
+        <%@include file="home.jsp" %>
         <div id="main">
             <div class="container">
                 <h2>Resident Requests Dashboard</h2>
@@ -196,7 +190,7 @@
                         <div class="filter-row">
                             <select id="staffFilter">
                                 <option value="0">Filter by Type Request</option>
-                                <c:forEach var="typerq" items="${listTypeRq}">
+                                <c:forEach var="typerq" items="${listTypeRq}" begin="2" end="3">
                                     <option value="${typerq.typeRqID}" ${param.typeRequestID == typerq.typeRqID ? 'selected' : ''}>${typerq.typeName}</option>
                                 </c:forEach>
                             </select>
@@ -329,67 +323,35 @@
         </div>
 
         <script>
-            function updateStatus(element) {
-                const requestID = element.getAttribute("data-id");
-                let statusID = parseInt(element.getAttribute("data-status-id"));
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll(".status").forEach(item => {
+                    item.addEventListener("click", function () {
+                        const requestID = this.getAttribute("data-id");
+                        let statusID = parseInt(this.getAttribute("data-status-id"));
 
-                // Nếu trạng thái là Pending, hiển thị các nút Duyệt và Không Duyệt
-                if (statusID === 1) {
-                    document.getElementById("actionButtons-" + requestID).style.display = "block";
-                    return; // Không tiếp tục xử lý vì đã có hành động ở đây
-                }
+                        if (statusID === 2) { // Nếu đang là Processing
+                            updateStatusToResolved(requestID, this);
+                        }
+                    });
+                });
+            });
 
-                // Logic chuyển trạng thái cho các trạng thái khác
-                if (statusID === 2) {
-                    statusID = 3; // Processing → Resolved
-                } else {
-                    return; // Nếu đã là Resolved (3), không làm gì cả
-                }
-
-                // Gửi AJAX cập nhật trạng thái
+            function updateStatusToResolved(requestID, element) {
                 fetch('${pageContext.request.contextPath}/manager/updateRequestStatus', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({id: requestID, statusID: statusID})
+                    body: JSON.stringify({id: requestID, statusID: 3}) // Chuyển thành Resolved
                 })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                element.setAttribute("data-status-id", statusID);
-                                updateStatusDisplay(element, statusID);
-                            } else {
-                                alert("Lỗi cập nhật trạng thái!");
-                            }
-                        })
-                        .catch(error => console.error('Lỗi:', error));
-            }
-            function approveRequest(requestID) {
-                // Cập nhật trạng thái thành Processing khi "Duyệt"
-                updateRequestStatus(requestID, 2);
-            }
-
-            function rejectRequest(requestID) {
-                // Cập nhật trạng thái thành Cancel khi "Không Duyệt"
-                updateRequestStatus(requestID, 4); // Giả sử 4 là trạng thái Cancel
-            }
-
-            function updateRequestStatus(requestID, statusID) {
-                fetch('${pageContext.request.contextPath}/manager/updateRequestStatus', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({id: requestID, statusID: statusID})
-                })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                const statusElement = document.querySelector(`[data-id='${requestID}']`);
-                                statusElement.setAttribute("data-status-id", statusID);
-                                updateStatusDisplay(statusElement, statusID);
-                                document.getElementById("actionButtons-" + requestID).style.display = "none"; // Ẩn các nút sau khi lựa chọn
+                                element.setAttribute("data-status-id", 3);
+                                element.innerText = "Resolved";
+                                element.style.backgroundColor = "#4CAF50";
+                                element.style.border = "2px solid #388E3C";
+                                element.style.boxShadow = "0 0 5px rgba(76, 175, 80, 0.5)";
                             } else {
                                 alert("Lỗi cập nhật trạng thái!");
                             }
@@ -398,18 +360,12 @@
             }
 
             function updateStatusDisplay(element, statusID) {
-                if (statusID === 1) {
-                    element.innerText = "Pending";
-                    element.style.backgroundColor = "#FF5722";
-                } else if (statusID === 2) {
+                if (statusID === 2) {
                     element.innerText = "Processing";
                     element.style.backgroundColor = "#03A9F4";
                 } else if (statusID === 3) {
                     element.innerText = "Resolved";
                     element.style.backgroundColor = "#4CAF50";
-                } else if (statusID === 4) {
-                    element.innerText = "Canceled";
-                    element.style.backgroundColor = "#B0BEC5"; // Màu xám cho trạng thái hủy
                 }
             }
         </script>
@@ -423,43 +379,43 @@
                 const dateFilter = document.getElementById("dateFilter").value;
                 const sortBox = document.getElementById("sortBox").value;
                 const pageSize = document.getElementById("itemsPerPage").value;
-                
+
                 if (searchBox) {
                     params.set("keySearch", searchBox);
                 } else {
                     params.delete("keySearch");
                 }
-                
+
                 if (staffFilter !== "0") {
                     params.set("typeRequestID", staffFilter);
                 } else {
                     params.delete("typeRequestID");
                 }
-                
+
                 if (statusFilter !== "0") {
                     params.set("status", statusFilter);
                 } else {
                     params.delete("status");
                 }
-                
+
                 if (dateFilter) {
                     params.set("date", dateFilter);
                 } else {
                     params.delete("date");
                 }
-                
+
                 if (sortBox !== "0") {
                     params.set("sort", sortBox);
                 } else {
                     params.delete("sort");
                 }
-                
+
                 if (pageSize !== "5") {
                     params.set("pageSize", pageSize);
                 } else {
                     params.delete("pageSize");
                 }
-                
+
                 if (params.toString()) {
                     params.set("page", "1");
                 } else {

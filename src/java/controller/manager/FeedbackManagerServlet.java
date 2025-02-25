@@ -64,29 +64,7 @@ public class FeedbackManagerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
               throws ServletException, IOException {
         FeedbackDAO fbDAO = new FeedbackDAO();
-        List<Feedback> list = fbDAO.selectAll();
-
-        try {
-            // Lấy tham số từ request
-            String keySort_raw = request.getParameter("sort");
-            String keySearch = request.getParameter("keySearch");
-            String roleID_raw = request.getParameter("roleID");
-            String rating_raw = request.getParameter("rating");
-            String date_raw = request.getParameter("date");
-
-            // Chuyển đổi giá trị, xử lý null và exception
-            int roleID = (roleID_raw != null && !roleID_raw.isEmpty()) ? Integer.parseInt(roleID_raw) : 0;
-            int rating = (rating_raw != null && !rating_raw.isEmpty()) ? Integer.parseInt(rating_raw) : 0;
-            int keySort = (keySort_raw != null && !keySort_raw.isEmpty()) ? Integer.parseInt(keySort_raw) : 0;
-            LocalDate date = (date_raw != null && !date_raw.isEmpty()) ? LocalDate.parse(date_raw) : null;
-
-            // Nếu có tham số lọc, thực hiện tìm kiếm
-            if (keySearch != null || roleID != 0 || rating != 0 || date != null || keySort != 0) {
-                list = fbDAO.getAllFeedbacksBySearchOrFilterOrSort(keySearch, roleID, rating, date, keySort);
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Loi o exception!");
-        }
+        List<Feedback> listFirstPage = fbDAO.selectFirstPage();
 
         //Phân trang
         // Lấy tham số từ request
@@ -96,7 +74,7 @@ public class FeedbackManagerServlet extends HttpServlet {
         // Khai báo biến
         int page = 1; // Trang mặc định
         int pageSize = 5; // Giá trị mặc định nếu không có tham số pageSize
-        int size = list.size();
+        int size = fbDAO.selectAll().size();
         int num = 1;
 
         try {
@@ -122,12 +100,35 @@ public class FeedbackManagerServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             System.out.println("Lỗi parse số: " + e.getMessage());
             page = 1;
+            pageSize = 5;
         }
 
-        List<Feedback> listPage = fbDAO.getListByPage(page, pageSize);
-        for (Feedback feedback : listPage) {
-            System.out.println(feedback.toString());
+        try {
+            // Lấy tham số từ request
+            String keySort_raw = request.getParameter("sort");
+            String keySearch_raw = request.getParameter("keySearch");
+            String roleID_raw = request.getParameter("roleID");
+            String rating_raw = request.getParameter("rating");
+
+            // Chuyển đổi giá trị, xử lý null và exception
+            int roleID = (roleID_raw != null && !roleID_raw.isEmpty()) ? Integer.parseInt(roleID_raw) : 0;
+            int rating = (rating_raw != null && !rating_raw.isEmpty()) ? Integer.parseInt(rating_raw) : 0;
+            int keySort = (keySort_raw != null && !keySort_raw.isEmpty()) ? Integer.parseInt(keySort_raw) : 0;
+            String keySearch = (keySearch_raw != null) ? keySearch_raw.replaceAll("\\s+", " ").trim() : null;
+            if (keySearch != null && keySearch.isEmpty()) {
+                keySearch = null;
+            }
+
+// Nếu có tham số lọc, thực hiện tìm kiếm
+            if (keySearch_raw != null || roleID != 0 || rating != 0 || keySort != 0 || xpage != null) {
+                listFirstPage = fbDAO.getAllFeedbacksBySearchOrFilterOrSort(keySearch, roleID, rating, keySort, page, pageSize);
+                int numberOfLine = fbDAO.getNumberOfFeedbacksBySearchOrFilterOrSort(keySearch, roleID, rating, keySort);
+                num = (numberOfLine % pageSize == 0) ? (numberOfLine / pageSize) : (numberOfLine / pageSize + 1);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Loi o exception!");
         }
+
         request.setAttribute("page", page);
         request.setAttribute("num", num);
         //send list role of staff for feedback of manager
@@ -135,7 +136,7 @@ public class FeedbackManagerServlet extends HttpServlet {
         List<Role> listrole = rdao.selectAll();
         request.setAttribute("listrole", listrole);
 
-        request.setAttribute("listfb", listPage);
+        request.setAttribute("listfb", listFirstPage);
         request.getRequestDispatcher("/manager/feedback.jsp").forward(request, response);
     }
 
