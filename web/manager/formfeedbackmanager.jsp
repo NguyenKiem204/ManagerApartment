@@ -143,7 +143,7 @@
             </div>
         </div>
     </body>
-    <script>
+    <script type="text/javascript">
         function loadNamesAndRatings() {
             const position = document.getElementById("position").value;
             const monthYear = document.getElementById("feedback-month").value;
@@ -200,44 +200,27 @@
 //                                console.log(typeof data.feedbackList[0].rate);   // Phải là "number"
 //                                console.log(typeof data.feedbackList[0].date);   // Phải là "string"
 
-if (Array.isArray(data.feedbackList) && data.feedbackList.length > 0) {
-    console.log("Rendering feedback list...");
-} else {
-    console.log("Feedback list is empty!");
-}
+                            if (Array.isArray(data.feedbackList) && data.feedbackList.length > 0) {
+                                console.log("Rendering feedback list...");
+                            } else {
+                                console.log("Feedback list is empty!");
+                            }
                             console.table(data.feedbackList);
 
-                            if (Array.isArray(data.feedbackList) && data.feedbackList.length > 0) {
-                                const rows = data.feedbackList.map((fb, index) => {
-                                    if (Array.isArray(data.feedbackList) && data.feedbackList.length > 0) {
-                                const rows = data.feedbackList.map((fb, index) => {
-                                    console.log(`Rendering row ` + index +`:`, fb);  // 🛠 In từng phần tử ra console
-
-                                    return `<tr>
-                    <td>${index + 1}</td>
-                    <td>${fb.title || "No Title"}</td>
-                    <td>${fb.rate || "N/A"} ⭐</td>
-                    <td>${fb.date || "No Date"}</td>
-                </tr>`;
-                                }).join("");
-
-                                document.getElementById("feedback-list").innerHTML = rows;
-                            } else {
-                                document.getElementById("feedback-list").innerHTML = `<tr><td colspan="4" style="text-align:center;">No feedback available</td></tr>`;
-                            }  // 🛠 In từng phần tử ra console
-
-                                    return `<tr>
-                    <td>${index + 1}</td>
-                    <td>${fb.title || "No Title"}</td>
-                    <td>${fb.rate || "N/A"} ⭐</td>
-                    <td>${fb.date || "No Date"}</td>
-                </tr>`;
-                                }).join("");
-
-                                document.getElementById("feedback-list").innerHTML = rows;
-                            } else {
-                                document.getElementById("feedback-list").innerHTML = `<tr><td colspan="4" style="text-align:center;">No feedback available</td></tr>`;
-                            }
+                            if (data.feedbackList && data.feedbackList.length > 0) {
+                data.feedbackList.forEach((fb, index) => {
+//                    console.log(`Rendering row ` + fb.title);
+                    index++;
+                    feedbackListElement.innerHTML +=`<tr>
+                        <td>`+ index +`</td>
+                        <td>`+fb.title +`</td>
+                        <td>`+fb.rate+`</td>
+                        <td>`+fb.date+`</td>
+                    </tr>`;
+                });
+            } else {
+                feedbackListElement.innerHTML = `<tr><td colspan="4" style="text-align:center;">No feedback available</td></tr>`;
+            }// 🛠 In từng phần tử ra console
 
                         })
                         .catch(error => console.error('Error:', error));
