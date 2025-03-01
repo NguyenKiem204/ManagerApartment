@@ -1,4 +1,11 @@
-/dist/
-/nbproject/private/
-/build/
-/.idea/
+nbproject/private/
+nbproject/build-impl.xml
+nbproject/genfiles.properties
+build/
+dist/
+build/web/WEB-INF/classes/
+build/generated-sources/
+build/generated-web-pages/
+build/web/META-INF/
+*.war
+*.class
