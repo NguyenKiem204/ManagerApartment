@@ -15,6 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Feedback;
 import java.sql.*;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -112,7 +115,7 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         }
         return null;
     }
-    
+
     public List<Feedback> selectFirstPage() {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedback ORDER BY [FeedbackID] OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY";
@@ -186,7 +189,6 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
 //                params.add(Date.valueOf(date));
 //            }
 //------------------------------------------
-
             //Xu ly sort
             if (keySort != 0) {
                 switch (keySort) {
@@ -235,7 +237,7 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         }
         return list;
     }
-    
+
     public int getNumberOfFeedbacksBySearchOrFilterOrSort(String keySearch,
               int roleID, int rating, int keySort) {
         List<Feedback> list = new ArrayList<>();
@@ -284,7 +286,6 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
 //                params.add(Date.valueOf(date));
 //            }
 //------------------------------------------
-
             //Xu ly sort
             if (keySort != 0) {
                 switch (keySort) {
@@ -340,5 +341,101 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             Logger.getLogger(ImageDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return latestFeedbackID;
+    }
+
+    public List<Feedback> getFeedbackByMonthYearAndStaffID(LocalDate monthYear, int staffID) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = """
+                    SELECT [FeedbackID], [Title], [Description], [Date], [Rate], [StaffID], [ResidentID]
+                    FROM [ApartmentManagement].[dbo].[Feedback]
+                    WHERE StaffID = ? 
+                    AND FORMAT([Date], 'yyyy-MM') = ?
+                    ORDER BY [Date] DESC;""";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, staffID);
+            String formattedMonthYear = monthYear.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            ps.setObject(2, formattedMonthYear);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback fb = new Feedback(
+                          rs.getInt("FeedbackID"),
+                          rs.getString("Title"),
+                          rs.getString("Description"),
+                          rs.getDate("Date").toLocalDate(),
+                          rs.getInt("Rate"),
+                          staff.selectById(rs.getInt("StaffID")),
+                          resident.selectById(rs.getInt("ResidentID"))
+                );
+                list.add(fb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public int getPositiveFeedback(int position, LocalDate monthYear) {
+        List<Feedback> list = getFeedbackByMonthYearAndStaffID(monthYear, position);
+
+        if (list.isEmpty()) {
+            return 0; // Trả về 0 nếu không có feedback nào
+        }
+
+        // Đếm số feedback có rating từ 3 đến 5 (positive feedback)
+        long positiveCount = list.stream().filter(fb -> fb.getRate() >= 3).count();
+
+        // Tính phần trăm feedback positive
+        double percentage = (positiveCount * 100.0) / list.size();
+
+        return (int) Math.round(percentage);
+    }
+    
+    public Map<String, Object> getFeedbackSummary(int position, LocalDate monthYear) {
+        Map<String, Object> feedbackSummary = new HashMap<>();
+
+        List<Feedback> feedbackList = getFeedbackByMonthYearAndStaffID(monthYear, position);
+
+        if (feedbackList.isEmpty()) {
+            // Nếu không có feedback, trả về giá trị mặc định "N/A"
+            feedbackSummary.put("totalFeedback", "N/A");
+            feedbackSummary.put("avgRating", "N/A");
+            feedbackSummary.put("positiveFeedback", "N/A");
+            feedbackSummary.put("negativeFeedback", "N/A");
+            feedbackSummary.put("feedbackList", "N/A");
+            return feedbackSummary;
+        }
+
+        // Tính tổng số feedback
+        int totalFeedback = feedbackList.size();
+
+        // Tính tổng rating và số lượng feedback
+        double totalRating = 0;
+        int positiveCount = 0;
+
+        for (Feedback feedback : feedbackList) {
+            totalRating += feedback.getRate();
+            if (feedback.getRate() >= 3) {
+                positiveCount++;
+            }
+        }
+
+        // Tính trung bình rating (làm tròn 1 chữ số thập phân)
+        double avgRating = Math.round((totalRating / totalFeedback) * 10.0) / 10.0;
+
+        // Tính phần trăm feedback tích cực
+        int positiveFeedback = (int) Math.round((positiveCount * 100.0) / totalFeedback);
+
+        // Tính phần trăm feedback tiêu cực
+        int negativeFeedback = 100 - positiveFeedback;
+
+        // Lưu vào Map kết quả
+        feedbackSummary.put("totalFeedback", totalFeedback);
+        feedbackSummary.put("avgRating", avgRating);
+        feedbackSummary.put("positiveFeedback", positiveFeedback);
+        feedbackSummary.put("negativeFeedback", negativeFeedback);
+        feedbackSummary.put("feedbackList", feedbackList);
+
+        return feedbackSummary;
     }
 }

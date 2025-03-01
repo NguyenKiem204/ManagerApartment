@@ -6,6 +6,7 @@ package dao;
 
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import model.Apartment;
@@ -37,13 +38,12 @@ public class Test {
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
         
-        List<ImageFeedback> imageFeedbackList = new ArrayList<>();
-        
-        List<Request> list = requestDAO.selectFirstPage();
-        for (Request request : list) {
-            System.out.println(request.toString());
+        List<Feedback> list = feedbackDAO.getFeedbackByMonthYearAndStaffID(LocalDate.of(2025, 2, 1), 2);
+        for (Feedback feedback : list) {
+            System.out.println(feedback.toString());
         }
-
+        
+        
         // Ví dụ: thêm các đối tượng ImageFeedback vào danh sách
         // Giả sử bạn đã có InputStream từ file và kích thước của ảnh (size)
 //        InputStream imgStream1 = null;  // Thay bằng InputStream thực tế

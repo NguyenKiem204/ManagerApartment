@@ -23,11 +23,16 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ManagerFeedback {
     int managerFeedbackID;
-    int year;
-    int month;
+    LocalDate MonthYear;
     int totalFeedback;
-    double averageRating;
-    String managerComment;
+    double avgRating;
+    double positivePercentage;
+    double negativePercentage;
+    String strengths;
+    String weaknesses;
+    String staffResponse;
+    String actionPlan;
+    LocalDate deadline;
     LocalDate createdAt;
     Staff staff;
 }

@@ -194,7 +194,7 @@ public class FeedbackServlet extends HttpServlet {
             fbDAO.insert(fb);
 
             // Redirect đến trang thành công
-            response.sendRedirect("feedbacksuccess.jsp");
+            response.sendRedirect("feedbacksuccessfull");
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
