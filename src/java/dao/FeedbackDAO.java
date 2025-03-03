@@ -18,6 +18,7 @@ import java.sql.*;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import model.Staff;
 
 /**
  *
@@ -116,11 +117,74 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         return null;
     }
 
+    public List<Feedback> selectAllByRoleIDAndStatus(int roleID) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = """
+                     SELECT [FeedbackID], [Title], [Description], [Date], [Rate], f.StaffID, [ResidentID], s.RoleID
+                                         FROM Feedback f
+                                JOIN Staff s ON f.StaffID = s.StaffID
+                                         WHERE s.RoleID = ? 
+                                         AND s.Status = 'Active';""";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, roleID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback fb = new Feedback(
+                          rs.getInt("FeedbackID"),
+                          rs.getString("Title"),
+                          rs.getString("Description"),
+                          rs.getDate("Date").toLocalDate(),
+                          rs.getInt("Rate"),
+                          staff.selectById(rs.getInt("StaffID")),
+                          resident.selectById(rs.getInt("ResidentID"))
+                );
+                list.add(fb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
     public List<Feedback> selectFirstPage() {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedback ORDER BY [FeedbackID] OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback fb = new Feedback(
+                          rs.getInt("FeedbackID"),
+                          rs.getString("Title"),
+                          rs.getString("Description"),
+                          rs.getDate("Date").toLocalDate(),
+                          rs.getInt("Rate"),
+                          staff.selectById(rs.getInt("StaffID")),
+                          resident.selectById(rs.getInt("ResidentID"))
+                );
+                list.add(fb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public List<Feedback> selectFirstPageOfFormFeedbackStatistic(int roleID) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = """
+                     SELECT f.*
+                     FROM Feedback f
+                     JOIN Staff s ON f.StaffID = s.StaffID
+                     JOIN [Role] r ON s.RoleID = r.RoleID
+                     WHERE s.[Status] = 'Active' 
+                       AND r.RoleID = ?
+                     ORDER BY f.FeedbackID
+                     OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY;""";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, roleID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
@@ -343,16 +407,17 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         return latestFeedbackID;
     }
 
-    public List<Feedback> getFeedbackByMonthYearAndStaffID(LocalDate monthYear, int staffID) {
+    public List<Feedback> getFeedbackByMonthYearAndRoleID(LocalDate monthYear, int roleID) {
         List<Feedback> list = new ArrayList<>();
         String sql = """
-                    SELECT [FeedbackID], [Title], [Description], [Date], [Rate], [StaffID], [ResidentID]
-                    FROM [ApartmentManagement].[dbo].[Feedback]
-                    WHERE StaffID = ? 
-                    AND FORMAT([Date], 'yyyy-MM') = ?
-                    ORDER BY [Date] DESC;""";
+                     SELECT [FeedbackID], [Title], [Description], [Date], [Rate], f.StaffID, [ResidentID], s.RoleID
+                                         FROM Feedback f
+                                         JOIN Staff s ON f.StaffID = s.StaffID
+                                         WHERE s.RoleID = ? 
+                                         AND FORMAT([Date], 'yyyy-MM') = ? AND s.Status = 'Active'
+                                         ORDER BY [Date] DESC;""";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, staffID);
+            ps.setInt(1, roleID);
             String formattedMonthYear = monthYear.format(DateTimeFormatter.ofPattern("yyyy-MM"));
             ps.setObject(2, formattedMonthYear);
 
@@ -376,7 +441,7 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
     }
 
     public int getPositiveFeedback(int position, LocalDate monthYear) {
-        List<Feedback> list = getFeedbackByMonthYearAndStaffID(monthYear, position);
+        List<Feedback> list = getFeedbackByMonthYearAndRoleID(monthYear, position);
 
         if (list.isEmpty()) {
             return 0; // Trả về 0 nếu không có feedback nào
@@ -390,11 +455,11 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
 
         return (int) Math.round(percentage);
     }
-    
+
     public Map<String, Object> getFeedbackSummary(int position, LocalDate monthYear) {
         Map<String, Object> feedbackSummary = new HashMap<>();
 
-        List<Feedback> feedbackList = getFeedbackByMonthYearAndStaffID(monthYear, position);
+        List<Feedback> feedbackList = getFeedbackByMonthYearAndRoleID(monthYear, position);
 
         if (feedbackList.isEmpty()) {
             // Nếu không có feedback, trả về giá trị mặc định "N/A"
@@ -437,5 +502,52 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         feedbackSummary.put("feedbackList", feedbackList);
 
         return feedbackSummary;
+    }
+
+    public int countFeedbackByRole(int roleID, LocalDate monthYear) {
+        String sql = "SELECT COUNT(*) FROM Feedback f "
+                  + "JOIN Staff s ON f.StaffID = s.StaffID "
+                  + "WHERE s.RoleID = ? AND s.Status = 'Active' AND FORMAT(f.Date, 'yyyy-MM') = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, roleID);
+            String formattedMonthYear = monthYear.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            ps.setObject(2, formattedMonthYear);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    public List<Feedback> selectFeedbackByPage(int roleID, int page, int pageSize, LocalDate monthYear) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT f.* FROM Feedback f "
+                  + "JOIN Staff s ON f.StaffID = s.StaffID "
+                  + "WHERE s.RoleID = ? AND s.Status = 'Active' AND FORMAT(f.Date, 'yyyy-MM') = ? "
+                  + "ORDER BY f.FeedbackID "
+                  + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, roleID);
+            String formattedMonthYear = monthYear.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            ps.setObject(2, formattedMonthYear);
+            ps.setInt(3, (page - 1) * pageSize);
+            ps.setInt(4, pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback feedback = new Feedback();
+                feedback.setFeedbackID(rs.getInt("FeedbackID"));
+                feedback.setTitle(rs.getString("Title"));
+                feedback.setDescription(rs.getString("Description"));
+                feedback.setDate(rs.getDate("Date").toLocalDate());
+                feedback.setRate(rs.getInt("Rate"));
+                list.add(feedback);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

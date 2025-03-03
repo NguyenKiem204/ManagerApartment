@@ -13,6 +13,7 @@ import model.Apartment;
 import model.Feedback;
 import model.Image;
 import model.ImageFeedback;
+import model.ManagerFeedback;
 import model.Request;
 import model.Resident;
 import model.Role;
@@ -37,13 +38,12 @@ public class Test {
         RequestDAO requestDAO = new RequestDAO();
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
+        ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
         
-        List<Feedback> list = feedbackDAO.getFeedbackByMonthYearAndStaffID(LocalDate.of(2025, 2, 1), 2);
-        for (Feedback feedback : list) {
-            System.out.println(feedback.toString());
-        }
-        
-        
+        System.out.println(feedbackDAO.countFeedbackByRole(2, LocalDate.of(2025, 2, 2)));
+//        ManagerFeedback t = new ManagerFeedback(LocalDate.now(), 10, 4.3, 82, 18, "Good luck", "Can cai thien nhieu", null, "training more", LocalDate.now().plusDays(3), LocalDate.now(), staffDAO.getStaffByID(2));
+//        managerFeedbackDAO.insert(t);
+       
         // Ví dụ: thêm các đối tượng ImageFeedback vào danh sách
         // Giả sử bạn đã có InputStream từ file và kích thước của ảnh (size)
 //        InputStream imgStream1 = null;  // Thay bằng InputStream thực tế

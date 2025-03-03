@@ -108,4 +108,32 @@ public static String trim(String input) {
         }
         return null;
     }
+    public static boolean isValidTitle(String title) {
+        return title != null && title.matches("^[a-zA-Z0-9 .,!?()-]+$");
+    }
+    
+    // Kiểm tra input có rỗng hoặc chỉ chứa khoảng trắng không
+    public static boolean isEmptyOrWhitespace(String input) {
+        return input == null || input.trim().isEmpty();
+    }
+    
+    // Kiểm tra input có chứa ký tự đặc biệt không
+    public static boolean containsSpecialCharacters(String input) {
+        return input != null && Pattern.compile("[^a-zA-Z0-9\\s]").matcher(input).find();
+    }
+    
+    // Validate deadline: không được chọn ngày trong quá khứ
+    public static boolean validateDeadline(String deadline_raw) {
+        LocalDate deadline = null;
+        try {
+            deadline = LocalDate.parse(deadline_raw);
+        } catch (Exception e) {
+        }
+        return deadline == null || !deadline.isBefore(java.time.LocalDate.now());
+    }
+    
+    // Kiểm tra xem người dùng đã chọn monthyear chưa
+    public static boolean isValidMonthYear(String monthYear) {
+        return monthYear != null && !monthYear.trim().isEmpty();
+    }
 }
