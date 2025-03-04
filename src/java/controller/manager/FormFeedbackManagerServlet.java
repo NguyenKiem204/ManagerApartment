@@ -277,11 +277,11 @@ public class FormFeedbackManagerServlet extends HttpServlet {
                 return;
             }
             // Kiểm tra độ dài strengths
-            if (strengths.length() < 5) {
+            if (cleanTextstr.trim().replaceAll("\\s+", " ").length() < 10) {
                 RoleDAO rdao = new RoleDAO();
                 List<Role> listrole = rdao.selectAll();
                 request.setAttribute("listrole", listrole);
-                request.setAttribute("error", "Please enter strengths more 5 keyword");
+                request.setAttribute("error", "Please enter strengths more 10 keyword");
                 request.getRequestDispatcher("formfeedbackmanager.jsp").forward(request, response);
                 return;
             }
@@ -302,11 +302,11 @@ public class FormFeedbackManagerServlet extends HttpServlet {
             }
 
             // Kiểm tra độ dài weaknesses
-            if (weaknesses.length() < 5) {
+            if (cleanTextstr.trim().replaceAll("\\s+", " ").length() < 10) {
                 RoleDAO rdao = new RoleDAO();
                 List<Role> listrole = rdao.selectAll();
                 request.setAttribute("listrole", listrole);
-                request.setAttribute("error", "Please enter weaknesses more 5 keyword");
+                request.setAttribute("error", "Please enter weaknesses more 10 keyword");
                 request.getRequestDispatcher("formfeedbackmanager.jsp").forward(request, response);
                 return;
             }
