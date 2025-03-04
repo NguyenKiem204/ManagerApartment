@@ -10,8 +10,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import model.Message;
 import model.Resident;
 import model.Staff;
@@ -38,8 +43,8 @@ public class ChatServlet extends HttpServlet {
             ResidentDAO residentDAO = new ResidentDAO();
             MessageDAO messageDAO = new MessageDAO();
 
-            List<Staff> listStaff = staffDAO.selectAll();
-            List<Resident> listResident = residentDAO.selectAll();
+            List<Staff> listStaff = staffDAO.selectAllSortedByLastMessage(currentUserEmail);
+            List<Resident> listResident = residentDAO.selectAllSortedByLastMessage(currentUserEmail);
 
             listStaff.removeIf(s -> s.getEmail().equals(currentUserEmail));
             listResident.removeIf(r -> r.getEmail().equals(currentUserEmail));
@@ -47,6 +52,12 @@ public class ChatServlet extends HttpServlet {
             List<Object> combinedList = new ArrayList<>();
             combinedList.addAll(listStaff);
             combinedList.addAll(listResident);
+
+            Map<String, java.sql.Timestamp> lastMessageMap = messageDAO.getLastMessageTimestamps(currentUserEmail);
+            combinedList.sort(Comparator.comparing(o -> {
+                String email = (o instanceof Staff) ? ((Staff) o).getEmail() : ((Resident) o).getEmail();
+                return lastMessageMap.getOrDefault(email, Timestamp.valueOf("1970-01-01 00:00:00"));
+            }, Comparator.reverseOrder()));
 
             String chatWithEmail = request.getParameter("email");
             Object chatWithUser = null;

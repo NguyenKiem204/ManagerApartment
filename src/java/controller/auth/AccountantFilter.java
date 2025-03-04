@@ -4,7 +4,6 @@
  */
 package controller.auth;
 
-import jakarta.servlet.DispatcherType;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -15,31 +14,32 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.Resident;
+import model.Staff;
 
 /**
  *
  * @author nkiem
  */
-@WebFilter(filterName = "BlockJspHtmlFilter", urlPatterns = {"/*"})
-public class BlockJspHtmlFilter implements Filter {
-
+public class AccountantFilter implements Filter {
+    
     private static final boolean debug = true;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
-
-    public BlockJspHtmlFilter() {
-    }
-
+    
+    public AccountantFilter() {
+    }    
+    
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("BlockJspHtmlFilter:DoBeforeProcessing");
+            log("AccountantFilter:DoBeforeProcessing");
         }
 
         // Write code here to process the request and/or response before
@@ -62,12 +62,12 @@ public class BlockJspHtmlFilter implements Filter {
 	    log(buf.toString());
 	}
          */
-    }
-
+    }    
+    
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("BlockJspHtmlFilter:DoAfterProcessing");
+            log("AccountantFilter:DoAfterProcessing");
         }
 
         // Write code here to process the request and/or response after
@@ -101,25 +101,33 @@ public class BlockJspHtmlFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
-
+        
         if (debug) {
-            log("BlockJspHtmlFilter:doFilter()");
+            log("AccountantFilter:doFilter()");
         }
-
+        
         doBeforeProcessing(request, response);
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpServletRequest rq = (HttpServletRequest) request;
+        HttpServletResponse rs = (HttpServletResponse) response;
+        HttpSession session = rq.getSession(false);
 
-        String requestURI = httpRequest.getRequestURI();
-        System.out.println("Request URI: " + requestURI);
-
-        if ((requestURI.endsWith(".jsp") || requestURI.endsWith(".html"))
-                && request.getDispatcherType() == DispatcherType.REQUEST // Chỉ chặn request từ trình duyệt
-                && !requestURI.endsWith("/error-403.jsp")) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/error-403");
+        Resident resident = (session != null) ? (Resident) session.getAttribute("resident") : null;
+        if (resident != null) {
+            rs.sendRedirect(rq.getContextPath() + "/error-403");
             return;
         }
 
+        Staff staff = (session != null) ? (Staff) session.getAttribute("staff") : null;
+        if (staff == null) {
+            rs.sendRedirect(rq.getContextPath() + "/login");
+            return;
+        }
+
+        Integer roleId = (staff.getRole() != null) ? staff.getRole().getRoleID(): null;
+        if (roleId!=3) {
+            rs.sendRedirect(rq.getContextPath() + "/error-403");
+            return;
+        }
         Throwable problem = null;
         try {
             chain.doFilter(request, response);
@@ -130,7 +138,7 @@ public class BlockJspHtmlFilter implements Filter {
             problem = t;
             t.printStackTrace();
         }
-
+        
         doAfterProcessing(request, response);
 
         // If there was a problem, we want to rethrow it if it is
@@ -165,17 +173,17 @@ public class BlockJspHtmlFilter implements Filter {
     /**
      * Destroy method for this filter
      */
-    public void destroy() {
+    public void destroy() {        
     }
 
     /**
      * Init method for this filter
      */
-    public void init(FilterConfig filterConfig) {
+    public void init(FilterConfig filterConfig) {        
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
-            if (debug) {
-                log("BlockJspHtmlFilter:Initializing filter");
+            if (debug) {                
+                log("AccountantFilter:Initializing filter");
             }
         }
     }
@@ -186,27 +194,27 @@ public class BlockJspHtmlFilter implements Filter {
     @Override
     public String toString() {
         if (filterConfig == null) {
-            return ("BlockJspHtmlFilter()");
+            return ("AccountantFilter()");
         }
-        StringBuffer sb = new StringBuffer("BlockJspHtmlFilter(");
+        StringBuffer sb = new StringBuffer("AccountantFilter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());
     }
-
+    
     private void sendProcessingError(Throwable t, ServletResponse response) {
-        String stackTrace = getStackTrace(t);
-
+        String stackTrace = getStackTrace(t);        
+        
         if (stackTrace != null && !stackTrace.equals("")) {
             try {
                 response.setContentType("text/html");
                 PrintStream ps = new PrintStream(response.getOutputStream());
-                PrintWriter pw = new PrintWriter(ps);
+                PrintWriter pw = new PrintWriter(ps);                
                 pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n"); //NOI18N
 
                 // PENDING! Localize this for next official release
-                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");
-                pw.print(stackTrace);
+                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");                
+                pw.print(stackTrace);                
                 pw.print("</pre></body>\n</html>"); //NOI18N
                 pw.close();
                 ps.close();
@@ -223,7 +231,7 @@ public class BlockJspHtmlFilter implements Filter {
             }
         }
     }
-
+    
     public static String getStackTrace(Throwable t) {
         String stackTrace = null;
         try {
@@ -237,9 +245,9 @@ public class BlockJspHtmlFilter implements Filter {
         }
         return stackTrace;
     }
-
+    
     public void log(String msg) {
-        filterConfig.getServletContext().log(msg);
+        filterConfig.getServletContext().log(msg);        
     }
-
+    
 }

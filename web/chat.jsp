@@ -13,83 +13,86 @@
     </head>
 
     <body>
-        <div class="container">
-            <div class="sidebar">
-                <div class="sidebar-header">
-                    <input placeholder="Tìm kiếm trên Messenger" type="text" />
-                    <i class="fas fa-search"> </i>
+        <%@include file="manager/menumanager.jsp" %>
+        <div id="main">
+            <div class="container">
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <input placeholder="Tìm kiếm trên Messenger" type="text" />
+                        <i class="fas fa-search"> </i>
+                    </div>
+                    <div class="sidebar-content">
+                        <c:forEach var="user" items="${list}">
+                            <a href="chat?email=${user.email}">
+                                <div class="contact ${user.email == chatwith.email ? 'active' : ''}">
+                                    <img alt="Profile picture of ${user.fullName}" height="40" src="<%= request.getContextPath() %>/${user.image.imageURL}"
+                                         width="40" />
+                                    <div>
+                                        <div class="name">${user.fullName}</div>
+                                        <div class="time">
+                                            <c:choose>
+                                                <c:when test="${user.lastMessage != null}">
+                                                    ${user.lastMessage}
+                                                </c:when>
+                                                <c:otherwise>
+                                                    Bắt đầu cuộc trò chuyện
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </c:forEach>
+                    </div>
                 </div>
-                <div class="sidebar-content">
-                    <c:forEach var="user" items="${list}">
-                        <a href="chat?email=${user.email}">
-                            <div class="contact ${user.email == chatwith.email ? 'active' : ''}">
-                                <img alt="Profile picture of ${user.fullName}" height="40" src="<%= request.getContextPath() %>/${user.image.imageURL}"
-                                     width="40" />
+                <div class="chat-area">
+                    <div class="chat-header">
+                        <c:if test="${not empty chatwith}">
+                            <c:set var="user" value="${chatwith}" />
+                            <div class="user-info">
+                                <img alt="Profile picture of ${user.fullName}" height="40" 
+                                     src="<%= request.getContextPath() %>/${user.image.imageURL}" width="40" />
                                 <div>
-                                    <div class="name">${user.fullName}</div>
-                                    <div class="time">
-                                        <c:choose>
-                                            <c:when test="${user.lastMessage != null}">
-                                                ${user.lastMessage}
-                                            </c:when>
-                                            <c:otherwise>
-                                                Bắt đầu cuộc trò chuyện
-                                            </c:otherwise>
-                                        </c:choose>
+                                    ${user.fullName} 
+                                    <c:if test="${chatwithType == 'staff'}">(Staff)</c:if>
+                                    <c:if test="${chatwithType == 'resident'}">(Resident)</c:if>
+                                    </div>
+                                    <input type="hidden" id="emailSend" name="emailSend"
+                                           value="${sessionScope.staff != null ? sessionScope.staff.email : sessionScope.resident.email}" />
+                                <input type="hidden" id="emailRecieved" name="emailRecieved" value="${user.email}" />
+                            </div>
+                            <div>
+                                <i class="fas fa-phone"></i>
+                                <i class="fas fa-video"></i>
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                        </c:if>
+                    </div>
+
+
+                    <div class="chat-content" id="chat-content">
+                        <c:forEach var="message" items="${messageHistory}">
+                            <c:set var="currentUserEmail" value="${sessionScope.staff != null ? sessionScope.staff.email : sessionScope.resident.email}" />
+                            <div class="message ${message.senderEmail eq currentUserEmail ? 'sent' : 'received'}">
+                                <c:if test="${message.senderEmail ne currentUserEmail}">
+                                    <img alt="Profile picture" class="avatar" height="30"
+                                         src="<%= request.getContextPath() %>/${chatwith.image.imageURL}" width="30" />
+                                </c:if>
+                                <div>
+                                    <div class="text">${message.messageText}</div>
+                                    <div class="${message.senderEmail eq currentUserEmail ? 'time-right' : 'time-left'}">
+                                        ${message.formattedDate}
                                     </div>
                                 </div>
                             </div>
-                        </a>
-                    </c:forEach>
-                </div>
-            </div>
-            <div class="chat-area">
-                <div class="chat-header">
-                    <c:if test="${not empty chatwith}">
-                        <c:set var="user" value="${chatwith}" />
-                        <div class="user-info">
-                            <img alt="Profile picture of ${user.fullName}" height="40" 
-                                 src="<%= request.getContextPath() %>/${user.image.imageURL}" width="40" />
-                            <div>
-                                ${user.fullName} 
-                                <c:if test="${chatwithType == 'staff'}">(Staff)</c:if>
-                                <c:if test="${chatwithType == 'resident'}">(Resident)</c:if>
-                                </div>
-                                <input type="hidden" id="emailSend" name="emailSend"
-                                       value="${sessionScope.staff != null ? sessionScope.staff.email : sessionScope.resident.email}" />
-                            <input type="hidden" id="emailRecieved" name="emailRecieved" value="${user.email}" />
-                        </div>
-                        <div>
-                            <i class="fas fa-phone"></i>
-                            <i class="fas fa-video"></i>
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                    </c:if>
-                </div>
-
-
-                <div class="chat-content" id="chat-content">
-                    <c:forEach var="message" items="${messageHistory}">
-                        <c:set var="currentUserEmail" value="${sessionScope.staff != null ? sessionScope.staff.email : sessionScope.resident.email}" />
-                        <div class="message ${message.senderEmail eq currentUserEmail ? 'sent' : 'received'}">
-                            <c:if test="${message.senderEmail ne currentUserEmail}">
-                                <img alt="Profile picture" class="avatar" height="30"
-                                     src="<%= request.getContextPath() %>/${chatwith.image.imageURL}" width="30" />
-                            </c:if>
-                            <div>
-                                <div class="text">${message.messageText}</div>
-                                <div class="${message.senderEmail eq currentUserEmail ? 'time-right' : 'time-left'}">
-                                    ${message.formattedDate}
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-                <div class="chat-footer">
-                    <input id="message-input" placeholder="Aa" type="text" />
-                    <button id="send-button" type="button">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                        </c:forEach>
+                    </div>
+                    <div class="chat-footer">
+                        <input id="message-input" placeholder="Aa" type="text" />
+                        <button id="send-button" type="button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -4,7 +4,6 @@
  */
 package controller.auth;
 
-import jakarta.servlet.DispatcherType;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -15,16 +14,17 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.Resident;
+import model.Staff;
 
 /**
  *
  * @author nkiem
  */
-@WebFilter(filterName = "BlockJspHtmlFilter", urlPatterns = {"/*"})
-public class BlockJspHtmlFilter implements Filter {
+public class TenantFilter implements Filter {
 
     private static final boolean debug = true;
 
@@ -33,13 +33,13 @@ public class BlockJspHtmlFilter implements Filter {
     // configured. 
     private FilterConfig filterConfig = null;
 
-    public BlockJspHtmlFilter() {
+    public TenantFilter() {
     }
 
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("BlockJspHtmlFilter:DoBeforeProcessing");
+            log("TenantFilter:DoBeforeProcessing");
         }
 
         // Write code here to process the request and/or response before
@@ -67,7 +67,7 @@ public class BlockJspHtmlFilter implements Filter {
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("BlockJspHtmlFilter:DoAfterProcessing");
+            log("TenantFilter:DoAfterProcessing");
         }
 
         // Write code here to process the request and/or response after
@@ -101,25 +101,33 @@ public class BlockJspHtmlFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
-
         if (debug) {
-            log("BlockJspHtmlFilter:doFilter()");
+            log("TenantFilter:doFilter()");
         }
-
         doBeforeProcessing(request, response);
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
-
-        String requestURI = httpRequest.getRequestURI();
-        System.out.println("Request URI: " + requestURI);
-
-        if ((requestURI.endsWith(".jsp") || requestURI.endsWith(".html"))
-                && request.getDispatcherType() == DispatcherType.REQUEST // Chỉ chặn request từ trình duyệt
-                && !requestURI.endsWith("/error-403.jsp")) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/error-403");
+        
+        HttpServletRequest rq = (HttpServletRequest) request;
+        HttpServletResponse rs = (HttpServletResponse) response;
+        HttpSession session = rq.getSession(false);
+        
+        Staff staff = (session != null) ? (Staff) session.getAttribute("staff") : null;
+        if (staff != null) {
+            rs.sendRedirect(rq.getContextPath() + "/error-403");
             return;
         }
-
+        Resident resident = (session != null) ? (Resident) session.getAttribute("resident") : null;
+        if (resident == null) {
+            rs.sendRedirect(rq.getContextPath() + "/login");
+            return;
+        }
+        
+        Integer roleId = (resident.getRole() != null) ? resident.getRole().getRoleID() : null;
+        if (roleId == null || roleId != 6) {
+            rs.sendRedirect(rq.getContextPath() + "/error-403");
+            return;
+        }
+        
+        // At this point, user is a resident with roleID = 6, so continue the filter chain
         Throwable problem = null;
         try {
             chain.doFilter(request, response);
@@ -130,9 +138,9 @@ public class BlockJspHtmlFilter implements Filter {
             problem = t;
             t.printStackTrace();
         }
-
+        
         doAfterProcessing(request, response);
-
+        
         // If there was a problem, we want to rethrow it if it is
         // a known type, otherwise log it.
         if (problem != null) {
@@ -175,7 +183,7 @@ public class BlockJspHtmlFilter implements Filter {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
             if (debug) {
-                log("BlockJspHtmlFilter:Initializing filter");
+                log("TenantFilter:Initializing filter");
             }
         }
     }
@@ -186,9 +194,9 @@ public class BlockJspHtmlFilter implements Filter {
     @Override
     public String toString() {
         if (filterConfig == null) {
-            return ("BlockJspHtmlFilter()");
+            return ("TenantFilter()");
         }
-        StringBuffer sb = new StringBuffer("BlockJspHtmlFilter(");
+        StringBuffer sb = new StringBuffer("TenantFilter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());

@@ -87,32 +87,31 @@ public class NewsDAO implements DAOInterface<News, Integer> {
         return list;
     }
 
-    public List<News> searchNews(String title, String startDate, String endDate, int page, int pageSize) {
+  public List<News> searchNews(String title, String startDate, String endDate, int page, int pageSize) {
     List<News> list = new ArrayList<>();
     int offset = (page - 1) * pageSize;
-
     StringBuilder sql = new StringBuilder("SELECT * FROM [News] WHERE 1=1");
     List<Object> params = new ArrayList<>();
-
-    boolean hasTitle = title != null && !title.trim().isEmpty();
-    boolean hasStartDate = startDate != null && !startDate.trim().isEmpty();
-    boolean hasEndDate = endDate != null && !endDate.trim().isEmpty();
-
-    if (hasTitle) {
+    
+    if (title != null && !title.trim().isEmpty()) {
         sql.append(" AND Title LIKE ?");
         params.add("%" + title + "%");
     }
-
+    
+    boolean hasStartDate = startDate != null && !startDate.trim().isEmpty();
+    boolean hasEndDate = endDate != null && !endDate.trim().isEmpty();
+    
     if (hasStartDate) {
         sql.append(" AND CAST(SentDate AS DATE) >= ?");
         params.add(startDate);
     }
+    
     if (hasEndDate) {
         sql.append(" AND CAST(SentDate AS DATE) <= ?");
         params.add(endDate);
     }
-
-    // Nếu có điều kiện ngày tháng thì sắp xếp theo độ gần nhất
+    
+    // Modified ordering logic
     if (hasStartDate && hasEndDate) {
         sql.append(" ORDER BY ABS(DATEDIFF(DAY, CAST(SentDate AS DATE), DATEADD(DAY, DATEDIFF(DAY, CAST(? AS DATE), CAST(? AS DATE)) / 2, CAST(? AS DATE))))");
         params.add(startDate);
@@ -124,13 +123,13 @@ public class NewsDAO implements DAOInterface<News, Integer> {
     } else if (hasEndDate) {
         sql.append(" ORDER BY ABS(DATEDIFF(DAY, CAST(SentDate AS DATE), CAST(? AS DATE)))");
         params.add(endDate);
-    } 
-    else if (!hasTitle) {
+    } else {
+        // When neither startDate nor endDate are provided, sort by most recent first
         sql.append(" ORDER BY SentDate DESC");
     }
-
+    
     sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-
+    
     try (Connection connection = DBContext.getConnection(); 
          PreparedStatement ps = connection.prepareStatement(sql.toString())) {
         
@@ -138,9 +137,10 @@ public class NewsDAO implements DAOInterface<News, Integer> {
         for (Object param : params) {
             ps.setObject(paramIndex++, param);
         }
+        
         ps.setInt(paramIndex++, offset);
         ps.setInt(paramIndex++, pageSize);
-
+        
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             News news = new News(
@@ -156,6 +156,7 @@ public class NewsDAO implements DAOInterface<News, Integer> {
     } catch (SQLException ex) {
         Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+    
     return list;
 }
 

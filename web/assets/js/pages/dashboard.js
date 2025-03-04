@@ -37,26 +37,33 @@ var optionsProfileVisit = {
     ],
   },
 };
-let optionsVisitorsProfile = {
-  series: [1506, 257],
-  labels: ["Được thuê", "Trống"],
-  colors: ["#d5460d", "#55c6e8"],
-  chart: {
-    type: "donut",
-    width: "100%",
-    height: "350px",
-  },
-  legend: {
-    position: "bottom",
-  },
-  plotOptions: {
-    pie: {
-      donut: {
-        size: "30%",
+let chartElement = document.getElementById("chart-visitors-profile");
+  let occupied = chartElement.getAttribute("data-occupied");
+  let available = chartElement.getAttribute("data-available");
+
+  let optionsVisitorsProfile = {
+    series: [parseInt(occupied), parseInt(available)], // Chuyển đổi sang số nguyên
+    labels: ["Được thuê", "Trống"],
+    colors: ["#d5460d", "#55c6e8"],
+    chart: {
+      type: "donut",
+      width: "100%",
+      height: "350px",
+    },
+    legend: {
+      position: "bottom",
+    },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: "30%",
+        },
       },
     },
-  },
-};
+  };
+
+  var chart = new ApexCharts(chartElement, optionsVisitorsProfile);
+  chart.render();
 
 var optionsEurope = {
   series: [
@@ -134,10 +141,10 @@ var chartProfileVisit = new ApexCharts(
   document.querySelector("#chart-profile-visit"),
   optionsProfileVisit
 );
-var chartVisitorsProfile = new ApexCharts(
-  document.getElementById("chart-visitors-profile"),
-  optionsVisitorsProfile
-);
+//var chartVisitorsProfile = new ApexCharts(
+//  document.getElementById("chart-visitors-profile"),
+//  optionsVisitorsProfile
+//);
 var chartEurope = new ApexCharts(
   document.querySelector("#chart-europe"),
   optionsEurope

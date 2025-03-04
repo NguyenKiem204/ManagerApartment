@@ -59,10 +59,11 @@
             </div>
 
             <button type="submit">Log In</button>
-            <div class="social">
-                <div class="go"><img src="./assets/images/logo/logo-google.svg" width="20px" alt="logo-google">
-                    Google</div>
-            </div>
+            <a href="">
+                <div class="social">
+                    <div class="go"><img src="./assets/images/logo/logo-google.svg" width="20px" alt="logo-google">Google</div>
+                </div>
+            </a>
         </form>
 
         <script type="text/javascript">
