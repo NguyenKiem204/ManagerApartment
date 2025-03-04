@@ -97,32 +97,70 @@
                 font-weight: bold;
                 display: inline-block;
                 text-align: center;
-                min-width: 100px;
+                min-width: 120px;
                 color: white;
             }
 
-            .status[data-status-id="1"] { /* Pending */
-                background-color: #FF5722; /* Cam đậm */
-                border: 2px solid #E64A19;
-                box-shadow: 0 0 5px rgba(255, 87, 34, 0.5);
+            /* Pending */
+            .status[data-status-id="1"] {
+                background-color: #FF5722; /* Dark Orange */
+                border-color: #E64A19;
+                box-shadow: 0 0 8px rgba(255, 87, 34, 0.6);
             }
 
-            .status[data-status-id="2"] { /* Processing */
-                background-color: #03A9F4; /* Xanh dương sáng */
-                border: 2px solid #0288D1;
-                box-shadow: 0 0 5px rgba(3, 169, 244, 0.5);
+            /* Assigned */
+            .status[data-status-id="2"] {
+                background-color: #FFC107; /* Amber */
+                border-color: #FFA000;
+                box-shadow: 0 0 8px rgba(255, 193, 7, 0.6);
             }
 
-            .status[data-status-id="3"] { /* Resolved */
-                background-color: #4CAF50; /* Xanh lá đậm */
-                border: 2px solid #388E3C;
-                box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+            /* In Progress */
+            .status[data-status-id="3"] {
+                background-color: #03A9F4; /* Bright Blue */
+                border-color: #0288D1;
+                box-shadow: 0 0 8px rgba(3, 169, 244, 0.6);
             }
 
-            .status[data-status-id="4"] { /* Canceled */
-                background-color: #B0BEC5; /* Màu xám cho trạng thái hủy */
-                border: 2px solid #78909C;
-                box-shadow: 0 0 5px rgba(176, 190, 197, 0.5);
+            /* Completed */
+            .status[data-status-id="4"] {
+                background-color: #4CAF50; /* Green */
+                border-color: #388E3C;
+                box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+            }
+
+            /* Expired */
+            .status[data-status-id="5"] {
+                background-color: #9E9E9E; /* Gray */
+                border-color: #757575;
+                box-shadow: 0 0 8px rgba(158, 158, 158, 0.6);
+            }
+
+            /* Reopened */
+            .status[data-status-id="6"] {
+                background-color: #E91E63; /* Pink */
+                border-color: #C2185B;
+                box-shadow: 0 0 8px rgba(233, 30, 99, 0.6);
+            }
+
+            /* Resolved */
+            .status[data-status-id="7"] {
+                background-color: #673AB7; /* Purple */
+                border-color: #512DA8;
+                box-shadow: 0 0 8px rgba(103, 58, 183, 0.6);
+            }
+
+            .status[data-status-id="8"] {
+                background-color: #B0BEC5; /* Xám nhạt */
+                border-color: #78909C;
+                box-shadow: 0 0 8px rgba(176, 190, 197, 0.6);
+            }
+            
+            /* Default (Unknown) */
+            .status[data-status-id="0"] {
+                background-color: #607D8B; /* Blue Gray */
+                border-color: #455A64;
+                box-shadow: 0 0 8px rgba(96, 125, 139, 0.6);
             }
 
             .filter-container {
@@ -340,8 +378,8 @@
                 }
 
                 // Logic chuyển trạng thái cho các trạng thái khác
-                if (statusID === 2) {
-                    statusID = 3; // Processing → Resolved
+                if (statusID === 6) {
+                    statusID = 2; // Reopened → Assigned
                 } else {
                     return; // Nếu đã là Resolved (3), không làm gì cả
                 }
@@ -372,7 +410,7 @@
 
             function rejectRequest(requestID) {
                 // Cập nhật trạng thái thành Cancel khi "Không Duyệt"
-                updateRequestStatus(requestID, 4); // Giả sử 4 là trạng thái Cancel
+                updateRequestStatus(requestID, 8); // Giả sử 8 là trạng thái Cancel
             }
 
             function updateRequestStatus(requestID, statusID) {
@@ -385,33 +423,62 @@
                 })
                         .then(response => response.json())
                         .then(data => {
+                            console.log("Response Data:", data); // Debugging
                             if (data.success) {
+                                window.location.reload();
                                 const statusElement = document.querySelector(`[data-id='${requestID}']`);
                                 statusElement.setAttribute("data-status-id", statusID);
                                 updateStatusDisplay(statusElement, statusID);
                                 document.getElementById("actionButtons-" + requestID).style.display = "none"; // Ẩn các nút sau khi lựa chọn
+
                             } else {
-                                alert("Lỗi cập nhật trạng thái!");
+                                alert("Failed to update status: ");
                             }
                         })
                         .catch(error => console.error('Lỗi:', error));
             }
 
             function updateStatusDisplay(element, statusID) {
-                if (statusID === 1) {
-                    element.innerText = "Pending";
-                    element.style.backgroundColor = "#FF5722";
-                } else if (statusID === 2) {
-                    element.innerText = "Processing";
-                    element.style.backgroundColor = "#03A9F4";
-                } else if (statusID === 3) {
-                    element.innerText = "Resolved";
-                    element.style.backgroundColor = "#4CAF50";
-                } else if (statusID === 4) {
-                    element.innerText = "Canceled";
-                    element.style.backgroundColor = "#B0BEC5"; // Màu xám cho trạng thái hủy
+
+                switch (statusID) {
+                    case 1:
+                        element.innerText = "Pending";
+                        element.style.backgroundColor = "#FF5722";// Orange
+                        break;
+                    case 2:
+                        element.innerText = "Assigned";
+                        element.style.backgroundColor = "#FFC107"; // Amber
+                        break;
+                    case 3:
+                        element.innerText = "In Progress";
+                        element.style.backgroundColor = "#03A9F4"; // Blue
+                        break;
+                    case 4:
+                        element.innerText = "Completed";
+                        element.style.backgroundColor = "#4CAF50"; // Green
+                        break;
+                    case 5:
+                        element.innerText = "Expired";
+                        element.style.backgroundColor = "#9E9E9E"; // Gray
+                        break;
+                    case 6:
+                        element.innerText = "Reopened";
+                        element.style.backgroundColor = "#E91E63"; // Pink
+                        break;
+                    case 7:
+                        element.innerText = "Resolved";
+                        element.style.backgroundColor = "#673AB7"; // Purple
+                        break;
+                    case 8:
+                        element.innerText = "Cancel";
+                        element.style.backgroundColor = "#B0BEC5"; // Purple
+                        break;
+                    default:
+                        element.innerText = "Unknown";
+                        element.style.backgroundColor = "#607D8B"; // Default: Blue Gray
                 }
             }
+
         </script>
         <script>
             function updateFilter() {
@@ -423,43 +490,43 @@
                 const dateFilter = document.getElementById("dateFilter").value;
                 const sortBox = document.getElementById("sortBox").value;
                 const pageSize = document.getElementById("itemsPerPage").value;
-                
+
                 if (searchBox) {
                     params.set("keySearch", searchBox);
                 } else {
                     params.delete("keySearch");
                 }
-                
+
                 if (staffFilter !== "0") {
                     params.set("typeRequestID", staffFilter);
                 } else {
                     params.delete("typeRequestID");
                 }
-                
+
                 if (statusFilter !== "0") {
                     params.set("status", statusFilter);
                 } else {
                     params.delete("status");
                 }
-                
+
                 if (dateFilter) {
                     params.set("date", dateFilter);
                 } else {
                     params.delete("date");
                 }
-                
+
                 if (sortBox !== "0") {
                     params.set("sort", sortBox);
                 } else {
                     params.delete("sort");
                 }
-                
+
                 if (pageSize !== "5") {
                     params.set("pageSize", pageSize);
                 } else {
                     params.delete("pageSize");
                 }
-                
+
                 if (params.toString()) {
                     params.set("page", "1");
                 } else {

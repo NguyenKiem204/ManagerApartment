@@ -74,7 +74,7 @@ public class FeedbackManagerServlet extends HttpServlet {
         // Khai báo biến
         int page = 1; // Trang mặc định
         int pageSize = 5; // Giá trị mặc định nếu không có tham số pageSize
-        int size = fbDAO.selectAll().size();
+        int size = fbDAO.selectAllToCount();
         int num = 1;
 
         try {

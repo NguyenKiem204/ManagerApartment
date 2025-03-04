@@ -91,6 +91,21 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         }
         return list;
     }
+    
+    public int selectAllToCount() {
+        String sql = "SELECT count(*) FROM Feedback";
+        int num = 0;
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                num = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return num;
+    }
 
     @Override
     public Feedback selectById(Integer id) {
@@ -149,7 +164,7 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
 
     public List<Feedback> selectFirstPage() {
         List<Feedback> list = new ArrayList<>();
-        String sql = "SELECT * FROM Feedback ORDER BY [FeedbackID] OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY";
+        String sql = "SELECT * FROM Feedback ORDER BY [FeedbackID] DESC OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -266,7 +281,7 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
                         throw new AssertionError();
                 }
             } else {
-                sql += " ORDER BY FeedbackID";
+                sql += " ORDER BY FeedbackID desc";
             }
 
 //xu ly phan trang
@@ -304,7 +319,7 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
 
     public int getNumberOfFeedbacksBySearchOrFilterOrSort(String keySearch,
               int roleID, int rating, int keySort) {
-        List<Feedback> list = new ArrayList<>();
+        int num = 0;
         String sql = """
                      SELECT [FeedbackID]
                            ,[Title]
@@ -363,7 +378,7 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
                         throw new AssertionError();
                 }
             } else {
-                sql += " ORDER BY FeedbackID";
+                sql += " ORDER BY FeedbackID desc";
             }
 
         } catch (Exception e) {
@@ -375,22 +390,14 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             }
 
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Feedback fb = new Feedback(
-                          rs.getInt("FeedbackID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getDate("Date").toLocalDate(),
-                          rs.getInt("Rate"),
-                          staff.selectById(rs.getInt("StaffID")),
-                          resident.selectById(rs.getInt("ResidentID"))
-                );
-                list.add(fb);
+            if(rs.next()){
+                num =rs.getInt(1);
+                return num;
             }
         } catch (SQLException ex) {
             Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return list.size();
+        return num;
     }
 
     public int getLatestFeedbackID() {

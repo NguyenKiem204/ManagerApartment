@@ -35,7 +35,7 @@ public class TypeRequestDAO implements DAOInterface<TypeRequest, Integer> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    StaffDAO staff = new StaffDAO();
+    RoleDAO roleDAO = new RoleDAO();
 
     @Override
     public List<TypeRequest> selectAll() {
@@ -48,7 +48,7 @@ public class TypeRequestDAO implements DAOInterface<TypeRequest, Integer> {
                 TypeRequest tr = new TypeRequest(
                           rs.getInt("TypeRqID"),
                           rs.getString("TypeName"),
-                          staff.selectById(rs.getInt("StaffID"))
+                          roleDAO.selectById(rs.getInt("RoleID"))
                 );
 
                 list.add(tr);
@@ -69,7 +69,7 @@ public class TypeRequestDAO implements DAOInterface<TypeRequest, Integer> {
                 if (rs.next()) {
                     typeRequest = new TypeRequest(rs.getInt("TypeRqID"),
                               rs.getString("TypeName"),
-                              staff.selectById(rs.getInt("StaffID"))
+                              roleDAO.selectById(rs.getInt("RoleID"))
                     );
                 }
             }

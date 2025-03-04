@@ -116,6 +116,21 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         return list;
     }
 
+    public int selectAllToCount() {
+        String sql = "SELECT count(*) FROM Request";
+        int num = 0;
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                num = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return num;
+    }
+
     @Override
     public Request selectById(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -385,23 +400,26 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
 
     public List<Request> getAllRequestsBySearchOrFilterOrSortOfStaff(String keySearch,
               int typeRequestID, LocalDate date, int statusID, int keySort,
-              int page, int pageSize, int staffID) {
+              int page, int pageSize, int roleID) {
         List<Request> list = new ArrayList<>();
         String sql = """
                      SELECT [RequestID]
-                        ,[Description]
-                        ,[Title]
-                        ,[Date]
-                        ,r.ResidentID, CompletedAt, ViewedAt
-                        ,res.FullName
-                        ,r.TypeRqID
-                        ,r.StatusID
-                        ,a.ApartmentID
-                        ,a.ApartmentName
-                    FROM [ApartmentManagement].[dbo].[Request] r 
-                        JOIN Apartment a ON r.ApartmentID = a.ApartmentID
-                        JOIN Resident res ON r.ResidentID = res.ResidentID
-                        WHERE 1 = 1""";
+                                                ,r.Description
+                                                ,[Title]
+                                                ,[Date]
+                                                ,r.ResidentID, CompletedAt, ViewedAt
+                                                ,res.FullName
+                                                ,r.TypeRqID
+                                                ,r.StatusID
+                                                ,a.ApartmentID
+                                                ,a.ApartmentName
+                                            FROM [ApartmentManagement].[dbo].[Request] r 
+                                                JOIN Apartment a ON r.ApartmentID = a.ApartmentID
+                                                JOIN Resident res ON r.ResidentID = res.ResidentID
+                        						Join TypeRequest tr on r.TypeRqID = tr.TypeRqID 
+                        						join role ro on tr.RoleID = ro.RoleID 
+                        						join Staff st on st.RoleID = ro.RoleID
+                                                WHERE 1 = 1""";
 
         List<Object> params = new ArrayList<>();
         try {
@@ -419,13 +437,14 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                 params.add(typeRequestID);
             }
 
-            //check rating is null or not
+            //check status is null or not
             if (statusID != 0) {
-                sql += " AND r.StatusID = ?";
+                sql += " AND r.StatusID = ? AND ro.roleID = ? AND st.status = 'Active'";
                 params.add(statusID);
+                params.add(roleID);
             } else {
-                sql += " AND StatusID in (2, 3) AND StaffID = ?";
-                params.add(staffID);
+                sql += " AND StatusID in (2, 3, 4, 5, 6, 7) AND ro.roleID = ? AND st.status = 'Active'";
+                params.add(roleID);
             }
 
             //check date is null or not
@@ -529,7 +548,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
 
             //check rating is null or not
             if (statusID != 0) {
-                sql += " AND r.Stat usID = ?";
+                sql += " AND r.StatusID = ?";
                 params.add(statusID);
             }
 
@@ -571,23 +590,26 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
     }
 
     public int getNumberOfRequestsBySearchOrFilterOrSortOfStaff(String keySearch,
-              int typeRequestID, LocalDate date, int statusID, int keySort, int staffID) {
+              int typeRequestID, LocalDate date, int statusID, int keySort, int roleID) {
         int num = 0;
         String sql = """
                      SELECT [RequestID]
-                                                  ,[Description]
-                                                  ,[Title]
-                                                  ,[Date]
-                                                  ,r.ResidentID, CompletedAt, ViewedAt
-                                                  ,res.FullName
-                                                  ,r.TypeRqID
-                                                  ,r.StatusID
-                                                  ,a.ApartmentID
-                                                  ,a.ApartmentName
-                                              FROM [ApartmentManagement].[dbo].[Request] r 
-                                                JOIN Apartment a ON r.ApartmentID = a.ApartmentID
-                                                JOIN Resident res ON r.ResidentID = res.ResidentID
-                                              WHERE 1 = 1""";
+                            ,r.Description
+                            ,[Title]
+                            ,[Date]
+                            ,r.ResidentID, CompletedAt, ViewedAt
+                            ,res.FullName
+                            ,r.TypeRqID
+                            ,r.StatusID
+                            ,a.ApartmentID
+                            ,a.ApartmentName
+                        FROM [ApartmentManagement].[dbo].[Request] r 
+                            JOIN Apartment a ON r.ApartmentID = a.ApartmentID
+                            JOIN Resident res ON r.ResidentID = res.ResidentID
+                            Join TypeRequest tr on r.TypeRqID = tr.TypeRqID 
+                            join role ro on tr.RoleID = ro.RoleID 
+                            join Staff st on st.RoleID = ro.RoleID
+                        WHERE 1 = 1""";
 
         List<Object> params = new ArrayList<>();
         try {
@@ -607,11 +629,12 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
 
             //check rating is null or not
             if (statusID != 0) {
-                sql += " AND r.StatusID = ?";
+                sql += " AND r.StatusID = ? AND ro.roleID = ? AND st.status = 'Active'";
                 params.add(statusID);
+                params.add(roleID);
             } else {
-                sql += " AND StatusID in (2, 3) AND StaffID = ?";
-                params.add(staffID);
+                sql += " AND StatusID in (2, 3, 4, 5, 6, 7) AND ro.roleID = ? AND st.status = 'Active'";
+                params.add(roleID);
             }
 
             //check date is null or not
@@ -694,16 +717,18 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         return list;
     }
 
-    public List<Request> selectFirstPageOfStaff(int staffID) {
+    public List<Request> selectFirstPageOfStaff(int roleID) {
         List<Request> list = new ArrayList<>();
         String sql = """
                      SELECT * 
-                     FROM Request  
-                     where StatusID in (2, 3) AND StaffID = ? 
-                     ORDER BY [RequestID] OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY""";
+                         FROM Request t Join TypeRequest tr on t.TypeRqID = tr.TypeRqID 
+                     		join role ro on tr.RoleID = ro.RoleID 
+                     		join Staff st on st.RoleID = ro.RoleID
+                         where t.StatusID in (2, 3, 4, 5, 6, 7) AND tr.RoleID = ? AND st.Status = 'Active'
+                         ORDER BY [RequestID] OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY""";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, staffID);
+            ps.setInt(1, roleID);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -734,12 +759,16 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         return list;
     }
 
-    public int numberfLineOStaff(int staffID) {
-        String sql = "SELECT * FROM Request where StatusID in (2, 3) AND StaffID = ?";
+    public int numberfLineOStaff(int roleID) {
+        String sql = """
+                     SELECT * FROM Request r 
+                     join TypeRequest tr on r.TypeRqID = tr.TypeRqID
+                     join Staff st on tr.RoleID = st.RoleID 
+                     where StatusID in (2, 3, 4, 5, 6, 7) AND st.RoleID = ? AND st.Status = 'Active'""";
         int num = 0;
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, staffID);
+            ps.setInt(1, roleID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 num++;
