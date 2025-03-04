@@ -162,6 +162,65 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return list;
     }
+    public int numberResident() {
+    int count = 0;
+    String sql = "SELECT COUNT(*) FROM Resident";
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        if (rs.next()) {
+            count = rs.getInt(1);
+        }
+
+    } catch (SQLException ex) {
+        Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return count;
+}
+
+    public List<Resident> selectAllSortedByLastMessage(String myEmail) {
+    List<Resident> list = new ArrayList<>();
+    String sql = """
+        SELECT r.*, MAX(m.Timestamp) AS LastMessageTime
+        FROM Resident r
+        LEFT JOIN Message m 
+            ON (r.Email = m.SenderEmail OR r.Email = m.ReceiverEmail)
+            AND (m.SenderEmail = ? OR m.ReceiverEmail = ?)
+        GROUP BY r.ResidentID, r.FullName, r.Email, r.PhoneNumber, r.CCCD, 
+                 r.Password, r.DOB, r.Sex, r.Status, r.ImageID, r.RoleID
+        ORDER BY LastMessageTime DESC
+    """;
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, myEmail);
+        ps.setString(2, myEmail);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Resident resident = new Resident(
+                    rs.getInt("ResidentID"),
+                    rs.getString("FullName"),
+                    rs.getString("Password"),
+                    rs.getString("PhoneNumber"),
+                    rs.getString("CCCD"),
+                    rs.getString("Email"),
+                    rs.getDate("DOB").toLocalDate(),
+                    rs.getString("Sex"),
+                    rs.getString("Status"),
+                    imageDAO.selectById(rs.getInt("ImageID")),
+                    roleDAO.selectById(rs.getInt("RoleID"))
+            );
+            list.add(resident);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return list;
+}
+
 
     @Override
     public Resident selectById(Integer id) {

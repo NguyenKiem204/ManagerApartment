@@ -212,7 +212,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            
+
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="fa-solid fa-users-gear"></i>
@@ -287,7 +287,7 @@
 
 
                             <li class="sidebar-item">
-                                <a href="application-chat.html" class="sidebar-link">
+                                <a href="<%= request.getContextPath() %>/chat" class="sidebar-link">
                                     <i class="bi bi-chat-dots-fill"></i>
                                     <span>Messages</span>
                                 </a>
@@ -355,67 +355,75 @@
                     <section class="row">
                         <div class="col-12 col-lg-9">
                             <div class="row">
-                                <div class="scroll-container">
-                                    <button class="scroll-btn left"><i class="fa-solid fa-angle-left"></i></button>
-                                    <div class="row row-btn">
-                                        <div class="col-8 col-lg-5 col-md-8">
-                                            <div class="card">
-                                                <div class="card-body px-3 py-4-5 border-cam">
-                                                    <div class="row">
-                                                        <div class="col-md-5">
-                                                            <img class="fixed-size-img" 
-                                                                 src="<%= request.getContextPath() %>/assets/images/aparts/R.jpg" alt="Chung cư">
-                                                        </div>
-                                                        <div class="col-md-7">
-                                                            <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
-                                                            <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
-                                                            <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
-                                                        </div>
+                                <div class="col-6 col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body px-3 py-4-5 border-cam">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="stats-icon purple">
+                                                        <i class="fa-regular fa-building"></i>
                                                     </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <h6 class="text-muted font-semibold">Số căn hộ</h6>
+                                                    <h6 class="font-extrabold mb-0">${numberApartment}</h6>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-8 col-lg-5 col-md-8">
-                                            <div class="card">
-                                                <div class="card-body px-3 py-4-5 border-cam">
-                                                    <div class="row">
-                                                        <div class="col-md-5" >
-                                                            <img class="fixed-size-img" 
-                                                                 src="<%= request.getContextPath() %>/assets/images/aparts/toab.jpg" alt="Chung cư">
-                                                        </div>
-                                                        <div class="col-md-7">
-                                                            <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
-                                                            <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
-                                                            <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-8 col-lg-5 col-md-8">
-                                            <div class="card">
-                                                <div class="card-body px-3 py-4-5 border-cam">
-                                                    <div class="row">
-                                                        <div class="col-md-5" >
-                                                            <img class="fixed-size-img" 
-                                                                 src="<%= request.getContextPath() %>/assets/images/aparts/toac.jpeg" alt="Chung cư">
-                                                        </div>
-                                                        <div class="col-md-7">
-                                                            <h5 class="text-muted font-semibold">Vinhomes Grand Park</h5>
-                                                            <h6 class="font-extrabold mb-0">Số phòng: 1.506</h6>
-                                                            <h6 class="font-extrabold mb-0">Số cư dân: 3.045</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                     </div>
-                                    <button class="scroll-btn right"><i class="fa-solid fa-angle-right"></i></button>
+                                </div>
+                                <div class="col-6 col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body px-3 py-4-5 border-cam">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="stats-icon blue">
+                                                        <i class="fa-solid fa-people-roof"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <h6 class="text-muted font-semibold">Số cư dân</h6>
+                                                    <h6 class="font-extrabold mb-0">${numberResident}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body px-3 py-4-5 border-cam">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="stats-icon green">
+                                                        <i class="fa-solid fa-file-invoice"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <h6 class="text-muted font-semibold">Hóa đơn</h6>
+                                                    <h6 class="font-extrabold mb-0">600</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body px-3 py-4-5 border-cam">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="stats-icon red">
+                                                        <i class="fa-solid fa-handshake-simple"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <h6 class="text-muted font-semibold">Hợp đồng</h6>
+                                                    <h6 class="font-extrabold mb-0">112</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-
                             <div class="row">
                                 <div class="col-12">
                                     <div class="card border-cam">
@@ -439,9 +447,9 @@
                                                 <div class="col-6">
                                                     <div class="d-flex align-items-center">
                                                         <svg class="bi text-primary" width="32" height="32" fill="blue"
-                                                             style="width: 10px">
+                                                             style="width:10px">
                                                         <use
-                                                            xlink:href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
+                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
                                                         </svg>
                                                         <h5 class="mb-0 ms-3">Chí Thanh</h5>
                                                     </div>
@@ -457,9 +465,9 @@
                                                 <div class="col-6">
                                                     <div class="d-flex align-items-center">
                                                         <svg class="bi text-success" width="32" height="32" fill="blue"
-                                                             style="width: 10px">
+                                                             style="width:10px">
                                                         <use
-                                                            xlink:href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
+                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
                                                         </svg>
                                                         <h5 class="mb-0 ms-3">Mường Thanh</h5>
                                                     </div>
@@ -475,9 +483,9 @@
                                                 <div class="col-6">
                                                     <div class="d-flex align-items-center">
                                                         <svg class="bi text-danger" width="32" height="32" fill="blue"
-                                                             style="width: 10px">
+                                                             style="width:10px">
                                                         <use
-                                                            xlink:href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
+                                                            xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
                                                         </svg>
                                                         <h5 class="mb-0 ms-3">Hải Phong</h5>
                                                     </div>
@@ -511,31 +519,28 @@
                                                             <td class="col-3">
                                                                 <div class="d-flex align-items-center">
                                                                     <div class="avatar avatar-md">
-                                                                        <img src="<%= request.getContextPath() %>/assets/images/faces/5.jpg" />
+                                                                        <img src="assets/images/faces/5.jpg">
                                                                     </div>
                                                                     <p class="font-bold ms-3 mb-0">Si Cantik</p>
                                                                 </div>
                                                             </td>
                                                             <td class="col-auto">
-                                                                <p class="mb-0">
-                                                                    Congratulations on your graduation!
-                                                                </p>
+                                                                <p class=" mb-0">Congratulations on your graduation!</p>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="col-3">
                                                                 <div class="d-flex align-items-center">
                                                                     <div class="avatar avatar-md">
-                                                                        <img src="<%= request.getContextPath() %>/assets/images/faces/2.jpg" />
+                                                                        <img src="assets/images/faces/2.jpg">
                                                                     </div>
                                                                     <p class="font-bold ms-3 mb-0">Si Ganteng</p>
                                                                 </div>
                                                             </td>
                                                             <td class="col-auto">
-                                                                <p class="mb-0">
-                                                                    Wow amazing design! Can you make another
-                                                                    tutorial for this design?
-                                                                </p>
+                                                                <p class=" mb-0">Wow amazing design! Can you make another
+                                                                    tutorial for
+                                                                    this design?</p>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -548,15 +553,14 @@
                         </div>
                         <div class="col-12 col-lg-3">
                             <div class="card">
-                                <div class="card-body  border-cam"
-                                     style="padding-top: 3.2rem !important; padding-bottom: 3.1rem !important;">
+                                <div class="card-body py-4 px-5 border-cam">
                                     <div class="d-flex align-items-center">
                                         <div class="avatar avatar-xl">
-                                            <img src="<%= request.getContextPath() %>/assets/images/faces/1.png" alt="Face 1" />
+                                            <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" alt="${staff.fullName}">
                                         </div>
                                         <div class="ms-3 name">
                                             <h5 class="font-bold">Chủ Căn Hộ</h5>
-                                            <h6 class="text-muted mb-0">Nguyễn Đăng Nguyên</h6>
+                                            <h6 class="text-muted mb-0">${staff.fullName}</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -566,35 +570,21 @@
                                     <h4>Tin nhắn gần đây</h4>
                                 </div>
                                 <div class="card-content pb-4">
-                                    <div class="recent-message d-flex px-4 py-3">
-                                        <div class="avatar avatar-lg">
-                                            <img src="<%= request.getContextPath() %>/assets/images/faces/4.jpg" />
+                                    <c:forEach var="user" items="${list}">
+                                        <div class="recent-message d-flex px-4 py-3">
+                                            <div class="avatar avatar-lg">
+                                                <img src="<%= request.getContextPath() %>/${user.image.imageURL}">
+                                            </div>
+                                            <div class="name ms-4">
+                                                <h5 class="mb-1">${user.fullName}</h5>
+                                                <h6 class="text-muted mb-0">${user.email}</h6>
+                                            </div>
                                         </div>
-                                        <div class="name ms-4">
-                                            <h5 class="mb-1">Nguyễn Kiểm</h5>
-                                            <h6 class="text-muted mb-0">@nkiem</h6>
-                                        </div>
-                                    </div>
-                                    <div class="recent-message d-flex px-4 py-3">
-                                        <div class="avatar avatar-lg">
-                                            <img src="<%= request.getContextPath() %>/assets/images/faces/3.jpg" />
-                                        </div>
-                                        <div class="name ms-4">
-                                            <h5 class="mb-1">Quang Dũng</h5>
-                                            <h6 class="text-muted mb-0">@dung</h6>
-                                        </div>
-                                    </div>
-                                    <div class="recent-message d-flex px-4 py-3">
-                                        <div class="avatar avatar-lg">
-                                            <img src="<%= request.getContextPath() %>/assets/images/faces/5.jpg" />
-                                        </div>
-                                        <div class="name ms-4">
-                                            <h5 class="mb-1">Mai Hương</h5>
-                                            <h6 class="text-muted mb-0">@huong</h6>
-                                        </div>
-                                    </div>
+                                    </c:forEach>
+
                                     <div class="px-4">
-                                        <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3">
+                                        <button onclick="window.location.href = '<%= request.getContextPath() %>/chat'" 
+                                                class='btn btn-block btn-xl btn-light-primary font-bold mt-3'>
                                             Start Conversation
                                         </button>
                                     </div>
@@ -605,7 +595,8 @@
                                     <h4>Số căn hộ đã thuê</h4>
                                 </div>
                                 <div class="card-body">
-                                    <div id="chart-visitors-profile"></div>
+                                    <div id="chart-visitors-profile"  data-occupied="${numberApartmentOccupied}"
+                                         data-available="${numberApartmentAvailable}"></div>
                                 </div>
                             </div>
                         </div>

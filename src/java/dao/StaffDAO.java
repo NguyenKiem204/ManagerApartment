@@ -167,6 +167,48 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         }
         return list;
     }
+    public List<Staff> selectAllSortedByLastMessage(String myEmail) {
+    List<Staff> list = new ArrayList<>();
+    String sql = """
+        SELECT s.*, MAX(m.Timestamp) AS LastMessageTime
+        FROM Staff s
+        LEFT JOIN Message m 
+            ON (s.Email = m.SenderEmail OR s.Email = m.ReceiverEmail)
+            AND (m.SenderEmail = ? OR m.ReceiverEmail = ?)
+        GROUP BY s.StaffID, s.FullName, s.Email, s.PhoneNumber, s.CCCD, 
+                 s.Password, s.DOB, s.Sex, s.Status, s.ImageID, s.RoleID
+        ORDER BY LastMessageTime DESC
+    """;
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, myEmail);
+        ps.setString(2, myEmail);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Staff staff = new Staff(
+                    rs.getInt("StaffID"),
+                    rs.getString("FullName"),
+                    rs.getString("Password"),
+                    rs.getString("PhoneNumber"),
+                    rs.getString("CCCD"),
+                    rs.getString("Email"),
+                    rs.getDate("DOB").toLocalDate(),
+                    rs.getString("Sex"),
+                    rs.getString("Status"),
+                    imageDAO.selectById(rs.getInt("ImageID")),
+                    roleDAO.selectById(rs.getInt("RoleID"))
+            );
+
+            list.add(staff);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return list;
+}
+
 
     @Override
     public Staff selectById(Integer id) {

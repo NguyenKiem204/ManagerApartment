@@ -4,7 +4,9 @@ import model.Message;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,6 +59,34 @@ public class MessageDAO implements DAOInterface<Message, Integer> {
         }
         return row;
     }
+public Map<String, Timestamp> getLastMessageTimestamps(String userEmail) {
+    Map<String, Timestamp> lastMessageMap = new HashMap<>();
+    String sql = """
+        SELECT Email, MAX(Timestamp) AS LastMessageTime FROM (
+            SELECT SenderEmail AS Email, Timestamp FROM Message WHERE SenderEmail = ? OR ReceiverEmail = ?
+            UNION
+            SELECT ReceiverEmail AS Email, Timestamp FROM Message WHERE SenderEmail = ? OR ReceiverEmail = ?
+        ) AS Combined
+        GROUP BY Email
+    """;
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, userEmail);
+        ps.setString(2, userEmail);
+        ps.setString(3, userEmail);
+        ps.setString(4, userEmail);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            lastMessageMap.put(rs.getString("Email"), rs.getTimestamp("LastMessageTime"));
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return lastMessageMap;
+}
+
 
     @Override
     public List<Message> selectAll() {

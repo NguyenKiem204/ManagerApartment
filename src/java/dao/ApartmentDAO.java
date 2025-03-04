@@ -85,11 +85,11 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Apartment apartment = new Apartment(
-                          rs.getInt("ApartmentID"),
-                          rs.getString("ApartmentName"),
-                          rs.getString("Block"),
-                          rs.getString("Status"),
-                          rs.getString("Type")
+                        rs.getInt("ApartmentID"),
+                        rs.getString("ApartmentName"),
+                        rs.getString("Block"),
+                        rs.getString("Status"),
+                        rs.getString("Type")
                 );
                 list.add(apartment);
             }
@@ -97,6 +97,58 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
+    }
+
+    public int numberApartment() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM Apartment";
+
+        try (Connection connection = DBContext.getConnection(); 
+             PreparedStatement ps = connection.prepareStatement(sql); 
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
+    public int numberApartmentOccupied() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM Apartment Where Status = 'Occupied'";
+
+        try (Connection connection = DBContext.getConnection(); 
+             PreparedStatement ps = connection.prepareStatement(sql); 
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
+        public int numberApartmentAvailable() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM Apartment Where Status = 'Available'";
+
+        try (Connection connection = DBContext.getConnection(); 
+             PreparedStatement ps = connection.prepareStatement(sql); 
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
     }
 
     @Override
@@ -110,11 +162,11 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     apartment = new Apartment(
-                              rs.getInt("ApartmentID"),
-                              rs.getString("ApartmentName"),
-                              rs.getString("Block"),
-                              rs.getString("Status"),
-                              rs.getString("Type")
+                            rs.getInt("ApartmentID"),
+                            rs.getString("ApartmentName"),
+                            rs.getString("Block"),
+                            rs.getString("Status"),
+                            rs.getString("Type")
                     );
                 }
             }
@@ -134,11 +186,11 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     apartment = new Apartment(
-                              rs.getInt("ApartmentID"),
-                              rs.getString("ApartmentName"),
-                              rs.getString("Block"),
-                              rs.getString("Status"),
-                              rs.getString("Type")
+                            rs.getInt("ApartmentID"),
+                            rs.getString("ApartmentName"),
+                            rs.getString("Block"),
+                            rs.getString("Status"),
+                            rs.getString("Type")
                     );
                 }
             }
@@ -156,11 +208,11 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Apartment apartment = new Apartment(
-                          rs.getInt("ApartmentID"),
-                          rs.getString("ApartmentName"),
-                          rs.getString("Block"),
-                          rs.getString("Status"),
-                          rs.getString("Type")
+                        rs.getInt("ApartmentID"),
+                        rs.getString("ApartmentName"),
+                        rs.getString("Block"),
+                        rs.getString("Status"),
+                        rs.getString("Type")
                 );
                 list.add(apartment);
             }
