@@ -109,8 +109,8 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
     public String getImageURL(int staffId) {
         String imageURL = null;
         String query = "SELECT i.ImageURL FROM Image i "
-                + "JOIN Staff s ON i.ImageID = s.ImageID "
-                + "WHERE s.StaffID = ?";
+                  + "JOIN Staff s ON i.ImageID = s.ImageID "
+                  + "WHERE s.StaffID = ?";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(query)) {
 
@@ -149,16 +149,16 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Staff staff = new Staff(rs.getInt("StaffID"),
-                        rs.getString("FullName"),
-                        rs.getString("Password"),
-                        rs.getString("PhoneNumber"),
-                        rs.getString("CCCD"),
-                        rs.getString("Email"),
-                        rs.getDate("DOB").toLocalDate(),
-                        rs.getString("Sex"),
-                        rs.getString("Status"),
-                        imageDAO.selectById(rs.getInt("ImageID")),
-                        roleDAO.selectById(rs.getInt("RoleID")));
+                          rs.getString("FullName"),
+                          rs.getString("Password"),
+                          rs.getString("PhoneNumber"),
+                          rs.getString("CCCD"),
+                          rs.getString("Email"),
+                          rs.getDate("DOB").toLocalDate(),
+                          rs.getString("Sex"),
+                          rs.getString("Status"),
+                          imageDAO.selectById(rs.getInt("ImageID")),
+                          roleDAO.selectById(rs.getInt("RoleID")));
 
                 list.add(staff);
             }
@@ -220,17 +220,17 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 staff = new Staff(
-                        rs.getInt("StaffID"),
-                        rs.getString("FullName"),
-                        rs.getString("Password"),
-                        rs.getString("PhoneNumber"),
-                        rs.getString("CCCD"),
-                        rs.getString("Email"),
-                        rs.getDate("DOB").toLocalDate(),
-                        rs.getString("Sex"),
-                        rs.getString("Status"),
-                        imageDAO.selectById(rs.getInt("ImageID")),
-                        roleDAO.selectById(rs.getInt("RoleID"))
+                          rs.getInt("StaffID"),
+                          rs.getString("FullName"),
+                          rs.getString("Password"),
+                          rs.getString("PhoneNumber"),
+                          rs.getString("CCCD"),
+                          rs.getString("Email"),
+                          rs.getDate("DOB").toLocalDate(),
+                          rs.getString("Sex"),
+                          rs.getString("Status"),
+                          imageDAO.selectById(rs.getInt("ImageID")),
+                          roleDAO.selectById(rs.getInt("RoleID"))
                 );
             }
         } catch (SQLException ex) {
@@ -248,17 +248,17 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 staff = new Staff(
-                        rs.getInt("StaffID"),
-                        rs.getString("FullName"),
-                        rs.getString("Password"),
-                        rs.getString("PhoneNumber"),
-                        rs.getString("CCCD"),
-                        rs.getString("Email"),
-                        rs.getDate("DOB").toLocalDate(),
-                        rs.getString("Sex"),
-                        rs.getString("Status"),
-                        imageDAO.selectById(rs.getInt("ImageID")),
-                        roleDAO.selectById(rs.getInt("RoleID"))
+                          rs.getInt("StaffID"),
+                          rs.getString("FullName"),
+                          rs.getString("Password"),
+                          rs.getString("PhoneNumber"),
+                          rs.getString("CCCD"),
+                          rs.getString("Email"),
+                          rs.getDate("DOB").toLocalDate(),
+                          rs.getString("Sex"),
+                          rs.getString("Status"),
+                          imageDAO.selectById(rs.getInt("ImageID")),
+                          roleDAO.selectById(rs.getInt("RoleID"))
                 );
             }
         } catch (SQLException ex) {
@@ -318,6 +318,7 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         }
         return false;
     }
+
     public boolean existPhoneNumber(String phone) {
         String sql = "SELECT * FROM Staff WHERE PhoneNumber = ?";
         System.out.println(sql);
@@ -406,17 +407,17 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Staff staff = new Staff(
-                        rs.getInt("StaffID"),
-                        rs.getString("FullName"),
-                        rs.getString("Password"),
-                        rs.getString("PhoneNumber"),
-                        rs.getString("CCCD"),
-                        rs.getString("Email"),
-                        rs.getDate("DOB").toLocalDate(),
-                        rs.getString("Sex"),
-                        rs.getString("Status"),
-                        imageDAO.selectById(rs.getInt("ImageID")),
-                        roleDAO.selectById(rs.getInt("RoleID"))
+                          rs.getInt("StaffID"),
+                          rs.getString("FullName"),
+                          rs.getString("Password"),
+                          rs.getString("PhoneNumber"),
+                          rs.getString("CCCD"),
+                          rs.getString("Email"),
+                          rs.getDate("DOB").toLocalDate(),
+                          rs.getString("Sex"),
+                          rs.getString("Status"),
+                          imageDAO.selectById(rs.getInt("ImageID")),
+                          roleDAO.selectById(rs.getInt("RoleID"))
                 );
                 staffs.add(staff);
             }
@@ -453,17 +454,17 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Staff staff = new Staff(
-                            rs.getInt("StaffID"),
-                            rs.getString("FullName"),
-                            rs.getString("Password"),
-                            rs.getString("PhoneNumber"),
-                            rs.getString("CCCD"),
-                            rs.getString("Email"),
-                            rs.getDate("DOB").toLocalDate(),
-                            rs.getString("Sex"),
-                            rs.getString("Status"),
-                            imageDAO.selectById(rs.getInt("ImageID")),
-                            roleDAO.selectById(rs.getInt("RoleID"))
+                              rs.getInt("StaffID"),
+                              rs.getString("FullName"),
+                              rs.getString("Password"),
+                              rs.getString("PhoneNumber"),
+                              rs.getString("CCCD"),
+                              rs.getString("Email"),
+                              rs.getDate("DOB").toLocalDate(),
+                              rs.getString("Sex"),
+                              rs.getString("Status"),
+                              imageDAO.selectById(rs.getInt("ImageID")),
+                              roleDAO.selectById(rs.getInt("RoleID"))
                     );
                     staffs.add(staff);
                 }
@@ -504,6 +505,84 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Staff> getStaffByPosition(int position) {
+        List<Staff> staffs = new ArrayList<>();
+        String query = "SELECT TOP 1 * FROM Staff WHERE RoleID = ? AND Status = 'Active' ";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, position);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Staff staff = new Staff(
+                              rs.getInt("StaffID"),
+                              rs.getString("FullName"),
+                              rs.getString("Password"),
+                              rs.getString("PhoneNumber"),
+                              rs.getString("CCCD"),
+                              rs.getString("Email"),
+                              rs.getDate("DOB").toLocalDate(),
+                              rs.getString("Sex"),
+                              rs.getString("Status"),
+                              imageDAO.selectById(rs.getInt("ImageID")),
+                              roleDAO.selectById(rs.getInt("RoleID"))
+                    );
+                    staffs.add(staff);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return staffs;
+    }
+
+    public Staff getStaffByRoleIDAndStatus(Integer roleID, String status) {
+        Staff staff = null;
+        String sql = """
+                     SELECT [StaffID]
+                           ,[FullName]
+                           ,[Password]
+                           ,[PhoneNumber]
+                           ,[CCCD]
+                           ,[Email]
+                           ,[DOB]
+                           ,[Sex]
+                           ,[Status]
+                           ,[RoleID]
+                           ,[ImageID]
+                       FROM [ApartmentManagement].[dbo].[Staff]
+                       WHERE Status = ? And RoleID = ?""";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, roleID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                staff = new Staff();
+                staff.setStaffId(rs.getInt("StaffID"));
+                staff.setFullName(rs.getString("FullName"));
+                staff.setPhoneNumber(rs.getString("PhoneNumber"));
+                staff.setCccd(rs.getString("CCCD"));
+                staff.setEmail(rs.getString("Email"));
+                staff.setDob(rs.getDate("DOB").toLocalDate());
+                staff.setSex(rs.getString("Sex"));
+                staff.setStatus(rs.getString("Status"));
+                staff.setImage(imageDAO.selectById(rs.getInt("ImageID")));
+                staff.setRole(roleDAO.selectById(rs.getInt("RoleID")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return staff;
+    }
+
+    public boolean isExistStaffByRoleIDAndStatusID(int position, String status) {
+        return getStaffByRoleIDAndStatus(position, status) != null;
     }
 
 }

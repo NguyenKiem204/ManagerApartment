@@ -6,12 +6,14 @@ package dao;
 
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import model.Apartment;
 import model.Feedback;
 import model.Image;
 import model.ImageFeedback;
+import model.ManagerFeedback;
 import model.Request;
 import model.Resident;
 import model.Role;
@@ -36,14 +38,12 @@ public class Test {
         RequestDAO requestDAO = new RequestDAO();
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
+        ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
         
-        List<ImageFeedback> imageFeedbackList = new ArrayList<>();
-        
-        List<Request> list = requestDAO.selectFirstPage();
-        for (Request request : list) {
-            System.out.println(request.toString());
-        }
-
+        System.out.println(feedbackDAO.countFeedbackByRole(2, LocalDate.of(2025, 2, 2)));
+//        ManagerFeedback t = new ManagerFeedback(LocalDate.now(), 10, 4.3, 82, 18, "Good luck", "Can cai thien nhieu", null, "training more", LocalDate.now().plusDays(3), LocalDate.now(), staffDAO.getStaffByID(2));
+//        managerFeedbackDAO.insert(t);
+       
         // Ví dụ: thêm các đối tượng ImageFeedback vào danh sách
         // Giả sử bạn đã có InputStream từ file và kích thước của ảnh (size)
 //        InputStream imgStream1 = null;  // Thay bằng InputStream thực tế

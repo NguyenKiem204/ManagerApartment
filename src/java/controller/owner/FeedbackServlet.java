@@ -27,7 +27,9 @@ import model.Feedback;
 import model.ImageFeedback;
 import model.Resident;
 import model.Role;
+import model.Staff;
 import org.jsoup.Jsoup;
+import validation.Validate;
 
 /**
  *
@@ -105,7 +107,7 @@ public class FeedbackServlet extends HttpServlet {
         ResidentDAO residentDAO = new ResidentDAO();
 
         String title = request.getParameter("title");
-        String staffID_raw = request.getParameter("staff");
+        String roleID_raw = request.getParameter("staff");
         String rating_raw = request.getParameter("rating");
         String description = request.getParameter("description");
         // Loại bỏ HTML & ký tự khoảng trắng
@@ -113,7 +115,8 @@ public class FeedbackServlet extends HttpServlet {
         String error = "error";
 
         RoleDAO rdao = new RoleDAO();
-        List<Role> listrole = rdao.selectAll();
+//        List<Role> listrole = rdao.selectAll();
+        List<Role> listrole = rdao.getListRoleWithStaffExits();
 
         //validate title
         if (title != null) {
@@ -135,13 +138,13 @@ public class FeedbackServlet extends HttpServlet {
             return;
         }
 
-        // Kiểm tra ký tự đặc biệt (chỉ cho phép chữ, số, khoảng trắng, và một số dấu câu)
-//        if (!title.matches("^[a-zA-Z0-9 .,!?()-]+$")) {
-//            request.setAttribute(error, "Title contains invalid characters!");
-//            request.setAttribute("listrole", listrole);
-//            request.getRequestDispatcher("feedback.jsp").forward(request, response);
-//            return;
-//        }
+//         Kiểm tra ký tự đặc biệt (chỉ cho phép chữ, số, khoảng trắng, và một số dấu câu)
+        if (!Validate.isValidTitle(title)) {
+            request.setAttribute(error, "Title contains invalid characters!");
+            request.setAttribute("listrole", listrole);
+            request.getRequestDispatcher("feedback.jsp").forward(request, response);
+            return;
+        }
 
         //check number star
         if (rating_raw == null || rating_raw.trim().isEmpty()) {
@@ -154,6 +157,7 @@ public class FeedbackServlet extends HttpServlet {
         if (description != null) {
             description = description.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
         }
+        
         //check description null or not
         if (cleanText == null || cleanText.trim().isEmpty()) {
             request.setAttribute(error, "Description cannot be empty!");
@@ -161,20 +165,29 @@ public class FeedbackServlet extends HttpServlet {
             request.getRequestDispatcher("feedback.jsp").forward(request, response);
             return;
         }
+        //         Kiểm tra ký tự đặc biệt (chỉ cho phép chữ, số, khoảng trắng, và một số dấu câu)
+//        if (!description.matches("/^[A-Za-zÀ-Ỹà-ỹ0-9.,?!\\-()\\[\\]:; \\n]{10,1000}$")) {
+//            request.setAttribute(error, "Description contains invalid characters hehe!");
+//            request.setAttribute("listrole", listrole);
+//            request.getRequestDispatcher("feedback.jsp").forward(request, response);
+//            return;
+//        };
 
         int rating;
-        int staffID;
+        int roleID;
+        Staff staff = new Staff();
 
         try {
             rating = Integer.parseInt(rating_raw);
-            staffID = Integer.parseInt(staffID_raw);
+            roleID = Integer.parseInt(roleID_raw);
+            staff = staffDAO.getStaffByRoleIDAndStatus(roleID, "Active");
         } catch (NumberFormatException e) {
             response.getWriter().println("LOI DINH DANG SO. VUI LONG KIEM TRA LAI");
             return; // Dừng việc xử lý nếu có lỗi định dạng
         }
 
         if (rating < 1 || rating > 5) {
-            response.getWriter().println("Rating phải trong khoảng từ 1 đến 5.");
+            response.getWriter().println("Rating must be between 1 and 5.");
             return;
         }
 
@@ -190,11 +203,11 @@ public class FeedbackServlet extends HttpServlet {
         FeedbackDAO fbDAO = new FeedbackDAO();
         try {
             // Tạo đối tượng Feedback và lưu vào DB
-            Feedback fb = new Feedback(title, description, LocalDate.now(), rating, staffDAO.selectById(staffID), resident); // resident.getResidentId()
+            Feedback fb = new Feedback(title, description, LocalDate.now(), rating, staff, resident);
             fbDAO.insert(fb);
 
             // Redirect đến trang thành công
-            response.sendRedirect("feedbacksuccess.jsp");
+            response.sendRedirect("feedbacksuccessfull");
 
         } catch (NumberFormatException e) {
             e.printStackTrace();

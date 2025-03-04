@@ -240,13 +240,7 @@
                                         <a href="request">Request</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="layout-vertical-1-column.html">Residents</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-vertical-navbar.html">Accounting Department</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-horizontal.html">Security Department</a>
+                                        <a href="formfeedbackmanager">Feedback Statistics</a>
                                     </li>
                                 </ul>
                             </li>

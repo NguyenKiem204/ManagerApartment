@@ -24,6 +24,7 @@ import model.Request;
 import model.Resident;
 import model.TypeRequest;
 import org.jsoup.Jsoup;
+import validation.Validate;
 
 /**
  *
@@ -140,6 +141,13 @@ public class RequestServlet extends HttpServlet {
             request.getRequestDispatcher("request.jsp").forward(request, response);
             return;
         }
+        
+        if (!Validate.isValidTitle(title)) {
+            request.setAttribute(error, "Title contains invalid characters!");
+            request.setAttribute("listtyperq", listrq);
+            request.getRequestDispatcher("request.jsp").forward(request, response);
+            return;
+        }
 
         // Kiểm tra độ dài title
         if (title.length() < 5 || title.length() > 100) {
@@ -153,6 +161,12 @@ public class RequestServlet extends HttpServlet {
         if (description != null) {
             description = description.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
         }
+//        if (!description.matches("^[a-zA-Z0-9 .,!?()-]+$")) {
+//            request.setAttribute(error, "Description contains invalid characters!");
+//            request.setAttribute("listtyperq", listrq);
+//            request.getRequestDispatcher("request.jsp").forward(request, response);
+//            return;
+//        }
         //check description null or not
         if (cleanText == null || cleanText.trim().isEmpty()) {
             request.setAttribute(error, "Description cannot be empty!");

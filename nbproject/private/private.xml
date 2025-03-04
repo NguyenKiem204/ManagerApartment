@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2"
+                      lastBookmarkId="0" />
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/PR2/ManagerApartment/web/manager/manage-urls.jsp</file>
@@ -21,6 +22,11 @@
             <file>file:/D:/PR2/ManagerApartment/src/java/controller/auth/TenantFilter.java</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/config/Iconstant.java</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/AddNewInvoices.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/src/java/controller/owner/FeedbackServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/src/java/validation/Validate.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/web/manager/formfeedbackmanager.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/src/java/dao/Test.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/ManagerApartment/src/java/controller/manager/FormFeedbackManagerServlet.java</file>
         </group>
     </open-files>
 </project-private>
