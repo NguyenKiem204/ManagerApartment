@@ -370,7 +370,7 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         return staffs;
     }
 
-    public List<Staff> searchStaffs(String keyword, String sex, String status) {
+    public List<Staff> searchStaffs(String keyword, String sex, String status, int page, int pageSize) {
         List<Staff> staffs = new ArrayList<>();
         String query = "SELECT * FROM Staff WHERE (FullName LIKE ? OR Email LIKE ?)";
 
@@ -380,7 +380,8 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         if (status != null && !status.isEmpty()) {
             query += " AND Status = ?";
         }
-
+        // Thêm ORDER BY và phân trang
+        query += " ORDER BY StaffID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
 
             ps.setString(1, "%" + keyword + "%");
@@ -393,7 +394,10 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
             if (status != null && !status.isEmpty()) {
                 ps.setString(paramIndex++, status);
             }
-
+            // Thiết lập OFFSET và FETCH NEXT cho phân trang
+            int offset = (page - 1) * pageSize;
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, pageSize);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Staff staff = new Staff(
@@ -418,7 +422,48 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
 
         return staffs;
     }
+    public int getTotalStaffs(String keyword, String sex, String status) {
+    int total = 0;
+    String query = "SELECT COUNT(*) FROM Staff WHERE (FullName LIKE ? OR Email LIKE ?)";
 
+    if (sex != null && !sex.isEmpty()) {
+        query += " AND Sex = ?";
+    }
+    if (status != null && !status.isEmpty()) {
+        query += " AND Status = ?";
+    }
+
+    try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+        ps.setString(1, "%" + keyword + "%");
+        ps.setString(2, "%" + keyword + "%");
+
+        int paramIndex = 3;
+        if (sex != null && !sex.isEmpty()) {
+            ps.setString(paramIndex++, sex);
+        }
+        if (status != null && !status.isEmpty()) {
+            ps.setString(paramIndex++, status);
+        }
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return total;
+}
+    public boolean updatePassword(int staffId, String newPassword) throws SQLException {
+    String query = "UPDATE Staff SET Password = ? WHERE StaffID = ?";
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(query)) {
+        ps.setString(1, newPassword);
+        ps.setInt(2, staffId);
+        return ps.executeUpdate() > 0;
+    }
+}
     public boolean isStaffExists(String phoneNumber, String cccd, String email) {
         String sql = "SELECT COUNT(*) FROM Staff WHERE PhoneNumber = ? OR CCCD = ? OR Email = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {

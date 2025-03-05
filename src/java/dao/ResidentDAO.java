@@ -378,54 +378,121 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         return false;
     }
 
-    public List<Resident> searchResidents(String keyword, String sex, String status) {
-        List<Resident> residents = new ArrayList<>();
-        String query = "SELECT * FROM Resident WHERE (FullName LIKE ? OR Email LIKE ?)";
+    public List<Resident> searchResidents(String keyword, String sex, String status, int page, int pageSize) {
+    List<Resident> residents = new ArrayList<>();
+    String query = "SELECT * FROM Resident WHERE (FullName LIKE ? OR Email LIKE ?)";
 
+    if (sex != null && !sex.isEmpty()) {
+        query += " AND Sex = ?";
+    }
+    if (status != null && !status.isEmpty()) {
+        query += " AND Status = ?";
+    }
+
+    // Thêm ORDER BY và phân trang
+    query += " ORDER BY ResidentID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+    try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+
+        ps.setString(1, "%" + keyword + "%");
+        ps.setString(2, "%" + keyword + "%");
+
+        int paramIndex = 3;
         if (sex != null && !sex.isEmpty()) {
-            query += " AND Sex = ?";
+            ps.setString(paramIndex++, sex);
         }
         if (status != null && !status.isEmpty()) {
-            query += " AND Status = ?";
+            ps.setString(paramIndex++, status);
         }
 
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+        // Thiết lập OFFSET và FETCH NEXT cho phân trang
+        int offset = (page - 1) * pageSize;
+        ps.setInt(paramIndex++, offset);
+        ps.setInt(paramIndex++, pageSize);
 
-            ps.setString(1, "%" + keyword + "%");
-            ps.setString(2, "%" + keyword + "%");
-
-            int paramIndex = 3;
-            if (sex != null && !sex.isEmpty()) {
-                ps.setString(paramIndex++, sex);
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Resident resident = new Resident(
+                        rs.getInt("ResidentID"),
+                        rs.getString("FullName"),
+                        rs.getString("Password"),
+                        rs.getString("PhoneNumber"),
+                        rs.getString("CCCD"),
+                        rs.getString("Email"),
+                        rs.getDate("DOB").toLocalDate(),
+                        rs.getString("Sex"),
+                        rs.getString("Status"),
+                        imageDAO.selectById(rs.getInt("ImageID")),
+                        roleDAO.selectById(rs.getInt("RoleID"))
+                );
+                residents.add(resident);
             }
-            if (status != null && !status.isEmpty()) {
-                ps.setString(paramIndex++, status);
-            }
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Resident resident = new Resident(
-                            rs.getInt("ResidentID"),
-                            rs.getString("FullName"),
-                            rs.getString("Password"),
-                            rs.getString("PhoneNumber"),
-                            rs.getString("CCCD"),
-                            rs.getString("Email"),
-                            rs.getDate("DOB").toLocalDate(),
-                            rs.getString("Sex"),
-                            rs.getString("Status"),
-                            imageDAO.selectById(rs.getInt("ImageID")),
-                            roleDAO.selectById(rs.getInt("RoleID"))
-                    );
-                    residents.add(resident);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-
-        return residents;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return residents;
+}
+    public int getTotalResidents(String keyword, String sex, String status) {
+    int total = 0;
+    String query = "SELECT COUNT(*) FROM Resident WHERE (FullName LIKE ? OR Email LIKE ?)";
+
+    if (sex != null && !sex.isEmpty()) {
+        query += " AND Sex = ?";
+    }
+    if (status != null && !status.isEmpty()) {
+        query += " AND Status = ?";
+    }
+
+    try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+        ps.setString(1, "%" + keyword + "%");
+        ps.setString(2, "%" + keyword + "%");
+
+        int paramIndex = 3;
+        if (sex != null && !sex.isEmpty()) {
+            ps.setString(paramIndex++, sex);
+        }
+        if (status != null && !status.isEmpty()) {
+            ps.setString(paramIndex++, status);
+        }
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return total;
+}
+public boolean isOwnerResident(int ownerId) {
+    boolean isValid = false;
+    String query = "SELECT COUNT(*) FROM Resident WHERE ResidentID = ? AND RoleID = 7";
+    
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, ownerId);
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                isValid = rs.getInt(1) > 0;
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return isValid;
+}
+public boolean updatePassword(int residentId, String newPassword) throws SQLException {
+    String query = "UPDATE Resident SET Password = ? WHERE ResidentID = ?";
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(query)) {
+        ps.setString(1, newPassword);
+        ps.setInt(2, residentId);
+        return ps.executeUpdate() > 0;
+    }
+}
 
     public Resident getApartmentOwnerByDepartment(int departmentID) {
         String sql = "SELECT "

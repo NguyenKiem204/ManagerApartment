@@ -1,10 +1,9 @@
 <%-- 
-    Document   : home1
-    Created on : Feb 11, 2025, 2:12:16 AM
-    Author     : nkiem
+    Document   : mngapartment
+    Created on : Mar 2, 2025, 2:17:47 AM
+    Author     : fptshop
 --%>
 
-<%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem --%>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -13,7 +12,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Trang chủ</title>
+        <title>Manage Apartment</title>
 
         <link rel="preconnect" href="<%= request.getContextPath() %>/https://fonts.gstatic.com" />
         <link href="<%= request.getContextPath() %>/https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
@@ -135,7 +134,7 @@
                 font-weight: bold;
                 margin-bottom: 20px;
             }
-            .add-resident-button {
+            .add-apartment-button {
                 display: inline-block;
                 background-color: #4CAF50;
                 color: white;
@@ -147,7 +146,7 @@
                 transition: background-color 0.3s;
             }
 
-            .add-resident-button:hover {
+            .add-apartment-button:hover {
                 background-color: #45a049;
             }
             .switch {
@@ -602,78 +601,92 @@
                 <!--=============================CONTENT HERE=======================-->
                 <div>
                     <div >
-                        <h1>Resident List</h1>
+                        <h1>Apartments List</h1>
                         <%-- Hiển thị thông báo nếu có --%>
                         <c:if test="${not empty mess}">
                             <div class="message">${mess}</div>
                         </c:if>
                         <!-- Nút Thêm Cư Dân -->
 <div style="text-align: center; margin-bottom: 20px;">
-    <button class="add-resident-button btn btn-success" id="openInsertModal">Add new resident</button>
+    <button class="add-apartment-button btn btn-success" id="openInsertModal">Add new apartment</button>
 </div>
 
 <!-- Modal Form -->
-<div id="insertResidentModal" class="modal">
+<div id="insertApartmentModal" class="modal">
     <div class="modal-content">
         <span class="modal-close">&times;</span>
         <h2 class="modal-title">Add resident</h2>
-        <form id="insertResidentForm">
-            <label for="fullName" class="modal-label">FullName:</label>
-            <input type="text" id="fullName" name="fullName" class="modal-input" required>
+        <form id="insertApartmentForm">
+            <label for="apartmentName" class="modal-label">Apartment Name:</label>
+            <input type="text" id="apartmentName" name="apartmentName" class="modal-input" required>
 
-            <label for="phoneNumber" class="modal-label">Phone Number:</label>
-            <input type="text" id="phoneNumber" name="phoneNumber" class="modal-input" required maxlength="10" pattern="\d{10}">
-
-            <label for="cccd" class="modal-label">CCCD:</label>
-            <input type="text" id="cccd" name="cccd" class="modal-input" required maxlength="12" pattern="\d{12}">
-
-            <label for="email" class="modal-label">Email:</label>
-            <input type="email" id="email" name="email" class="modal-input" required>
-
-            <label for="dob" class="modal-label">BirthDate:</label>
-            <input type="date" id="dob" name="dob" class="modal-input" required>
-
-            <label for="sex" class="modal-label">Gender:</label>
-            <select id="sex" name="sex" class="modal-select" required>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+            <label for="block" class="modal-label">Block:</label>
+            <select id="block" name="block" class="modal-select" required>
+                <option value="Male">Block A</option>
+                <option value="Female">Block B</option>
+                <option value="Female">Block C</option>
             </select>
 
-            <label for="role" class="modal-label">Role:</label>
-            <select id="roleId" name="roleId" class="modal-select" required>
-                <option value="6">Tenant</option>
-                <option value="7">Owner Department</option>
+            <label for="status" class="modal-label">Status:</label>
+            <select id="status" name="status" class="modal-select" required>
+                <option value="Available">Available</option>
+                <option value="Occupied">Occupied</option>
+                <option value="Maintenance">Maintenance</option>
             </select>
-
+            
+            <label for="type" class="modal-label">Block:</label>
+            <select id="type" name="type" class="modal-select" required>
+                <option value="1 Bedroom">1 Bedroom</option>
+                <option value="2 Bedrooms">2 Bedrooms</option>
+                <option value="3 Bedrooms">3 Bedrooms</option>
+            </select>
+            
+            <label for="ownerId" class="modal-label">OwnerId:</label>
+            <input type="text" id="ownerId" name="ownerId" class="modal-input" required pattern="\d{4}">
+            
             <button type="button" id="submitBtn" class="modal-button">Add</button>
         </form>
         <div id="message"></div>
     </div>
 </div>
-                        <div class="row mb-3">
+                        <div class=" row mb-3">
                             <!-- Cột bên trái: Bộ lọc (45%) -->
-                            <div class="col-md-5 d-flex gap-2">
-                                <form action="manageResident" method="get" class="d-flex gap-2 flex-grow-1">
-                                    <select name="sex" id="sexFilter" class="form-select" style="width: 100%;">
-                                        <option value="">AllGenders</option>
-                                        <option value="Male" ${selectedSex == 'Male' ? 'selected' : ''}>Male</option>
-                                        <option value="Female" ${selectedSex == 'Female' ? 'selected' : ''}>Female</option>
+                            <div class="d-flex gap-2">
+                                <form action="manageApartment" method="get" class="d-flex gap-2 flex-grow-1">
+                                    <select name="type" id="typeFilter" class="form-select" style="width: 100%;">
+                                        <option value="">AllTypes</option>
+                                        <option value="1 Bedroom" ${selectedType == '1 Bedroom' ? 'selected' : ''}>1 Bedroom</option>
+                                        <option value="2 Bedrooms" ${selectedType == '2 Bedrooms' ? 'selected' : ''}>2 Bedrooms</option>
+                                        <option value="3 Bedrooms" ${selectedType == '3 Bedrooms' ? 'selected' : ''}>3 Bedrooms</option>
+                                        
                                     </select>
 
                                     <select name="status" id="statusFilter" class="form-select" style="width: 100%;">
                                         <option value="">AllStatus</option>
-                                        <option value="Active" ${selectedStatus == 'Active' ? 'selected' : ''}>Active</option>
-                                        <option value="Deactive" ${selectedStatus == 'Deactive' ? 'selected' : ''}>Deactive</option>
+                                        <option value="Available" ${selectedStatus == 'Available' ? 'selected' : ''}>Available</option>
+                                        <option value="Occupied" ${selectedStatus == 'Occupied' ? 'selected' : ''}>Occupied</option>
+                                        <option value="Occupied" ${selectedStatus == 'Maintenance' ? 'selected' : ''}>Maintenance</option>
                                     </select>
-
-                                    <button type="submit" class="btn btn-primary" style="width: 20%;">Filter:</button>
+                                    <select name="block" id="blockFilter" class="form-select" style="width: 100%;">
+                                        <option value="">AllBlocks</option>
+                                        <option value="Block A" ${selectedBlock == 'Block A' ? 'selected' : ''}>Block A</option>
+                                        <option value="Block B" ${selectedBlock == 'Block B' ? 'selected' : ''}>Block B</option>
+                                        <option value="Block C" ${selectedBlock == 'Block C' ? 'selected' : ''}>Block C</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary" style="width: 20%;">Filter</button>
                                 </form>
                             </div>
 
                             <!-- Cột bên phải: Tìm kiếm (45%) -->
+                            <div class="col-md-6">
+                                <form action="manageApartment" method="get" class="d-flex">
+                                    <input type="text" name="name" placeholder="Enter an apartment name..." value="${selectedName}" class="form-control me-2" style="width: 70%;">
+                                    <button type="submit" class="btn btn-primary" style="width: 30%;">Search</button>
+                                </form>
+                            </div>
                             <div class="col-md-5">
-                                <form action="manageResident" method="get" class="d-flex">
-                                    <input type="text" name="searchKeyword" placeholder="Enter name or email..." value="${searchKeyword}" class="form-control me-2" style="width: 70%;">
+                                <form action="manageApartment" method="get" class="d-flex">
+                                    <input type="text" name="ownerId" placeholder="Enter an ownerId..." value="${selectedOwnerId}" class="form-control me-2" style="width: 70%;">
                                     <button type="submit" class="btn btn-primary" style="width: 30%;">Search</button>
                                 </form>
                             </div>
@@ -687,132 +700,183 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Resident ID</th>
-                                        <th>FullName</th>
-                                        <th>PhoneNumber</th>
-                                        <th>CCCD</th>
-                                        <th>Email</th>
-                                        <th>BirthDate</th>
-                                        <th>Gender</th>
+                                        <th>ID</th>
+                                        <th>Apartment Name</th>
+                                        <th>Block</th>
                                         <th>Status</th>
-                                        <th>Role</th>
+                                        <th>Type</th>
+                                        <th>Owner ID</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach var="resident" items="${listResident}">
+                                    <c:forEach var="apartment" items="${listApartment}">
                                         <tr>
-                                            <td>${resident.residentId}</td>
-                                            <td>${resident.fullName}</td>
-                                            <td>${resident.phoneNumber}</td>
-                                            <td>${resident.cccd}</td>
-                                            <td>${resident.email}</td>
-                                            <td><fmt:formatDate value="${resident.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate></td>
-                                            <td>${resident.sex}</td>
+                                            <td>${apartment.apartmentId}</td>
+                                            <td>${apartment.apartmentName}</td>
+                                            <td>${apartment.block}</td>
+                                            <td>${apartment.status}</td>
+                                            <td>${apartment.type}</td>
+                                            <td>${apartment.ownerId}</td>
                                             <td>
-                                                <label class="switch">
-                                                    <input type="checkbox" class="status-toggle" data-id="${resident.residentId}" ${resident.status eq 'Active' ? 'checked' : ''}>
-
-                                                    <span class="slider round"></span>
-                                                </label>
+                                                <button class="btn btn-primary btn-edit" data-id="${apartment.apartmentId}">Edit</button>
                                             </td>
-                                            <td>
-                                                <c:choose>
-                                                    <c:when test="${resident.role.getRoleID() == 6}">Tenant</c:when>
-                                                    <c:when test="${resident.role.getRoleID() == 7}">Owner</c:when>
-                                                    <c:otherwise>Unknown</c:otherwise>
-                                                </c:choose>
-                                            </td>
-
-                                            <td>
-                                                <div class="actions">
-                                                    <a href="deleteResident?residentId=${resident.residentId}" onclick="return confirm('Bạn có chắc chắn muốn xóa cư dân này không?');">Delete</a>
-                                                </div>
-                                            </td>
+                                            
                                         </tr>
                                     </c:forEach>
                                 </tbody>
                             </table>
                         </div>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document"> <!-- Thêm modal-lg hoặc modal-xl -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Apartment</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Nội dung AJAX sẽ load vào đây -->
+            </div>
+        </div>
+    </div>
+</div>
 
-                    </div>
-                                    
-                </div>
-                                    <ul class="pagination">
+
+    <ul class="pagination justify-content-center">
     <c:if test="${currentPage > 1}">
         <li class="page-item">
-            <a class="page-link" href="?page=${currentPage - 1}&searchKeyword=${searchKeyword}&sex=${selectedSex}&status=${selectedStatus}&block=${selectedBlock}">Previous</a>
+            <a class="page-link" href="?page=${currentPage - 1}
+            <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
+            <c:if test="${selectedOwnerId != -1}">&ownerId=${selectedOwnerId}</c:if>
+            <c:if test="${not empty selectedType}">&type=${selectedType}</c:if>
+            <c:if test="${not empty selectedStatus}">&status=${selectedStatus}</c:if>
+            <c:if test="${not empty selectedBlock}">&block=${selectedBlock}</c:if>
+            ">Previous</a>
         </li>
     </c:if>
 
     <c:forEach begin="1" end="${totalPages}" var="i">
         <li class="page-item ${i == currentPage ? 'active' : ''}">
-            <a class="page-link" href="?page=${i}&searchKeyword=${searchKeyword}&sex=${selectedSex}&status=${selectedStatus}&block=${selectedBlock}">${i}</a>
+            <a class="page-link" href="?page=${i}
+            <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
+            <c:if test="${selectedOwnerId != -1}">&ownerId=${selectedOwnerId}</c:if>
+            <c:if test="${not empty selectedType}">&type=${selectedType}</c:if>
+            <c:if test="${not empty selectedStatus}">&status=${selectedStatus}</c:if>
+            <c:if test="${not empty selectedBlock}">&block=${selectedBlock}</c:if>
+            ">${i}</a>
         </li>
     </c:forEach>
 
     <c:if test="${currentPage < totalPages}">
         <li class="page-item">
-            <a class="page-link" href="?page=${currentPage + 1}&searchKeyword=${searchKeyword}&sex=${selectedSex}&status=${selectedStatus}&block=${selectedBlock}">Next</a>
+            <a class="page-link" href="?page=${currentPage + 1}
+            <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
+            <c:if test="${selectedOwnerId != -1}">&ownerId=${selectedOwnerId}</c:if>
+            <c:if test="${not empty selectedType}">&type=${selectedType}</c:if>
+            <c:if test="${not empty selectedStatus}">&status=${selectedStatus}</c:if>
+            <c:if test="${not empty selectedBlock}">&block=${selectedBlock}</c:if>
+            ">Next</a>
         </li>
     </c:if>
 </ul>
 
-
+<c:if test="${totalPages == 0}">
+    <p class="text-center text-muted">No apartments found.</p>
+</c:if>
+</div>
+</div>
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script>
-                                                        $(document).ready(function () {
-                                                            $(".status-toggle").change(function () {
-                                                                let residentId = $(this).data("id");
-                                                                let newStatus = $(this).is(":checked") ? "Active" : "Deactive";
+                $(document).ready(function () {
+    $(".btn-edit").click(function () {
+        var apartmentId = $(this).data("id");
 
-                                                                $.ajax({
-                                                                    url: "/ManagerApartment/manager/updateResidentStatus",
-                                                                    type: "POST",
-                                                                    data: {residentId: residentId, status: newStatus},
-                                                                    success: function (response) {
-                                                                        alert(response.message);
-                                                                    },
-                                                                    error: function () {
-                                                                        alert("Lỗi khi cập nhật trạng thái.");
-                                                                    }
-                                                                });
-                                                            });
-                                                        });
-                </script>
-                <script>
+        $.ajax({
+            url: "/ManagerApartment/manager/updateApartment",
+            type: "GET",
+            data: { apartmentId: apartmentId },
+            success: function (data) {
+                if (data.trim() === "") {
+                    alert("No data returned. Please check your server.");
+                } else {
+                    $("#editModal .modal-body").html(data); // Hiển thị dữ liệu vào modal
+                    $("#editModal").modal("show"); // Mở modal
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("GET Error:", xhr.responseText);
+                alert("Error loading apartment data: " + xhr.responseText);
+            }
+        });
+    });
+
+    // Xử lý lưu cập nhật
+    $(document).on("click", "#saveUpdate", function () {
+        var formData = $("#updateApartmentForm").serialize();
+
+        $.ajax({
+            url: "/ManagerApartment/manager/updateApartment",
+            type: "POST",
+            data: formData,
+            success: function (response) {
+                $("#editModal").modal("hide"); // Đóng modal
+                alert("Apartment updated successfully!"); // Thông báo thành công
+                location.reload(); // Refresh danh sách
+            },
+            error: function (xhr, status, error) {
+                console.error("POST Error:", xhr.responseText);
+                alert("Error updating apartment: " + xhr.responseText);
+            }
+        });
+    });
+
+    // Xử lý sự kiện bấm vào dấu "X"
+    $(document).on("click", ".close", function () {
+        $("#editModal").modal("hide"); // Đóng modal khi bấm dấu "X"
+    });
+
+    // Xử lý sự kiện bấm ra ngoài modal để đóng
+    $(document).on("click", function (event) {
+        if ($(event.target).is("#editModal")) {
+            $("#editModal").modal("hide"); // Đóng modal nếu bấm ra ngoài modal
+        }
+    });
+});
+
+</script>
+<script>
     $(document).ready(function () {
         
         // Mở Modal
         $("#openInsertModal").click(function () {
-            $("#insertResidentModal").show();
+            $("#insertApartmentModal").show();
         });
 
         // Đóng Modal khi nhấn dấu X
         $(".modal-close").click(function () {
-            $("#insertResidentModal").hide();
+            $("#insertApartmentModal").hide();
         });
 
         // Đóng Modal khi click ra ngoài
         $(window).click(function (event) {
-            if (event.target.id === "insertResidentModal") {
-                $("#insertResidentModal").hide();
+            if (event.target.id === "insertApartmentModal") {
+                $("#insertApartmentModal").hide();
             }
         });
 
         // Gửi form bằng AJAX
         $("#submitBtn").click(function () {
-            let formData = $("#insertResidentForm").serialize();
+            let formData = $("#insertApartmentForm").serialize();
             $.ajax({
                 type: "POST",
-                url: "manageResident",
+                url: "manageApartment",
                 data: formData,
                 dataType: "json",
                 success: function (response) {
                     if (response.success) {
                         $("#message").html("<span style='color: green;'>" + response.message + "</span>");
-                        $("#insertResidentForm")[0].reset(); // Reset form
-                        setTimeout(() => { $("#insertResidentModal").hide(); location.reload(); }, 1500);
+                        $("#insertApartmentForm")[0].reset(); // Reset form
+                        setTimeout(() => { $("#insertApartmentModal").hide(); location.reload(); }, 1500);
                     } else {
                         $("#message").html("<span style='color: red;'>" + response.message + "</span>");
                     }
@@ -824,6 +888,7 @@
         });
     });
 </script>
+
                 <!--==============================END================================-->
 
                 <footer>
@@ -852,3 +917,4 @@
     </body>
 
 </html>
+

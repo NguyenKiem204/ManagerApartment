@@ -14,11 +14,15 @@ public class Apartment {
     String block;
     String status;
     String type;
+    int ownerId;
 
-    public Apartment(String apartmentName, String block, String status, String type) {
+    public Apartment(String apartmentName, String block, String status, String type, int ownerId) {
         this.apartmentName = apartmentName;
         this.block = block;
         this.status = status;
         this.type = type;
+        this.ownerId = ownerId;
     }
+
+    
 }

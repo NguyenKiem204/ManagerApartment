@@ -5,6 +5,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.sql.Date;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -61,5 +62,8 @@ public class Resident {
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.email = email;
+    }
+    public Date getFormattedDate() {
+        return Date.valueOf(dob); // Chuyển LocalDate -> SQL Date
     }
 }

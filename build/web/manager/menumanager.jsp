@@ -196,7 +196,7 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="extra-component-avatar.html">List</a>
+                                        <a href="manageApartment">Apartment</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="extra-component-sweetalert.html">Vehicles</a>

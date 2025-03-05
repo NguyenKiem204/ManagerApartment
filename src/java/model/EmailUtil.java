@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class EmailUtil {
     public static void sendEmail(String recipientEmail, String password) {
          final String senderEmail = "dungnqhe186457@fpt.edu.vn"; // 
-         final String senderPassword = "v x w o x l k e d g e e x u a e"; //(App Password)
+         final String senderPassword = "y d w p z p n i c b e c b c l v"; //(App Password)
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -32,18 +32,18 @@ public class EmailUtil {
             }
         });
 
-//        try {
-//            Message message = new MimeMessage(session);
-//            message.setFrom(new InternetAddress(senderEmail));
-//            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-//            message.setSubject("Resident's account profile");
-//            message.setText("Hey,\n\nYour account was created.\nYour password is: " + password + "\n\n Please change your password when you log in by this email!");
-//
-//            Transport.send(message);
-//            System.out.println("Email đã được gửi thành công!");
-//        } catch (MessagingException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(senderEmail));
+            message.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(recipientEmail));
+            message.setSubject("Resident's account profile");
+            message.setText("Hey,\n\nYour account was created.\nYour password is: " + password + "\n\n Please change your password when you log in by this email!");
+
+            Transport.send(message);
+            System.out.println("Email đã được gửi thành công!");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
     public boolean isValidEmail(String email) {
         // Biểu thức chính quy cho định dạng email

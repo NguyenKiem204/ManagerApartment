@@ -28,6 +28,7 @@
         <url-pattern>/manager/manageResident</url-pattern>
         <url-pattern>/manager/manageStaff</url-pattern>
         <url-pattern>/manager/request</url-pattern>
+        
     </filter-mapping>
     
     <filter-mapping>

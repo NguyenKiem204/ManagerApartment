@@ -139,11 +139,11 @@
                                     <span>Home</span>
                                 </a>
                             </li>
-
+                            
                             <li class="sidebar-item">
-                                <a href="<%= request.getContextPath() %>/news" class="sidebar-link">
-                                    <i class="fa-solid fa-envelope"></i>
-                                    <span>News</span>
+                                <a href="manageTenant" class="sidebar-link">
+                                    <i class="bi bi-envelope-fill"></i>
+                                    <span>Tenant</span>
                                 </a>
                             </li>
 
