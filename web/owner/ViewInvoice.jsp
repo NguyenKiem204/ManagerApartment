@@ -145,7 +145,7 @@
                             </form>
                         </div>
                         <div class="col-md-4">
-                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
+                            <form action="ViewInvoice" method="get" class="d-flex gap-2">
                                 <input type="text" name="search" placeholder="Search by title.." value="${search}" class="form-control me-2">
                                 <input type="hidden" name="FromDate" value="${selectedFromDate}">  
                                 <input type="hidden" name="dueDate" value="${selectedDueDate}"> 

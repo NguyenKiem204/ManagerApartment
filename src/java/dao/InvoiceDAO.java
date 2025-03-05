@@ -326,8 +326,6 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return latestInvoiceID;
     }
 
-   
-
     public void updateStatusInvoice(int id) {
         String sql = "UPDATE Invoice SET Status = 'Paid', PaymentDate = GETDATE() WHERE InvoiceID = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -344,7 +342,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         }
     }
 
-   public boolean updateInvoiceStatus(int invoiceID) {
+    public boolean updateInvoiceStatus(int invoiceID) {
         String sql = "UPDATE Invoice SET Status = 'Paid', PaymentDate = GETDATE() WHERE InvoiceID = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, invoiceID);
@@ -355,7 +353,6 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
             return false; // Trả về false nếu có lỗi
         }
     }
-   
 
     public List<Invoices> filterInvoices(String status, LocalDate fromDate, LocalDate dueDate) {
         List<Invoices> invoices = new ArrayList<>();
@@ -492,7 +489,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return listPage;
     }
 
-    public List<Invoices> getInvoicesByres(int residentId, LocalDate fromDate, LocalDate dueDate) {
+    public List<Invoices> getInvoicesByres(int residentId, LocalDate fromDate, LocalDate dueDate, boolean isHistory) {
         List<Invoices> invoices = new ArrayList<>();
         List<Object> parameters = new ArrayList<>();
 
@@ -512,13 +509,26 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
 
         parameters.add(residentId); // Thêm residentId vào danh sách tham số
 
-        if (fromDate != null) {
-            sql += " AND inv.PublicDate >= ?";
-            parameters.add(java.sql.Date.valueOf(fromDate));
-        }
-        if (dueDate != null) {
-            sql += " AND inv.PublicDate <= ?";
-            parameters.add(java.sql.Date.valueOf(dueDate));
+        if (isHistory) {
+            // Lọc theo lịch sử thanh toán (PaymentDate)
+            if (fromDate != null) {
+                sql += " AND inv.PaymentDate >= ?";
+                parameters.add(java.sql.Date.valueOf(fromDate));
+            }
+            if (dueDate != null) {
+                sql += " AND inv.PaymentDate <= ?";
+                parameters.add(java.sql.Date.valueOf(dueDate));
+            }
+        } else {
+            // Lọc theo ngày công bố (PublicDate)
+            if (fromDate != null) {
+                sql += " AND inv.PublicDate >= ?";
+                parameters.add(java.sql.Date.valueOf(fromDate));
+            }
+            if (dueDate != null) {
+                sql += " AND inv.PublicDate <= ?";
+                parameters.add(java.sql.Date.valueOf(dueDate));
+            }
         }
 
         sql += " ORDER BY inv.InvoiceID";
@@ -598,39 +608,4 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return invoices;
     }
 
-    public static void main(String[] args) {
-        InvoiceDAO invoiceDAO = new InvoiceDAO(); // Tạo đối tượng DAO
-        int residentId = 7; // ID của cư dân cần kiểm tra
-        LocalDate fromDate = LocalDate.of(2024, 1, 1); // Ngày bắt đầu lọc hóa đơn
-        LocalDate dueDate = LocalDate.of(2025, 12, 31); // Ngày kết thúc lọc hóa đơn
-
-        // Gọi phương thức để lấy danh sách hóa đơn
-        List<Invoices> invoices1 = invoiceDAO.getInvoicesByres(residentId, fromDate, dueDate);
-        List<Invoices> invoices=new ArrayList<>();
-        for(Invoices i:invoices1){
-            if(i.getStatus().equals("Paid")){
-                invoices.add(i);
-            }
-        }
-        // Kiểm tra kết quả
-        if (invoices.isEmpty()) {
-            System.out.println("Không có hóa đơn nào được tìm thấy cho cư dân ID: " + residentId);
-        } else {
-            for (Invoices inv : invoices) {
-                System.out.println("Hóa đơn ID: " + inv.getInvoiceID());
-                System.out.println("Tổng tiền: " + inv.getTotalAmount());
-                System.out.println("Ngày xuất hóa đơn: " + inv.getPublicDate());
-                System.out.println("Trạng thái: " + inv.getStatus());
-                System.out.println("Ngày đến hạn: " + inv.getDueDate());
-              
-                System.out.println("Cư dân: " + inv.getResident().getFullName());
-                System.out.println("Căn hộ: " + inv.getApartment().getApartmentName());
-                System.out.println("Chi tiết hóa đơn:");
-                for (InvoiceDetail detail : inv.getDetails()) {
-                    System.out.println("  - Loại: " + detail.getBillType() + " | Số tiền: " + detail.getAmount());
-                }
-                System.out.println("--------------------------------------------------");
-            }
-        }
-    }
 }

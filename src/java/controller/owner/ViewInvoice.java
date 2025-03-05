@@ -81,7 +81,7 @@ public class ViewInvoice extends HttpServlet {
                     ? LocalDate.parse(dueDateStr)
                     : null;
 
-            List<Invoices> list1 = iDAO.getInvoicesByres(rs.getResidentId(), fromDate, dueDate);
+            List<Invoices> list1 = iDAO.getInvoicesByres(rs.getResidentId(), fromDate, dueDate,false);
             List<Invoices> list= new ArrayList<>();
             for(Invoices i: list1){
                 if(i.getStatus().equals("Unpaid")){

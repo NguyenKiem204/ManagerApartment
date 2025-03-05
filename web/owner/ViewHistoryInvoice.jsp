@@ -148,7 +148,7 @@
 
 
                         <div class="col-md-4">
-                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
+                            <form action="ViewHistoryInvoice" method="get" class="d-flex gap-2">
                                 <input type="text" name="search" placeholder="Search by title.." value="${search}" class="form-control me-2">
                                 <input type="hidden" name="FromDate" value="${selectedFromDate}">  
                                 <input type="hidden" name="dueDate" value="${selectedDueDate}"> 
@@ -169,7 +169,7 @@
                             <th>Amount</th>
                             <th>Apartment</th>
                             <th>Public Date</th>
-                            <th>Payment Term</th>
+                            <th>Payment Date</th>
 
                             <th>Late(0,1%/d)</th>
                             <th  style="width:60px">Actions</th>
@@ -185,7 +185,7 @@
                                 <td>${l.totalAmount + l.muon}</td>
                                 <td>${l.apartment.apartmentName}</td>
                                 <td>${l.publicDateft}</td>
-                                <td>${l.dueDateft}</td>
+                                <td>${l.publicDateft}</td>
                                 <td>
                                     <c:if test="${l.muon != 0}">
                                         <p>Islate</p>

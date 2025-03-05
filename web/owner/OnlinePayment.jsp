@@ -67,7 +67,7 @@
                         <div class="alert alert-danger">Failed to generate payment URL.</div>
                     </c:if>
                     <p value=""><strong>Account bank number:</strong> 686868922004</p>
-                    <p value=""><strong>Token:</strong> ${token}</p>
+                    <p value=""><strong>Transaction Code:</strong> ${transactionId}</p>
                 </div>
                 <div class="card invoice-details">
                     <h3 class="text-center">Invoice Details</h3>

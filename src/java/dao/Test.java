@@ -80,8 +80,8 @@ public class Test {
 //       /
 //        imageDAO.insert(image);
 
-//        Staff staff = new Staff("Nguyễn Văn b", "123", "0931652222", "66349841131194", "nguyenmanhb151@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(4).build());
-//        staffDAO.insert(staff);
+        Staff staff = new Staff("Nguyễn Văn b", "123", "0931652222", "66349841131194", "nguyenmanhb151@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(3).build());
+        staffDAO.insert(staff);
 
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);
