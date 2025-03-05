@@ -146,30 +146,13 @@
                                     <span>News</span>
                                 </a>
                             </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-collection-fill"></i>
+                            <li class="sidebar-item">
+                                <a href="<%= request.getContextPath() %>/ViewInvoice" class="sidebar-link">
+                                    <i class="fa-solid fa-envelope"></i>
                                     <span>Invoices</span>
                                 </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="#">List</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Vehicles</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Notifications</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Complaints</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-divider.html">Divider</a>
-                                    </li>
-                                </ul>
                             </li>
+
 
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
@@ -186,14 +169,7 @@
                                 </ul>
                             </li>
 
-                            <li class="sidebar-title">Others</li>
-
-                            <li class="sidebar-item">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-envelope-fill"></i>
-                                    <span>Blogs</span>
-                                </a>
-                            </li>
+                           
 
                             <li class="sidebar-item">
                                 <a href="#" class="sidebar-link">
@@ -208,13 +184,6 @@
                                 <a href="https://zuramai.github.io/mazer/docs" class="sidebar-link">
                                     <i class="bi bi-life-preserver"></i>
                                     <span>Building Information</span>
-                                </a>
-                            </li>
-
-                            <li class="sidebar-item">
-                                <a href="https://github.com/zuramai/mazer/blob/main/CONTRIBUTING.md" class="sidebar-link">
-                                    <i class="bi bi-puzzle"></i>
-                                    <span>Service Fee Information</span>
                                 </a>
                             </li>
                             <li class="sidebar-item">

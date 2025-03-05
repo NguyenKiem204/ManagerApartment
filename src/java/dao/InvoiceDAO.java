@@ -54,23 +54,27 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return row;
     }
 
-    // Lấy danh sách hóa đơn từ database
     @Override
     public List<Invoices> selectAll() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public List<Invoices> selectAllByOwnerId(int id) {
         List<Invoices> list = new ArrayList<>();
 
-        String sql = "SELECT inv.InvoiceID, inv.TotalAmount, inv.PublicDate, inv.Status AS InvoiceStatus, "
-                + "inv.Description AS InvoiceDescription, inv.DueDate, inv.islate,"
-                + "idt.DetailID, idt.Amount, idt.Description AS DetailDescription, "
-                + "tb.TypeName AS BillType, "
-                + "res.ResidentID, res.FullName AS ResidentName, res.PhoneNumber AS ResidentPhone, res.Email AS ResidentEmail, "
-                + "apt.ApartmentID, apt.ApartmentName, apt.Block, apt.Status AS ApartmentStatus, apt.Type AS ApartmentType "
-                + "FROM Invoice inv "
-                + "JOIN Resident res ON inv.ResidentID = res.ResidentID "
-                + "JOIN Contract ct ON res.ResidentID = ct.ResidentID "
-                + "JOIN Apartment apt ON ct.ApartmentID = apt.ApartmentID "
-                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID "
-                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID "
+        String sql = "SELECT inv.InvoiceID, inv.TotalAmount, inv.PublicDate, inv.Status AS InvoiceStatus, \n"
+                + "       inv.Description AS InvoiceDescription, inv.DueDate, inv.islate,\n"
+                + "       idt.DetailID, idt.Amount, idt.Description AS DetailDescription, \n"
+                + "       tb.TypeName AS BillType, \n"
+                + "       res.ResidentID, res.FullName AS ResidentName, res.PhoneNumber AS ResidentPhone, res.Email AS ResidentEmail, \n"
+                + "       apt.ApartmentID, apt.ApartmentName, apt.Block, apt.Status AS ApartmentStatus, apt.Type AS ApartmentType \n"
+                + "FROM Invoice inv \n"
+                + "JOIN Resident res ON inv.ResidentID = res.ResidentID \n"
+                + "LEFT JOIN Contract ct ON res.ResidentID = ct.ResidentID \n"
+                + "LEFT JOIN Apartment apt ON ct.ApartmentID = apt.ApartmentID \n"
+                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID \n"
+                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID \n"
+                + "WHERE res.ResidentID = 1\n"
                 + "ORDER BY inv.InvoiceID;";
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -106,10 +110,10 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                     LocalDate publicDate = rs.getDate("PublicDate") != null ? rs.getDate("PublicDate").toLocalDate() : null;
                     LocalDate dueDateLocal = rs.getDate("DueDate") != null ? rs.getDate("DueDate").toLocalDate() : null;
                     LocalDate payDate = rs.getDate("PaymentDate") != null ? rs.getDate("PaymentDate").toLocalDate() : null;
-                    if ("Unpaid".equals(rs.getString("InvoiceStatus"))  && dueDateLocal != null && dueDateLocal.isBefore(LocalDate.now())) {
+                    if ("Unpaid".equals(rs.getString("InvoiceStatus")) && dueDateLocal != null && dueDateLocal.isBefore(LocalDate.now())) {
                         long daysLate = ChronoUnit.DAYS.between(dueDateLocal, LocalDate.now());
-                        double penaltyRate = 0.001; 
-                        Late=rs.getDouble("TotalAmount") * ( penaltyRate * daysLate);
+                        double penaltyRate = 0.001;
+                        Late = rs.getDouble("TotalAmount") * (penaltyRate * daysLate);
                         this.updateislate(Late, invoiceID);
                     }
                     invoice = new Invoices(
@@ -322,25 +326,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return latestInvoiceID;
     }
 
-    public void updateInvoice(Invoices inv) {
-        String sql = "UPDATE Invoice\n"
-                + "SET  \n"
-                + "    TotalAmount = ?,  \n"
-                + "    [Description] = ?, \n"
-                + "    DueDate = ?\n"
-                + "WHERE InvoiceID = ?;";
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDouble(1, inv.getTotalAmount());
-            ps.setString(2, inv.getDescription());
-            ps.setDate(3, java.sql.Date.valueOf(inv.getDueDate()));
-            ps.setInt(4, inv.getInvoiceID());
-            int rowsUpdated = ps.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        }
-    }
+   
 
     public void updateStatusInvoice(int id) {
         String sql = "UPDATE Invoice SET Status = 'Paid', PaymentDate = GETDATE() WHERE InvoiceID = ?";
@@ -357,6 +343,19 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
             e.printStackTrace();
         }
     }
+
+   public boolean updateInvoiceStatus(int invoiceID) {
+        String sql = "UPDATE Invoice SET Status = 'Paid', PaymentDate = GETDATE() WHERE InvoiceID = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, invoiceID);
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0; // Trả về true nếu cập nhật thành công
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false; // Trả về false nếu có lỗi
+        }
+    }
+   
 
     public List<Invoices> filterInvoices(String status, LocalDate fromDate, LocalDate dueDate) {
         List<Invoices> invoices = new ArrayList<>();
@@ -376,7 +375,6 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                 + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID "
                 + "WHERE 1=1";
 
-      
         if (status != null && !status.isEmpty()) {
             sql += " AND inv.Status = ?";
             parameters.add(status);
@@ -427,13 +425,13 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                     LocalDate publicDate = rs.getDate("PublicDate") != null ? rs.getDate("PublicDate").toLocalDate() : null;
                     LocalDate dueDateLocal = rs.getDate("DueDate") != null ? rs.getDate("DueDate").toLocalDate() : null;
                     LocalDate payDate = rs.getDate("PaymentDate") != null ? rs.getDate("PaymentDate").toLocalDate() : null;
-                    if ("Unpaid".equals(rs.getString("InvoiceStatus"))  && dueDateLocal != null && dueDateLocal.isBefore(LocalDate.now())) {
+                    if ("Unpaid".equals(rs.getString("InvoiceStatus")) && dueDateLocal != null && dueDateLocal.isBefore(LocalDate.now())) {
                         long daysLate = ChronoUnit.DAYS.between(dueDateLocal, LocalDate.now());
-                        double penaltyRate = 0.001; 
-                        late=rs.getDouble("TotalAmount") * ( penaltyRate * daysLate);
+                        double penaltyRate = 0.001;
+                        late = rs.getDouble("TotalAmount") * (penaltyRate * daysLate);
                         this.updateislate(late, invoiceID);
                     }
-                    
+
                     invoice = new Invoices(
                             invoiceID,
                             totalAmount,
@@ -466,6 +464,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         }
         return invoices;
     }
+
     public <T> int getTotalPage(List<T> list, int numberPerPape) {
         int totalPage;
         if (list.size() % numberPerPape == 0) {
@@ -475,6 +474,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         }
         return totalPage;
     }
+
     public <T> List<T> getListPerPage(List<T> list, int numberPerPape, String page) {
         if (page == null || page == "") {
             page = "1";
@@ -490,5 +490,147 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
             }
         }
         return listPage;
+    }
+
+    public List<Invoices> getInvoicesByres(int residentId, LocalDate fromDate, LocalDate dueDate) {
+        List<Invoices> invoices = new ArrayList<>();
+        List<Object> parameters = new ArrayList<>();
+
+        String sql = "SELECT inv.InvoiceID, inv.TotalAmount, inv.PublicDate, inv.Status AS InvoiceStatus, "
+                + "inv.Description AS InvoiceDescription, inv.DueDate, inv.islate, inv.PaymentDate, "
+                + "idt.DetailID, idt.Amount, idt.Description AS DetailDescription, "
+                + "tb.TypeName AS BillType, "
+                + "res.ResidentID, res.FullName AS ResidentName, res.PhoneNumber AS ResidentPhone, res.Email AS ResidentEmail, "
+                + "apt.ApartmentID, apt.ApartmentName, apt.Block, apt.Status AS ApartmentStatus, apt.Type AS ApartmentType "
+                + "FROM Invoice inv "
+                + "JOIN Resident res ON inv.ResidentID = res.ResidentID "
+                + "JOIN Contract ct ON res.ResidentID = ct.ResidentID "
+                + "JOIN Apartment apt ON ct.ApartmentID = apt.ApartmentID "
+                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID "
+                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID "
+                + "WHERE inv.ResidentID = ?"; // Thêm điều kiện lọc theo ResidentID
+
+        parameters.add(residentId); // Thêm residentId vào danh sách tham số
+
+        if (fromDate != null) {
+            sql += " AND inv.PublicDate >= ?";
+            parameters.add(java.sql.Date.valueOf(fromDate));
+        }
+        if (dueDate != null) {
+            sql += " AND inv.PublicDate <= ?";
+            parameters.add(java.sql.Date.valueOf(dueDate));
+        }
+
+        sql += " ORDER BY inv.InvoiceID";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (int i = 0; i < parameters.size(); i++) {
+                ps.setObject(i + 1, parameters.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int invoiceID = rs.getInt("InvoiceID");
+                Invoices invoice = null;
+                for (Invoices inv : invoices) {
+                    if (inv.getInvoiceID() == invoiceID) {
+                        invoice = inv;
+                        break;
+                    }
+                }
+                if (invoice == null) {
+                    Resident resident = new Resident(
+                            rs.getInt("ResidentID"),
+                            rs.getString("ResidentName"),
+                            rs.getString("ResidentPhone"),
+                            rs.getString("ResidentEmail")
+                    );
+
+                    Apartment apartment = new Apartment(
+                            rs.getInt("ApartmentID"),
+                            rs.getString("ApartmentName"),
+                            rs.getString("Block"),
+                            rs.getString("ApartmentStatus"),
+                            rs.getString("ApartmentType")
+                    );
+                    double late = rs.getDouble("islate");
+                    double totalAmount = rs.getDouble("TotalAmount");
+                    LocalDate publicDate = rs.getDate("PublicDate") != null ? rs.getDate("PublicDate").toLocalDate() : null;
+                    LocalDate dueDateLocal = rs.getDate("DueDate") != null ? rs.getDate("DueDate").toLocalDate() : null;
+                    LocalDate payDate = rs.getDate("PaymentDate") != null ? rs.getDate("PaymentDate").toLocalDate() : null;
+                    if ("Unpaid".equals(rs.getString("InvoiceStatus")) && dueDateLocal != null && dueDateLocal.isBefore(LocalDate.now())) {
+                        long daysLate = ChronoUnit.DAYS.between(dueDateLocal, LocalDate.now());
+                        double penaltyRate = 0.001;
+                        late = rs.getDouble("TotalAmount") * (penaltyRate * daysLate);
+                        this.updateislate(late, invoiceID);
+                    }
+
+                    invoice = new Invoices(
+                            invoiceID,
+                            totalAmount,
+                            publicDate,
+                            rs.getString("InvoiceStatus"),
+                            rs.getString("InvoiceDescription"),
+                            dueDateLocal,
+                            resident,
+                            apartment,
+                            late,
+                            payDate
+                    );
+
+                    invoices.add(invoice);
+                }
+
+                int detailID = rs.getInt("DetailID");
+                if (!rs.wasNull()) {
+                    InvoiceDetail detail = new InvoiceDetail(
+                            detailID,
+                            rs.getDouble("Amount"),
+                            rs.getString("DetailDescription"),
+                            rs.getString("BillType")
+                    );
+                    invoice.addDetail(detail);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InvoiceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return invoices;
+    }
+
+    public static void main(String[] args) {
+        InvoiceDAO invoiceDAO = new InvoiceDAO(); // Tạo đối tượng DAO
+        int residentId = 7; // ID của cư dân cần kiểm tra
+        LocalDate fromDate = LocalDate.of(2024, 1, 1); // Ngày bắt đầu lọc hóa đơn
+        LocalDate dueDate = LocalDate.of(2025, 12, 31); // Ngày kết thúc lọc hóa đơn
+
+        // Gọi phương thức để lấy danh sách hóa đơn
+        List<Invoices> invoices1 = invoiceDAO.getInvoicesByres(residentId, fromDate, dueDate);
+        List<Invoices> invoices=new ArrayList<>();
+        for(Invoices i:invoices1){
+            if(i.getStatus().equals("Paid")){
+                invoices.add(i);
+            }
+        }
+        // Kiểm tra kết quả
+        if (invoices.isEmpty()) {
+            System.out.println("Không có hóa đơn nào được tìm thấy cho cư dân ID: " + residentId);
+        } else {
+            for (Invoices inv : invoices) {
+                System.out.println("Hóa đơn ID: " + inv.getInvoiceID());
+                System.out.println("Tổng tiền: " + inv.getTotalAmount());
+                System.out.println("Ngày xuất hóa đơn: " + inv.getPublicDate());
+                System.out.println("Trạng thái: " + inv.getStatus());
+                System.out.println("Ngày đến hạn: " + inv.getDueDate());
+              
+                System.out.println("Cư dân: " + inv.getResident().getFullName());
+                System.out.println("Căn hộ: " + inv.getApartment().getApartmentName());
+                System.out.println("Chi tiết hóa đơn:");
+                for (InvoiceDetail detail : inv.getDetails()) {
+                    System.out.println("  - Loại: " + detail.getBillType() + " | Số tiền: " + detail.getAmount());
+                }
+                System.out.println("--------------------------------------------------");
+            }
+        }
     }
 }
