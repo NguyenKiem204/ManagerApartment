@@ -84,6 +84,7 @@ public class UpdateNewsServlet extends HttpServlet {
         throws ServletException, IOException {
     String newsIDParam = request.getParameter("newsID");
     String title = request.getParameter("title");
+    title = validation.Validate.escapeSQL(title);
     String description = request.getParameter("description");
     String staffIdParam = request.getParameter("staffId");
     String url = request.getParameter("url");

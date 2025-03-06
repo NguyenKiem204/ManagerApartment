@@ -107,41 +107,7 @@
                 background-color: #ccc;
                 cursor: not-allowed;
             }
-            /*            #pageNumber {
-                            color: black;
-                            font-weight: bold;
-                            margin-top: auto;
-                            margin-bottom: auto;
-                        }
-                        input[type="date"]::-webkit-datetime-edit, input[type="date"]::-webkit-inner-spin-button, input[type="date"]::-webkit-clear-button {
-                            color: #fff;
-                            position: relative;
-                        }
-            
-                        input[type="date"]::-webkit-datetime-edit-year-field{
-                            position: absolute !important;
-                            border-left:1px solid #8c8c8c;
-                            padding: 2px;
-                            color:#000;
-                            left: 56px;
-                        }
-            
-                        input[type="date"]::-webkit-datetime-edit-month-field{
-                            position: absolute !important;
-                            border-left:1px solid #8c8c8c;
-                            padding: 2px;
-                            color:#000;
-                            left: 26px;
-                        }
-            
-            
-                        input[type="date"]::-webkit-datetime-edit-day-field{
-                            position: absolute !important;
-                            color:#000;
-                            padding: 2px;
-                            left: 4px;
-            
-                        }*/
+
         </style>
 
 
@@ -235,13 +201,25 @@
                                 <td>${l.description}</td>
                                 <td>${l.totalAmount+ l.muon}</td>
                                 <td>${l.apartment.apartmentName}</td>
-                                <td>${l.status}</td>
+                                <td>
+                               
+                                    <c:if test="${'Unpaid' eq l.status}">
+                                        <p style="background-color: orange; color: white; border-radius: 8px; padding: 5px; display: inline-block; text-align: center;">
+                                            ${l.status}
+                                        </p>
+                                    </c:if>
+                                    <c:if test="${'Paid' eq l.status}">
+                                        <p style="background-color: green; color: white; border-radius: 8px; padding: 5px; display: inline-block; text-align: center;">
+                                            ${l.status}
+                                        </p>
+                                    </c:if>
+                                </td>
                                 <td>${l.dueDateft}</td>
                                 <td>${l.paydateft}</td>
                                 <td>${l.publicDateft}</td>
                                 <td>
                                     <c:if test="${l.muon != 0}">
-                                        <p>Islate</p>
+                                        <p style="color:red">Islate</p>
                                     </c:if>
                                 </td>
                                 <td style="width:30px">
@@ -315,13 +293,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-        <script>
-            $(document).ready(function () {
-                $("#dueDate").datepicker({
-                    dateFormat: "dd/mm/yy"
-                });
-            });
-        </script>
 
 
     </body>

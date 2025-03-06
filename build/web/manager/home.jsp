@@ -154,7 +154,7 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="component-alert.html">Building</a>
+                                        <a href="manageApartment">Apartment</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="component-badge.html">Floor</a>

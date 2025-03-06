@@ -7,6 +7,7 @@
 <%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem --%>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 
@@ -706,7 +707,7 @@
                                             <td>${resident.phoneNumber}</td>
                                             <td>${resident.cccd}</td>
                                             <td>${resident.email}</td>
-                                            <td>${resident.dob}</td>
+                                            <td><fmt:formatDate value="${resident.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate></td>
                                             <td>${resident.sex}</td>
                                             <td>
                                                 <label class="switch">
@@ -735,7 +736,29 @@
                         </div>
 
                     </div>
+                                    
                 </div>
+                                    <ul class="pagination">
+    <c:if test="${currentPage > 1}">
+        <li class="page-item">
+            <a class="page-link" href="?page=${currentPage - 1}&searchKeyword=${searchKeyword}&sex=${selectedSex}&status=${selectedStatus}&block=${selectedBlock}">Previous</a>
+        </li>
+    </c:if>
+
+    <c:forEach begin="1" end="${totalPages}" var="i">
+        <li class="page-item ${i == currentPage ? 'active' : ''}">
+            <a class="page-link" href="?page=${i}&searchKeyword=${searchKeyword}&sex=${selectedSex}&status=${selectedStatus}&block=${selectedBlock}">${i}</a>
+        </li>
+    </c:forEach>
+
+    <c:if test="${currentPage < totalPages}">
+        <li class="page-item">
+            <a class="page-link" href="?page=${currentPage + 1}&searchKeyword=${searchKeyword}&sex=${selectedSex}&status=${selectedStatus}&block=${selectedBlock}">Next</a>
+        </li>
+    </c:if>
+</ul>
+
+
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script>
                                                         $(document).ready(function () {

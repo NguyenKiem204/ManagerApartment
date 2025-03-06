@@ -55,7 +55,7 @@ public class Error403Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("error-430.jsp").forward(request, response);
+        request.getRequestDispatcher("error-404.jsp").forward(request, response);
     } 
 
     /** 

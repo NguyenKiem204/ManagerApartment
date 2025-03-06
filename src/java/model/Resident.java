@@ -6,6 +6,7 @@ package model;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.sql.Date;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -80,6 +81,6 @@ public class Resident {
     }
 
     public Date getFormattedDate() {
-        return Date.valueOf(dob);
+        return Date.valueOf(dob); // Chuyển LocalDate -> SQL Date
     }
 }
