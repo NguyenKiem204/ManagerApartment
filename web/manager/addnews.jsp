@@ -141,8 +141,8 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
-                                                               alt="Logo" /></a>
+                                <a href="menumanager"><img src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
+                                                           alt="Logo" /></a>
                             </div>
                             <div class="toggler">
                                 <a href="#" class="sidebar-hide d-xl-none d-block"><i
@@ -401,18 +401,19 @@
                         <div class="col-lg-8 col-md-10">
                             <form id="Create" action="addnews" method="POST" class="p-4 border rounded shadow bg-white" enctype="multipart/form-data">
                                 <input type="hidden" value="${sessionScope.staff.staffId}" name="staffId"/>
-                                <div class="alert alert-danger mb-3 d-none">Có lỗi xảy ra!</div>
-
+                                <c:if test="${not empty errors}">
+                                    <div class="alert alert-danger">
+                                        <strong>An error has occurred:</strong>
+                                        <ul class="mb-0">
+                                            <c:forEach var="error" items="${errors}">
+                                                <li>${error}</li>
+                                                </c:forEach>
+                                        </ul>
+                                    </div>
+                                </c:if>
                                 <div class="mb-3">
                                     <label for="title" class="form-label"><i class="fas fa-heading"></i> Tên bài viết</label>
                                     <input type="text" name="title" id="title" class="form-control border-orange" />
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="category" class="form-label"><i class="fas fa-list-alt"></i> Danh mục</label>
-                                    <select id="category" class="form-select border-orange">
-                                        <option value="0" selected>Chọn danh mục</option>
-                                    </select>
                                 </div>
 
                                 <div class="mb-3">
@@ -442,7 +443,15 @@
                     </div>
                 </div>
 
-                <script>
+                <script type="text/javascript">
+                    document.querySelectorAll('input, textarea').forEach(function (input) {
+                        input.addEventListener('focus', function () {
+                            const errorAlert = document.querySelector('.alert-danger');
+                            if (errorAlert) {
+                                errorAlert.style.display = 'none';
+                            }
+                        });
+                    });
                     $(document).ready(function () {
                         $('#detail').summernote({
                             height: 300,
@@ -469,7 +478,7 @@
                 </footer>
             </div>
         </div>
-        
+
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
         <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 

@@ -51,26 +51,36 @@ public class NewsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-    int page = 1;
-    int newsPerPage = 6;
+    int pageSize = 6;
+        int page = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null) {
+            page = Integer.parseInt(pageParam);
+        }
 
-    if (request.getParameter("page") != null) {
-        page = Integer.parseInt(request.getParameter("page"));
-    }
+        String searchTitle = validation.Validate.normalizeString(request.getParameter("searchTitle"));
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+
         NewsDAO newsDAO = new NewsDAO();
-    List<News> newsList = newsDAO.selectAll();
-    int totalNews = newsList.size();
-    int totalPages = (int) Math.ceil((double) totalNews / newsPerPage);
+        List<News> newsList;
+        int totalRecords;
 
-    int startIndex = (page - 1) * newsPerPage;
-    int endIndex = Math.min(startIndex + newsPerPage, totalNews);
+        if (searchTitle != null || startDate != null || endDate != null) {
+            newsList = newsDAO.searchNews(searchTitle, startDate, endDate, page, pageSize);
+            totalRecords = newsDAO.getTotalSearchRecords(searchTitle, startDate, endDate);
+        } else {
+            newsList = newsDAO.selectAll(page, pageSize);
+            totalRecords = newsDAO.getTotalRecords();
+        }
+        int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
 
-    List<News> newsForPage = newsList.subList(startIndex, endIndex);
-
-    request.setAttribute("newsList", newsForPage);
-    request.setAttribute("totalPages", totalPages);
-    request.setAttribute("currentPage", page);
-
+        request.setAttribute("newsList", newsList);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("searchTitle", searchTitle);
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
     request.getRequestDispatcher("/news.jsp").forward(request, response);
     } 
 

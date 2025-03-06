@@ -79,10 +79,33 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD}</file>
+                    <file>${file.reference.jakarta.websocket-api-2.1.0.jar}</file>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.json-20230618.jar}</file>
+                    <file>${file.reference.jakarta.servlet-api-6.1.0.jar}</file>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.jsoup-1.18.3.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.json-20250107.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.commons-logging-1.2.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.commons-codec-1.15.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.jsoup-1.18.3.jar-1}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.jsoup-1.18.3.jar-2}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

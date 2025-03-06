@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller;
 
 import config.EmailSender;
@@ -15,41 +14,45 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author nkiem
  */
-@WebServlet(name="SendResetLinkServlet", urlPatterns={"/send-reset-link"})
+@WebServlet(name = "SendResetLinkServlet", urlPatterns = {"/send-reset-link"})
 public class SendResetLinkServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SendResetLinkServlet</title>");  
+            out.println("<title>Servlet SendResetLinkServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SendResetLinkServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet SendResetLinkServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -57,49 +60,58 @@ public class SendResetLinkServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-         String email = request.getParameter("email");
-        if (email == null || email.trim().isEmpty()) {
-            response.getWriter().write("Email không được để trống.");
-            return;
+            throws ServletException, IOException {
+        String email = request.getParameter("email").trim();
+        if (email == null || email.isEmpty()) {
+            request.setAttribute("error", "Email can't empty!");
+            request.getRequestDispatcher("forgotpassword,jsp").forward(request, response);
+        } else if (!EMAIL_PATTERN.matcher(email).matches()) {
+            request.setAttribute("error", "Invalid email format!");
+            request.getRequestDispatcher("forgotpassword.jsp").forward(request, response);
         }
-        StaffDAO staffDAO = new StaffDAO();
-        ResidentDAO residentDAO = new ResidentDAO();
-        EmailSender emailSender = new EmailSender();
-        if (!staffDAO.existEmail(email)&&!residentDAO.existEmail(email)) {
-            response.getWriter().write("Email không tồn tại trong hệ thống.");
-            return;
+            StaffDAO staffDAO = new StaffDAO();
+            ResidentDAO residentDAO = new ResidentDAO();
+            EmailSender emailSender = new EmailSender();
+            if (!staffDAO.existEmail(email) && !residentDAO.existEmail(email)) {
+                request.setAttribute("error", "Email not exist!");
+                request.getRequestDispatcher("forgotpassword.jsp").forward(request, response);
+            }
+            try {
+                emailSender.sendVerificationEmail(request, email);
+                request.getRequestDispatcher("checkmail.jsp").forward(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect("error-403.html");
+            }
         }
-        try {
-            emailSender.sendVerificationEmail(request,email);
-            request.getRequestDispatcher("checkmail.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendRedirect("error-403.html");
-        }
-    }
-    
 
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
+        /**
+         * Returns a short description of the servlet.
+         *
+         * @return a String containing servlet description
+         */
+        @Override
+        public String getServletInfo
+        
+            () {
         return "Short description";
-    }// </editor-fold>
+        }// </editor-fold>
 
-}
+    }

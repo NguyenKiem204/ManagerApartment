@@ -126,6 +126,58 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return list;
     }
 
+    public int numberApartment() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM Apartment";
+
+        try (Connection connection = DBContext.getConnection(); 
+             PreparedStatement ps = connection.prepareStatement(sql); 
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
+    public int numberApartmentOccupied() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM Apartment Where Status = 'Occupied'";
+
+        try (Connection connection = DBContext.getConnection(); 
+             PreparedStatement ps = connection.prepareStatement(sql); 
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
+        public int numberApartmentAvailable() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM Apartment Where Status = 'Available'";
+
+        try (Connection connection = DBContext.getConnection(); 
+             PreparedStatement ps = connection.prepareStatement(sql); 
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
+
     @Override
     public Apartment selectById(Integer id) {
         Apartment apartment = null;
@@ -217,7 +269,6 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
     public List<Apartment> selectAllOcc() {
         List<Apartment> list = new ArrayList<>();
         String sql = "SELECT * FROM Apartment a where a.Status='Occupied'";
-        System.out.println(sql);
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -237,6 +288,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return list;
     }
+
     
 //    public List<Apartment> searchApartments(String name, int ownerId, String type, String status, String block, int page, int pageSize) {
 //    List<Apartment> apartments = new ArrayList<>();
@@ -449,4 +501,19 @@ public int getTotalApartments(String name, int ownerId, String type, String stat
 }
 
 
+    public List<String> getApartmentNames(String searchQuery) {
+        List<String> apartments = new ArrayList<>();
+        String sql = "SELECT TOP 5 ApartmentName FROM Apartment WHERE ApartmentName LIKE ?"; // Giới hạn kết quả
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, searchQuery + "%"); // Tìm kiếm theo tiền tố
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                apartments.add(rs.getString("ApartmentName"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apartments;
+    }
 }

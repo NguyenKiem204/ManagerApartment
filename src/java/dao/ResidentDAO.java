@@ -69,7 +69,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
 
     public int updateProfileResident(Resident resident) {
         int row = 0;
-        String updateRessidentSQL = "UPDATE Resident SET FullName = ?,PhoneNumber = ?, Email = ?, DOB = ?, Sex = ?, ImageID = ? WHERE ResidentID = ?";
+        String updateRessidentSQL = "UPDATE Resident SET FullName = ?,PhoneNumber = ?, DOB = ?, Sex = ?, ImageID = ? WHERE ResidentID = ?";
         String updateImageSQL = "UPDATE Image SET ImageURL = ? WHERE ImageID = ?";
 
         try (Connection connection = DBContext.getConnection()) {
@@ -85,11 +85,10 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
             try (PreparedStatement ps = connection.prepareStatement(updateRessidentSQL)) {
                 ps.setString(1, resident.getFullName());
                 ps.setString(2, resident.getPhoneNumber());
-                ps.setString(3, resident.getEmail());
-                ps.setDate(4, Date.valueOf(resident.getDob()));
-                ps.setString(5, resident.getSex());
-                ps.setInt(6, resident.getImage().getImageID());
-                ps.setInt(7, resident.getResidentId());
+                ps.setDate(3, Date.valueOf(resident.getDob()));
+                ps.setString(4, resident.getSex());
+                ps.setInt(5, resident.getImage().getImageID());
+                ps.setInt(6, resident.getResidentId());
 
                 row = ps.executeUpdate();
             }
@@ -163,6 +162,65 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return list;
     }
+    public int numberResident() {
+    int count = 0;
+    String sql = "SELECT COUNT(*) FROM Resident";
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        if (rs.next()) {
+            count = rs.getInt(1);
+        }
+
+    } catch (SQLException ex) {
+        Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return count;
+}
+
+    public List<Resident> selectAllSortedByLastMessage(String myEmail) {
+    List<Resident> list = new ArrayList<>();
+    String sql = """
+        SELECT r.*, MAX(m.Timestamp) AS LastMessageTime
+        FROM Resident r
+        LEFT JOIN Message m 
+            ON (r.Email = m.SenderEmail OR r.Email = m.ReceiverEmail)
+            AND (m.SenderEmail = ? OR m.ReceiverEmail = ?)
+        GROUP BY r.ResidentID, r.FullName, r.Email, r.PhoneNumber, r.CCCD, 
+                 r.Password, r.DOB, r.Sex, r.Status, r.ImageID, r.RoleID
+        ORDER BY LastMessageTime DESC
+    """;
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, myEmail);
+        ps.setString(2, myEmail);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Resident resident = new Resident(
+                    rs.getInt("ResidentID"),
+                    rs.getString("FullName"),
+                    rs.getString("Password"),
+                    rs.getString("PhoneNumber"),
+                    rs.getString("CCCD"),
+                    rs.getString("Email"),
+                    rs.getDate("DOB").toLocalDate(),
+                    rs.getString("Sex"),
+                    rs.getString("Status"),
+                    imageDAO.selectById(rs.getInt("ImageID")),
+                    roleDAO.selectById(rs.getInt("RoleID"))
+            );
+            list.add(resident);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return list;
+}
+
 
     @Override
     public Resident selectById(Integer id) {
@@ -225,6 +283,18 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         String sql = "SELECT * FROM Resident WHERE Email = ?";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    public boolean existPhoneNumber(String phone) {
+        String sql = "SELECT * FROM Resident WHERE PhoneNumber = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, phone);
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
             }

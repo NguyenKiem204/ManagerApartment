@@ -141,7 +141,7 @@
                             <li class="sidebar-title">Menu</li>
 
                             <li class="sidebar-item active">
-                                <a href="index.html" class="sidebar-link">
+                                <a href="home" class="sidebar-link">
                                     <i class="bi bi-grid-fill"></i>
                                     <span>Home</span>
                                 </a>
@@ -240,13 +240,7 @@
                                         <a href="request">Request</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="layout-vertical-1-column.html">Residents</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-vertical-navbar.html">Accounting Department</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-horizontal.html">Security Department</a>
+                                        <a href="formfeedbackmanager">Feedback Statistics</a>
                                     </li>
                                 </ul>
                             </li>
@@ -291,7 +285,7 @@
 
 
                             <li class="sidebar-item">
-                                <a href="application-chat.html" class="sidebar-link">
+                                <a href="chat" class="sidebar-link">
                                     <i class="bi bi-chat-dots-fill"></i>
                                     <span>Messages</span>
                                 </a>

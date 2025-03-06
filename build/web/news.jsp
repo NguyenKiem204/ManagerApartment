@@ -40,6 +40,62 @@
                 height: 200px;
                 object-fit: cover;
             }
+            .news-item{
+                border: 2px solid #E64A19;
+            }
+            .pagination {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 20px 0;
+            }
+            .pagination a,
+            .pagination strong {
+                text-decoration: none;
+                color: #007bff;
+                padding: 8px 12px;
+                margin: 0 5px;
+                border: 1px solid #007bff;
+                border-radius: 4px;
+                transition: background-color 0.3s, color 0.3s;
+            }
+            .pagination a:hover {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .pagination strong {
+                background-color: #007bff;
+                color: white;
+                border: none;
+            }
+            .card {
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .form-label {
+                font-weight: 500;
+            }
+
+            .btn-primary {
+                background-color: #435ebe;
+                border-color: #435ebe;
+            }
+
+            .btn-primary:hover {
+                background-color: #364b98;
+                border-color: #364b98;
+            }
+
+            .btn-secondary {
+                background-color: #6c757d;
+                border-color: #6c757d;
+            }
+
+            .btn-secondary:hover {
+                background-color: #5a6268;
+                border-color: #545b62;
+            }
         </style>
     </head>
 
@@ -382,40 +438,83 @@
                     <i class="bi bi-justify fs-3"></i>
                 </a>
                 <!--=============================CONTENT HERE=======================-->
-                <div class="text-center mb-4">
-                    <h1 class="text-d" style="font-family: 'Playball', cursive; font-size: 36px">
-                        <i class="fa-solid fa-fire"></i>Breaking News
-                    </h1>
-                    <hr class="w-25 mx-auto border-3 border-warning" />
-                </div>
-                <div class="container my-5">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="text-center mb-4">
+                            <h1 class="text-d" style="font-family: 'Playball', cursive; font-size: 36px">
+                                <i class="fa-solid fa-fire"></i>Breaking News
+                            </h1>
+                            <hr class="w-25 mx-auto border-3 border-warning" />
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="container my-5">
 
-                    <!-- News Section -->
-                    <div class="row">
-                        <c:forEach var="news" items="${newsList}">
-                            <div class="col-md-4 news-card">
-                                <div class="card">
-                                    <img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="card-img-top img-fluid" alt="News Image">
-                                    <div class="card-body">
-                                        <h5 class="card-title truncated-text" style="height: 65px">${news.title}</h5>
-                                        <p class="text-muted">Ngày đăng: ${news.sentDate}</p>
-                                        <a href="news-detail?newsId=${news.newsID}" class="btn btn-primary mt-1">Đọc thêm</a>
+                            <!-- News Section -->
+                            <div class="row">
+                                <c:forEach var="news" items="${newsList}">
+                                    <div class="col-md-4 news-card">
+                                        <div class="card news-item">
+                                            <img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="card-img-top img-fluid" alt="News Image">
+                                            <div class="card-body">
+                                                <h5 class="card-title truncated-text" style="height: 65px">${news.title}</h5>
+                                                <p class="text-muted">Ngày đăng: ${news.formattedDate}</p>
+                                                <a href="news-detail?newsId=${news.newsID}" class="btn btn-primary mt-1">Đọc thêm</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                </c:forEach>
                             </div>
-                        </c:forEach>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <!-- Pagination -->
+                        <div class="pagination">  
+                            <c:set var="currentPage" value="${currentPage}" />  
+                            <c:set var="totalPages" value="${totalPages}" />  
+                            <c:set var="prevPage" value="${currentPage - 1}" />  
+                            <c:set var="nextPage" value="${currentPage + 1}" />  
+
+                            <c:url var="baseUrl" value="news">
+                                <c:param name="searchTitle" value="${param.searchTitle}" />
+                                <c:param name="startDate" value="${param.startDate}" />
+                                <c:param name="endDate" value="${param.endDate}" />
+                            </c:url>
+
+                            <c:if test="${currentPage > 1}">  
+                                <a href="${baseUrl}&page=1">First Page</a>  
+                                <a href="${baseUrl}&page=${prevPage}">Previous</a>  
+                            </c:if>  
+
+                            <c:set var="startPage" value="${currentPage - 1}" />  
+                            <c:set var="endPage" value="${currentPage + 1}" />  
+
+                            <c:if test="${startPage < 1}">
+                                <c:set var="startPage" value="1" />
+                            </c:if>
+
+                            <c:if test="${endPage > totalPages}">
+                                <c:set var="endPage" value="${totalPages}" />
+                            </c:if>
+
+                            <c:forEach var="i" begin="${startPage}" end="${endPage}">  
+                                <c:choose>  
+                                    <c:when test="${i == currentPage}">  
+                                        <strong>${i}</strong>  
+                                    </c:when>  
+                                    <c:otherwise>  
+                                        <a href="${baseUrl}&page=${i}">${i}</a>  
+                                    </c:otherwise>  
+                                </c:choose>  
+                            </c:forEach>  
+
+                            <c:if test="${currentPage < totalPages}">  
+                                <a href="${baseUrl}&page=${nextPage}">Next</a>  
+                                <a href="${baseUrl}&page=${totalPages}">Last Page</a>  
+                            </c:if>  
+                        </div>
                     </div>
 
-                    <!-- Pagination -->
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            <c:forEach var="i" begin="1" end="${totalPages}">
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=${i}">${i}</a>
-                                </li>
-                            </c:forEach>
-                        </ul>
-                    </nav>
                 </div>
                 <!--==============================END================================-->
 

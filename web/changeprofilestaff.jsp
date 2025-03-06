@@ -7,6 +7,7 @@
 <%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem --%>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 
@@ -409,7 +410,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" value="${not empty staff ? staff.email : (not empty resident ? resident.email : 'N/A')}">
+                                <input type="email" class="form-control" id="email" name="email" disabled value="${not empty staff ? staff.email : (not empty resident ? resident.email : 'N/A')}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="phone" class="form-label">Số điện thoại</label>
@@ -435,13 +436,46 @@
                                 <label for="password" class="form-label">Mật khẩu</label>
                                 <input type="password" class="form-control" id="password" value="*******" disabled>
                             </div>
+                                
                         </div>
+                        <c:if test="${not empty errors}">
+                            <div class="alert alert-danger">
+                                <strong>An error has occurred:</strong>
+                                <ul class="mb-0">
+                                    <c:forEach var="error" items="${errors}">
+                                        <li>${error}</li>
+                                        </c:forEach>
+                                </ul>
+                            </div>
+                        </c:if>
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                             <button type="reset" class="btn btn-secondary">Hủy</button>
                         </div>
                     </form>
                 </div>
+                <style>
+                    .alert-danger {
+                        padding: 10px;
+                        border-radius: 5px;
+                        font-size: 14px;
+                    }
+                    .alert-danger ul {
+                        margin-bottom: 0;
+                        padding-left: 20px;
+                    }
+
+                </style>
+                <script>
+                    document.querySelectorAll('input, select').forEach(function (input) {
+                        input.addEventListener('focus', function () {
+                            const errorAlert = document.querySelector('.alert-danger');
+                            if (errorAlert) {
+                                errorAlert.style.display = 'none';
+                            }
+                        });
+                    });
+                </script>
                 <!--==============================END================================-->
 
                 <footer>

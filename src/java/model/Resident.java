@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.sql.Date;
 import lombok.*;
@@ -31,6 +32,21 @@ public class Resident {
     String status;
     Image image;
     Role role;
+    String lastMessage;
+
+    public Resident(int residentId, String fullName, String password, String phoneNumber, String cccd, String email, LocalDate dob, String sex, String status, Image image, Role role) {
+        this.residentId = residentId;
+        this.fullName = fullName;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.cccd = cccd;
+        this.email = email;
+        this.dob = dob;
+        this.sex = sex;
+        this.status = status;
+        this.image = image;
+        this.role = role;
+    }
 
     public Resident(String fullName, String password, String phoneNumber, String cccd, String mail, LocalDate dob, String sex, String status, Image image, Role role) {
         this.fullName = fullName;
@@ -63,6 +79,7 @@ public class Resident {
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
+
     public Date getFormattedDate() {
         return Date.valueOf(dob); // Chuyển LocalDate -> SQL Date
     }

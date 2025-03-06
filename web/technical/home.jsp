@@ -289,16 +289,10 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="layout-default.html">Send Notification</a>
+                                        <a href="#">Feedback</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="layout-vertical-1-column.html">Residents</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-vertical-navbar.html">Accounting Department</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-horizontal.html">Security Department</a>
+                                        <a href="request">Request</a>
                                     </li>
                                 </ul>
                             </li>
@@ -393,23 +387,8 @@
                     <i class="bi bi-justify fs-3"></i>
                 </a>
                 <!--=============================CONTENT HERE=======================-->
-                
-                <!--==============================END================================-->
 
-                <footer>
-                    <div class="footer clearfix mb-0 text-muted">
-                        <div class="float-start">
-                            <p>2025 &copy; Kiemm</p>
-                        </div>
-                        <div class="float-end">
-                            <p>
-                                Crafted with
-                                <span class="text-danger"><i class="bi bi-heart"></i></span> by
-                                <a href="http://ahmadsaugi.com">NguyenKiem</a>
-                            </p>
-                        </div>
-                    </div>
-                </footer>
+                <!--==============================END================================-->
             </div>
         </div>
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->

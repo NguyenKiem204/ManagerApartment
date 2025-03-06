@@ -14,12 +14,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.TypeRequest;
 
-
 /**
  *
  * @author admin
  */
-public class TypeRequestDAO implements DAOInterface<TypeRequest, Integer>{
+public class TypeRequestDAO implements DAOInterface<TypeRequest, Integer> {
 
     @Override
     public int insert(TypeRequest t) {
@@ -36,6 +35,8 @@ public class TypeRequestDAO implements DAOInterface<TypeRequest, Integer>{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    RoleDAO roleDAO = new RoleDAO();
+
     @Override
     public List<TypeRequest> selectAll() {
         List<TypeRequest> list = new ArrayList<>();
@@ -46,8 +47,10 @@ public class TypeRequestDAO implements DAOInterface<TypeRequest, Integer>{
             while (rs.next()) {
                 TypeRequest tr = new TypeRequest(
                           rs.getInt("TypeRqID"),
-                          rs.getString("TypeName"));
-          
+                          rs.getString("TypeName"),
+                          roleDAO.selectById(rs.getInt("RoleID"))
+                );
+
                 list.add(tr);
             }
         } catch (SQLException ex) {
@@ -65,7 +68,9 @@ public class TypeRequestDAO implements DAOInterface<TypeRequest, Integer>{
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     typeRequest = new TypeRequest(rs.getInt("TypeRqID"),
-                              rs.getString("TypeName"));
+                              rs.getString("TypeName"),
+                              roleDAO.selectById(rs.getInt("RoleID"))
+                    );
                 }
             }
         } catch (SQLException ex) {
@@ -74,5 +79,4 @@ public class TypeRequestDAO implements DAOInterface<TypeRequest, Integer>{
         return typeRequest;
     }
 
-    
 }

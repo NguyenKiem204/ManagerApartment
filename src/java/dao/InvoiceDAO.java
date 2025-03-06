@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -53,59 +54,27 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return row;
     }
 
-    public void deletebyID(int InvoiceId) {
-
-        String sqlDeleteDetails = "DELETE FROM InvoiceDetail WHERE InvoiceID = ?";
-        String sqlDeleteInvoice = "DELETE FROM Invoice WHERE InvoiceID = ?";
-
-        try (Connection connection = DBContext.getConnection()) {
-            try (PreparedStatement psDetail = connection.prepareStatement(sqlDeleteDetails)) {
-                psDetail.setInt(1, InvoiceId);
-                psDetail.executeUpdate();
-            }
-            try (PreparedStatement psInvoice = connection.prepareStatement(sqlDeleteInvoice)) {
-                psInvoice.setInt(1, InvoiceId);
-                psInvoice.executeUpdate();
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(InvoiceDAO.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-    }
-
-    public void deleteInvoiceDetail(int InvoiceId) {
-
-        String sqlDeleteDetails = "DELETE FROM InvoiceDetail WHERE InvoiceID = ?";
-        try (Connection connection = DBContext.getConnection()) {
-            try (PreparedStatement psDetail = connection.prepareStatement(sqlDeleteDetails)) {
-                psDetail.setInt(1, InvoiceId);
-                psDetail.executeUpdate();
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(InvoiceDAO.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-    }
-
-    // Lấy danh sách hóa đơn từ database
     @Override
     public List<Invoices> selectAll() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public List<Invoices> selectAllByOwnerId(int id) {
         List<Invoices> list = new ArrayList<>();
 
-        String sql = "SELECT inv.InvoiceID, inv.TotalAmount, inv.PublicDate, inv.Status AS InvoiceStatus, "
-                + "inv.Description AS InvoiceDescription, inv.DueDate, inv.islate,"
-                + "idt.DetailID, idt.Amount, idt.Description AS DetailDescription, "
-                + "tb.TypeName AS BillType, "
-                + "res.ResidentID, res.FullName AS ResidentName, res.PhoneNumber AS ResidentPhone, res.Email AS ResidentEmail, "
-                + "apt.ApartmentID, apt.ApartmentName, apt.Block, apt.Status AS ApartmentStatus, apt.Type AS ApartmentType "
-                + "FROM Invoice inv "
-                + "JOIN Resident res ON inv.ResidentID = res.ResidentID "
-                + "JOIN Contract ct ON res.ResidentID = ct.ResidentID "
-                + "JOIN Apartment apt ON ct.ApartmentID = apt.ApartmentID "
-                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID "
-                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID "
+        String sql = "SELECT inv.InvoiceID, inv.TotalAmount, inv.PublicDate, inv.Status AS InvoiceStatus, \n"
+                + "       inv.Description AS InvoiceDescription, inv.DueDate, inv.islate,\n"
+                + "       idt.DetailID, idt.Amount, idt.Description AS DetailDescription, \n"
+                + "       tb.TypeName AS BillType, \n"
+                + "       res.ResidentID, res.FullName AS ResidentName, res.PhoneNumber AS ResidentPhone, res.Email AS ResidentEmail, \n"
+                + "       apt.ApartmentID, apt.ApartmentName, apt.Block, apt.Status AS ApartmentStatus, apt.Type AS ApartmentType \n"
+                + "FROM Invoice inv \n"
+                + "JOIN Resident res ON inv.ResidentID = res.ResidentID \n"
+                + "LEFT JOIN Contract ct ON res.ResidentID = ct.ResidentID \n"
+                + "LEFT JOIN Apartment apt ON ct.ApartmentID = apt.ApartmentID \n"
+                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID \n"
+                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID \n"
+                + "WHERE res.ResidentID = 1\n"
                 + "ORDER BY inv.InvoiceID;";
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -136,15 +105,16 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                             rs.getString("ApartmentStatus"),
                             rs.getString("ApartmentType")
                     );
-                    int Late = rs.getInt("islate");
+                    double Late = rs.getDouble("islate");
                     double totalamount = rs.getDouble("TotalAmount");
                     LocalDate publicDate = rs.getDate("PublicDate") != null ? rs.getDate("PublicDate").toLocalDate() : null;
-                    LocalDate dueDate = rs.getDate("DueDate") != null ? rs.getDate("DueDate").toLocalDate() : null;
-                    if (rs.getString("InvoiceStatus").equals("Unpaid") && rs.getInt("islate") != 1 && dueDate.isBefore(LocalDate.now())) {
-
-                        totalamount = rs.getDouble("TotalAmount") * 0.02 + rs.getDouble("TotalAmount");
-                        Late++;
-                        this.updateislate(Late, totalamount, rs.getInt("InvoiceID"));
+                    LocalDate dueDateLocal = rs.getDate("DueDate") != null ? rs.getDate("DueDate").toLocalDate() : null;
+                    LocalDate payDate = rs.getDate("PaymentDate") != null ? rs.getDate("PaymentDate").toLocalDate() : null;
+                    if ("Unpaid".equals(rs.getString("InvoiceStatus")) && dueDateLocal != null && dueDateLocal.isBefore(LocalDate.now())) {
+                        long daysLate = ChronoUnit.DAYS.between(dueDateLocal, LocalDate.now());
+                        double penaltyRate = 0.001;
+                        Late = rs.getDouble("TotalAmount") * (penaltyRate * daysLate);
+                        this.updateislate(Late, invoiceID);
                     }
                     invoice = new Invoices(
                             invoiceID,
@@ -152,7 +122,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                             publicDate,
                             rs.getString("InvoiceStatus"),
                             rs.getString("InvoiceDescription"),
-                            dueDate,
+                            dueDateLocal,
                             resident,
                             apartment,
                             Late
@@ -178,15 +148,14 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return list;
     }
 
-    public void updateislate(int islate, double totalamount, int id) {
+    public void updateislate(double islate, int id) {
         String sql = "UPDATE Invoice  \n"
-                + "SET TotalAmount =?,  \n"
+                + "SET   \n"
                 + "    isLate = ?  \n"
                 + "WHERE InvoiceID = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDouble(1, totalamount);
-            ps.setInt(2, islate);
-            ps.setInt(3, id);
+            ps.setDouble(1, islate);
+            ps.setInt(2, id);
 
             int rowsUpdated = ps.executeUpdate();
 
@@ -203,7 +172,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                 + "    inv.PublicDate, \n"
                 + "    inv.Status AS InvoiceStatus, \n"
                 + "    inv.Description AS InvoiceDescription, \n"
-                + "    inv.DueDate,inv.islate, \n"
+                + "    inv.DueDate,inv.islate,inv.PaymentDate, \n"
                 + "    idt.DetailID, \n"
                 + "    idt.Amount, \n"
                 + "    idt.Description AS DetailDescription, \n"
@@ -252,7 +221,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
 
                         LocalDate publicDate = rs.getDate("PublicDate") != null ? rs.getDate("PublicDate").toLocalDate() : null;
                         LocalDate dueDate = rs.getDate("DueDate") != null ? rs.getDate("DueDate").toLocalDate() : null;
-
+                        LocalDate paydate = rs.getDate("PaymentDate") != null ? rs.getDate("PaymentDate").toLocalDate() : null;
                         invoice = new Invoices(
                                 rs.getInt("InvoiceID"),
                                 rs.getDouble("TotalAmount"),
@@ -262,7 +231,8 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                                 dueDate,
                                 resident,
                                 apartment,
-                                rs.getInt("islate")
+                                rs.getInt("islate"),
+                                paydate
                         );
                     }
 
@@ -356,26 +326,6 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return latestInvoiceID;
     }
 
-    public void updateInvoice(Invoices inv) {
-        String sql = "UPDATE Invoice\n"
-                + "SET  \n"
-                + "    TotalAmount = ?,  \n"
-                + "    [Description] = ?, \n"
-                + "    DueDate = ?\n"
-                + "WHERE InvoiceID = ?;";
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDouble(1, inv.getTotalAmount());
-            ps.setString(2, inv.getDescription());
-            ps.setDate(3, java.sql.Date.valueOf(inv.getDueDate()));
-            ps.setInt(4, inv.getInvoiceID());
-            int rowsUpdated = ps.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        }
-    }
-
     public void updateStatusInvoice(int id) {
         String sql = "UPDATE Invoice SET Status = 'Paid', PaymentDate = GETDATE() WHERE InvoiceID = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -392,7 +342,19 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         }
     }
 
-    public List<Invoices> filterInvoices(int apartmentId, String status, LocalDate fromDate, LocalDate dueDate) {
+    public boolean updateInvoiceStatus(int invoiceID) {
+        String sql = "UPDATE Invoice SET Status = 'Paid', PaymentDate = GETDATE() WHERE InvoiceID = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, invoiceID);
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0; // Trả về true nếu cập nhật thành công
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false; // Trả về false nếu có lỗi
+        }
+    }
+
+    public List<Invoices> filterInvoices(String status, LocalDate fromDate, LocalDate dueDate) {
         List<Invoices> invoices = new ArrayList<>();
         List<Object> parameters = new ArrayList<>();
 
@@ -410,10 +372,6 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                 + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID "
                 + "WHERE 1=1";
 
-        if (apartmentId != 0) {
-            sql += " AND apt.ApartmentID = ?";
-            parameters.add(apartmentId);
-        }
         if (status != null && !status.isEmpty()) {
             sql += " AND inv.Status = ?";
             parameters.add(status);
@@ -459,16 +417,18 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                             rs.getString("ApartmentStatus"),
                             rs.getString("ApartmentType")
                     );
-                    int late = rs.getInt("islate");
+                    double late = rs.getDouble("islate");
                     double totalAmount = rs.getDouble("TotalAmount");
                     LocalDate publicDate = rs.getDate("PublicDate") != null ? rs.getDate("PublicDate").toLocalDate() : null;
                     LocalDate dueDateLocal = rs.getDate("DueDate") != null ? rs.getDate("DueDate").toLocalDate() : null;
                     LocalDate payDate = rs.getDate("PaymentDate") != null ? rs.getDate("PaymentDate").toLocalDate() : null;
-                    if ("Unpaid".equals(rs.getString("InvoiceStatus")) && late != 1 && dueDateLocal != null && dueDateLocal.isBefore(LocalDate.now())) {
-                        totalAmount = rs.getDouble("TotalAmount") * 1.02;
-                        late++;
-                        this.updateislate(late, totalAmount, invoiceID);
+                    if ("Unpaid".equals(rs.getString("InvoiceStatus")) && dueDateLocal != null && dueDateLocal.isBefore(LocalDate.now())) {
+                        long daysLate = ChronoUnit.DAYS.between(dueDateLocal, LocalDate.now());
+                        double penaltyRate = 0.001;
+                        late = rs.getDouble("TotalAmount") * (penaltyRate * daysLate);
+                        this.updateislate(late, invoiceID);
                     }
+
                     invoice = new Invoices(
                             invoiceID,
                             totalAmount,
@@ -501,4 +461,151 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         }
         return invoices;
     }
+
+    public <T> int getTotalPage(List<T> list, int numberPerPape) {
+        int totalPage;
+        if (list.size() % numberPerPape == 0) {
+            totalPage = list.size() / numberPerPape;
+        } else {
+            totalPage = list.size() / numberPerPape + 1;
+        }
+        return totalPage;
+    }
+
+    public <T> List<T> getListPerPage(List<T> list, int numberPerPape, String page) {
+        if (page == null || page == "") {
+            page = "1";
+        }
+        int index = Integer.parseInt(page);
+        int start = numberPerPape * (index - 1);
+        int end = numberPerPape * index - 1;
+        List<T> listPage = new ArrayList<>();
+        for (int i = start; i <= end; i++) {
+            listPage.add(list.get(i));
+            if (i == list.size() - 1) {
+                break;
+            }
+        }
+        return listPage;
+    }
+
+    public List<Invoices> getInvoicesByres(int residentId, LocalDate fromDate, LocalDate dueDate, boolean isHistory) {
+        List<Invoices> invoices = new ArrayList<>();
+        List<Object> parameters = new ArrayList<>();
+
+        String sql = "SELECT inv.InvoiceID, inv.TotalAmount, inv.PublicDate, inv.Status AS InvoiceStatus, "
+                + "inv.Description AS InvoiceDescription, inv.DueDate, inv.islate, inv.PaymentDate, "
+                + "idt.DetailID, idt.Amount, idt.Description AS DetailDescription, "
+                + "tb.TypeName AS BillType, "
+                + "res.ResidentID, res.FullName AS ResidentName, res.PhoneNumber AS ResidentPhone, res.Email AS ResidentEmail, "
+                + "apt.ApartmentID, apt.ApartmentName, apt.Block, apt.Status AS ApartmentStatus, apt.Type AS ApartmentType "
+                + "FROM Invoice inv "
+                + "JOIN Resident res ON inv.ResidentID = res.ResidentID "
+                + "JOIN Contract ct ON res.ResidentID = ct.ResidentID "
+                + "JOIN Apartment apt ON ct.ApartmentID = apt.ApartmentID "
+                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID "
+                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID "
+                + "WHERE inv.ResidentID = ?"; // Thêm điều kiện lọc theo ResidentID
+
+        parameters.add(residentId); // Thêm residentId vào danh sách tham số
+
+        if (isHistory) {
+            // Lọc theo lịch sử thanh toán (PaymentDate)
+            if (fromDate != null) {
+                sql += " AND inv.PaymentDate >= ?";
+                parameters.add(java.sql.Date.valueOf(fromDate));
+            }
+            if (dueDate != null) {
+                sql += " AND inv.PaymentDate <= ?";
+                parameters.add(java.sql.Date.valueOf(dueDate));
+            }
+        } else {
+            // Lọc theo ngày công bố (PublicDate)
+            if (fromDate != null) {
+                sql += " AND inv.PublicDate >= ?";
+                parameters.add(java.sql.Date.valueOf(fromDate));
+            }
+            if (dueDate != null) {
+                sql += " AND inv.PublicDate <= ?";
+                parameters.add(java.sql.Date.valueOf(dueDate));
+            }
+        }
+
+        sql += " ORDER BY inv.InvoiceID";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (int i = 0; i < parameters.size(); i++) {
+                ps.setObject(i + 1, parameters.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int invoiceID = rs.getInt("InvoiceID");
+                Invoices invoice = null;
+                for (Invoices inv : invoices) {
+                    if (inv.getInvoiceID() == invoiceID) {
+                        invoice = inv;
+                        break;
+                    }
+                }
+                if (invoice == null) {
+                    Resident resident = new Resident(
+                            rs.getInt("ResidentID"),
+                            rs.getString("ResidentName"),
+                            rs.getString("ResidentPhone"),
+                            rs.getString("ResidentEmail")
+                    );
+
+                    Apartment apartment = new Apartment(
+                            rs.getInt("ApartmentID"),
+                            rs.getString("ApartmentName"),
+                            rs.getString("Block"),
+                            rs.getString("ApartmentStatus"),
+                            rs.getString("ApartmentType")
+                    );
+                    double late = rs.getDouble("islate");
+                    double totalAmount = rs.getDouble("TotalAmount");
+                    LocalDate publicDate = rs.getDate("PublicDate") != null ? rs.getDate("PublicDate").toLocalDate() : null;
+                    LocalDate dueDateLocal = rs.getDate("DueDate") != null ? rs.getDate("DueDate").toLocalDate() : null;
+                    LocalDate payDate = rs.getDate("PaymentDate") != null ? rs.getDate("PaymentDate").toLocalDate() : null;
+                    if ("Unpaid".equals(rs.getString("InvoiceStatus")) && dueDateLocal != null && dueDateLocal.isBefore(LocalDate.now())) {
+                        long daysLate = ChronoUnit.DAYS.between(dueDateLocal, LocalDate.now());
+                        double penaltyRate = 0.001;
+                        late = rs.getDouble("TotalAmount") * (penaltyRate * daysLate);
+                        this.updateislate(late, invoiceID);
+                    }
+
+                    invoice = new Invoices(
+                            invoiceID,
+                            totalAmount,
+                            publicDate,
+                            rs.getString("InvoiceStatus"),
+                            rs.getString("InvoiceDescription"),
+                            dueDateLocal,
+                            resident,
+                            apartment,
+                            late,
+                            payDate
+                    );
+
+                    invoices.add(invoice);
+                }
+
+                int detailID = rs.getInt("DetailID");
+                if (!rs.wasNull()) {
+                    InvoiceDetail detail = new InvoiceDetail(
+                            detailID,
+                            rs.getDouble("Amount"),
+                            rs.getString("DetailDescription"),
+                            rs.getString("BillType")
+                    );
+                    invoice.addDetail(detail);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InvoiceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return invoices;
+    }
+
 }

@@ -34,198 +34,116 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
-        <style>
-            .text-des {
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 1;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            .image-news{
-                width: 130px;
-                height: 130px;
-                object-fit: cover;
-                object-position: center;
-            }
-            .btn a{
-                display: inline-block !important;
-                border-radius: 5px !important;
-                width: 75px !important;
-                height: 35px!important;
-                text-decoration: none!important;
-                padding: 5px 10px !important;
-                border: 1px solid #ccc !important;
-
-            }
-            .btn a:first-child{
-                background-color: #4CAF50 !important;
-                color: #fff !important;
-            }
-            .btn a:last-child{
-                background-color: #f44336 !important;
-                color: #fff !important;
-            }
-            .btn-add{
-                display: inline-block !important;
-                width: 70px !important;
-                padding: 5px 10px !important;
-                border-radius: 8px !important;
-            }
-
-            .btn1 {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100%;
-                width: 100%;
-                box-shadow: none !important;
-                border-radius: none !important;
-            }
-
-            .btn1 button {
-                display: inline-block;
-                border-radius: 8px;
-                width: 70px;
-                height: 40px;
-                text-decoration: none;
-                padding: 5px 10px;
-                border: 2px solid #ccc;
-                position: relative;
-                overflow: hidden;
-                transition: color 0.4s, background-color 0.4s;
-            }
-
-            .btn1 button:first-child {
-                background-color: #4CAF50;
-                color: #fff;
-                margin-right: 5px;
-            }
-
-            .btn1 button:last-child {
-                background-color: #f44336;
-                color: #fff;
-            }
-
-            .btn1 button:first-child:hover {
-                background-color: #fff;
-                color: #4CAF50;
-            }
-
-            .btn1 button:last-child:hover {
-                background-color: #fff;
-                color: #f44336;
-            }
-
-            .btn1 button:hover::before {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 300%;
-                height: 300%;
-                background: rgba(255, 255, 255, 0.3);
-                transform: translate(-50%, -50%) scale(0);
-                border-radius: 50%;
-                animation: ripple 0.6s linear;
-            }
-
-            .updateForm {
-                position: fixed;
-                width: 1050px;
-                top: 50%;
-                left: 50%;
-                transform: translate(-40%, -50%);
-                display: none;
-                z-index: 10;
-                background-color: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            }
-
-            .updateForm.active {
-                display: block;
-            }
-
-            #close {
-                position: absolute;
-                top: -25px;
-                right: -25px;
-                font-weight: 600;
-                cursor: pointer;
-                z-index: 11;
-            }
-
-            #close i {
-                font-size: 1.8rem;
-                color: #f44336;
-                background: #fff;
-                border: 2px solid #333;
-                border-radius: 50%;
-            }
-
-            .overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-                display: none;
-                z-index: 5;
-            }
-
-            .overlay.active {
-                display: block;
-            }
-            .title{
-                /*font-size: 20px;*/
-                font-weight: 550;
-            }
-            .title-xl{
-                font-size: 20px !important;
-                font-weight: 600 !important;
-            }
-        </style>
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/managernews.css" />
     </head>
 
     <body>
         <%@include file="menumanager.jsp" %>
-        <div id="main">
-            <div>
-                <table class="table bg-light table-striped table-hover table-bordered caption-top table-responsive-md">
-                    <thead>
-                        <tr class="table-dark">
-                            <th class="col-1">STT</th>
-                            <th class="col-4">Title</th>
-                            <th class="col-2">SentDate</th>
-                            <th class="col-2">Image</th>
-                            <th class="col-2">Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:set var="i" value="0"></c:set>
-                        <c:forEach var="news" items="${list}">
-                            <tr>
-                                <td>${i+1}</td>
-                                <td class="title">${news.title}</th>
-                                <td>${news.sentDate}</td>
-                                <td><img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="image-news shadow" alt="${news.title}" /></td>
-                                <td><div class="btn1">  
-                                        <button onclick="updateNews(
-                                                        '${news.newsID}',
-                                                        '${fn:escapeXml(news.title)}',
-                                                        '${fn:escapeXml(news.description)}',
-                                                        '${news.sentDate}',
-                                                        '${sessionScope.staff.staffId}')">Update</button>  
-                                        <button onclick="deleteNews('${news.newsID}', '${fn:escapeXml(news.title)}')">Delete</button>  
-                                    </div></td>
+        <div id="main" style="margin-top: -70px !important">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <form action="managernews" method="GET" class="row g-3 align-items-center">
+                        <div class="col-md-4">
+                            <label for="searchTitle" class="form-label">Search by Title</label>
+                            <input type="text" class="form-control" id="searchTitle" name="searchTitle" 
+                                   value="${param.searchTitle}" placeholder="Enter title...">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="startDate" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="startDate" name="startDate" 
+                                   value="${param.startDate}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="endDate" class="form-label">End Date</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate" 
+                                   value="${param.endDate}">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary me-2">Search</button>
+                            <a href="managernews" class="btn btn-secondary">Reset</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <table class="table bg-light table-striped table-hover table-bordered caption-top table-responsive-md">
+                        <thead>
+                            <tr class="table-dark">
+                                <th class="col-1">STT</th>
+                                <th class="col-4">Title</th>
+                                <th class="col-2">SentDate</th>
+                                <th class="col-2">Image</th>
+                                <th class="col-2">Edit</th>
                             </tr>
-                            <c:set var="i" value="${i + 1}"></c:set>
-                        </c:forEach>
-                    </tbody>
-                </table>  
+                        </thead>
+                        <tbody>
+                            <c:set var="i" value="0"></c:set>
+                            <c:forEach var="news" items="${newsList}">
+                                <tr>
+                                    <td>${i+1}</td>
+                                    <td class="title">${news.title}</th>
+                                    <td>${news.formattedDate}</td>
+                                    <td><img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="image-news shadow" alt="${news.title}" /></td>
+                                    <td><div class="btn1">
+                                            <button onclick="updateNews(
+                                                            '${news.newsID}',
+                                                            '${fn:escapeXml(news.title)}',
+                                                            '${fn:escapeXml(news.description)}',
+                                                            '${fn:escapeXml(news.formattedDate)}',
+                                                            '${sessionScope.staff.staffId}')">Update</button>  
+                                            <button onclick="deleteNews('${news.newsID}', '${fn:escapeXml(news.title)}')">Delete</button>  
+                                        </div></td>
+                                </tr>
+                                <c:set var="i" value="${i + 1}"></c:set>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">  
+                    <c:set var="currentPage" value="${currentPage}" />  
+                    <c:set var="totalPages" value="${totalPages}" />  
+                    <c:set var="prevPage" value="${currentPage - 1}" />  
+                    <c:set var="nextPage" value="${currentPage + 1}" />  
+
+                    <c:url var="baseUrl" value="managernews">
+                        <c:param name="searchTitle" value="${param.searchTitle}" />
+                        <c:param name="startDate" value="${param.startDate}" />
+                        <c:param name="endDate" value="${param.endDate}" />
+                    </c:url>
+
+                    <c:if test="${currentPage > 1}">  
+                        <a href="${baseUrl}&page=1">First Page</a>  
+                        <a href="${baseUrl}&page=${prevPage}">Previous</a>  
+                    </c:if>  
+
+                    <c:set var="startPage" value="${currentPage - 1}" />  
+                    <c:set var="endPage" value="${currentPage + 1}" />  
+
+                    <c:if test="${startPage < 1}">
+                        <c:set var="startPage" value="1" />
+                    </c:if>
+
+                    <c:if test="${endPage > totalPages}">
+                        <c:set var="endPage" value="${totalPages}" />
+                    </c:if>
+
+                    <c:forEach var="i" begin="${startPage}" end="${endPage}">  
+                        <c:choose>  
+                            <c:when test="${i == currentPage}">  
+                                <strong>${i}</strong>  
+                            </c:when>  
+                            <c:otherwise>  
+                                <a href="${baseUrl}&page=${i}">${i}</a>  
+                            </c:otherwise>  
+                        </c:choose>  
+                    </c:forEach>  
+
+                    <c:if test="${currentPage < totalPages}">  
+                        <a href="${baseUrl}&page=${nextPage}">Next</a>  
+                        <a href="${baseUrl}&page=${totalPages}">Last Page</a>  
+                    </c:if>  
+                </div>
+
             </div>
             <div class="container">
                 <div class="row justify-content-center">
@@ -234,6 +152,19 @@
                             <form action="updatenews" method="post" enctype="multipart/form-data" onsubmit="return confirmUpdateNews()">
                                 <input type="hidden" name="newsID" id="newsID">
                                 <input type="hidden" name="staffId" id="staffId">
+                                <input type="hidden" name="url" id="url">
+                                <c:if test="${not empty sessionScope.newsID}">
+                                    <c:if test="${not empty sessionScope.errors}">
+                                        <div class="alert alert-danger">
+                                            <strong>An error has occurred:</strong>
+                                            <ul class="mb-0">
+                                                <c:forEach var="error" items="${sessionScope.errors}">
+                                                    <li>${error}</li>
+                                                    </c:forEach>
+                                            </ul>
+                                        </div>
+                                    </c:if>
+                                </c:if>
                                 <div class="form-group">
                                     <label for="name">Title</label>
                                     <input type="text" class="form-control title-xl" id="title" name="title" placeholder="Enter Title">
@@ -260,8 +191,48 @@
                 </div>
             </div>
             <div onclick="closeForm()" class="overlay"></div>
+            <c:if test="${not empty sessionScope.errors}">
+                <div id="errorAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>An error has occurred:</strong>
+                    <ul class="mb-0">
+                        <c:forEach var="error" items="${sessionScope.errors}">
+                            <li>${error}</li>
+                            </c:forEach>
+                    </ul>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="closeErrorAlert()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <c:remove var="errors" scope="session"/>
+            </c:if>
         </div>
         <script type="text/javascript">
+            function closeErrorAlert() {
+                let errorAlert = document.getElementById("errorAlert");
+                if (errorAlert) {
+                    errorAlert.classList.add("fade-out");
+                    setTimeout(() => {
+                        errorAlert.style.display = "none";
+                    }, 500);
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                let errorAlert = document.getElementById("errorAlert");
+                if (errorAlert) {
+                    errorAlert.style.display = "block";
+                    setTimeout(() => {
+                        errorAlert.classList.add("show");
+
+                        setTimeout(() => {
+                            errorAlert.classList.add("fade-out");
+                            setTimeout(() => {
+                                errorAlert.style.display = "none";
+                            }, 500);
+                        }, 5000);
+                    }, 100);
+                }
+            });
             $(document).ready(function () {
                 $('#detail').summernote({
                     height: 300,
@@ -270,6 +241,9 @@
                 });
             });
             let titlee = "";
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("url").value = window.location.href;
+            });
             function updateNews(newsID, title, description, sentDate, staffId) {
                 titlee = title;
                 document.getElementById('newsID').value = newsID;
@@ -290,8 +264,9 @@
                 document.querySelector(".form-container").classList.remove("active");
             }
             function deleteNews(newsID, title) {
-                if (confirm("Bạn có chắc chắn xóa sản phẩm  " + title + " không?")) {
-                    window.location.href = "deletenews?newsID=" + newsID;
+                if (confirm("Bạn có chắc chắn xóa sản phẩm " + title + " không?")) {
+                    let currentUrl = encodeURIComponent(window.location.href);
+                    window.location.href = "deletenews?newsID=" + newsID + "&url=" + currentUrl;
                 }
             }
 

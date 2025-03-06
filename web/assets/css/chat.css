@@ -15,7 +15,8 @@ body {
 
       .container {
         display: flex;
-        height: 100vh;
+        height: 83vh !important;
+        margin: -50px -50px 0px -50px; 
       }
 
       .sidebar {

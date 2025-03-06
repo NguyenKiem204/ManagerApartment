@@ -4,7 +4,9 @@ import model.Message;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,6 +59,34 @@ public class MessageDAO implements DAOInterface<Message, Integer> {
         }
         return row;
     }
+public Map<String, Timestamp> getLastMessageTimestamps(String userEmail) {
+    Map<String, Timestamp> lastMessageMap = new HashMap<>();
+    String sql = """
+        SELECT Email, MAX(Timestamp) AS LastMessageTime FROM (
+            SELECT SenderEmail AS Email, Timestamp FROM Message WHERE SenderEmail = ? OR ReceiverEmail = ?
+            UNION
+            SELECT ReceiverEmail AS Email, Timestamp FROM Message WHERE SenderEmail = ? OR ReceiverEmail = ?
+        ) AS Combined
+        GROUP BY Email
+    """;
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, userEmail);
+        ps.setString(2, userEmail);
+        ps.setString(3, userEmail);
+        ps.setString(4, userEmail);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            lastMessageMap.put(rs.getString("Email"), rs.getTimestamp("LastMessageTime"));
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return lastMessageMap;
+}
+
 
     @Override
     public List<Message> selectAll() {
@@ -121,30 +151,59 @@ public class MessageDAO implements DAOInterface<Message, Integer> {
     }
 
     public List<Message> getMessagesBetween(String email1, String email2) {
-        List<Message> list = new ArrayList<>();
-        String sql = "SELECT * FROM [Message] WHERE (SenderEmail = ? AND ReceiverEmail = ?) OR (SenderEmail = ? AND ReceiverEmail = ?)";
-        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, email1);
-            ps.setString(2, email2);
-            ps.setString(3, email2);
-            ps.setString(4, email1);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Message message = new Message(
-                        rs.getInt("MessageID"),
-                        rs.getString("SenderEmail"),
-                        rs.getString("ReceiverEmail"),
-                        rs.getString("MessageText"),
-                        rs.getTimestamp("Timestamp").toLocalDateTime(),
-                        rs.getString("Status")
-                );
-                list.add(message);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex);
+    List<Message> list = new ArrayList<>();
+    String sql = "SELECT * FROM [Message] WHERE (SenderEmail = ? AND ReceiverEmail = ?) OR (SenderEmail = ? AND ReceiverEmail = ?) ORDER BY Timestamp ASC";
+    try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, email1);
+        ps.setString(2, email2);
+        ps.setString(3, email2);
+        ps.setString(4, email1);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Message message = new Message(
+                    rs.getInt("MessageID"),
+                    rs.getString("SenderEmail"),
+                    rs.getString("ReceiverEmail"),
+                    rs.getString("MessageText"),
+                    rs.getTimestamp("Timestamp").toLocalDateTime(),
+                    rs.getString("Status")
+            );
+            list.add(message);
         }
-        return list;
+    } catch (SQLException ex) {
+        Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return list;
+}
+    public Message getLastMessageBetween(String email1, String email2) {
+    Message lastMessage = null;
+    String sql = "SELECT TOP 1 * FROM [Message] WHERE (SenderEmail = ? AND ReceiverEmail = ?) OR (SenderEmail = ? AND ReceiverEmail = ?) ORDER BY Timestamp DESC";
+    
+    try (Connection connection = DBContext.getConnection(); 
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, email1);
+        ps.setString(2, email2);
+        ps.setString(3, email2);
+        ps.setString(4, email1);
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                lastMessage = new Message(
+                    rs.getInt("MessageID"),
+                    rs.getString("SenderEmail"),
+                    rs.getString("ReceiverEmail"),
+                    rs.getString("MessageText"),
+                    rs.getTimestamp("Timestamp").toLocalDateTime(),
+                    rs.getString("Status")
+                );
+            }
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return lastMessage;
+}
 
     public int markMessagesAsRead(String senderEmail, String receiverEmail) {
         String sql = "UPDATE [Message] SET Status = 'READ' WHERE SenderEmail = ? AND ReceiverEmail = ? AND Status = 'UNREAD'";
@@ -158,7 +217,6 @@ public class MessageDAO implements DAOInterface<Message, Integer> {
         return 0;
     }
 
-    // Phương thức bổ sung: Lấy danh sách tin nhắn theo người gửi
     public List<Message> getMessagesBySender(String senderEmail) {
         List<Message> list = new ArrayList<>();
         String sql = "SELECT * FROM [Message] WHERE SenderEmail = ?";

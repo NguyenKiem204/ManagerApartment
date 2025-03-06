@@ -8,6 +8,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,36 +16,96 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Invoice Manager</title>
-        <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />   
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="<%= request.getContextPath() %>/https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
               rel="stylesheet" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
 
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
 
         <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
         <style>
 
-            .active::-webkit-scrollbar {
-                width: 0px;
-                height: 0px;
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+            }
+            .container {
+                max-width: 1200px;
+                background-color: #fff;
+                padding: 20px;
+                margin: auto;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            h2 {
+                text-align: center;
+                color: #ff9800;
             }
 
-            .active {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
+            input, select {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: 16px;
             }
-            #main {
-                margin-left: 150px;/* Điều chỉnh theo kích thước sidebar */
-                width: calc(100% - 150px); /* Đảm bảo không đè lên sidebar */
-                transition: all 0.3s;
+            input {
+                width: 70%;
+            }
+            select {
+                width: 28%;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 15px;
+            }
+            table, th, td {
+                border: 1px solid #ddd;
+            }
+            th, td {
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: #ff9800;
+                color: white;
+                cursor: pointer;
+                position: relative;
+            }
+            th .sort-icon {
+                margin-left: 5px;
+                font-size: 12px;
+            }
+            .rating {
+                color: #FFD700;
+                font-size: 20px;
+            }
+            .pagination {
+                text-align: center;
+                margin-top: 10px;
+            }
+            .pagination button {
+                background-color: #ff9800;
+                color: white;
+                border: none;
+                padding: 8px 15px;
+                margin: 5px;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+            .pagination button:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
             }
 
         </style>
@@ -53,234 +114,187 @@
     </head>
 
     <body>
-        <div id="app">
-            <div id="sidebar" class="active">
-                <div class="sidebar-wrapper active" style="border: 2px solid orangered; border-radius: 0 20px 20px 0">
-                    <div class="sidebar-header">
-                        <div class="d-flex justify-content-between">
-                            <div class="logo">
-                                <a href="<%= request.getContextPath() %>/index.html"><img src="<%= request.getContextPath() %>/assets/images/logo/logo.png" alt="Logo" /></a>
-                            </div>
-                            <div class="toggler">
-                                <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-                            </div>
-                        </div>
+
+        <%@include file="menuaccountant.jsp" %>
+
+
+
+        <div id="main">
+            <div class="container ">
+
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                    <h2>Invoices Manager</h2>
+                    <div class="d-flex align-items-center">
+                        <a href="<%= request.getContextPath() %>/UpdateStatusInvoice" class="btn btn-primary d-flex align-items-center me-2">
+                            <i class="bi bi-arrow-repeat me-1"></i> Update Status
+                        </a>
+
+                        <a href="<%= request.getContextPath() %>/addnewinvoice" class="btn btn-success d-flex align-items-center">
+                            <i class="bi bi-plus-lg me-1"></i> Add New Invoice
+                        </a>
                     </div>
-                    <div class="sidebar-menu">
-                        <ul class="menu">
-                            <li class="sidebar-title">Menu</li>
-
-                            <li class="sidebar-item">
-                                <a href="index.html" class="sidebar-link">
-                                    <i class="bi bi-house-door-fill"></i>
-                                    <span>Home</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item active">
-                                <a href="index.html" class="sidebar-link">
-                                    <i class="bi bi-receipt-cutoff"></i>
-                                    <span>Invoice Management</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item ">
-                                <a href="index.html" class="sidebar-link">
-                                    <i class="bi bi-file-earmark-text-fill"></i>
-                                    <span>Request</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item ">
-                                <a href="index.html" class="sidebar-link">
-                                    <i class="bi bi-chat-dots-fill"></i>
-                                    <span>FeedBack</span>
-                                </a>
-                            </li>
-
-
-
-
-                            <!-- =================================??ng nh?p, log out..==================== -->
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-person-badge-fill"></i>
-                                    <span>Setting</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="auth-login.html">Profile</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="LogoutServlet">Logout</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <button class="sidebar-toggler btn x">
-                        <i data-feather="x"></i>
-                    </button>
                 </div>
-            </div>
-            <div id="main">
-                <header class="mb-2">
-                    <a href="#" class="burger-btn d-block d-xl-none">
-                        <i class="bi bi-justify fs-3"></i>
-                    </a>
-                </header>
-                <div id="main">
+                <div class="search-sort-container">
+                    <div class="row mb-3 align-items-center" >
 
-                    <main  id="content">
-                        <div class="container mt-2">
-                            <div class="container mt-2">
-                                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                                    <h2>Invoices Manager</h2>
-                                    <div class="d-flex align-items-center">
-                                        <a href="<%= request.getContextPath() %>/UpdateStatusInvoice" class="btn btn-primary d-flex align-items-center me-2">
-                                            <i class="bi bi-arrow-repeat me-1"></i> Update Status
-                                        </a>
+                        <div class="col-md-8">
+                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
 
-                                        <a href="<%= request.getContextPath() %>/addnewinvoice" class="btn btn-success d-flex align-items-center">
-                                            <i class="bi bi-plus-lg me-1"></i> Add New Invoice
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="row mb-3 align-items-center" >
-
-                                        <div class="col-md-8">
-                                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
-                                                <select name="apartmentId" class="form-select" aria-label="Default select example">
-                                                    <option value="">All Department</option>
-                                                    <c:forEach items="${listApartment}" var="o">
-                                                        <option value="${o.apartmentId}" 
-                                                                ${selectedApartmentId == o.apartmentId ? 'selected' : ''}>
-                                                            ${o.apartmentName}
-                                                        </option>
-                                                    </c:forEach>
-                                                </select>
-                                                <select class="form-select" name="status">
-                                                    <option value="">All Status</option>
-                                                    <option value="Paid" ${selectedStatus == 'Paid' ? 'selected' : ''}>Paid</option>
-                                                    <option value="Unpaid" ${selectedStatus == 'Unpaid' ? 'selected' : ''}>Unpaid</option>
-                                                </select>
-                                                <label for="FromDate" class="form-label align-self-center">From:</label>
-                                                <input type="date" class="form-control" id="FromDate" name="FromDate" 
-                                                       value="${selectedFromDate}">
-                                                <label for="dueDate" class="form-label align-self-center">Due:</label>
-                                                <input type="date" class="form-control" id="dueDate" name="dueDate" 
-                                                       value="${selectedDueDate}">
-                                                <button type="submit" class="btn btn-primary" style="width: 70px;">Filter</button>
-                                            </form>
-                                        </div>
+                                <select class="form-select" name="status">
+                                    <option value="">All Status</option>
+                                    <option value="Paid" ${selectedStatus == 'Paid' ? 'selected' : ''}>Paid</option>
+                                    <option value="Unpaid" ${selectedStatus == 'Unpaid' ? 'selected' : ''}>Unpaid</option>
+                                </select>
+                                <label for="FromDate" class="form-label align-self-center">From:</label>
+                                <input type="date" class="form-control" id="FromDate" name="FromDate" 
+                                       value="${selectedFromDate}">
+                                <label for="dueDate" class="form-label align-self-center">Due:</label>
+                                <input type="date" class="form-control" id="dueDate" name="dueDate" 
+                                       value="${selectedDueDate}">
 
 
-                                        <div class="col-md-4">
-                                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
-                                                <input type="text" name="search" placeholder="Search by title.." value="${search}" class="form-control me-2">
-                                                <input type="hidden" name="apartmentId" value="${selectedApartmentId}">  
-                                                <input type="hidden" name="status" value="${selectedStatus}">  
-                                                <input type="hidden" name="FromDate" value="${selectedFromDate}">  
-                                                <input type="hidden" name="dueDate" value="${selectedDueDate}"> 
-                                                <button type="submit" class="btn btn-primary">Search</button>
-                                            </form>
-                                        </div>
-                                    </div>
+                                <button type="submit" class="btn btn-primary" style="width: 70px;">Filter</button>
 
+                                <a href="<%= request.getContextPath() %>/InvoicesManager" class="btn btn-info btn-sm">
+                                    <i class="fas fa-sync-alt"></i> <!-- Icon reload -->
+                                </a>
 
-                                </div>
-
-                            </div>
+                            </form>
                         </div>
 
 
+                        <div class="col-md-4">
+                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
+                                <input type="text" name="search" placeholder="Search by title.." value="${search}" class="form-control me-2">
+
+                                <input type="hidden" name="status" value="${selectedStatus}">  
+                                <input type="hidden" name="FromDate" value="${selectedFromDate}">  
+                                <input type="hidden" name="dueDate" value="${selectedDueDate}"> 
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </form>
+                        </div>
+                    </div>
 
 
-
-                        <table class="table table-striped table-hover table-bordered caption-top">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Invoice Code</th>
-                                    <th>Title</th>
-                                    <th>Amount</th>
-                                    <th>Apartment</th>
-                                    <th>Status</th>
-                                    <th>Payment Term</th>
-                                    <th>Payment Date</th>
-                                    <th>Public Date</th>
-                                    <th>Late(2%)</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody style="background:white">
-                                <c:forEach items="${sessionScope.ListInvoices}" var="l">
-                                    <tr>
-                                        <td>${l.invoiceID}</td>
-                                        <td>${l.description}</td>
-                                        <td>${l.totalAmount}</td>
-                                        <td>${l.apartment.apartmentName}</td>
-                                        <td>${l.status}</td>
-                                        <td>${l.dueDate}</td>
-                                        <td>${l.paydate}</td>
-                                        <td>${l.publicDate}</td>
-                                        <td>
-                                            <c:if test="${l.muon == 1}">
-                                                <p>Islate</p>
-                                            </c:if>
-                                        </td>
-                                        <td style="width:200px">
-                                            <a href="<%= request.getContextPath() %>/DetailInvoice?invoiceID=${l.invoiceID}" class="btn btn-info btn-sm">Detail</a>
-                                            <c:if test='${l.status eq "Unpaid"}'>
-                                                <a href="<%= request.getContextPath() %>/editinvoice?invoiceID=${l.invoiceID}" class="btn btn-warning btn-sm">Edit</a>
-                                                <button onclick="confirmDelete('${l.invoiceID}')" class="btn btn-danger btn-sm">Delete</button>
-                                            </c:if>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
                 </div>
+
+
+                <table class="tableinvoice ">
+                    <thead class="table">
+                        <tr>
+                            <th>Invoice Code</th>
+                            <th>Title</th>
+                            <th>Amount</th>
+                            <th>Apartment</th>
+                            <th>Status</th>
+                            <th>Payment Term</th>
+                            <th>Payment Date</th>
+                            <th>Public Date</th>
+                            <th>Late(0,1%/d)</th>
+                            <th  style="width:30px">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background:white" id="tableBody">
+                        <c:forEach items="${sessionScope.ListInvoices}" var="l">
+                            <tr>
+                                <td>${l.invoiceID}</td>
+                                <td>${l.description}</td>
+                                <td>${l.totalAmount+ l.muon}</td>
+                                <td>${l.apartment.apartmentName}</td>
+                                <td>
+                               
+                                    <c:if test="${'Unpaid' eq l.status}">
+                                        <p style="background-color: orange; color: white; border-radius: 8px; padding: 5px; display: inline-block; text-align: center;">
+                                            ${l.status}
+                                        </p>
+                                    </c:if>
+                                    <c:if test="${'Paid' eq l.status}">
+                                        <p style="background-color: green; color: white; border-radius: 8px; padding: 5px; display: inline-block; text-align: center;">
+                                            ${l.status}
+                                        </p>
+                                    </c:if>
+                                </td>
+                                <td>${l.dueDateft}</td>
+                                <td>${l.paydateft}</td>
+                                <td>${l.publicDateft}</td>
+                                <td>
+                                    <c:if test="${l.muon != 0}">
+                                        <p style="color:red">Islate</p>
+                                    </c:if>
+                                </td>
+                                <td style="width:30px">
+                                    <a href="<%= request.getContextPath() %>/DetailInvoice?invoiceID=${l.invoiceID}" class="btn btn-info btn-sm">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+                <c:if test="${not empty  sessionScope.ListInvoices}">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                        <c:set var="startPage" value="${requestScope.currentPage - 1}" />
+                        <c:set var="endPage" value="${requestScope.currentPage + 1}" />
+                        <c:if test="${startPage < 1}">
+                            <c:set var="startPage" value="1"/>
+                            <c:set var="endPage" value="3"/>
+                        </c:if>
+                        <c:if test="${endPage > requestScope.totalPage}">
+                            <c:set var="endPage" value="${requestScope.totalPage}"/>
+                            <c:set var="startPage" value="${endPage - 2}" />
+                            <c:if test="${startPage < 1}">
+                                <c:set var="startPage" value="1"/>
+                            </c:if>
+                        </c:if>
+                        <c:if test="${requestScope.currentPage > 1}">
+                            <a href="InvoicesManager?page=${requestScope.currentPage - 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                               style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
+                                &lt;
+                            </a>
+                        </c:if>
+                        <c:forEach begin="${startPage}" end="${endPage}" var="page">
+                            <a href="InvoicesManager?page=${page}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                               style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;
+                               <c:if test='${page == requestScope.currentPage}'> background-color: #007bff; color: white; </c:if>">
+                                ${page}
+                            </a>
+                        </c:forEach>
+                        <c:if test="${requestScope.currentPage < requestScope.totalPage}">
+                            <a href="InvoicesManager?page=${requestScope.currentPage + 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                               style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
+                                &gt;
+                            </a>
+                        </c:if>
+                    </div>
+
+                </c:if>
+                <c:if test="${empty sessionScope.ListInvoices}">
+                    <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
+                        <p style="font-size: 20px;">${message}</p>
+                    </div>
+                </c:if>
+
             </div>
         </div>
 
-    </div>
 
 
 
 
-    <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
-    <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
+        <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
+        <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 
-    <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
-    <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
 
-    <script src="assets/js/main.js"></script>
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteLabel">Confirm Deletion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this invoice?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <a id="deleteConfirmBtn" href="#" class="btn btn-danger">Delete</a>
-                </div>
-            </div>
-        </div>
-    </div>
+        <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    <!-- JavaScript -->
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script>
-                                                    function confirmDelete(invoiceID) {
-                                                        let deleteUrl = "<%= request.getContextPath() %>/DeleteInvoice?invoiceID=" + invoiceID;
-                                                        document.getElementById("deleteConfirmBtn").href = deleteUrl;
-                                                        var myModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
-                                                        myModal.show();
-                                                    }
-    </script>
-</body>
+
+
+    </body>
 
 </html>

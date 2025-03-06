@@ -7,6 +7,10 @@
 <%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem --%>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="model.Staff" %>  
+<%@ page import="model.Resident" %> 
+<%@ page import="java.time.LocalDate" %>  
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <!DOCTYPE html>
 <html>
 
@@ -428,7 +432,18 @@
                                             <p><strong>Phone:</strong> ${not empty staff ? staff.phoneNumber : (not empty resident ? resident.phoneNumber : 'N/A')}</p>
                                             <p><strong>Address:</strong> Hà Nội</p>
                                             <p><strong>Status: </strong>Active</p>
-                                            <p><strong>Date Of Birth:</strong> ${not empty staff ? staff.dob : (not empty resident ? resident.dob : 'N/A')}</p>
+                                            <%  
+                                              LocalDate dob = null;
+                                              Resident resident = (Resident) session.getAttribute("resident");
+                                              if (resident != null) {  
+                                                  dob = resident.getDob();
+                                              } 
+                                              String dobString = (dob != null) ? dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) : "N/A";   
+                                            %>   
+
+                                            <p><strong>Date Of Birth:</strong> 
+                                                <%= dobString %>  
+                                            </p>
                                             <p><strong>Sex:</strong> ${not empty staff ? staff.sex : (not empty resident ? resident.sex : 'N/A')}</p>
                                         </div>
                                     </div>
