@@ -122,6 +122,8 @@ public class RequestTechnicalServlet extends HttpServlet {
 
             // Nếu có tham số lọc, thực hiện tìm kiếm
             if (keySearch_raw != null || status != 0 || typeRequestID != 0 || date != null || keySort != 0 || xpage != null) {
+                
+//                hàm getAllRequestsBySearchOrFilterOrSortOfStaff() đang bị lỗi khi thực hiện 1 tác vụ khác
                 listFirstPage = requestDAO.getAllRequestsBySearchOrFilterOrSortOfStaff(keySearch, typeRequestID, date, status, keySort, page, pageSize, 4);
                 int numberOfLine = requestDAO.getNumberOfRequestsBySearchOrFilterOrSortOfStaff(keySearch, typeRequestID, date, status, keySort, 4);
                 num = (numberOfLine % pageSize == 0) ? (numberOfLine / pageSize) : (numberOfLine / pageSize + 1);

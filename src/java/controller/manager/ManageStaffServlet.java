@@ -31,24 +31,54 @@ public class ManageStaffServlet extends HttpServlet {
     throws ServletException, IOException {
     String sex = request.getParameter("sex");
     String status = request.getParameter("status");
-    String searchKeyword = request.getParameter("searchKeyword"); 
-
+    String searchKeywordRaw = request.getParameter("searchKeyword"); 
+    String searchKeyword = normalizeString(searchKeywordRaw);
     StaffDAO staffDAO = new StaffDAO();
     List<Staff> listStaff;
+    int page = 1;
+    int pageSize = 4; // Số bản ghi mỗi trang
 
-    if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-        listStaff = staffDAO.searchStaffs(searchKeyword.trim(), sex, status);
-    } else {
-        listStaff = staffDAO.getAllStaffs(sex, status);
+    // Lấy page từ request nếu có
+    String pageStr = request.getParameter("page");
+    if (pageStr != null && !pageStr.isEmpty()) {
+        page = Integer.parseInt(pageStr);
     }
-
+    listStaff = staffDAO.searchStaffs(searchKeyword.trim(), sex, status, page, pageSize);
+//    if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+//        listStaff = staffDAO.searchStaffs(searchKeyword.trim(), sex, status);
+//    } else {
+//        listStaff = staffDAO.getAllStaffs(sex, status);
+//    }
+    int totalRecords = staffDAO.getTotalStaffs(searchKeyword.trim(), sex, status);
+    int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
     request.setAttribute("listStaff", listStaff);
     request.setAttribute("selectedSex", sex);
     request.setAttribute("selectedStatus", status);
     request.setAttribute("searchKeyword", searchKeyword); 
-
+    request.setAttribute("totalPages", totalPages);
+    request.setAttribute("currentPage", page);
     request.getRequestDispatcher("/manager/mngstaff.jsp").forward(request, response);
 }
+    private String normalizeString(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return ""; // Nếu chuỗi null hoặc rỗng, trả về rỗng
+        }
+        
+        // Xóa khoảng trắng thừa và tách các từ
+        String[] words = input.trim().replaceAll("\\s+", " ").split(" ");
+        
+        StringBuilder normalized = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                // Viết hoa chữ cái đầu, các chữ sau viết thường
+                normalized.append(Character.toUpperCase(word.charAt(0)))
+                          .append(word.substring(1).toLowerCase())
+                          .append(" ");
+            }
+        }
+        
+        return normalized.toString().trim(); // Xóa khoảng trắng cuối cùng
+    }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -70,12 +100,11 @@ public class ManageStaffServlet extends HttpServlet {
             String dobStr = request.getParameter("dob");
             String sex = request.getParameter("sex");
             int roleId = Integer.parseInt(request.getParameter("roleId"));
-            int imageId = imageDAO.selectAll().size() + 1;
             
             // Kiểm tra định dạng số điện thoại (10 số)
             if (!phoneNumber.matches("\\d{10}")) {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "Số điện thoại phải có đúng 10 chữ số!");
+                jsonResponse.put("message", "Phone number must has 10 number characters!");
                 out.write(jsonResponse.toString());
                 return;
             }
@@ -83,7 +112,13 @@ public class ManageStaffServlet extends HttpServlet {
             // Kiểm tra định dạng CCCD (12 số)
             if (!cccd.matches("\\d{12}")) {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "CCCD phải có đúng 12 chữ số!");
+                jsonResponse.put("message", "CCCD must has 12 number characters");
+                out.write(jsonResponse.toString());
+                return;
+            }
+            if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$")) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Định dạng mail sai");
                 out.write(jsonResponse.toString());
                 return;
             }
@@ -101,14 +136,13 @@ public class ManageStaffServlet extends HttpServlet {
 
             // Mặc định trạng thái là Active
             String status = "Active";
-            Image image = imageDAO.selectById(imageDAO.insert(new Image(imageId, null))); // Ảnh mặc định
             Role role = roleDAO.selectById(roleId);
 
             // Tạo mật khẩu ngẫu nhiên (3 ký tự)
-            String password = generateRandomPassword(3);
+            String password = generateRandomPassword(5);
 
             // Tạo đối tượng Resident
-            Staff newStaff = new Staff(fullName, password, phoneNumber, cccd, email, dob, sex, status, image, role);
+            Staff newStaff = new Staff(fullName, password, phoneNumber, cccd, email, dob, sex, status, role);
 
             // Thêm vào database
             int isAdded = staffDAO.insert(newStaff);

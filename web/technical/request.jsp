@@ -1,3 +1,9 @@
+<%-- 
+    Document   : requestadministrative
+    Created on : Feb 11, 2025, 5:19:31 AM
+    Author     : admin
+--%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -190,7 +196,7 @@
                         <div class="filter-row">
                             <select id="staffFilter">
                                 <option value="0">Filter by Type Request</option>
-                                <c:forEach var="typerq" items="${listTypeRq}" begin="2" end="3">
+                                <c:forEach var="typerq" items="${listTypeRq}">
                                     <option value="${typerq.typeRqID}" ${param.typeRequestID == typerq.typeRqID ? 'selected' : ''}>${typerq.typeName}</option>
                                 </c:forEach>
                             </select>
@@ -241,10 +247,6 @@
                                         <span class="status" data-id="${rq.requestID}" data-status-id="${rq.status.statusID}" onclick="updateStatus(this)">
                                         ${rq.status.statusName}
                                     </span>
-                                    <div class="action-buttons" id="actionButtons-${rq.requestID}" style="display: none;">
-                                        <button class="approve-btn" onclick="approveRequest(${rq.requestID})">Approve</button>
-                                        <button class="reject-btn" onclick="rejectRequest(${rq.requestID})">Reject</button>
-                                    </div>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -323,51 +325,113 @@
         </div>
 
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                document.querySelectorAll(".status").forEach(item => {
-                    item.addEventListener("click", function () {
-                        const requestID = this.getAttribute("data-id");
-                        let statusID = parseInt(this.getAttribute("data-status-id"));
+            function updateStatus(element) {
+                const requestID = element.getAttribute("data-id");
+                let statusID = parseInt(element.getAttribute("data-status-id"));
 
-                        if (statusID === 2) { // Nếu đang là Processing
-                            updateStatusToResolved(requestID, this);
-                        }
-                    });
-                });
-            });
+                // Nếu trạng thái là Pending, hiển thị các nút Duyệt và Không Duyệt
+//                if (statusID === 1) {
+//                    document.getElementById("actionButtons-" + requestID).style.display = "block";
+//                    return; // Không tiếp tục xử lý vì đã có hành động ở đây
+//                }
 
-            function updateStatusToResolved(requestID, element) {
+                // Logic chuyển trạng thái cho các trạng thái khác
+                if (statusID === 3) {
+                    statusID = 4; // Inprogress → Completed
+                } else {
+                    return; // Nếu đã là Resolved (3), không làm gì cả
+                }
+
+                // Gửi AJAX cập nhật trạng thái
                 fetch('${pageContext.request.contextPath}/manager/updateRequestStatus', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({id: requestID, statusID: 3}) // Chuyển thành Resolved
+                    body: JSON.stringify({id: requestID, statusID: statusID})
                 })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                element.setAttribute("data-status-id", 3);
-                                element.innerText = "Resolved";
-                                element.style.backgroundColor = "#4CAF50";
-                                element.style.border = "2px solid #388E3C";
-                                element.style.boxShadow = "0 0 5px rgba(76, 175, 80, 0.5)";
+                                element.setAttribute("data-status-id", statusID);
+                                updateStatusDisplay(element, statusID);
                             } else {
                                 alert("Lỗi cập nhật trạng thái!");
                             }
                         })
                         .catch(error => console.error('Lỗi:', error));
             }
+            function approveRequest(requestID) {
+                // Cập nhật trạng thái thành Processing khi "Duyệt"
+                updateRequestStatus(requestID, 2);
+            }
+
+            function rejectRequest(requestID) {
+                // Cập nhật trạng thái thành Cancel khi "Không Duyệt"
+                updateRequestStatus(requestID, 4); // Giả sử 4 là trạng thái Cancel
+            }
+
+            function updateRequestStatus(requestID, statusID) {
+                fetch('${pageContext.request.contextPath}/technical/updateRequestStatus', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({id: requestID, statusID: statusID})
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Response Data:", data); // Debugging
+                            if (data.success) {
+                                window.location.reload();
+                                const statusElement = document.querySelector(`[data-id='${requestID}']`);
+                                statusElement.setAttribute("data-status-id", statusID);
+                                updateStatusDisplay(statusElement, statusID);
+                                document.getElementById("actionButtons-" + requestID).style.display = "none"; // Ẩn các nút sau khi lựa chọn
+                                
+                            } else {
+                                alert("Failed to update status: ");
+                            }
+                        })
+                        .catch(error => console.error('Lỗi:', error));
+            }
 
             function updateStatusDisplay(element, statusID) {
-                if (statusID === 2) {
-                    element.innerText = "Processing";
-                    element.style.backgroundColor = "#03A9F4";
-                } else if (statusID === 3) {
-                    element.innerText = "Resolved";
-                    element.style.backgroundColor = "#4CAF50";
+                switch (statusID) {
+                    case 1:
+                        element.innerText = "Pending";
+                        element.style.backgroundColor = "#FF5722"; // Orange
+                        break;
+                    case 2:
+                        element.innerText = "Assigned";
+                        element.style.backgroundColor = "#FFC107"; // Amber
+                        break;
+                    case 3:
+                        element.innerText = "In Progress";
+                        element.style.backgroundColor = "#03A9F4"; // Blue
+                        break;
+                    case 4:
+                        element.innerText = "Completed";
+                        element.style.backgroundColor = "#4CAF50"; // Green
+                        break;
+                    case 5:
+                        element.innerText = "Expired";
+                        element.style.backgroundColor = "#9E9E9E"; // Gray
+                        break;
+                    case 6:
+                        element.innerText = "Reopened";
+                        element.style.backgroundColor = "#E91E63"; // Pink
+                        break;
+                    case 7:
+                        element.innerText = "Resolved";
+                        element.style.backgroundColor = "#673AB7"; // Purple
+                        break;
+                    default:
+                        element.innerText = "Unknown";
+                        element.style.backgroundColor = "#607D8B"; // Default: Blue Gray
                 }
             }
+
         </script>
         <script>
             function updateFilter() {

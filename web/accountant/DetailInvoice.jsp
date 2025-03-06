@@ -114,10 +114,6 @@
                         <a href="<%= request.getContextPath() %>/InvoicesManager" class="btn btn-secondary">
                             <i class="bi bi-arrow-left"></i> Back
                         </a>
-
-                        <c:if test='${invoice.status eq "Unpaid"}'>
-                            <a href="<%= request.getContextPath() %>/editinvoice?invoiceID=${invoice.invoiceID}" class="btn btn-primary ms-2">Edit Invoice</a>
-                        </c:if>
                     </div>
 
 

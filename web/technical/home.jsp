@@ -289,16 +289,10 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="layout-default.html">Feedback</a>
+                                        <a href="#">Feedback</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="request">Request</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-vertical-navbar.html">Accounting Department</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="layout-horizontal.html">Security Department</a>
                                     </li>
                                 </ul>
                             </li>

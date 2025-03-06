@@ -98,7 +98,7 @@ public class HomeManagerServlet extends HttpServlet {
             String email = (o instanceof Staff) ? ((Staff) o).getEmail() : ((Resident) o).getEmail();
             return lastMessageMap.getOrDefault(email, Timestamp.valueOf("1970-01-01 00:00:00"));
         }, Comparator.reverseOrder()));
-        List<Object> list = combinedList.subList(0, 3);
+        List<Object> list = combinedList.subList(0, combinedList.size());
         request.setAttribute("list", list);
         request.getRequestDispatcher("home.jsp").forward(request, response);
     }

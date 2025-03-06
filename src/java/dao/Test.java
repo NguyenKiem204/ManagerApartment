@@ -40,7 +40,11 @@ public class Test {
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
         ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
         
-        System.out.println(feedbackDAO.countFeedbackByRole(2, LocalDate.of(2025, 2, 2)));
+        List<Request> list = requestDAO.selectFirstPageOfStaff(4);
+        for (Request request : list) {
+            System.out.println(request.toString());
+        }
+        
 //        ManagerFeedback t = new ManagerFeedback(LocalDate.now(), 10, 4.3, 82, 18, "Good luck", "Can cai thien nhieu", null, "training more", LocalDate.now().plusDays(3), LocalDate.now(), staffDAO.getStaffByID(2));
 //        managerFeedbackDAO.insert(t);
        
@@ -76,8 +80,8 @@ public class Test {
 //       /
 //        imageDAO.insert(image);
 
-//        Staff staff = new Staff("Nguyễn Văn A", "123", "0331652222", "12349841131194", "nguyenmanhc151@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(3).build());
-//        staffDAO.insert(staff);
+        Staff staff = new Staff("Nguyễn Văn b", "123", "0931652222", "66349841131194", "nguyenmanhb151@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(3).build());
+        staffDAO.insert(staff);
 
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);

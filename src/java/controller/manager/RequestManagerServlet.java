@@ -74,7 +74,7 @@ public class RequestManagerServlet extends HttpServlet {
         // Khai báo biến
         int page = 1; // Trang mặc định
         int pageSize = 5; // Giá trị mặc định nếu không có tham số pageSize
-        int size = requestDAO.selectAll().size();
+        int size = requestDAO.selectAllToCount();
         int num = 1;
 
         try {
