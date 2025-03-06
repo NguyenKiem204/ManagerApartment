@@ -31,6 +31,7 @@ public class UrlDAO {
         }
         return mapping;
     }
+    
     public int saveFilterMapping(String filterName, List<String> urlPatterns) {
         int generatedId = -1;
         FilterMapping existingMapping = getFilterMappingByName(filterName);
@@ -67,8 +68,6 @@ public class UrlDAO {
                 
                 int row = ps.executeUpdate();
                 System.out.println("(" + row + " row(s) affected)");
-                
-                // Lấy ID được tạo
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         generatedId = generatedKeys.getInt(1);
@@ -80,6 +79,31 @@ public class UrlDAO {
         }
         return generatedId;
     }
+    
+    /**
+     * Updates an existing filter mapping with completely new URL patterns
+     * @param id ID of the mapping to update
+     * @param filterName Filter name
+     * @param urlPatterns New list of URL patterns
+     * @return true if update was successful, false otherwise
+     */
+    public boolean updateFilterMapping(int id, String filterName, List<String> urlPatterns) {
+        String xmlData = UrlUtils.serializeFilterMapping(filterName, urlPatterns);
+        String sql = "UPDATE UrlTable SET EncodedUrl = ? WHERE ID = ?";
+        
+        try (Connection connection = DBContext.getConnection(); 
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, xmlData);
+            ps.setInt(2, id);
+            
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(UrlDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    
     public FilterMapping getFilterMapping(int id) {
         FilterMapping mapping = null;
         String sql = "SELECT ID, EncodedUrl FROM UrlTable WHERE ID = ?";
@@ -102,6 +126,7 @@ public class UrlDAO {
         }
         return mapping;
     }
+    
     public List<FilterMapping> getAllFilterMappings() {
         List<FilterMapping> mappings = new ArrayList<>();
         String sql = "SELECT ID, EncodedUrl FROM UrlTable";

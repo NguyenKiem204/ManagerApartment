@@ -84,13 +84,21 @@
                                     <td>${news.formattedDate}</td>
                                     <td><img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="image-news shadow" alt="${news.title}" /></td>
                                     <td><div class="btn1">
-                                            <button onclick="updateNews(
-                                                            '${news.newsID}',
-                                                            '${fn:escapeXml(news.title)}',
-                                                            '${fn:escapeXml(news.description)}',
-                                                            '${fn:escapeXml(news.formattedDate)}',
-                                                            '${sessionScope.staff.staffId}')">Update</button>  
-                                            <button onclick="deleteNews('${news.newsID}', '${fn:escapeXml(news.title)}')">Delete</button>  
+                                            <button 
+                                                data-id="${news.newsID}"
+                                                data-title="${fn:escapeXml(news.title)}"
+                                                data-description="${fn:escapeXml(news.description)}"
+                                                data-date="${fn:escapeXml(news.formattedDate)}"
+                                                data-staff="${sessionScope.staff.staffId}"
+                                                onclick="updateNewsFromButton(this)">
+                                                Update
+                                            </button>  
+                                            <button 
+                                                data-id="${news.newsID}"
+                                                data-title="${fn:escapeXml(news.title)}"
+                                                onclick="deleteNewsFromButton(this)">
+                                                Delete
+                                            </button>
                                         </div></td>
                                 </tr>
                                 <c:set var="i" value="${i + 1}"></c:set>
@@ -207,6 +215,22 @@
             </c:if>
         </div>
         <script type="text/javascript">
+            function updateNewsFromButton(button) {
+                const newsID = button.getAttribute("data-id");
+                const title = button.getAttribute("data-title");
+                const description = button.getAttribute("data-description");
+                const date = button.getAttribute("data-date");
+                const staffId = button.getAttribute("data-staff");
+
+                updateNews(newsID, title, description, date, staffId);
+            }
+
+            function deleteNewsFromButton(button) {
+                const newsID = button.getAttribute("data-id");
+                const title = button.getAttribute("data-title");
+
+                deleteNews(newsID, title);
+            }
             function closeErrorAlert() {
                 let errorAlert = document.getElementById("errorAlert");
                 if (errorAlert) {

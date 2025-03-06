@@ -128,6 +128,7 @@ public static String trim(String input) {
         try {
             deadline = LocalDate.parse(deadline_raw);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return deadline == null || !deadline.isBefore(java.time.LocalDate.now());
     }
@@ -136,4 +137,14 @@ public static String trim(String input) {
     public static boolean isValidMonthYear(String monthYear) {
         return monthYear != null && !monthYear.trim().isEmpty();
     }
+    public static String escapeSQL(String input) {
+    return input.replace("'", "''")
+                .replace("\"", "\\\"")
+                .replace("\\", "\\\\")
+                .replace(";", "\\;")
+                .replace("--", "—")
+                .replace("/*", "/ *")
+                .replace("*/", "* /");
+}
+
 }
