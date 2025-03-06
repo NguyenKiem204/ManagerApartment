@@ -10,6 +10,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 import dao.FeedbackDAO;
 import dao.ManagerFeedbackDAO;
+import dao.NotificationDAO;
 import dao.RoleDAO;
 import dao.StaffDAO;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import model.Feedback;
 import model.ManagerFeedback;
+import model.Notification;
 import model.Role;
 import model.Staff;
 import org.jsoup.Jsoup;
@@ -197,6 +199,7 @@ public class FormFeedbackManagerServlet extends HttpServlet {
         Validate validate = new Validate();
         StaffDAO staffDAO = new StaffDAO();
         ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
+        NotificationDAO notificationDAO = new NotificationDAO();
 
         String position_raw = request.getParameter("position");
         String monthYear_raw = request.getParameter("feedback-month");
@@ -345,7 +348,6 @@ public class FormFeedbackManagerServlet extends HttpServlet {
                 return;
             }
 
-            System.out.println("deadline string: " + deadline_raw);
             //Kiểm tra user chọn dl là ngày trong quá khứ
             if (!validate.validateDeadline(deadline_raw)) {
                 RoleDAO rdao = new RoleDAO();
@@ -373,6 +375,11 @@ public class FormFeedbackManagerServlet extends HttpServlet {
                       strengths, weaknesses, null, actionPlan,
                       deadline, LocalDate.now(), staff);
             managerFeedbackDAO.insert(managerFeedback);
+            System.out.println("Result last ID in form fb mmanager servlet: " + managerFeedbackDAO.selectLastId());
+            
+//gửi thông báo tới staff
+            Notification notification = new Notification("You have new feedback from your manager.", "feedback", LocalDate.now(), false,managerFeedbackDAO.selectLastId(), "ManagerFeedback", staff, null);
+            notificationDAO.insert(notification);
         } catch (NumberFormatException e) {
             log("LOIIIII!");
         }

@@ -14,6 +14,7 @@ import model.Feedback;
 import model.Image;
 import model.ImageFeedback;
 import model.ManagerFeedback;
+import model.Notification;
 import model.Request;
 import model.Resident;
 import model.Role;
@@ -39,11 +40,14 @@ public class Test {
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
         ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
+        NotificationDAO notificationDAO = new NotificationDAO();
         
-        List<Request> list = requestDAO.selectFirstPageOfStaff(4);
-        for (Request request : list) {
-            System.out.println(request.toString());
-        }
+        System.out.println(managerFeedbackDAO.selectLastId());
+        
+//        List<Notification> list = notificationDAO.selectAllByStaffID(4);
+//        for (Notification notification : list) {
+//            System.out.println("Ket qua la: " + notification.toString());
+//        }
         
 //        ManagerFeedback t = new ManagerFeedback(LocalDate.now(), 10, 4.3, 82, 18, "Good luck", "Can cai thien nhieu", null, "training more", LocalDate.now().plusDays(3), LocalDate.now(), staffDAO.getStaffByID(2));
 //        managerFeedbackDAO.insert(t);
@@ -75,12 +79,12 @@ public class Test {
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
-//        Resident resident = new Resident("Nguyễn Văn b", "123", "03314710223", "3984132344394", "b@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
-//        residentDAO.insert(resident);
+        Resident resident = new Resident("Nguyễn Văn c", "123", "03314811123", "5584132343394", "c@gmail.com",  LocalDate.of(2004, 12, 5), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
+        residentDAO.insert(resident);
 //       /
 //        imageDAO.insert(image);
 
-//        Staff staff = new Staff("Nguyễn Văn b", "123", "0931652222", "66349841131194", "nguyenmanhb151@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(4).build());
+//        Staff staff = new Staff("Nguyễn Văn Technical", "123", "0931625329", "99349841151111", "tech@gmail.com",  LocalDate.of(2003, 6, 27), "Male", "Active", new Image().builder().imageID(3).build(), new Role().builder().roleID(4).build());
 //        staffDAO.insert(staff);
 
 
