@@ -7,6 +7,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,7 +18,7 @@ import model.ManagerFeedback;
  *
  * @author admin
  */
-public class ManagerFeedbackDAO implements DAOInterface<ManagerFeedback, Integer>  {
+public class ManagerFeedbackDAO implements DAOInterface<ManagerFeedback, Integer> {
 
     @Override
     public int insert(ManagerFeedback t) {
@@ -41,9 +42,9 @@ public class ManagerFeedbackDAO implements DAOInterface<ManagerFeedback, Integer
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlInsert)) {
             ps.setDate(1, Date.valueOf(t.getMonthYear()));
             ps.setInt(2, t.getTotalFeedback());
-            ps.setDouble(3,t.getAvgRating());
-            ps.setInt(4,t.getPositivePercentage());
-            ps.setInt(5,t.getNegativePercentage());
+            ps.setDouble(3, t.getAvgRating());
+            ps.setInt(4, t.getPositivePercentage());
+            ps.setInt(5, t.getNegativePercentage());
             ps.setString(6, t.getStrengths());
             ps.setString(7, t.getWeaknesses());
             ps.setString(8, t.getStaffResponse());
@@ -77,5 +78,18 @@ public class ManagerFeedbackDAO implements DAOInterface<ManagerFeedback, Integer
     public ManagerFeedback selectById(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
+    public int selectLastId() {
+        String sql = "SELECT MAX([ManagerFeedbackID]) FROM [ApartmentManagement].[dbo].[ManagerFeedback];";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1); // Lấy giá trị MAX(NotificationID)
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerFeedbackDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0; // Trả về 0 nếu không có dữ liệu
+    }
+
 }

@@ -30,6 +30,89 @@
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
+        <style>
+            #notificationContainer {
+                position: relative;
+                display: inline-block;
+            }
+
+            #notificationBell {
+                cursor: pointer;
+                font-size: 24px;
+                position: relative;
+            }
+
+            #notificationCount {
+                display: none;
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background: red;
+                color: white;
+                font-size: 12px;
+                font-weight: bold;
+                width: 18px;
+                height: 18px;
+                text-align: center;
+                line-height: 18px;
+                border-radius: 50%;
+            }
+
+            #notificationList {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 30px;
+                background: white;
+                border: 1px solid #ddd;
+                width: 300px;
+                max-height: 400px;
+                overflow-y: auto;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                list-style: none;
+                padding: 10px;
+                z-index: 1000;
+                border-radius: 5px;
+            }
+
+            #notificationList li {
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+                cursor: pointer;
+                transition: background 0.2s, font-weight 0.2s;
+            }
+
+            #notificationList li.unread {
+                font-weight: bold;
+                background-color: #f9f9f9;
+            }
+
+            #notificationList li.read {
+                font-weight: normal;
+                background-color: white;
+            }
+
+            #notificationList li:hover {
+                background: #f5f5f5;
+            }
+
+            #notificationList li:last-child {
+                border-bottom: none;
+            }
+
+            .notif-header {
+                font-weight: bold;
+                color: #333;
+            }
+
+            .notif-time {
+                display: block;
+                font-size: 12px;
+                color: gray;
+                margin-top: 5px;
+                text-align: right;
+            }
+        </style>
     </head>
 
     <body>
@@ -73,7 +156,6 @@
 
                     <!-- User and Notification Dropdowns -->
                     <ul class="navbar-nav ms-auto">
-                        <!-- User Menu -->
                         <c:set var="resident" value="${sessionScope.resident}" />
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
@@ -98,53 +180,16 @@
                             </ul>
                         </li>
 
-                        <!-- Notification Menu -->
-                        <li class="nav-item dropdown user-menu">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="fa-solid fa-bell" style="font-size: 1.5rem; margin-top: 10px"></i>
-                            </a>
-                            <ul class="notify-menu dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                                <li class="notify">
-                                    <a href="!#">
-                                        <div class="user-alert">
-                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
-                                                 class="user-image rounded-circle shadow" alt="User Image" />
-                                        </div>
-                                        <p class="text-alert">
-                                            <strong>Dinh Tung</strong> mentioned you in a comment in
-                                            the Spring-boot Java web Vietnam group.
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="notify">
-                                    <a href="#!">
-                                        <div class="user-alert">
-                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
-                                                 class="user-image rounded-circle shadow" alt="User Image" />
-                                        </div>
-                                        <p class="text-alert">
-                                            <strong>Dinh Tung</strong> mentioned you in a comment in
-                                            the Spring-boot Java web Vietnam group.
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="notify">
-                                    <a href="#!">
-                                        <div class="user-alert">
-                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
-                                                 class="user-image rounded-circle shadow" alt="User Image" />
-                                        </div>
-                                        <p class="text-alert">
-                                            <strong>Dinh Tung</strong> mentioned you in a comment in
-                                            the Spring-boot Java web Vietnam group.
-                                        </p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
                     </ul>
+
+
+                    <div id="notificationContainer">
+                        <div id="notificationBell" class="bell">
+                            🔔
+                            <span id="notificationCount" class="count-badge">0</span>
+                        </div>
+                        <ul id="notificationList"></ul>
+                    </div>
                 </div>
             </nav>
             <div id="sidebar" class="active">
@@ -289,7 +334,7 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="#">Feedback</a>
+                                        <a href="feedbackreview">Feedback</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="request">Request</a>
@@ -391,6 +436,78 @@
                 <!--==============================END================================-->
             </div>
         </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $("#notificationBell").click(function (event) {
+                    event.stopPropagation();
+                    $("#notificationList").toggle();
+                    $("#notificationCount").hide(); // Ẩn số thông báo khi mở danh sách
+                });
+
+                $(document).click(function (event) {
+                    if (!$(event.target).closest("#notificationContainer").length) {
+                        $("#notificationList").hide();
+                    }
+                });
+
+                function checkNotifications() {
+                    $.ajax({
+                        url: "<%= request.getContextPath() %>/technical/GetNotifications",
+                        type: "GET",
+                        data: {roleId: 4},
+                        success: function (response) {
+                            console.log("Dữ liệu từ server:", response);
+
+                            if (response.length > 0) {
+                                $("#notificationBell").addClass("active");
+                                $("#notificationList").html("");
+
+                                response.forEach(function (notif) {
+                                    let liClass = notif.isRead ? "read" : "unread";
+                                    console.log("da doc ch: " + liClass);
+                                    console.log("notificationId la: " + notif.notificationId)
+                                    $("#notificationList").append(
+                                            `<li class="` + liClass + `" data-id="` + notif.notificationId + `">` + notif.message + `</li>`
+                                            );
+                                });
+
+                                // Hiển thị số lượng thông báo chưa đọc
+                                let unreadCount = response.filter(n => !n.isRead).length;
+                                if (unreadCount > 0) {
+                                    $("#notificationCount").text(unreadCount).show();
+                                } else {
+                                    $("#notificationCount").hide();
+                                }
+                            } else {
+                                $("#notificationCount").hide();
+                            }
+                        }
+                    });
+                }
+
+                // Khi click vào thông báo, đổi màu và update trạng thái đọc
+                $("#notificationList").on("click", "li", function () {
+                    let notificationId = $(this).data("id");
+                    $(this).removeClass("unread").addClass("read");
+
+                    $.ajax({
+                        url: "<%= request.getContextPath() %>/technical/MarkAsRead",
+                        type: "POST",
+                        data: {notificationId: notificationId},
+                        success: function () {
+                            console.log("Thông báo đã được đánh dấu là đã đọc!");
+                        }
+                    });
+                });
+
+                // Kiểm tra thông báo mới mỗi 5 giây
+                setInterval(checkNotifications, 5000);
+            });
+
+        </script>                            
+
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
         <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 
