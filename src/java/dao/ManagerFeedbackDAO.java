@@ -20,6 +20,8 @@ import model.ManagerFeedback;
  */
 public class ManagerFeedbackDAO implements DAOInterface<ManagerFeedback, Integer> {
 
+    private StaffDAO staff = new StaffDAO();
+
     @Override
     public int insert(ManagerFeedback t) {
         int row = 0;
@@ -76,7 +78,33 @@ public class ManagerFeedbackDAO implements DAOInterface<ManagerFeedback, Integer
 
     @Override
     public ManagerFeedback selectById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "SELECT * FROM [ManagerFeedback] WHERE ManagerFeedbackID = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    ManagerFeedback mf = new ManagerFeedback(
+                              rs.getInt("ManagerFeedbackID"),
+                              rs.getDate("monthYear").toLocalDate(),
+                              rs.getInt("totalFeedback"),
+                              rs.getDouble("avgRating"),
+                              rs.getInt("positivePercentage"),
+                              rs.getInt("negativePercentage"),
+                              rs.getString("strengths"),
+                              rs.getString("weaknesses"),
+                              rs.getString("staffResponse"),
+                              rs.getString("actionPlan"),
+                              rs.getDate("deadline").toLocalDate(),
+                              rs.getDate("createdAt").toLocalDate(),
+                              staff.selectById(rs.getInt("StaffID")
+                              ));
+                    return mf;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public int selectLastId() {

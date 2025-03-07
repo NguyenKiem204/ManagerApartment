@@ -101,7 +101,7 @@ public class NotificationDAO implements DAOInterface<Notification, Integer> {
     public List<Notification> selectAllByStaffID(int roleID) {
         List<Notification> list = new ArrayList<>();
         int staffId = staffdao.getStaffByRoleIDAndStatus(roleID, "Active").getStaffId();
-        String sql = "SELECT * FROM Notification WHERE StaffID = ?;";
+        String sql = "SELECT * FROM Notification WHERE StaffID = ? ORDER BY NotificationID DESC;";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, staffId);

@@ -1,4 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -50,6 +52,14 @@
             .submit-btn:hover {
                 background-color: #d35400;
             }
+
+            #description-content {
+                border: 2px solid #ddd;
+                padding: 15px;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+                margin-top: 10px;
+            }
         </style>
     </head>
     <body>
@@ -58,8 +68,8 @@
             <div class="container">
                 <h2>📌 Feedback Review</h2>
                 <h3>👤 Employee Information</h3>
-                <p><b>Full Name:</b> nhan vien A</p>
-                <p><b>Position:</b> accountant</p>
+                <p><b>Full Name:</b> ${managerFb.staff.fullName}</p>
+                <p><b>Position:</b> ${managerFb.staff.role.roleName}</p>
 
                 <h3>📊 Overall Ratings</h3>
                 <table>
@@ -70,10 +80,10 @@
                         <th>Negative Feedback (%)</th>
                     </tr>
                     <tr>
-                        <td>10</td>
-                        <td>4</td>
-                        <td>80</td>
-                        <td>20</td>
+                        <td>${managerFb.totalFeedback}</td>
+                        <td>${managerFb.avgRating}</td>
+                        <td>${managerFb.positivePercentage}</td>
+                        <td>${managerFb.negativePercentage}</td>
                     </tr>
                 </table>
 
@@ -85,24 +95,36 @@
                         <th>Rating (⭐)</th>
                         <th>Submission Date</th>
                     </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>aaaa</td>
-                        <td>4</td>
-                        <td>06/03</td>
-                    </tr>
+                    <c:forEach var="fb" items="${listFb}" varStatus="i">
+                        <tr>
+                            <td>${i.index + 1}</td>
+                            <td>${fb.title}</td>
+                            <td>${fb.rate}</td>
+                            <td><fmt:formatDate value="${fb.formattedDate}" pattern="dd/MM/yyyy" /></td>
+                        </tr>
+                    </c:forEach>
                 </table>
 
                 <h3>📌 Manager's Comments</h3>
                 <b>💡 Strengths:</b>
-                <p>good</p>
+                <div id="description-content">
+                    <p>${managerFb.strengths}</p> F
+                </div>
 
                 <b>⚠ Areas for Improvement:</b>
-                <p>improvement</p>
+                <div id="description-content">
+                    <p>${managerFb.weaknesses}</p>
+                </div>
+                <h3>📅 Next Actions</h3>
+                <b>Improvement Suggestions:</b>
+                <div id="description-content">
+                    <p>${managerFb.actionPlan}</p>
+                </div>
+                <b>Response Deadline:</b> ${managerFb.deadline}
 
                 <h3>📩 Staff Response</h3>
-                <form action="SubmitStaffResponseServlet" method="post">
-                    <input type="hidden" name="staffId" value="3" />
+                <form action="StaffResponseFb" method="post">
+                    <input type="hidden" name="managerFeedbackId" value="${managerFb.managerFeedbackId}" />
                     <textarea name="staffResponse" placeholder="Write your response here..."></textarea>
                     <button class="submit-btn" type="submit">Submit Response</button>
                 </form>

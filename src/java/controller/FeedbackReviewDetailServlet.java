@@ -3,8 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller.technical;
+package controller;
 
+import dao.FeedbackDAO;
+import dao.ManagerFeedbackDAO;
+import dao.ResidentDAO;
+import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,13 +16,22 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import model.Feedback;
+import model.ManagerFeedback;
+import model.Staff;
 
 /**
  *
  * @author admin
  */
-@WebServlet(name="FeedbackReviewDetailServlet", urlPatterns={"/technical/feedbackreviewdetail"})
+@WebServlet(name="FeedbackReviewDetailServlet", urlPatterns={"/feedbackreviewdetail"})
 public class FeedbackReviewDetailServlet extends HttpServlet {
+    private ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
+    private FeedbackDAO feedbackDAO = new FeedbackDAO();
+    private StaffDAO staffDAO = new StaffDAO();
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -55,6 +68,24 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        String managerFeedbackId_raw = request.getParameter("managerFeedbackId");
+        HttpSession session = request.getSession();
+        Staff staff = (Staff)session.getAttribute("staff");
+        System.out.println("ket qua la:" + staff);
+        int managerFeedbackId = 0;
+        ManagerFeedback managerFeedback = new ManagerFeedback();
+        List<Feedback> listFB = new ArrayList<>();
+        try {
+            managerFeedbackId = Integer.parseInt(managerFeedbackId_raw);
+            managerFeedback = managerFeedbackDAO.selectById(managerFeedbackId);
+            
+            //truyền 1 list feedback detail theo tháng của từng staff
+            listFB = feedbackDAO.getFeedbackByMonthYearAndRoleID(managerFeedback.getMonthYear(), staff.getRole().getRoleID());
+            
+        } catch (NumberFormatException e) {
+        }
+        request.setAttribute("managerFb", managerFeedback);
+        request.setAttribute("listFb", listFB);
         request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
     } 
 

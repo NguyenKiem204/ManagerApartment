@@ -59,8 +59,8 @@
             #notificationList {
                 display: none;
                 position: absolute;
-                right: 0;
-                top: 30px;
+                right: 10px;
+                top: 35px;
                 background: white;
                 border: 1px solid #ddd;
                 width: 300px;
@@ -78,6 +78,7 @@
                 border-bottom: 1px solid #eee;
                 cursor: pointer;
                 transition: background 0.2s, font-weight 0.2s;
+                position: relative;
             }
 
             #notificationList li.unread {
@@ -109,6 +110,33 @@
                 color: gray;
                 margin-top: 5px;
                 text-align: right;
+            }
+
+            .notification-item {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .notification-message {
+                font-size: 14px;
+                color: #333;
+                display: -webkit-box;
+                -webkit-line-clamp: 2; /* Hiển thị tối đa 2 dòng */
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-height: 3em; /* Đảm bảo không vượt quá 2 dòng */
+                word-wrap: break-word;
+            }
+
+            .notification-date {
+                font-size: 12px;
+                color: gray;
+                text-align: right;
+                /*margin-top: 5px;*/
             }
         </style>
     </head>
@@ -524,10 +552,19 @@
 
                                 response.forEach(function (notif) {
                                     let liClass = notif.isRead ? "read" : "unread";
+                                    let dateObj = new Date(notif.createdAt);
+                                    let formattedDate = dateObj.getDate().toString().padStart(2, '0') + '/' + (dateObj.getMonth() + 1).toString().padStart(2, '0');
+                                    // Xác định URL dựa trên referenceTable
+                                    let notificationUrl = getNotificationUrl(notif);
+                                    
                                     console.log("da doc ch: " + liClass);
                                     console.log("notificationId la: " + notif.notificationId);
                                     $("#notificationList").append(
-                                            `<li class="` + liClass + `" data-id="` + notif.notificationId + `">` + notif.message + `</li>`
+                                            `<li class="notification-item ` + liClass + `" data-id="`
+                                            + notif.notificationId + `"><a href="`+ notificationUrl +`">
+                                    <div class="notification-message">` + notif.message + `</div>
+                                    <div class="notification-date">` + formattedDate + `</div>
+                                        </a></li>`
                                             );
                                 });
 
@@ -544,6 +581,21 @@
                         }
                     });
                 }
+                
+                // Hàm lấy URL tùy theo referenceTable
+function getNotificationUrl(notif) {
+    let baseUrl = "<%= request.getContextPath() %>";
+    switch (notif.referenceTable) {
+        case "ManagerFeedback":
+            return baseUrl + `/feedbackreviewdetail?managerFeedbackId=` + notif.referenceId;
+        case "Request":
+            return `#`;
+        case "Invoice":
+            return `#`;
+        default:
+            return "#"; // Nếu không xác định được loại, đặt về #
+    }
+}
 
                 // Khi click vào thông báo, đổi màu và update trạng thái đọc
                 $("#notificationList").on("click", "li", function () {

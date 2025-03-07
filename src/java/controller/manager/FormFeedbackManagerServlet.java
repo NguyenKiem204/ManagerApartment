@@ -401,7 +401,7 @@ public class FormFeedbackManagerServlet extends HttpServlet {
             System.out.println("Result last ID in form fb mmanager servlet: " + managerFeedbackDAO.selectLastId());
 
 //gửi thông báo tới staff
-            Notification notification = new Notification("You have new feedback from your manager.", "feedback", LocalDate.now(), false, managerFeedbackDAO.selectLastId(), "ManagerFeedback", staff, null);
+            Notification notification = new Notification("You have new feedback from your manager. Mot con vit co 2 cai canh!", "feedback", LocalDate.now(), false, managerFeedbackDAO.selectLastId(), "ManagerFeedback", staff, null);
             notificationDAO.insert(notification);
         } catch (NumberFormatException e) {
             log("LOIIIII!");

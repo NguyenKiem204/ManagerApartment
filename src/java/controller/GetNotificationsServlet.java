@@ -82,6 +82,8 @@ public class GetNotificationsServlet extends HttpServlet {
             obj.put("isRead", notif.isRead());
             obj.put("staff", notif.getStaff());
             obj.put("resident", notif.getResident());
+            obj.put("referenceId", notif.getReferenceId());
+            obj.put("referenceTable", notif.getReferenceTable());
             notificationsArray.put(obj);
         }
         // Trả về response JSON
