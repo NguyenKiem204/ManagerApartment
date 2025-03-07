@@ -41,18 +41,6 @@ public class Test {
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
         ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
         NotificationDAO notificationDAO = new NotificationDAO();
-        
-<<<<<<< HEAD
-//        List<Request> list = requestDAO.selectFirstPageOfStaff(4);
-//        for (Request request : list) {
-//            System.out.println(request.toString());
-=======
-        System.out.println(managerFeedbackDAO.selectLastId());
-        
-//        List<Notification> list = notificationDAO.selectAllByStaffID(4);
-//        for (Notification notification : list) {
-//            System.out.println("Ket qua la: " + notification.toString());
->>>>>>> 4e9d7d06a22d58f55de5585e873c85e7a03a1bb1
 //        }
         
 //        ManagerFeedback t = new ManagerFeedback(LocalDate.now(), 10, 4.3, 82, 18, "Good luck", "Can cai thien nhieu", null, "training more", LocalDate.now().plusDays(3), LocalDate.now(), staffDAO.getStaffByID(2));

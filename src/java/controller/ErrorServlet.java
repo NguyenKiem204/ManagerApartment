@@ -27,6 +27,7 @@ public class ErrorServlet extends HttpServlet {
         }
         if (throwable != null) {
             errorMessage = throwable.getMessage();
+            throwable.printStackTrace();
         }
         request.setAttribute("errorCode", statusCode);
         request.setAttribute("errorMessage", errorMessage);

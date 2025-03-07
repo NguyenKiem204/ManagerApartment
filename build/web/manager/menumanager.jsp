@@ -39,7 +39,7 @@
                     <!-- Navbar Links -->
                     <ul class="navbar-nav kiem_can_trai">
                         <li class="nav-item d-none d-md-block">
-                            <a href="home" class="nav-link">Home</a>
+                            <a href="<%= request.getContextPath() %>/redirect/home" class="nav-link">Home</a>
                         </li>
                         <li class="nav-item d-none d-md-block">
                             <a href="#" class="nav-link">Contact</a>
@@ -49,29 +49,40 @@
                     <!-- User and Notification Dropdowns -->
                     <ul class="navbar-nav ms-auto">
                         <!-- User Menu -->
-                        <c:set var="staff" value="${sessionScope.staff}" />
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.staff}">
+                                <c:set var="user" value="${sessionScope.staff}" />
+                                <c:set var="role" value="staff" />
+                            </c:when>
+                            <c:when test="${not empty sessionScope.resident}">
+                                <c:set var="user" value="${sessionScope.resident}" />
+                                <c:set var="role" value="resident" />
+                            </c:when>
+                        </c:choose>
+
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" class="user-image rounded-circle shadow"
+                                <img src="<%= request.getContextPath() %>/${user.image.imageURL}" class="user-image rounded-circle shadow"
                                      alt="User Image" />
-                                <span class="d-none d-md-inline">${staff.fullName}</span>
+                                <span class="d-none d-md-inline">${user.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
-                                    <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" class="rounded-circle shadow"
+                                    <img src="<%= request.getContextPath() %>/${user.image.imageURL}" class="rounded-circle shadow"
                                          alt="User Image" />
                                     <p>
-                                        ${staff.fullName} - Web Developer
+                                        ${user.fullName} - ${role}
                                         <small>Member since Nov. 2024</small>
                                     </p>
                                 </li>
                                 <li class="user-footer d-flex justify-content-between">
-                                    <a href="<%= request.getContextPath() %>/profile-staff" class="btn btn-default btn-flat">Profile</a>
+                                    <a href="<%= request.getContextPath() %>/profile-${role}" class="btn btn-default btn-flat">Profile</a>
                                     <a href="#" class="btn btn-default btn-flat">Setting</a>
                                     <a href="<%= request.getContextPath() %>/logout" class="btn btn-default btn-flat">Logout</a>
                                 </li>
                             </ul>
                         </li>
+
 
                         <!-- Notification Menu -->
                         <li class="nav-item dropdown user-menu">
@@ -140,7 +151,7 @@
                         <ul class="menu">
                             <li class="sidebar-title">Menu</li>
 
-                            <li class="sidebar-item active">
+                            <li class="sidebar-item">
                                 <a href="<%= request.getContextPath() %>/redirect/home" class="sidebar-link">
                                     <i class="bi bi-grid-fill"></i>
                                     <span>Home</span>
@@ -302,21 +313,21 @@
 
                             <li class="sidebar-title">Others</li>
 
-                            <li class="sidebar-item has-sub">
+                            <li class="sidebar-item has-sub news-active">
                                 <a href="#" class="sidebar-link">
                                     <i class="fa-solid fa-envelope"></i>
                                     <span>News</span>
                                 </a>
-                                <ul class="submenu">
+                                <ul id="news" class="submenu">
                                     <c:if test="${sessionScope.staff.role.roleID == 1}">
-                                        <li class="submenu-item">
+                                        <li class="submenu-item managernews">
                                             <a href="<%= request.getContextPath() %>/manager/managernews">Manager News</a>
                                         </li>
-                                        <li class="submenu-item">
+                                        <li class="submenu-item addnews">
                                             <a href="<%= request.getContextPath() %>/manager/addnews">Add News</a>
                                         </li>
                                     </c:if>
-                                    <li class="submenu-item">
+                                    <li class="submenu-item news-itemm">
                                         <a href="<%= request.getContextPath() %>/news">News</a>
                                     </li>
                                 </ul>
@@ -388,7 +399,7 @@
 
                 <!--==============================END================================-->
 
-                <footer>
+<!--                <footer>
                     <div class="footer clearfix mb-0 text-muted">
                         <div class="float-start">
                             <p>2025 &copy; Kiemm</p>
@@ -401,7 +412,7 @@
                             </p>
                         </div>
                     </div>
-                </footer>
+                </footer>-->
             </div>
         </div>
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
