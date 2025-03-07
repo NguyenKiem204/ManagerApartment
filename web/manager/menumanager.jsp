@@ -275,8 +275,51 @@
                                                         <a
                                                             href="<%= request.getContextPath() %>/manager/request">Request</a>
                                                     </li>
+                                                    <li class="submenu-item">
+                                                    <a href="<%= request.getContextPath() %>formfeedbackmanager">Feedback Statistics</a>
+                                                </li>
                                                 </c:if>
-                                                <c:if test="${sessionScope.staff.role.roleID == 7}">
+                                                <c:if test="${sessionScope.staff.role.roleID == 2}">
+                                                    <li class="submenu-item">
+                                                        <a
+                                                            href="<%= request.getContextPath() %>/administative/feedback">Feedback</a>
+                                                    </li>
+                                                    <li class="submenu-item">
+                                                        <a
+                                                            href="<%= request.getContextPath() %>/administative/request">Request</a>
+                                                    </li>
+                                                </c:if>
+                                                    <c:if test="${sessionScope.staff.role.roleID == 3}">
+                                                    <li class="submenu-item">
+                                                        <a
+                                                            href="<%= request.getContextPath() %>/technical/feedback">Feedback</a>
+                                                    </li>
+                                                    <li class="submenu-item">
+                                                        <a
+                                                            href="<%= request.getContextPath() %>/technical/request">Request</a>
+                                                    </li>
+                                                </c:if>
+                                                    <c:if test="${sessionScope.staff.role.roleID == 4}">
+                                                    <li class="submenu-item">
+                                                        <a
+                                                            href="<%= request.getContextPath() %>/technical/feedback">Feedback</a>
+                                                    </li>
+                                                    <li class="submenu-item">
+                                                        <a
+                                                            href="<%= request.getContextPath() %>/technical/request">Request</a>
+                                                    </li>
+                                                </c:if>
+                                                    <c:if test="${sessionScope.staff.role.roleID == 5}">
+                                                    <li class="submenu-item">
+                                                        <a
+                                                            href="<%= request.getContextPath() %>/service/feedback">Feedback</a>
+                                                    </li>
+                                                    <li class="submenu-item">
+                                                        <a
+                                                            href="<%= request.getContextPath() %>/service/request">Request</a>
+                                                    </li>
+                                                </c:if>
+                                                <c:if test="${sessionScope.resident.role.roleID == 7}">
                                                     <li class="submenu-item">
                                                         <a
                                                             href="<%= request.getContextPath() %>/owner/feedback">Feedback</a>
@@ -286,15 +329,16 @@
                                                             href="<%= request.getContextPath() %>/owner/request">Request</a>
                                                     </li>
                                                 </c:if>
-                                                <c:if test="${sessionScope.staff.role.roleID == 4}">
+                                                    <c:if test="${sessionScope.resident.role.roleID == 6}">
                                                     <li class="submenu-item">
                                                         <a
-                                                            href="<%= request.getContextPath() %>/technical/request">Request</a>
+                                                            href="<%= request.getContextPath() %>/tenant/feedback">Feedback</a>
+                                                    </li>
+                                                    <li class="submenu-item">
+                                                        <a
+                                                            href="<%= request.getContextPath() %>/tenant/request">Request</a>
                                                     </li>
                                                 </c:if>
-                                                <li class="submenu-item">
-                                                    <a href="formfeedbackmanager">Feedback Statistics</a>
-                                                </li>
                                             </ul>
                                         </li>
                                         <c:if test="${sessionScope.staff.role.roleID == 1}">
