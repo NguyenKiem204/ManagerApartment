@@ -113,12 +113,12 @@ public class BlockJspHtmlFilter implements Filter {
         String requestURI = httpRequest.getRequestURI();
         System.out.println("Request URI: " + requestURI);
 
-        if ((requestURI.endsWith(".jsp") || requestURI.endsWith(".html"))
-                && request.getDispatcherType() == DispatcherType.REQUEST // Chỉ chặn request từ trình duyệt
-                && !requestURI.endsWith("/error-403.jsp")) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/error-403");
-            return;
-        }
+//        if ((requestURI.endsWith(".jsp") || requestURI.endsWith(".html"))
+//                && request.getDispatcherType() == DispatcherType.REQUEST // Chỉ chặn request từ trình duyệt
+//                && !requestURI.endsWith("/error-403.jsp")) {
+//            httpResponse.sendRedirect(httpRequest.getContextPath() + "/error-403");
+//            return;
+//        }
 
         Throwable problem = null;
         try {

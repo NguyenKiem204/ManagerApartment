@@ -19,7 +19,7 @@
               rel="stylesheet" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
 
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
+        <link rel="stylesheet" href="assets/vendors/iconly/bold.css" />
 
         <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css" />
@@ -66,7 +66,7 @@
                                     </p>
                                 </li>
                                 <li class="user-footer d-flex justify-content-between">
-                                    <a href="profile" class="btn btn-default btn-flat">Profile</a>
+                                    <a href="<%= request.getContextPath() %>/profile-staff" class="btn btn-default btn-flat">Profile</a>
                                     <a href="#" class="btn btn-default btn-flat">Setting</a>
                                     <a href="<%= request.getContextPath() %>/logout" class="btn btn-default btn-flat">Logout</a>
                                 </li>
@@ -95,7 +95,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
+                                            <img src="./assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -108,7 +108,7 @@
                                 <li class="notify">
                                     <a href="#!">
                                         <div class="user-alert">
-                                            <img src="<%= request.getContextPath() %>/assets/images/faces/nguyenkiem.jpg"
+                                            <img src="./assets/images/faces/nguyenkiem.jpg"
                                                  class="user-image rounded-circle shadow" alt="User Image" />
                                         </div>
                                         <p class="text-alert">
@@ -141,91 +141,110 @@
                             <li class="sidebar-title">Menu</li>
 
                             <li class="sidebar-item active">
-                                <a href="home" class="sidebar-link">
+                                <a href="<%= request.getContextPath() %>/redirect/home" class="sidebar-link">
                                     <i class="bi bi-grid-fill"></i>
                                     <span>Home</span>
                                 </a>
                             </li>
+                            <c:if test="${sessionScope.staff.role.roleID == 1}">
+                                <li class="sidebar-item has-sub">
+                                    <a href="#" class="sidebar-link">
+                                        <i class="bi bi-stack"></i>
+                                        <span>Apartment</span>
+                                    </a>
+                                    <ul class="submenu">
+                                        <li class="submenu-item">
+                                            <a href="manageApartment">Apartment</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="component-badge.html">Floor</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="component-breadcrumb.html">Apartment</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="component-button.html">Utilities</a>
+                                        </li>
+                                    </ul>
+                                </li>
 
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-stack"></i>
-                                    <span>Apartment</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="component-alert.html">Building</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="component-badge.html">Floor</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="component-breadcrumb.html">Apartment</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="component-button.html">Utilities</a>
-                                    </li>
-                                </ul>
-                            </li>
 
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-people-fill"></i>
-                                    <span>Staff</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="#">Administrative Staff</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Accountant</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Technical Board</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="#">Service Provider</a>
-                                    </li>
-                                </ul>
-                            </li>
+                                <li class="sidebar-item has-sub">
+                                    <a href="#" class="sidebar-link">
+                                        <i class="bi bi-people-fill"></i>
+                                        <span>Staff</span>
+                                    </a>
+                                    <ul class="submenu">
+                                        <li class="submenu-item">
+                                            <a href="#">Administrative Staff</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="#">Accountant</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="#">Technical Board</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="#">Service Provider</a>
+                                        </li>
+                                    </ul>
+                                </li>
 
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-collection-fill"></i>
-                                    <span>Residents</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="manageApartment">Apartment</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-sweetalert.html">Vehicles</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-toastify.html">Notifications</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-rating.html">Complaints</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-divider.html">Divider</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="fa-solid fa-users-gear"></i>
-                                    <span>Account</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="manageResident">Resident</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="manageStaff">Staff</a>
-                                    </li>
-                                </ul>
-                            </li>
+                                <li class="sidebar-item has-sub">
+                                    <a href="#" class="sidebar-link">
+                                        <i class="bi bi-collection-fill"></i>
+                                        <span>Residents</span>
+                                    </a>
+                                    <ul class="submenu">
+                                        <li class="submenu-item">
+                                            <a href="extra-component-avatar.html">List</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="extra-component-sweetalert.html">Vehicles</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="extra-component-toastify.html">Notifications</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="extra-component-rating.html">Complaints</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="extra-component-divider.html">Divider</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="sidebar-item has-sub">
+                                    <a href="#" class="sidebar-link">
+                                        <i class="fa-solid fa-users-gear"></i>
+                                        <span>Account</span>
+                                    </a>
+                                    <ul class="submenu">
+                                        <li class="submenu-item">
+                                            <a href="manageResident">Resident</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="manageStaff">Staff</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </c:if>
+                            <c:if test="${sessionScope.staff.role.roleID == 3}">
+                                <li class="sidebar-item ">
+                                    <a href="<%= request.getContextPath() %>/InvoicesManager" class="sidebar-link">
+                                        <i class="bi bi-receipt-cutoff"></i>
+                                        <span>Invoice Management</span>
+                                    </a>
+                                </li>
+                            </c:if>
+                            <c:if test="${sessionScope.staff.role.roleID == 7}">
+                                <li class="sidebar-item ">
+                                    <a href="<%= request.getContextPath() %>/ViewInvoice" class="sidebar-link">
+                                        <i class="bi bi-receipt-cutoff"></i>
+                                        <span>Invoice Management</span>
+                                    </a>
+                                </li>
+                            </c:if>
 
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
@@ -233,35 +252,53 @@
                                     <span>Feedback</span>
                                 </a>
                                 <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="feedback">Feedback</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="request">Request</a>
-                                    </li>
+                                    <c:if test="${sessionScope.staff.role.roleID == 1}">
+                                        <li class="submenu-item">
+                                            <a href="<%= request.getContextPath() %>/manager/feedback">Feedback</a>
+
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="<%= request.getContextPath() %>/manager/request">Request</a>
+                                        </li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.staff.role.roleID == 7}">
+
+                                        <li class="submenu-item">
+                                            <a href="<%= request.getContextPath() %>/owner/feedback">Feedback</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="<%= request.getContextPath() %>/owner/request">Request</a>
+                                        </li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.staff.role.roleID == 4}">
+                                        <li class="submenu-item">
+                                            <a href="<%= request.getContextPath() %>/technical/request">Request</a>
+                                        </li>
+                                    </c:if>
                                     <li class="submenu-item">
                                         <a href="formfeedbackmanager">Feedback Statistics</a>
                                     </li>
                                 </ul>
                             </li>
-
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-collection-fill"></i>
-                                    <span>Statistics</span>
-                                </a>
-                                <ul class="submenu">
-                                    <li class="submenu-item">
-                                        <a href="extra-component-avatar.html">Parking Service</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-sweetalert.html">Public Electricity Service</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="extra-component-toastify.html">Cleaning Service</a>
-                                    </li>
-                                </ul>
-                            </li>
+                            <c:if test="${sessionScope.staff.role.roleID == 1}">
+                                <li class="sidebar-item has-sub">
+                                    <a href="#" class="sidebar-link">
+                                        <i class="bi bi-collection-fill"></i>
+                                        <span>Statistics</span>
+                                    </a>
+                                    <ul class="submenu">
+                                        <li class="submenu-item">
+                                            <a href="extra-component-avatar.html">Parking Service</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="extra-component-sweetalert.html">Public Electricity Service</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="extra-component-toastify.html">Cleaning Service</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </c:if>
 
                             <li class="sidebar-title">Others</li>
 
@@ -271,21 +308,23 @@
                                     <span>News</span>
                                 </a>
                                 <ul class="submenu">
+                                    <c:if test="${sessionScope.staff.role.roleID == 1}">
+                                        <li class="submenu-item">
+                                            <a href="<%= request.getContextPath() %>/manager/managernews">Manager News</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a href="<%= request.getContextPath() %>/manager/addnews">Add News</a>
+                                        </li>
+                                    </c:if>
                                     <li class="submenu-item">
-                                        <a href="<%= request.getContextPath() %>/managernews">Manager News</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="addnews">Add News</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="news">News</a>
+                                        <a href="<%= request.getContextPath() %>/news">News</a>
                                     </li>
                                 </ul>
                             </li>
 
 
                             <li class="sidebar-item">
-                                <a href="chat" class="sidebar-link">
+                                <a href="<%= request.getContextPath() %>/chat" class="sidebar-link">
                                     <i class="bi bi-chat-dots-fill"></i>
                                     <span>Messages</span>
                                 </a>
@@ -346,23 +385,7 @@
                     <i class="bi bi-justify fs-3"></i>
                 </a>
                 <!--=============================CONTENT HERE=======================-->
-                
-                <!--==============================END================================-->
 
-<!--                <footer>
-                    <div class="footer clearfix mb-0 text-muted">
-                        <div class="float-start">
-                            <p>2025 &copy; Kiemm</p>
-                        </div>
-                        <div class="float-end">
-                            <p>
-                                Crafted with
-                                <span class="text-danger"><i class="bi bi-heart"></i></span> by
-                                <a href="http://ahmadsaugi.com">NguyenKiem</a>
-                            </p>
-                        </div>
-                    </div>
-                </footer>-->
             </div>
         </div>
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
