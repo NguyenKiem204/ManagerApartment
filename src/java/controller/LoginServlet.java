@@ -171,16 +171,16 @@ public class LoginServlet extends HttpServlet {
                 redirectToPage(response, request,"/manager/home");
                 break;
             case 2:
-                redirectToPage(response, request,"/administrative/menuadministrative.jsp");
+                redirectToPage(response, request,"/administrative/home");
                 break;
             case 3:
                 redirectToPage(response, request,"/accountant/home");
                 break;
             case 4:
-                redirectToPage(response, request,"menutechnical.jsp");
+                redirectToPage(response, request,"/technical/home");
                 break;
             case 5:
-                redirectToPage(response, request,"menuservice.jsp");
+                redirectToPage(response, request,"/service/home");
                 break;
             case 6:
                 redirectToPage(response, request,"/tenant/home");
