@@ -287,6 +287,7 @@ public class FormFeedbackManagerServlet extends HttpServlet {
                 }
             }
 
+            
             //validate for strengths
             if (strengths != null) {
                 strengths = strengths.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa

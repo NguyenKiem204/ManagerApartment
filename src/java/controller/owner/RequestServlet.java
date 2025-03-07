@@ -159,7 +159,7 @@ public class RequestServlet extends HttpServlet {
         
         //check description empty or not
         if (description != null) {
-            description = description.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
+            description = description.trim().replaceAll("[\\s\\u00A0]+", " "); // Loại bỏ khoảng trắng dư thừa
         }
 //        if (!description.matches("^[a-zA-Z0-9 .,!?()-]+$")) {
 //            request.setAttribute(error, "Description contains invalid characters!");
@@ -168,8 +168,8 @@ public class RequestServlet extends HttpServlet {
 //            return;
 //        }
         //check description null or not
-        if (cleanText == null || cleanText.trim().isEmpty()) {
-            request.setAttribute(error, "Description cannot be empty!");
+        if (cleanText.trim().isEmpty() || cleanText.length() < 10) {
+            request.setAttribute(error, "You need to describe this feedback! More 10 characters.");
             request.setAttribute("listtyperq", listrq);
             request.getRequestDispatcher("request.jsp").forward(request, response);
             return;
@@ -180,7 +180,7 @@ public class RequestServlet extends HttpServlet {
         try {
             typerq = Integer.parseInt(typerq_raw);
             Apartment apartment = apartmentDAO.getApartmentByName(apartmentName);
-            Request rq = new Request(description, title, LocalDate.now(), statusRequestDAO.selectById(1), resident, typeRequestDAO.selectById(typerq), apartmentDAO.getApartmentByName(apartmentName));
+            Request rq = new Request(description, title, LocalDate.now(), statusRequestDAO.selectById(1), resident, typeRequestDAO.selectById(typerq), apartment);
             System.out.println(rq.toString());
             int row = rqDAO.insert(rq);
             if (row != 0) {

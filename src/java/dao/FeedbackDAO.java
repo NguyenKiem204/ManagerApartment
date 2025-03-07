@@ -276,7 +276,7 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
                     case 1 ->
                         sql += " ORDER BY StaffID";
                     case 3 ->
-                        sql += " ORDER BY Date DESC";
+                        sql += " ORDER BY Date";
                     default ->
                         throw new AssertionError();
                 }
@@ -318,22 +318,13 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
     }
 
     public int getNumberOfFeedbacksBySearchOrFilterOrSort(String keySearch,
-              int roleID, int rating, int keySort) {
+              int roleID, int rating) {
         int num = 0;
         String sql = """
-                     SELECT [FeedbackID]
-                           ,[Title]
-                           ,f.Description
-                           ,[Date]
-                           ,[Rate]
-                           ,f.StaffID
-                           ,[ResidentID]
-                           ,s.FullName
-                     ,s.RoleID
-                           ,r.RoleName
+                     SELECT COUNT(*)
                        FROM [dbo].[Feedback] f 
-                     JOIN Staff s on f.StaffID = s.StaffID
-                                join Role r on s.RoleID = r.RoleID
+                       JOIN [dbo].[Staff] s on f.StaffID = s.StaffID
+                       JOIN [dbo].[Role] r on s.RoleID = r.RoleID
                        WHERE 1 = 1""";
 
         List<Object> params = new ArrayList<>();
@@ -359,27 +350,6 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
                 params.add(rating);
             }
 
-            //check date is null or not
-//            if (date != null) {
-//                sql += " AND CAST([Date] AS DATE) = ?";
-//                params.add(Date.valueOf(date));
-//            }
-//------------------------------------------
-            //Xu ly sort
-            if (keySort != 0) {
-                switch (keySort) {
-                    case 2 ->
-                        sql += " ORDER BY Rate";
-                    case 1 ->
-                        sql += " ORDER BY StaffID";
-                    case 3 ->
-                        sql += " ORDER BY Date";
-                    default ->
-                        throw new AssertionError();
-                }
-            } else {
-                sql += " ORDER BY FeedbackID desc";
-            }
 
         } catch (Exception e) {
         }
@@ -392,7 +362,6 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 num =rs.getInt(1);
-                return num;
             }
         } catch (SQLException ex) {
             Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
