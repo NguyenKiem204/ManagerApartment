@@ -5,6 +5,7 @@
 
 package controller;
 
+import config.PasswordUtil;
 import dao.ResidentDAO;
 import dao.StaffDAO;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import model.Staff;
 public class ChangePasswordServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        PasswordUtil passwordUtil = new PasswordUtil();
         HttpSession session = request.getSession();
         String newPassword = request.getParameter("newPassword").trim();
 
@@ -50,10 +52,10 @@ public class ChangePasswordServlet extends HttpServlet {
             boolean updateSuccess = false;
             if (resident != null) {
                 ResidentDAO residentDAO = new ResidentDAO();
-                updateSuccess = residentDAO.updatePassword(resident.getResidentId(), newPassword);
+                updateSuccess = residentDAO.updatePassword(resident.getResidentId(),  passwordUtil.hashPassword(newPassword));
             } else if (staff != null) {
                 StaffDAO staffDAO = new StaffDAO();
-                updateSuccess = staffDAO.updatePassword(staff.getStaffId(), newPassword);
+                updateSuccess = staffDAO.updatePassword(staff.getStaffId(), passwordUtil.hashPassword(newPassword));
             }
 
             if (updateSuccess) {

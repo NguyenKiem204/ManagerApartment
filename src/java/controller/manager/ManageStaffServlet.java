@@ -93,7 +93,26 @@ public class ManageStaffServlet extends HttpServlet {
 
         try {
             // Nhận dữ liệu từ request
+            // Nhận dữ liệu từ request
             String fullName = request.getParameter("fullName");
+
+            // Kiểm tra fullName không được null hoặc rỗng
+            if (fullName == null || fullName.trim().isEmpty()) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Full name cannot be empty!");
+            out.write(jsonResponse.toString());
+            return;
+            }
+
+            // Kiểm tra định dạng fullName (chỉ chứa chữ cái và khoảng trắng)
+            // Nếu tên có thể chứa ký tự đặc biệt hoặc số thì bạn cần điều chỉnh regex cho phù hợp
+//            if (!fullName.matches("^[a-zA-Z\\s]+$")) {
+//                jsonResponse.put("success", false);
+//                jsonResponse.put("message", "Full name must contain only letters and spaces!");
+//                out.write(jsonResponse.toString());
+//                return;
+//            }
+
             String phoneNumber = request.getParameter("phoneNumber");
             String cccd = request.getParameter("cccd");
             String email = request.getParameter("email");

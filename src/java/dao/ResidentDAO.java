@@ -41,6 +41,37 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return row;
     }
+    public int insert1(Resident resident) {
+    int residentId = -1; // Nếu insert thất bại thì trả về -1
+    String sql = "INSERT INTO Resident (FullName, Password, PhoneNumber, CCCD, Email, DOB, Sex, ImageID, Status, RoleID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+        ps.setString(1, resident.getFullName());
+        ps.setString(2, passwordEncode.hashPassword(resident.getPassword()));
+        ps.setString(3, resident.getPhoneNumber());
+        ps.setString(4, resident.getCccd());
+        ps.setString(5, resident.getEmail());
+        ps.setDate(6, Date.valueOf(resident.getDob()));
+        ps.setString(7, resident.getSex());
+        ps.setInt(8, imageDAO.insert1(new Image(null)));
+        ps.setString(9, resident.getStatus());
+        ps.setInt(10, resident.getRole().getRoleID());
+
+        int row = ps.executeUpdate();
+        if (row > 0) {
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    residentId = generatedKeys.getInt(1);
+                }
+            }
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    return residentId;
+}
 
     @Override
     public int update(Resident resident) {
@@ -558,6 +589,7 @@ public boolean updatePassword(int residentId, String newPassword) throws SQLExce
     String query = "UPDATE Resident SET Password = ? WHERE ResidentID = ?";
     try (Connection conn = DBContext.getConnection();
          PreparedStatement ps = conn.prepareStatement(query)) {
+        //ps.setString(1, passwordEncode.hashPassword(newPassword));
         ps.setString(1, newPassword);
         ps.setInt(2, residentId);
         return ps.executeUpdate() > 0;

@@ -8,28 +8,106 @@
 <%@ page import="java.util.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Change Password</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FFE6CC; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            align-self: flex-start;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            text-align: center; /* Căn giữa text */
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        small {
+            color: red;
+            height: 20px;
+            margin-bottom: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: linear-gradient(to right, #4CAF50, #2E7D32); 
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: linear-gradient(to right, #2E7D32, #1B5E20);
+        }
+    </style>
 </head>
 <body>
-    <h2>Change Password</h2>
-    
-    <form id="changePasswordForm">
-        <label>New Password:</label>
-        <input type="password" name="newPassword" id="newPassword" required>
-        <small id="passwordError" style="color: red;"></small>
-        <br>
 
-        <label>Confirm Password:</label>
-        <input type="password" name="confirmPassword" id="confirmPassword" required>
-        <small id="confirmError" style="color: red;"></small>
-        <br>
+    <div class="container">
+        <h2>Change Password</h2>
+        
+        <form id="changePasswordForm">
+            <label for="newPassword">New Password:</label>
+            <input type="password" name="newPassword" id="newPassword" required>
+            <small id="passwordError"></small>
 
-        <button type="button" id="submitChange">Change Password</button>
-    </form>
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" name="confirmPassword" id="confirmPassword" required>
+            <small id="confirmError"></small>
 
+            <button type="button" id="submitChange">Change Password</button>
+        </form>
+    </div>
     <script>
         $(document).ready(function () {
             $("#submitChange").click(function () {

@@ -44,7 +44,7 @@ public class ManageApartmentServlet extends HttpServlet {
     String block = request.getParameter("block");
 
     int page = 1;
-    int pageSize = 4; // Số bản ghi mỗi trang
+    int pageSize = 10; // Số bản ghi mỗi trang
 
     // Lấy page từ request nếu có
     String pageStr = request.getParameter("page");
@@ -88,6 +88,24 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         try {
             // Nhận dữ liệu từ request
             String apartmentName = request.getParameter("apartmentName");
+
+            // Kiểm tra apartmentName không được null hoặc rỗng
+            if (apartmentName == null || apartmentName.trim().isEmpty()) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Apartment name cannot be empty!");
+                out.write(jsonResponse.toString());
+                return;
+            }
+
+            // Kiểm tra định dạng apartmentName (chỉ chứa chữ cái, số và khoảng trắng)
+            // Nếu bạn cho phép ký tự đặc biệt khác, hãy điều chỉnh regex cho phù hợp
+            if (!apartmentName.matches("^[a-zA-Z0-9\\s]+$")) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Apartment name must contain only letters, numbers, and spaces!");
+            out.write(jsonResponse.toString());
+            return;
+            }
+
             String block = request.getParameter("block");
             String status = request.getParameter("status");
             String type = request.getParameter("type");
