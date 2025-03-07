@@ -54,7 +54,7 @@
         </style>
     </head>
     <body>
-        <%@include file="home.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
         <div id="main">
             <div class="container">
                 <h2>Feedback Overview</h2>
