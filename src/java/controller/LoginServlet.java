@@ -102,68 +102,68 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    private void handleLogin(HttpServletRequest request, HttpServletResponse response, String userType, String email, String password)
-            throws ServletException, IOException {
-        StaffDAO staffDAO = new StaffDAO();
-        ResidentDAO residentDAO = new ResidentDAO();
-        HttpSession session = request.getSession();
-        session.setMaxInactiveInterval(600);
-
-        if ("staff".equalsIgnoreCase(userType)) {
-            Staff staff = staffDAO.checkLogin(email, password);
-            if (staff != null) {
-                session.setAttribute("staff", staff);
-                redirectBasedOnRole(response, request, staff.getRole().getRoleID());
-                return;
-            }
-        } else if ("resident".equalsIgnoreCase(userType)) {
-            Resident resident = residentDAO.checkLogin(email, password);
-            if (resident != null) {
-                session.setAttribute("resident", resident);
-                redirectBasedOnRole(response, request, resident.getRole().getRoleID());
-                return;
-            }
-        }
-        handleLoginFailure(request, response, userType, email, password);
-    }
-//private void handleLogin(HttpServletRequest request, HttpServletResponse response, String userType, String email, String password)
-//        throws ServletException, IOException {
-//    StaffDAO staffDAO = new StaffDAO();
-//    ResidentDAO residentDAO = new ResidentDAO();
-//    HttpSession session = request.getSession();
-//    session.setMaxInactiveInterval(600);
+//    private void handleLogin(HttpServletRequest request, HttpServletResponse response, String userType, String email, String password)
+//            throws ServletException, IOException {
+//        StaffDAO staffDAO = new StaffDAO();
+//        ResidentDAO residentDAO = new ResidentDAO();
+//        HttpSession session = request.getSession();
+//        session.setMaxInactiveInterval(600);
 //
-//    if ("staff".equalsIgnoreCase(userType)) {
-//        Staff staff = staffDAO.checkLogin(email, password);
-//        if (staff != null) {
-//            session.setAttribute("staff", staff);
-//            
-//            // Kiểm tra nếu mật khẩu có đúng 5 ký tự (lần đầu đăng nhập)
-//            if (password.length() == 5) {
-//                response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
+//        if ("staff".equalsIgnoreCase(userType)) {
+//            Staff staff = staffDAO.checkLogin(email, password);
+//            if (staff != null) {
+//                session.setAttribute("staff", staff);
+//                redirectBasedOnRole(response, request, staff.getRole().getRoleID());
 //                return;
 //            }
-//
-//            redirectBasedOnRole(response, request, staff.getRole().getRoleID());
-//            return;
-//        }
-//    } else if ("resident".equalsIgnoreCase(userType)) {
-//        Resident resident = residentDAO.checkLogin(email, password);
-//        if (resident != null) {
-//            session.setAttribute("resident", resident);
-//
-//            // Kiểm tra nếu mật khẩu có đúng 5 ký tự (lần đầu đăng nhập)
-//            if (password.length() == 5) {
-//                response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
+//        } else if ("resident".equalsIgnoreCase(userType)) {
+//            Resident resident = residentDAO.checkLogin(email, password);
+//            if (resident != null) {
+//                session.setAttribute("resident", resident);
+//                redirectBasedOnRole(response, request, resident.getRole().getRoleID());
 //                return;
 //            }
-//
-//            redirectBasedOnRole(response, request, resident.getRole().getRoleID());
-//            return;
 //        }
+//        handleLoginFailure(request, response, userType, email, password);
 //    }
-//    handleLoginFailure(request, response, userType, email, password);
-//}
+private void handleLogin(HttpServletRequest request, HttpServletResponse response, String userType, String email, String password)
+        throws ServletException, IOException {
+    StaffDAO staffDAO = new StaffDAO();
+    ResidentDAO residentDAO = new ResidentDAO();
+    HttpSession session = request.getSession();
+    session.setMaxInactiveInterval(600);
+
+    if ("staff".equalsIgnoreCase(userType)) {
+        Staff staff = staffDAO.checkLogin(email, password);
+        if (staff != null) {
+            session.setAttribute("staff", staff);
+            
+            // Kiểm tra nếu mật khẩu có đúng 5 ký tự (lần đầu đăng nhập)
+            if (password.length() == 5) {
+                response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
+                return;
+            }
+
+            redirectBasedOnRole(response, request, staff.getRole().getRoleID());
+            return;
+        }
+    } else if ("resident".equalsIgnoreCase(userType)) {
+        Resident resident = residentDAO.checkLogin(email, password);
+        if (resident != null) {
+            session.setAttribute("resident", resident);
+
+            // Kiểm tra nếu mật khẩu có đúng 5 ký tự (lần đầu đăng nhập)
+            if (password.length() == 5) {
+                response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
+                return;
+            }
+
+            redirectBasedOnRole(response, request, resident.getRole().getRoleID());
+            return;
+        }
+    }
+    handleLoginFailure(request, response, userType, email, password);
+}
 
     private void redirectBasedOnRole(HttpServletResponse response, HttpServletRequest request, int roleID) throws IOException {
         switch (roleID) {

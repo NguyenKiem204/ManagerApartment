@@ -499,6 +499,40 @@ public int getTotalApartments(String name, int ownerId, String type, String stat
     }
     return total;
 }
+public int updateOwner(int apartmentId, int residentId) {
+    String sql = "UPDATE Apartment SET OwnerID = ? WHERE ApartmentID = ?";
+    try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, residentId);
+        ps.setInt(2, apartmentId);
+        return ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return 0;
+    }
+}
+public List<Apartment> getNotNullOwnerApartments() {
+    List<Apartment> apartments = new ArrayList<>();
+    String sql = "SELECT * FROM Apartment WHERE OwnerID IS NULL";
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+            apartments.add(new Apartment(
+                rs.getInt("ApartmentID"),
+                rs.getString("ApartmentName"),
+                rs.getString("Block"),
+                rs.getString("Status"),
+                rs.getString("Type"),
+                rs.getObject("OwnerID") != null ? rs.getInt("OwnerID") : -1
+            ));
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return apartments;
+}
 
 
     public List<String> getApartmentNames(String searchQuery) {

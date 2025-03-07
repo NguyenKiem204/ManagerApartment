@@ -623,7 +623,13 @@
 
             <label for="phoneNumber" class="modal-label">Phone Number:</label>
             <input type="text" id="phoneNumber" name="phoneNumber" class="modal-input" required maxlength="10" pattern="\d{10}">
-
+            <label>Apartment:</label>
+            <select name="apartmentId" class="form-control">
+                <option value="">-- Select Apartment --</option>
+                <c:forEach var="apartment" items="${apartmentList}">
+                    <option value="${apartment.apartmentId}">${apartment.apartmentName} - ${apartment.block}</option>
+                </c:forEach>
+            </select>
             <label for="cccd" class="modal-label">CCCD:</label>
             <input type="text" id="cccd" name="cccd" class="modal-input" required maxlength="12" pattern="\d{12}">
 
@@ -637,12 +643,6 @@
             <select id="sex" name="sex" class="modal-select" required>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
-            </select>
-
-            <label for="role" class="modal-label">Role:</label>
-            <select id="roleId" name="roleId" class="modal-select" required>
-                <option value="6">Tenant</option>
-                <option value="7">Owner Department</option>
             </select>
 
             <button type="button" id="submitBtn" class="modal-button">Add</button>
