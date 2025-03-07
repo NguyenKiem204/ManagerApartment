@@ -142,7 +142,7 @@ public class UpdateProfileServlet extends HttpServlet {
             residentDAO.updateProfileResident(resident);
             session.setAttribute("resident", resident);
         }
-        response.sendRedirect("profile");
+        response.sendRedirect("profile-resident");
     }
 
     private void validateInput(String fullName, String phoneNumber, String dobParam, List<String> errorMessages) {

@@ -1,0 +1,79 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 7, 2025, 10:11:47 PM
+    Author     : nkiem
+*/
+.news-card {
+    margin-bottom: 20px;
+}
+.truncated-text {
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+.news-item{
+    border: 2px solid #E64A19;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+.pagination a,
+.pagination strong {
+    text-decoration: none;
+    color: #007bff;
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+.pagination a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination strong {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: #435ebe;
+    border-color: #435ebe;
+}
+
+.btn-primary:hover {
+    background-color: #364b98;
+    border-color: #364b98;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}

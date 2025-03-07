@@ -55,7 +55,7 @@ public class ProfileStaffServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("profilestaff.jsp").forward(request, response);
+        request.getRequestDispatcher("profile-staff.jsp").forward(request, response);
     } 
 
     /** 
