@@ -3,8 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller;
+package controller.technical;
 
+import dao.NotificationDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,10 +16,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author nkiem
+ * @author admin
  */
-@WebServlet(name="ProfileStaffServlet", urlPatterns={"/profile-staff"})
-public class ProfileStaffServlet extends HttpServlet {
+@WebServlet(name="MarkAsReadServlet", urlPatterns={"/technical/MarkAsRead"})
+public class MarkAsReadServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +36,10 @@ public class ProfileStaffServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProfileStaffServlet</title>");  
+            out.println("<title>Servlet MarkAsReadServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ProfileStaffServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet MarkAsReadServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,7 +56,7 @@ public class ProfileStaffServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("profile-staff.jsp").forward(request, response);
+        
     } 
 
     /** 
@@ -68,7 +69,16 @@ public class ProfileStaffServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String notificationId_raw = request.getParameter("notificationId");
+        System.out.println("notificationID LA: " + notificationId_raw);
+        int notificationId = 0;
+        try {
+            notificationId = Integer.parseInt(notificationId_raw);
+        } catch (NumberFormatException e) {
+        }
+        NotificationDAO notificationDAO = new NotificationDAO();
+        notificationDAO.updateIsRead(notificationId); // Cập nhật trạng thái trong DB
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     /** 

@@ -17,8 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author nkiem
  */
-@WebServlet(name="ProfileServlet", urlPatterns={"/profile"})
-public class ProfileServlet extends HttpServlet {
+@WebServlet(name="ProfileServlet", urlPatterns={"/profile-resident"})
+public class ProfileResidentServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -55,7 +55,7 @@ public class ProfileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-       request.getRequestDispatcher("profile.jsp").forward(request, response);
+       request.getRequestDispatcher("profile-resident.jsp").forward(request, response);
     } 
 
     /** 

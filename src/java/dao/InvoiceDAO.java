@@ -607,5 +607,35 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         }
         return invoices;
     }
+    
+    public static void main(String[] args) {
+        // Create an instance of the class that contains the filterInvoices method (assuming it's named InvoiceDAO)
+        InvoiceDAO invoiceDAO = new InvoiceDAO();
+
+        // Define test parameters
+        String status = "";  // Test for 'Unpaid' status
+        LocalDate fromDate = LocalDate.of(2025, 1, 1);  // Test from January 1st, 2024
+        LocalDate dueDate = LocalDate.of(2025, 12, 31);  // Test until December 31st, 2024
+
+        // Call the filterInvoices method with the test parameters
+        List<Invoices> filteredInvoices = invoiceDAO.filterInvoices(status, fromDate, dueDate);
+
+        // Print the filtered invoices to check if everything is working
+        if (filteredInvoices.isEmpty()) {
+            System.out.println("No invoices found for the given filter criteria.");
+        } else {
+            for (Invoices invoice : filteredInvoices) {
+                System.out.println("Invoice ID: " + invoice.getInvoiceID());
+                System.out.println("Total Amount: " + invoice.getTotalAmount());
+                System.out.println("Public Date: " + invoice.getPublicDate());
+                System.out.println("Status: " + invoice.getStatus());
+                System.out.println("Resident: " + invoice.getResident().getFullName());
+                System.out.println("Apartment: " + invoice.getApartment().getApartmentName());
+                System.out.println("Due Date: " + invoice.getDueDate());
+//                System.out.println("Late Amount: " + invoice.getLate());
+                System.out.println("--------------------------------------");
+            }
+        }
+    }
 
 }

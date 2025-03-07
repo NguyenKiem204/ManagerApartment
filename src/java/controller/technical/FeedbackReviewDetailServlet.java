@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller;
+package controller.technical;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,10 +15,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author nkiem
+ * @author admin
  */
-@WebServlet(name="ProfileStaffServlet", urlPatterns={"/profile-staff"})
-public class ProfileStaffServlet extends HttpServlet {
+@WebServlet(name="FeedbackReviewDetailServlet", urlPatterns={"/technical/feedbackreviewdetail"})
+public class FeedbackReviewDetailServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +35,10 @@ public class ProfileStaffServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProfileStaffServlet</title>");  
+            out.println("<title>Servlet FeedbackReviewDetailServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ProfileStaffServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet FeedbackReviewDetailServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,7 +55,7 @@ public class ProfileStaffServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("profile-staff.jsp").forward(request, response);
+        request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
     } 
 
     /** 

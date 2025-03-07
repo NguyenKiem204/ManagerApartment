@@ -10,6 +10,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 import dao.FeedbackDAO;
 import dao.ManagerFeedbackDAO;
+import dao.NotificationDAO;
 import dao.RoleDAO;
 import dao.StaffDAO;
 import java.io.IOException;
@@ -21,12 +22,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.Console;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import model.Feedback;
 import model.ManagerFeedback;
+import model.Notification;
 import model.Role;
 import model.Staff;
 import org.jsoup.Jsoup;
@@ -127,8 +131,7 @@ public class FormFeedbackManagerServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             page = 1;
         }
-*/
-
+         */
         if (position_raw != null) {  // Xử lý AJAX request
             try {
                 StaffDAO staffDAO = new StaffDAO();
@@ -154,7 +157,6 @@ public class FormFeedbackManagerServlet extends HttpServlet {
 //                System.out.println("Current page map: " + page);
 //                System.out.println("totalPages map: " + totalPages);
 //                System.out.println("pageSize map: " + pageSize);
-
                 Gson gson = new GsonBuilder()
                           .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (date, type, jsonSerializationContext)
                                     -> new JsonPrimitive(date.toString()))
@@ -170,7 +172,6 @@ public class FormFeedbackManagerServlet extends HttpServlet {
 
 //        System.out.println("XPage (from request): " + xpage);
 //System.out.println("Current Page (before validation): " + page);
-        
         // Gửi danh sách vai trò và phân trang cho JSP
         List<Role> listrole = rdao.selectAll();
         request.setAttribute("listrole", listrole);
@@ -197,6 +198,7 @@ public class FormFeedbackManagerServlet extends HttpServlet {
         Validate validate = new Validate();
         StaffDAO staffDAO = new StaffDAO();
         ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
+        NotificationDAO notificationDAO = new NotificationDAO();
 
         String position_raw = request.getParameter("position");
         String monthYear_raw = request.getParameter("feedback-month");
@@ -259,9 +261,33 @@ public class FormFeedbackManagerServlet extends HttpServlet {
                 return;
             }
             if (monthYear_raw != null) {
-                monthYear = LocalDate.parse(monthYear_raw + "-01");
+                try {
+                    // Lấy giá trị tháng năm từ input
+                    YearMonth selectedMonthYear = YearMonth.parse(monthYear_raw);
+
+                    // Lấy tháng năm hiện tại
+                    YearMonth currentMonthYear = YearMonth.now();
+
+                    // Kiểm tra nếu người dùng chọn tháng tương lai
+                    if (selectedMonthYear.isAfter(currentMonthYear)) {
+                        RoleDAO rdao = new RoleDAO();
+                        List<Role> listrole = rdao.selectAll();
+                        request.setAttribute("listrole", listrole);
+                        request.setAttribute("error", "You cannot select a future month!");
+                        request.getRequestDispatcher("formfeedbackmanager.jsp").forward(request, response);
+                        return;
+                    }
+
+                    // Nếu hợp lệ, tiếp tục xử lý
+                    monthYear = selectedMonthYear.atDay(1); // Chuyển đổi thành LocalDate
+                } catch (DateTimeParseException e) {
+                    request.setAttribute("error", "Invalid date format!");
+                    request.getRequestDispatcher("formfeedbackmanager.jsp").forward(request, response);
+                    return;
+                }
             }
 
+            
             //validate for strengths
             if (strengths != null) {
                 strengths = strengths.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
@@ -345,7 +371,6 @@ public class FormFeedbackManagerServlet extends HttpServlet {
                 return;
             }
 
-            System.out.println("deadline string: " + deadline_raw);
             //Kiểm tra user chọn dl là ngày trong quá khứ
             if (!validate.validateDeadline(deadline_raw)) {
                 RoleDAO rdao = new RoleDAO();
@@ -373,6 +398,11 @@ public class FormFeedbackManagerServlet extends HttpServlet {
                       strengths, weaknesses, null, actionPlan,
                       deadline, LocalDate.now(), staff);
             managerFeedbackDAO.insert(managerFeedback);
+            System.out.println("Result last ID in form fb mmanager servlet: " + managerFeedbackDAO.selectLastId());
+
+//gửi thông báo tới staff
+            Notification notification = new Notification("You have new feedback from your manager.", "feedback", LocalDate.now(), false, managerFeedbackDAO.selectLastId(), "ManagerFeedback", staff, null);
+            notificationDAO.insert(notification);
         } catch (NumberFormatException e) {
             log("LOIIIII!");
         }

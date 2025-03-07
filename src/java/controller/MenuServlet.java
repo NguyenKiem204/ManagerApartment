@@ -17,8 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author nkiem
  */
-@WebServlet(name="ProfileStaffServlet", urlPatterns={"/profile-staff"})
-public class ProfileStaffServlet extends HttpServlet {
+@WebServlet(name="MenuServlet", urlPatterns={"/menu"})
+public class MenuServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +35,10 @@ public class ProfileStaffServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProfileStaffServlet</title>");  
+            out.println("<title>Servlet MenuServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ProfileStaffServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet MenuServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,7 +55,7 @@ public class ProfileStaffServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("profile-staff.jsp").forward(request, response);
+        request.getRequestDispatcher("manager/menumanager.jsp").forward(request, response);
     } 
 
     /** 

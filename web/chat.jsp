@@ -8,6 +8,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Chat Messenger</title>
+        <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/assets/css/chat.css" rel="stylesheet" />
     </head>
@@ -95,6 +96,7 @@
                     </div>
                 </div>
             </div>
+            
         </div>
     </body>
     <script type="text/javascript">

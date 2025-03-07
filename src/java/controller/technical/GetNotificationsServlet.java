@@ -3,8 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller;
+package controller.technical;
 
+import dao.NotificationDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,13 +13,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import model.Notification;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
- * @author nkiem
+ * @author admin
  */
-@WebServlet(name="ProfileStaffServlet", urlPatterns={"/profile-staff"})
-public class ProfileStaffServlet extends HttpServlet {
+@WebServlet(name="GetNotificationsServlet", urlPatterns={"/technical/GetNotifications"})
+public class GetNotificationsServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +40,10 @@ public class ProfileStaffServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProfileStaffServlet</title>");  
+            out.println("<title>Servlet GetNotificationsServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ProfileStaffServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet GetNotificationsServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,7 +60,34 @@ public class ProfileStaffServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("profile-staff.jsp").forward(request, response);
+        NotificationDAO notificationDAO = new NotificationDAO();
+//        int roleId = Integer.parseInt(request.getParameter("roleId"));
+        String roleId_raw = request.getParameter("roleId");
+        System.out.println("RoleId raw: " + roleId_raw);
+        int roleId = 1;
+        try {
+            roleId = Integer.parseInt(roleId_raw);
+        } catch (NumberFormatException e) {
+        }
+        System.out.println("roleID la: " + roleId);
+        List<Notification> list = notificationDAO.selectAllByStaffID(roleId);
+        JSONArray notificationsArray = new JSONArray();
+
+        for (Notification notif : list) {
+            JSONObject obj = new JSONObject();
+            obj.put("notificationId", notif.getNotificationID());
+            obj.put("message", notif.getMessage());
+            obj.put("type", notif.getType());
+            obj.put("createdAt", notif.getCreatedAt());
+            obj.put("isRead", notif.isRead());
+            obj.put("staff", notif.getStaff());
+            obj.put("resident", notif.getResident());
+            notificationsArray.put(obj);
+        }
+        // Trả về response JSON
+        response.setContentType("application/json");
+//        System.out.println(notificationsArray.toString(4)); // In JSON với format đẹp
+        response.getWriter().write(notificationsArray.toString());
     } 
 
     /** 
