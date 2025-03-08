@@ -5,6 +5,8 @@
 package model;
 
 import java.time.LocalDate;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,10 +35,10 @@ public class ManagerFeedback {
     String staffResponse;
     String actionPlan;
     LocalDate deadline;
-    LocalDate createdAt;
+    LocalDateTime createdAt;
     Staff staff;
 
-    public ManagerFeedback(LocalDate monthYear, int totalFeedback, double avgRating, int positivePercentage, int negativePercentage, String strengths, String weaknesses, String staffResponse, String actionPlan, LocalDate deadline, LocalDate createdAt, Staff staff) {
+    public ManagerFeedback(LocalDate monthYear, int totalFeedback, double avgRating, int positivePercentage, int negativePercentage, String strengths, String weaknesses, String staffResponse, String actionPlan, LocalDate deadline, LocalDateTime createdAt, Staff staff) {
         this.monthYear = monthYear;
         this.totalFeedback = totalFeedback;
         this.avgRating = avgRating;

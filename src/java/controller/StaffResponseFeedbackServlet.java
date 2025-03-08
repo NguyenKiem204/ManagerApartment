@@ -4,10 +4,7 @@
  */
 package controller;
 
-import dao.FeedbackDAO;
 import dao.ManagerFeedbackDAO;
-import dao.ResidentDAO;
-import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,9 +13,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import model.Feedback;
 import model.ManagerFeedback;
 import model.Resident;
 import model.Staff;
@@ -27,12 +21,10 @@ import model.Staff;
  *
  * @author admin
  */
-@WebServlet(name = "FeedbackReviewDetailServlet", urlPatterns = {"/feedbackreviewdetail"})
-public class FeedbackReviewDetailServlet extends HttpServlet {
+@WebServlet(name = "StaffResponseFeedbackServlet", urlPatterns = {"/staffresponsefeedback"})
+public class StaffResponseFeedbackServlet extends HttpServlet {
 
     private ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
-    private FeedbackDAO feedbackDAO = new FeedbackDAO();
-    private StaffDAO staffDAO = new StaffDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -51,10 +43,10 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FeedbackReviewDetailServlet</title>");
+            out.println("<title>Servlet StaffResponseFeedbackServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet FeedbackReviewDetailServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet StaffResponseFeedbackServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -72,8 +64,6 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
               throws ServletException, IOException {
-        String managerFeedbackId_raw = request.getParameter("managerFeedbackId");
-
         HttpSession session = request.getSession();
         Resident resident = (Resident) session.getAttribute("resident");
         Staff staff = (Staff) session.getAttribute("staff");
@@ -85,22 +75,7 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
             request.getRequestDispatcher("error-authorization.jsp").forward(request, response);
             return;
         }
-
-        int managerFeedbackId = 0;
-        ManagerFeedback managerFeedback = new ManagerFeedback();
-        List<Feedback> listFB = new ArrayList<>();
-        try {
-            managerFeedbackId = Integer.parseInt(managerFeedbackId_raw);
-            managerFeedback = managerFeedbackDAO.selectById(managerFeedbackId);
-
-            //truyền 1 list feedback detail theo tháng của từng staff
-            listFB = feedbackDAO.getFeedbackByMonthYearAndRoleID(managerFeedback.getMonthYear(), staff.getRole().getRoleID());
-
-        } catch (NumberFormatException e) {
-        }
-        request.setAttribute("managerFb", managerFeedback);
-        request.setAttribute("listFb", listFB);
-        request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
+        request.getRequestDispatcher("staffresponsefeedbacksuccessfull.jsp").forward(request, response);
     }
 
     /**
@@ -114,7 +89,19 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
               throws ServletException, IOException {
-        processRequest(request, response);
+        String managerFeedbackId_raw = request.getParameter("managerFeedbackId");
+        String staffResponse = request.getParameter("staffResponse");
+        int managerFeedbackId = 0;
+
+        try {
+            managerFeedbackId = Integer.parseInt(managerFeedbackId_raw);
+            ManagerFeedback managerFb = managerFeedbackDAO.selectById(managerFeedbackId);
+            managerFb.setStaffResponse(staffResponse);
+            //update staffresponse in DB
+            managerFeedbackDAO.update(managerFb);
+        } catch (NumberFormatException e) {
+        }
+        request.getRequestDispatcher("staffresponsefeedbacksuccessfull.jsp").forward(request, response);
     }
 
     /**

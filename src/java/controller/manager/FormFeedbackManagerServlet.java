@@ -21,9 +21,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.Console;
+import java.security.Timestamp;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeParseException;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -396,12 +399,12 @@ public class FormFeedbackManagerServlet extends HttpServlet {
             ManagerFeedback managerFeedback = new ManagerFeedback(monthYear,
                       totalFeedback, avgRating, positivePercentage, negativePercentage,
                       strengths, weaknesses, null, actionPlan,
-                      deadline, LocalDate.now(), staff);
+                      deadline, LocalDateTime.now(), staff);
             managerFeedbackDAO.insert(managerFeedback);
             System.out.println("Result last ID in form fb mmanager servlet: " + managerFeedbackDAO.selectLastId());
 
 //gửi thông báo tới staff
-            Notification notification = new Notification("You have new feedback from your manager. Mot con vit co 2 cai canh!", "feedback", LocalDate.now(), false, managerFeedbackDAO.selectLastId(), "ManagerFeedback", staff, null);
+            Notification notification = new Notification("You have new feedback from your manager. Nhieu con vit xoe ra nhieu cai canh!", "feedback", LocalDate.now(), false, managerFeedbackDAO.selectLastId(), "ManagerFeedback", staff, null);
             notificationDAO.insert(notification);
         } catch (NumberFormatException e) {
             log("LOIIIII!");

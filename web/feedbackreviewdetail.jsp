@@ -108,7 +108,7 @@
                 <h3>📌 Manager's Comments</h3>
                 <b>💡 Strengths:</b>
                 <div id="description-content">
-                    <p>${managerFb.strengths}</p> F
+                    <p>${managerFb.strengths}</p>
                 </div>
 
                 <b>⚠ Areas for Improvement:</b>
@@ -123,11 +123,38 @@
                 <b>Response Deadline:</b> ${managerFb.deadline}
 
                 <h3>📩 Staff Response</h3>
-                <form action="StaffResponseFb" method="post">
-                    <input type="hidden" name="managerFeedbackId" value="${managerFb.managerFeedbackId}" />
-                    <textarea name="staffResponse" placeholder="Write your response here..."></textarea>
-                    <button class="submit-btn" type="submit">Submit Response</button>
-                </form>
+                <c:set var="now" value="<%= java.time.LocalDate.now() %>" />
+
+                <c:choose>
+                    <%-- Nếu chưa phản hồi và còn trong thời hạn deadline --%>
+                    <c:when test="${empty managerFb.staffResponse and now.isBefore(managerFb.deadline.plusDays(1))}">
+                        <button id="toggleResponseForm" class="toggle-btn">➕ Add Response</button>
+                        <div id="responseForm" style="display: none;">
+                            <form action="staffresponsefeedback" method="post">
+                                <input type="hidden" name="managerFeedbackId" value="${managerFb.managerFeedbackId}" />
+                                <textarea name="staffResponse" placeholder="Write your response here..."></textarea>
+                                <button class="submit-btn" type="submit">Submit Response</button>
+                            </form>
+                        </div>
+                    </c:when>
+
+                    <%-- Nếu chưa phản hồi nhưng đã quá hạn deadline --%>
+                    <c:when test="${empty managerFb.staffResponse and now.isAfter(managerFb.deadline)}">
+                        <p class="error-message">⚠ Deadline for response has passed. You can no longer submit feedback.</p>
+                    </c:when>
+
+                    <%-- Nếu đã phản hồi trong thời hạn deadline --%>
+                    <c:otherwise>
+                        <p class="success-message">✅ You have already responded to this feedback.</p>
+                    </c:otherwise>
+                </c:choose>
+
+                <script>
+                    document.getElementById("toggleResponseForm")?.addEventListener("click", function () {
+                        let form = document.getElementById("responseForm");
+                        form.style.display = form.style.display === "none" ? "block" : "none";
+                    });
+                </script>
             </div>
         </div>
     </body>
