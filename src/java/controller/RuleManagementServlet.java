@@ -15,8 +15,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import model.Rule;
+import validation.Validate;
 
-@WebServlet(name = "RuleManagementServlet", urlPatterns = {"/rule-management"})
+@WebServlet(name = "RuleManagementServlet", urlPatterns = {"/manager/rule-management"})
 public class RuleManagementServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -54,7 +55,7 @@ public class RuleManagementServlet extends HttpServlet {
         request.setAttribute("pageSize", pageSize);
         request.setAttribute("totalRules", totalRules);
 
-        request.getRequestDispatcher("/rulemanagement.jsp").forward(request, response);
+        request.getRequestDispatcher("/manager/rulemanagement.jsp").forward(request, response);
     }
 
     @Override
@@ -70,8 +71,8 @@ public class RuleManagementServlet extends HttpServlet {
             String name = request.getParameter("editRuleName").trim();
             String description = request.getParameter("editRuleDescription").trim();
             LocalDate publicDate = LocalDate.parse(request.getParameter("editPublicDate").trim(), DateTimeFormatter.ISO_DATE);
+       
             Rule rule = new Rule(name, description, publicDate);
-
             RuleDAO ruleDAO = new RuleDAO();
             int inserted = ruleDAO.insert(rule);
             doGet(request, response);
@@ -102,8 +103,6 @@ public class RuleManagementServlet extends HttpServlet {
 
         RuleDAO ruleDAO = new RuleDAO();
         int update = ruleDAO.update(rule);
-
         doGet(request, response);
     }
-
 }

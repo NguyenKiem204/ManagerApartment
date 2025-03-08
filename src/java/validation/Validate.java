@@ -108,4 +108,10 @@ public static String trim(String input) {
         }
         return null;
     }
+    public static boolean validateReguationsName(String ruleName) {
+        if (ruleName == null || ruleName.trim().isEmpty()) {
+            return false; // Không được để trống
+        }
+        return true;
+    }
 }

@@ -6,7 +6,6 @@ package controller;
 
 import dao.RuleDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,13 +14,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Rule;
 
-@WebServlet(name = "RuleSeverlet", urlPatterns = {"/rule"})
-public class RuleSeverlet extends HttpServlet {
+@WebServlet(name = "ResidentRegulations", urlPatterns = {"/owner/regulations"})
+public class ResidentRegulations extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
         RuleDAO dao = new RuleDAO();
         List<Rule> list = dao.selectAll();
 
@@ -43,7 +41,7 @@ public class RuleSeverlet extends HttpServlet {
         request.setAttribute("pageNumber", pageNumber);
 
 //        System.out.println(list.size() + "test");
-        request.getRequestDispatcher("Rule.jsp").forward(request, response);
+        request.getRequestDispatcher("/owner/Regulations.jsp").forward(request, response);
     }
 
     @Override
@@ -76,12 +74,6 @@ public class RuleSeverlet extends HttpServlet {
         request.setAttribute("rulesList", rules);
         request.setAttribute("searchName", searchName);
 
-        request.getRequestDispatcher("Rule.jsp").forward(request, response);
+        request.getRequestDispatcher("/owner/Regulations.jsp").forward(request, response);
     }
-
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

@@ -2,6 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package controller;
 
 import dao.RuleDAO;
@@ -15,14 +16,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Rule;
 
-@WebServlet(name = "RuleSeverlet", urlPatterns = {"/rule"})
-public class RuleSeverlet extends HttpServlet {
-
+/**
+ *
+ * @author Hoang-Tran
+ */
+@WebServlet(name="RuleControll", urlPatterns={"/tenant/rulecontroll"})
+public class RuleControll extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        //processRequest(request, response);
-        RuleDAO dao = new RuleDAO();
+    throws ServletException, IOException {
+       // processRequest(request, response);
+       RuleDAO dao = new RuleDAO();
         List<Rule> list = dao.selectAll();
 
         int pageNumber = 1;
@@ -43,12 +47,12 @@ public class RuleSeverlet extends HttpServlet {
         request.setAttribute("pageNumber", pageNumber);
 
 //        System.out.println(list.size() + "test");
-        request.getRequestDispatcher("Rule.jsp").forward(request, response);
-    }
-
+        request.getRequestDispatcher("/tenant/viewregulations.jsp").forward(request, response);
+    } 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
+        //processRequest(request, response);
         String searchName = request.getParameter("search").trim();
         RuleDAO ruleDAO = new RuleDAO();
         List<Rule> rules;
@@ -76,7 +80,7 @@ public class RuleSeverlet extends HttpServlet {
         request.setAttribute("rulesList", rules);
         request.setAttribute("searchName", searchName);
 
-        request.getRequestDispatcher("Rule.jsp").forward(request, response);
+        request.getRequestDispatcher("/tenant/viewregulations.jsp").forward(request, response);
     }
 
     @Override
