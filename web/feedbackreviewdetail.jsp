@@ -53,12 +53,18 @@
                 background-color: #d35400;
             }
 
-            #description-content {
+            .description-content {
                 border: 2px solid #ddd;
                 padding: 15px;
                 border-radius: 5px;
                 background-color: #f9f9f9;
                 margin-top: 10px;
+            }
+            #feedback-container {
+                max-height: 400px; /* Giới hạn chiều cao */
+                overflow-y: auto;  /* Kích hoạt thanh cuộn dọc */
+                border: 1px solid #e67e22; /* Viền giống bảng */
+                padding: 5px;
             }
         </style>
     </head>
@@ -88,36 +94,38 @@
                 </table>
 
                 <h3>📑 Feedback Details</h3>
-                <table>
-                    <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Rating (⭐)</th>
-                        <th>Submission Date</th>
-                    </tr>
-                    <c:forEach var="fb" items="${listFb}" varStatus="i">
+                <div id="feedback-container">
+                    <table>
                         <tr>
-                            <td>${i.index + 1}</td>
-                            <td>${fb.title}</td>
-                            <td>${fb.rate}</td>
-                            <td><fmt:formatDate value="${fb.formattedDate}" pattern="dd/MM/yyyy" /></td>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Rating (⭐)</th>
+                            <th>Submission Date</th>
                         </tr>
-                    </c:forEach>
-                </table>
+                        <c:forEach var="fb" items="${listFb}" varStatus="i">
+                            <tr>
+                                <td>${i.index + 1}</td>
+                                <td>${fb.title}</td>
+                                <td>${fb.rate}</td>
+                                <td><fmt:formatDate value="${fb.formattedDate}" pattern="dd/MM/yyyy" /></td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </div>
 
                 <h3>📌 Manager's Comments</h3>
                 <b>💡 Strengths:</b>
-                <div id="description-content">
+                <div class="description-content">
                     <p>${managerFb.strengths}</p>
                 </div>
 
                 <b>⚠ Areas for Improvement:</b>
-                <div id="description-content">
+                <div class="description-content">
                     <p>${managerFb.weaknesses}</p>
                 </div>
                 <h3>📅 Next Actions</h3>
                 <b>Improvement Suggestions:</b>
-                <div id="description-content">
+                <div class="description-content">
                     <p>${managerFb.actionPlan}</p>
                 </div>
                 <b>Response Deadline:</b> ${managerFb.deadline}
@@ -155,13 +163,19 @@
                 <c:if test="${sessionScope.staff.role.roleID == 1}">
                     <c:choose>
                         <c:when test="${not empty managerFb.staffResponse}">
-                            <p>${managerFb.staffResponse}</p>
+                            <div class="description-content">
+                                <p>${managerFb.staffResponse}</p><!-- -->
+                            </div>
                         </c:when>
                         <c:otherwise>
                             <p><i>None</i></p>
                         </c:otherwise>
                     </c:choose>
                 </c:if>
+                <c:if test="${not empty error}">
+                    <p style="color: red;">${error}</p>
+                </c:if>
+
 
                 <script>
                     document.getElementById("toggleResponseForm")?.addEventListener("click", function () {

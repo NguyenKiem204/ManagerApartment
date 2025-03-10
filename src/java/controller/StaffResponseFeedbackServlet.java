@@ -21,6 +21,7 @@ import model.ManagerFeedback;
 import model.Notification;
 import model.Resident;
 import model.Staff;
+import validation.Validate;
 
 /**
  *
@@ -104,6 +105,34 @@ public class StaffResponseFeedbackServlet extends HttpServlet {
         String managerFeedbackId_raw = request.getParameter("managerFeedbackId");
         String staffResponse = request.getParameter("staffResponse");
         int managerFeedbackId = 0;
+        
+        //check toàn khoảng trắng
+        //chứa ký tự đặc biệt
+        //chứa ít hơn 5 ký tự
+        
+        //check title empty or not
+        if (staffResponse != null) {
+            staffResponse = staffResponse.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
+        }
+
+        if (staffResponse == null || staffResponse.trim().isEmpty()) {
+            request.setAttribute("error", "Response cannot be empty!");
+            request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
+            return;
+        }
+        
+        if (!Validate.isValidTitle(staffResponse)) {
+            request.setAttribute("error", "Response contains invalid characters!");
+            request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra độ dài title
+        if (staffResponse.length() < 5 || staffResponse.length() > 100) {
+            request.setAttribute("error", "Response must be between 5 and 100 characters!");
+            request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
+            return;
+        }
 
         try {
             managerFeedbackId = Integer.parseInt(managerFeedbackId_raw);

@@ -6,6 +6,8 @@
 package controller;
 
 import dao.NotificationDAO;
+import dao.RequestDAO;
+import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +15,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import model.Notification;
+import model.Request;
+import model.TypeRequest;
 
 /**
  *
@@ -77,7 +83,34 @@ public class MarkAsReadServlet extends HttpServlet {
         } catch (NumberFormatException e) {
         }
         NotificationDAO notificationDAO = new NotificationDAO();
-        notificationDAO.updateIsRead(notificationId); // Cập nhật trạng thái trong DB
+        RequestDAO requestDAO = new RequestDAO();
+        StaffDAO staffDAO = new StaffDAO();
+        
+        notificationDAO.updateIsRead(notificationId);
+        // Cập nhật trạng thái trong DB
+        /*TH là thông báo request của staff, khi bấm vào xem là xác nhận chuyển
+        từ status 2 -> 3 (Inprogress)*/
+        Notification notification = notificationDAO.selectById(notificationId);
+        if (notification.getReferenceTable().equalsIgnoreCase("Request")) {
+            Request request1 = requestDAO.selectById(notification.getReferenceId());
+            //get roleId -> xac dinh la staffId nao quan ly
+            int roleId = request1.getTypeRq().getRole().getRoleID();
+            //get staffId by roleId
+            int staffId = staffDAO.getStaffByRoleIDAndStatus(roleId, "Active").getStaffId();
+            
+            if (request1.getStatus().getStatusID() == 2) {
+                //update status assign to in progress
+                requestDAO.updateStatus(request1.getRequestID(), 3);
+                
+                String statusName = requestDAO.selectById(notification.getReferenceId()).getStatus().getStatusName();
+                //resident received notify about change status 
+                Notification notification_resident = new Notification(staffId,
+                      "Staff", "Request updated new status: " + statusName, "request",
+                      LocalDateTime.now(), false, notification.getReferenceId(), "Request",
+                      null, request1.getResident());
+                notificationDAO.insert(notification_resident);
+            }
+        }
         response.setStatus(HttpServletResponse.SC_OK);
     }
 

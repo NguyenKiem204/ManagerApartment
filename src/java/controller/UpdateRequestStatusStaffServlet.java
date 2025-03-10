@@ -2,7 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.manager;
+
+package controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -22,7 +23,6 @@ import java.io.BufferedReader;
 import java.time.LocalDateTime;
 import model.Notification;
 import model.Request;
-import model.Resident;
 import model.Staff;
 import model.StatusRequest;
 
@@ -30,39 +30,36 @@ import model.StatusRequest;
  *
  * @author admin
  */
-@WebServlet(name = "UpdateRequestStatusServlet", urlPatterns = {"/manager/updateRequestStatus"})
-public class UpdateRequestStatusServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
+@WebServlet(name="UpdateRequestStatusStaffServlet", urlPatterns={"/updateRequestStatusStaff"})
+public class UpdateRequestStatusStaffServlet extends HttpServlet {
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-              throws ServletException, IOException {
+    throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateRequestStatusServlet</title>");
+            out.println("<title>Servlet UpdateRequestStatusStaffServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdateRequestStatusServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet UpdateRequestStatusStaffServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    }
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -70,13 +67,12 @@ public class UpdateRequestStatusServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-              throws ServletException, IOException {
+    throws ServletException, IOException {
         processRequest(request, response);
-    }
+    } 
 
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -84,7 +80,7 @@ public class UpdateRequestStatusServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-              throws ServletException, IOException {
+    throws ServletException, IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
@@ -115,20 +111,20 @@ public class UpdateRequestStatusServlet extends HttpServlet {
             Staff st = staffDAO.getStaffByRoleIDAndStatus(roleId, "Active");
 
             //bảng notify có staff o mot so trang thai do manager gui
-            if (newStatus == 2 || newStatus == 9) {
-                Notification notification_staff = new Notification(staff.getStaffId(),
-                          "Staff", "Request updated new status: " + sr.getStatusName(), "request",
-                          LocalDateTime.now(), false, requestId,
-                          "Request", st, null);
-                notificationDAO.insert(notification_staff);
-            }
-            //bảng notify có resident từ đầu đến cuối để theo dõi quá trình do manager gui
-            Notification notification_resident = new Notification(staff.getStaffId(),
-                      "Staff", "Request updated new status: " + sr.getStatusName(), "request",
-                      LocalDateTime.now(), false, requestId, "Request",
-                      null, rq.getResident());
-
-            notificationDAO.insert(notification_resident);
+//            if (newStatus == 2 || newStatus == 9) {
+//                Notification notification_staff = new Notification(staff.getStaffId(),
+//                          "Staff", "Request updated new status: " + sr.getStatusName(), "request",
+//                          LocalDateTime.now(), false, requestId,
+//                          "Request", st, null);
+//                notificationDAO.insert(notification_staff);
+//            }
+//            //bảng notify có resident từ đầu đến cuối để theo dõi quá trình do manager gui
+//            Notification notification_resident = new Notification(staff.getStaffId(),
+//                      "Staff", "Request updated new status: " + sr.getStatusName(), "request",
+//                      LocalDateTime.now(), false, requestId, "Request",
+//                      null, rq.getResident());
+//
+//            notificationDAO.insert(notification_resident);
             
             JsonObject jsonResponse = new JsonObject();
             jsonResponse.addProperty("success", updated);
@@ -144,9 +140,8 @@ public class UpdateRequestStatusServlet extends HttpServlet {
         }
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override

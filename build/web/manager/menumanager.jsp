@@ -28,7 +28,10 @@
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
-        
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+
         <style>
             #notificationContainer {
                 position: relative;
@@ -210,7 +213,7 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"><img
+                                <a href="<%= request.getContextPath() %>/redirect/home"><img
                                         src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
                                         alt="Logo" /></a>
                             </div>
@@ -368,17 +371,17 @@
                                         </li>
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/technical/request">Request</a>
+                                                href="<%= request.getContextPath() %>/requeststaff">Request</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 4}">
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/technical/feedbackreview">Feedback</a>
+                                                href="<%= request.getContextPath() %>/feedbackreview">Feedback</a>
                                         </li>
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/technical/request">Request</a>
+                                                href="<%= request.getContextPath() %>/requeststaff">Request</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 5}">
@@ -482,7 +485,7 @@
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="!#" class="sidebar-link">
+                                <a href="#" class="sidebar-link">
                                     <i class="bi bi-puzzle"></i>
                                     <span>Regulations</span>
                                 </a>
@@ -495,10 +498,7 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="profile">Information</a>
-                                    </li>
-                                    <li class="submenu-item">
-                                        <a href="login">Login</a>
+                                        <a href="<%= request.getContextPath() %>/profile-${role}">Information</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="logout">Logout</a>
@@ -507,6 +507,7 @@
                                         <a href="forgot-password">Forgot Password</a>
                                     </li>
                                 </ul>
+
                             </li>
                         </ul>
                     </div>
@@ -523,7 +524,6 @@
         </div>
 
         <!--Notify-->
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <script>
             $(document).ready(function () {
                 $("#notificationBell").click(function (event) {
@@ -559,10 +559,10 @@
                                     let formattedDate = dateObj.getDate().toString().padStart(2, '0') + '/' + (dateObj.getMonth() + 1).toString().padStart(2, '0');
                                     // Xác định URL dựa trên referenceTable
                                     let notificationUrl = getNotificationUrl(notif);
-                                    
+
                                     $("#notificationList").append(
                                             `<li class="notification-item ` + liClass + `" data-id="`
-                                            + notif.notificationId + `"><a href="`+ notificationUrl +`">
+                                            + notif.notificationId + `"><a href="` + notificationUrl + `">
                                     <div class="notification-message">` + notif.message + `</div>
                                     <div class="notification-date">` + formattedDate + `</div>
                                         </a></li>`
@@ -582,21 +582,21 @@
                         }
                     });
                 }
-                
+
                 // Hàm lấy URL tùy theo referenceTable
-function getNotificationUrl(notif) {
-    let baseUrl = "<%= request.getContextPath() %>";
-    switch (notif.referenceTable) {
-        case "ManagerFeedback":
-            return baseUrl + `/feedbackreviewdetail?managerFeedbackId=` + notif.referenceId;
-        case "Request":
-            return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
-        case "Invoice":
-            return `#`;
-        default:
-            return "#"; // Nếu không xác định được loại, đặt về #
-    }
-}
+                function getNotificationUrl(notif) {
+                    let baseUrl = "<%= request.getContextPath() %>";
+                    switch (notif.referenceTable) {
+                        case "ManagerFeedback":
+                            return baseUrl + `/feedbackreviewdetail?managerFeedbackId=` + notif.referenceId;
+                        case "Request":
+                            return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
+                        case "Invoice":
+                            return `#`;
+                        default:
+                            return "#"; // Nếu không xác định được loại, đặt về #
+                    }
+                }
 
                 // Khi click vào thông báo, đổi màu và update trạng thái đọc
                 $("#notificationList").on("click", "li", function () {

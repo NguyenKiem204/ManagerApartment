@@ -5,6 +5,7 @@
 
 package controller;
 
+import dao.RequestDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Request;
 
 /**
  *
@@ -55,6 +57,16 @@ public class RequestDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        String requestId_raw = request.getParameter("requestId");
+        RequestDAO requestDAO = new RequestDAO();
+        int requestId = 0;
+        try {
+            requestId = Integer.parseInt(requestId_raw);
+            Request requestObj = requestDAO.selectById(requestId);
+            System.out.println("request obj: " + requestObj.toString());
+            request.setAttribute("request", requestObj);
+        } catch (NumberFormatException e) {
+        }
         request.getRequestDispatcher("requestdetail.jsp").forward(request, response);
     } 
 

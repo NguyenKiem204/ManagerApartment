@@ -155,7 +155,14 @@
                 border-color: #78909C;
                 box-shadow: 0 0 8px rgba(176, 190, 197, 0.6);
             }
-            
+
+            /* Review */
+            .status[data-status-id="9"] {
+                background-color: #FF9800; /* Orange */
+                border-color: #F57C00; /* Darker Orange */
+                box-shadow: 0 0 8px rgba(255, 152, 0, 0.6);
+            }
+
             /* Default (Unknown) */
             .status[data-status-id="0"] {
                 background-color: #607D8B; /* Blue Gray */
@@ -219,6 +226,13 @@
                 cursor: not-allowed;
             }
 
+            .truncate {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 200px; /* Adjust the width as needed */
+            }
+
         </style>
     </head>
     <body>
@@ -272,12 +286,13 @@
                             <th>Service</th>
                             <th>Date</th>
                             <th>Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
                         <c:forEach var="rq" items="${listrq}">
-                            <tr>
-                                <td>${rq.resident.fullName}</td>
+                            <tr data-request-id="${rq.requestID}">
+                                <td class="truncate">${rq.resident.fullName}</td>
                                 <td>${rq.apartment.apartmentName}</td>
                                 <td>${rq.typeRq.typeName}</td>
                                 <td><fmt:formatDate value="${rq.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate></td>
@@ -289,6 +304,11 @@
                                         <button class="approve-btn" onclick="approveRequest(${rq.requestID})">Approve</button>
                                         <button class="reject-btn" onclick="rejectRequest(${rq.requestID})">Reject</button>
                                     </div>
+                                </td>
+                                <td>
+                                    <span class="update-icon" onclick="goToDetail(${rq.requestID})">
+                                        📝 <!-- Biểu tượng cập nhật -->
+                                    </span>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -366,6 +386,13 @@
             </div>
         </div>
 
+        <script>
+            function goToDetail(requestId) {
+                if (requestId) {
+                    window.location.href = '${pageContext.request.contextPath}/requestdetail?requestId=' + requestId;
+                }
+            }
+        </script>
         <script>
             function updateStatus(element) {
                 const requestID = element.getAttribute("data-id");
@@ -473,6 +500,10 @@
                         element.innerText = "Cancel";
                         element.style.backgroundColor = "#B0BEC5"; // Purple
                         break;
+                    case 9:
+                        element.innerText = "Review";
+                        element.style.backgroundColor = "#FF9800"; // Orange
+                        break;
                     default:
                         element.innerText = "Unknown";
                         element.style.backgroundColor = "#607D8B"; // Default: Blue Gray
@@ -565,6 +596,7 @@
                     window.location.search = params.toString();
                 });
             });
+
         </script>
 
     </body>
