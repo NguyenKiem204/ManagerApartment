@@ -3,6 +3,30 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/CommentDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/css/news.css</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/NewsDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/js/comments.js</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/Request.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/Invoices.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/StaffDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/News.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/manager/home.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/js/pages/ui-chartjs.js</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/InvoiceDetail.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/Comment.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/js/pages/dashboard.js</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/Test.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/FeedbackDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/js/bootstrap.min.js.map</file>
+            <file>file:/D:/PR2/ManagerApartment/web/news.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/css/newsdetail.css</file>
+            <file>file:/D:/PR2/ManagerApartment/web/newsdetail.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/js/main.js</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/js/bootstrap.min.js</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/CommentServlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/NewsDetailServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/owner/RequestServlet.java</file>
             <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/FeedbackReviewDetailServlet.java</file>
             <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/GetNotificationsServlet.java</file>
             <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/dao/NotificationDAO.java</file>

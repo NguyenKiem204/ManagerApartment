@@ -14,11 +14,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>${news.title}</title>
         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
 
     <body>
         <%@include file="/manager/menumanager.jsp" %>
-        <link rel="stylesheet" href="<%= request.getContextPath() %>assets/css/newsdetail.css"/>
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/newsdetail.css"/>
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/news.css"/>
         <div id="main">
             <div class="container mt-4 mb-4">
                 <!-- Bài viết chi tiết -->
@@ -41,8 +43,6 @@
                                 ${news.description}
                             </div>
                         </div>
-
-
                     </div>
                 </div>
 
@@ -50,131 +50,82 @@
                 <div class="related-news">
                     <h3>Bài viết liên quan</h3>
                     <div class="row" id="related-news-grid">
-                        <!-- Bài viết liên quan 1 -->
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <img src="https://images.unsplash.com/photo-1738936339590-ea1fc8bd9732?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                     class="card-img-top" alt="Ảnh bài viết liên quan 1">
-                                <div class="card-body">
-                                    <h5 class="card-title">Hướng dẫn sử dụng Bootstrap 5</h5>
-                                    <p class="card-text">Tìm hiểu cách sử dụng Bootstrap 5 để thiết kế giao diện web hiện đại.
-                                    </p>
-                                    <a href="#" class="btn btn-primary">Xem thêm</a>
+                       <c:forEach var="news" items="${listRelatedNews}">
+                                <div class="col-md-4 news-card">
+                                    <div class="card news-item">
+                                        <img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="card-img-top img-fluid" alt="News Image">
+                                        <div class="card-body">
+                                            <h5 class="card-title truncated-text" style="height: 65px">${news.title}</h5>
+                                            <p class="text-muted">Create date: ${news.formattedDate}</p>
+                                            <a href="news-detail?newsId=${news.newsID}" class="btn btn-primary mt-1">Đọc thêm</a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- Bài viết liên quan 2 -->
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <img src="https://images.unsplash.com/photo-1739057736231-3577bfc1a1b9?q=80&w=3125&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                     class="card-img-top" alt="Ảnh bài viết liên quan 2">
-                                <div class="card-body">
-                                    <h5 class="card-title">Tối ưu hóa SEO cho blog</h5>
-                                    <p class="card-text">Các bí quyết giúp blog của bạn đạt thứ hạng cao trên công cụ tìm kiếm.
-                                    </p>
-                                    <a href="#" class="btn btn-primary">Xem thêm</a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Bài viết liên quan 3 -->
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <img src="https://images.unsplash.com/photo-1738975927070-d5af82de67c1?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                     class="card-img-top" alt="Ảnh bài viết liên quan 3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Cách viết content thu hút</h5>
-                                    <p class="card-text">Kỹ năng viết content giúp thu hút độc giả và tăng tương tác.</p>
-                                    <a href="#" class="btn btn-primary">Xem thêm</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Các bài viết liên quan khác -->
-                        <div class="col-md-4 mb-3 hidden">
-                            <div class="card">
-                                <img src="https://images.unsplash.com/photo-1738975927070-d5af82de67c1?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                     class="card-img-top" alt="Ảnh bài viết liên quan 4">
-                                <div class="card-body">
-                                    <h5 class="card-title">Cách viết content thu hút</h5>
-                                    <p class="card-text">Kỹ năng viết content giúp thu hút độc giả và tăng tương tác.</p>
-                                    <a href="#" class="btn btn-primary">Xem thêm</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-3 hidden">
-                            <div class="card">
-                                <img src="https://images.unsplash.com/photo-1738975927070-d5af82de67c1?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                     class="card-img-top" alt="Ảnh bài viết liên quan 5">
-                                <div class="card-body">
-                                    <h5 class="card-title">Cách viết content thu hút</h5>
-                                    <p class="card-text">Kỹ năng viết content giúp thu hút độc giả và tăng tương tác.</p>
-                                    <a href="#" class="btn btn-primary">Xem thêm</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-3 hidden">
-                            <div class="card">
-                                <img src="https://images.unsplash.com/photo-1738975927070-d5af82de67c1?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                     class="card-img-top" alt="Ảnh bài viết liên quan 6">
-                                <div class="card-body">
-                                    <h5 class="card-title">Cách viết content thu hút</h5>
-                                    <p class="card-text">Kỹ năng viết content giúp thu hút độc giả và tăng tương tác.</p>
-                                    <a href="#" class="btn btn-primary">Xem thêm</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-3 hidden">
-                            <div class="card">
-                                <img src="https://images.unsplash.com/photo-1738975927070-d5af82de67c1?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                     class="card-img-top" alt="Ảnh bài viết liên quan 6">
-                                <div class="card-body">
-                                    <h5 class="card-title">Cách viết content thu hút</h5>
-                                    <p class="card-text">Kỹ năng viết content giúp thu hút độc giả và tăng tương tác.</p>
-                                    <a href="#" class="btn btn-primary">Xem thêm</a>
-                                </div>
-                            </div>
-                        </div>
+                            </c:forEach>
                     </div>
                     <button id="load-more" class="btn btn-secondary mt-3">Xem thêm</button>
                 </div>
 
-                <!-- Phần bình luận -->
+                <!-- Phần bình luận với AJAX -->
                 <div style="border-radius: .7rem" class="comments-section mt-5 bg-light p-3">
                     <h3>Bình luận</h3>
+                    
+                    <!-- Alert container for feedback messages -->
+                    <div id="comment-alerts"></div>
+                    
                     <!-- Form bình luận -->
-                    <form>
+                    <form id="comment-form" method="post">
+                        <input type="hidden" id="newsId" name="newsId" value="${news.newsID}">
+                        
+                        <c:choose>
+                            <c:when test="${sessionScope.staff != null}">
+                                <input type="hidden" id="userId" name="userId" value="${sessionScope.staff.staffId}">
+                                <input type="hidden" id="userType" name="userType" value="Staff">
+                                <input type="hidden" id="userName" name="userName" value="${sessionScope.staff.fullName}">
+                                <input type="hidden" id="userAvatar" name="userAvatar" value="${pageContext.request.contextPath}/${sessionScope.staff.image.imageURL}">
+                            </c:when>
+                            <c:when test="${sessionScope.resident != null}">
+                                <input type="hidden" id="userId" name="userId" value="${sessionScope.resident.residentId}">
+                                <input type="hidden" id="userType" name="userType" value="Resident">
+                                <input type="hidden" id="userName" name="userName" value="${sessionScope.resident.fullName}">
+                                <input type="hidden" id="userAvatar" name="userAvatar" value="${pageContext.request.contextPath}/${sessionScope.resident.image.imageURL}">
+                            </c:when>
+                            <c:otherwise>
+                                <!-- Not logged in message -->
+                                <div class="alert alert-info">
+                                    Vui lòng đăng nhập để bình luận
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                        
                         <div class="mb-3">
-                            <textarea class="form-control" rows="3" placeholder="Viết bình luận của bạn..."></textarea>
+                            <textarea class="form-control" id="comment-content" name="content" rows="3" 
+                                      placeholder="Viết bình luận của bạn..."
+                                      <c:if test="${sessionScope.staff == null && sessionScope.resident == null}">disabled</c:if>></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                        
+                        <button type="submit" class="btn btn-primary" 
+                                <c:if test="${sessionScope.staff == null && sessionScope.resident == null}">disabled</c:if>>
+                            Gửi bình luận
+                        </button>
                     </form>
+                    
                     <!-- Danh sách bình luận -->
                     <div class="mt-4">
-                        <div class="comment">
-                            <div class="comment-avatar">
-                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                     alt="Avatar người dùng 1">
-                            </div>
-                            <div class="comment-content">
-                                <strong>Người dùng 1:</strong>
-                                <p>Bài viết rất hay và hữu ích. Cảm ơn tác giả!</p>
-                                <small class="text-muted">10 phút trước</small>
+                        <div id="comments-list">
+                            <!-- Comments will be loaded here via AJAX -->
+                            <div class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p>Đang tải bình luận...</p>
                             </div>
                         </div>
-                        <div class="comment">
-                            <div class="comment-avatar">
-                                <img src="https://images.unsplash.com/photo-1738956952892-7553e0327906?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                     alt="Avatar người dùng 2">
-                            </div>
-                            <div class="comment-content">
-                                <strong>Người dùng 2:</strong>
-                                <p>Mình đã áp dụng và thấy hiệu quả rõ rệt. Cảm ơn!</p>
-                                <small class="text-muted">30 phút trước</small>
-                            </div>
-                        </div>
+                        
+                        <!-- Load more comments button, initially hidden -->
+                        <button id="load-more-comments" class="btn btn-outline-primary mt-3" style="display: none;">
+                            Tải thêm bình luận
+                        </button>
                     </div>
                 </div>
             </div>
@@ -205,12 +156,9 @@
                 });
             });
         </script>
-        <script src="assets/js/bootstrap.bundle.min.js"></script>
-
-        <script src="assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="assets/js/pages/dashboard.js"></script>
-
-        <script src="assets/js/main.js"></script>
+        
+        <!-- Comments AJAX functionality -->
+        <script src="<%= request.getContextPath() %>/assets/js/comments.js"></script>
     </body>
 
 </html>

@@ -63,10 +63,13 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-              throws ServletException, IOException {
-        request.getSession().removeAttribute("staff");
-        request.getSession().removeAttribute("resident");
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
 
+        loadCookies(request);
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
@@ -102,6 +105,17 @@ public class LoginServlet extends HttpServlet {
         for (Cookie cookie : cookies) {
             cookie.setMaxAge(maxAge);
             response.addCookie(cookie);
+        }
+    }
+
+    private void loadCookies(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("userType".equals(cookie.getName())) {
+                    request.setAttribute("userType", cookie.getValue());
+                }
+            }
         }
     }
 

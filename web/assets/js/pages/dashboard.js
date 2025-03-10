@@ -1,42 +1,46 @@
-var optionsProfileVisit = {
-  annotations: {
-    position: "back",
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  chart: {
-    type: "bar",
-    height: 300,
-  },
-  fill: {
-    opacity: 1,
-  },
-  plotOptions: {},
-  series: [
-    {
-      name: "sales",
-      data: [9, 20, 30, 20, 10, 20, 30, 20, 10, 20, 30, 20],
+document.addEventListener("DOMContentLoaded", function () {
+  var optionsProfileVisit = {
+    annotations: {
+      position: "back",
     },
-  ],
-  colors: "#d5460d",
-  xaxis: {
-    categories: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+    dataLabels: {
+      enabled: false,
+    },
+    chart: {
+      type: "bar",
+      height: 300,
+    },
+    fill: {
+      opacity: 1,
+    },
+    plotOptions: {},
+    series: [
+      {
+        name: "Revenue",
+        data: revenueData, // Dữ liệu từ JSP
+      },
     ],
-  },
-};
+    colors: "#d5460d",
+    xaxis: {
+      categories: [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+      ],
+    },
+    yaxis: {
+      labels: {
+        formatter: function (value) {
+          return new Intl.NumberFormat("vi-VN").format(value) + " VND";
+        },
+      },
+    },
+  };
+
+  var chartProfileVisit = new ApexCharts(document.querySelector("#chart-profile-visit"), optionsProfileVisit);
+  chartProfileVisit.render();
+});
+
+//
 let chartElement = document.getElementById("chart-visitors-profile");
   let occupied = chartElement.getAttribute("data-occupied");
   let available = chartElement.getAttribute("data-available");
@@ -137,10 +141,10 @@ let optionsIndonesia = {
   colors: ["#dc3545"],
 };
 
-var chartProfileVisit = new ApexCharts(
-  document.querySelector("#chart-profile-visit"),
-  optionsProfileVisit
-);
+//var chartProfileVisit = new ApexCharts(
+//  document.querySelector("#chart-profile-visit"),
+//  optionsProfileVisit
+//);
 //var chartVisitorsProfile = new ApexCharts(
 //  document.getElementById("chart-visitors-profile"),
 //  optionsVisitorsProfile

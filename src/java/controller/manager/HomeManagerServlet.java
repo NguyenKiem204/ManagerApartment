@@ -5,6 +5,7 @@
 package controller.manager;
 
 import dao.ApartmentDAO;
+import dao.InvoiceDAO;
 import dao.MessageDAO;
 import dao.ResidentDAO;
 import dao.StaffDAO;
@@ -16,8 +17,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import model.Resident;
@@ -70,10 +73,14 @@ public class HomeManagerServlet extends HttpServlet {
             throws ServletException, IOException {
         ApartmentDAO apartmentDAO = new ApartmentDAO();
         ResidentDAO residentDAO = new ResidentDAO();
+        InvoiceDAO invoiceDAO = new InvoiceDAO();
         int numberAptm = apartmentDAO.numberApartment();
         int numberResident = residentDAO.numberResident();
         int numberApartmentOccupied = apartmentDAO.numberApartmentOccupied();
         int numberApartmentAvailable = apartmentDAO.numberApartmentAvailable();
+        int year = LocalDate.now().getYear();
+        List<Double> listRevenue = invoiceDAO.getRevenueByMonth(year);
+        request.setAttribute("listRevenue", listRevenue);
         request.setAttribute("numberApartment", numberAptm);
         request.setAttribute("numberResident", numberResident);
         request.setAttribute("numberApartmentOccupied", numberApartmentOccupied);

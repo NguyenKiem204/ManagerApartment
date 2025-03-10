@@ -100,59 +100,58 @@
         </div>
     </body>
     <script type="text/javascript">
-        var websocket = new WebSocket("ws://localhost:8080/ManagerApartment/chatRoomServer");
-        var isConnected = false;
+    var websocket = new WebSocket("ws://localhost:8080/ManagerApartment/chatRoomServer");
+    var isConnected = false;
 
-        websocket.onopen = function (message) {
-            isConnected = true;
-            var senderEmail = document.getElementById('emailSend').value;
-            websocket.send(JSON.stringify({type: "connect", email: senderEmail}));
-            console.log("Server connected...");
+    websocket.onopen = function (message) {
+        isConnected = true;
+        var senderEmail = document.getElementById('emailSend').value;
+        websocket.send(JSON.stringify({type: "connect", email: senderEmail}));
+        console.log("Server connected...");
 
-            scrollToBottom();
-        };
+        scrollToBottom();
+    };
 
-        websocket.onmessage = function (message) {
-            console.log("Message received: ", message.data);
-            processMessage(message);
-        };
+    websocket.onmessage = function (message) {
+        console.log("Message received: ", message.data);
+        processMessage(message);
+    };
 
-        websocket.onerror = function (event) {
-            console.error("WebSocket error: ", event);
-            isConnected = false;
-        };
+    websocket.onerror = function (event) {
+        console.error("WebSocket error: ", event);
+        isConnected = false;
+    };
 
-        websocket.onclose = function (event) {
-            console.log("WebSocket connection closed: ", event);
-            isConnected = false;
-        };
+    websocket.onclose = function (event) {
+        console.log("WebSocket connection closed: ", event);
+        isConnected = false;
+    };
 
-        function processMessage(message) {
-            console.log("Raw message data:", message.data);
-            try {
-                var messageData = JSON.parse(message.data);
-                console.log("Parsed message data:", messageData);
-            } catch (error) {
-                console.error("Error parsing message data:", error);
-                return;
-            }
+    function processMessage(message) {
+        console.log("Raw message data:", message.data);
+        try {
+            var messageData = JSON.parse(message.data);
+            console.log("Parsed message data:", messageData);
+        } catch (error) {
+            console.error("Error parsing message data:", error);
+            return;
+        }
 
-            if (!messageData || !messageData.message) {
-                console.warn("No message property found in the data.");
-                return;
-            }
+        if (!messageData || !messageData.message) {
+            console.warn("No message property found in the data.");
+            return;
+        }
 
+        var senderEmail = document.getElementById('emailSend').value;
+        var currentReceiverEmail = document.getElementById('emailRecieved').value;
+        
+        if (
+            (messageData.sender === senderEmail && messageData.receiver === currentReceiverEmail) ||
+            (messageData.receiver === senderEmail && messageData.sender === currentReceiverEmail)
+        ) {
             var chatContent = document.getElementById('chat-content');
             var newMessage = document.createElement('div');
-            var senderEmail = document.getElementById('emailSend').value;
-            var receiverEmail = document.getElementById('emailRecieved').value;
-
-            if (messageData.sender !== senderEmail && messageData.sender !== receiverEmail &&
-                    messageData.receiver !== senderEmail && messageData.receiver !== receiverEmail) {
-                console.log("Message not for this conversation");
-                return;
-            }
-
+            
             newMessage.className = 'message ' + (messageData.sender === senderEmail ? 'sent' : 'received');
 
             var messageContent = document.createElement('div');
@@ -184,101 +183,147 @@
 
             chatContent.appendChild(newMessage);
             scrollToBottom();
+        } else {
+            console.log("Message not for the current conversation: sender=" + messageData.sender + 
+                        ", receiver=" + messageData.receiver + ", current=" + currentReceiverEmail);
+            
+            updateSidebarNewMessage(messageData.sender, messageData.receiver, messageData.message);
         }
-
-        function scrollToBottom() {
-            var chatContent = document.getElementById('chat-content');
-            chatContent.scrollTop = chatContent.scrollHeight;
-        }
-
-        function sendMessage() {
-            var input = document.getElementById('message-input');
-            var messageText = input.value;
-
-            if (messageText.trim() !== "") {
-                if (!isConnected) {
-                    reconnectWebSocket();
-                    setTimeout(function () {
-                        if (isConnected) {
-                            sendMessage();
-                        } else {
-                            alert("Cannot connect to the chat server. Please try again later.");
-                        }
-                    }, 1000);
-                    return;
+    }
+    function updateSidebarNewMessage(sender, receiver, messageText) {
+        var currentUserEmail = document.getElementById('emailSend').value;
+        var contactEmail = sender === currentUserEmail ? receiver : sender;
+        
+        var contactLinks = document.querySelectorAll('.sidebar-content a');
+        var updated = false;
+        
+        for (var i = 0; i < contactLinks.length; i++) {
+            var link = contactLinks[i];
+            if (link.href.includes('email=' + contactEmail)) {
+                var contactElement = link.querySelector('.contact');
+                if (contactElement) {
+                    contactElement.classList.add('new-message');
+                    updated = true;
+                    var timeElement = contactElement.querySelector('.time');
+                    if (timeElement && sender !== currentUserEmail) {
+                        timeElement.textContent = "New message: " + messageText.substring(0, 15) + 
+                                                (messageText.length > 15 ? "..." : "");
+                    }
+                    break;
                 }
-
-                var senderEmail = document.getElementById('emailSend').value;
-                var receiverEmail = document.getElementById('emailRecieved').value;
-
-                if (senderEmail && receiverEmail) {
-                    var messageData = {
-                        type: "message",
-                        sender: senderEmail,
-                        receiver: receiverEmail,
-                        message: messageText
-                    };
-
-                    websocket.send(JSON.stringify(messageData));
-                    console.log("Sent message:", messageData);
-                    input.value = "";
-                } else {
-                    console.error("Email elements not found.");
-                }
-            } else {
-                console.log("Message is empty, not sending.");
             }
         }
+        if (!updated) {
+            console.log("Could not find contact element for " + contactEmail);
+        }
+    }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            var messageInput = document.getElementById('message-input');
-            var sendButton = document.getElementById('send-button');
+    function scrollToBottom() {
+        var chatContent = document.getElementById('chat-content');
+        chatContent.scrollTop = chatContent.scrollHeight;
+    }
 
-            messageInput.addEventListener('keypress', function (event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    sendMessage();
-                }
-            });
+    function sendMessage() {
+        var input = document.getElementById('message-input');
+        var messageText = input.value;
 
-            sendButton.addEventListener('click', function () {
-                sendMessage();
-            });
-
-            scrollToBottom();
-        });
-        function reconnectWebSocket() {
+        if (messageText.trim() !== "") {
             if (!isConnected) {
-                console.log("Attempting to reconnect...");
-                if (websocket) {
-                    websocket.close();
-                }
-                websocket = new WebSocket("ws://localhost:8080/ManagerApartment/chatRoomServer");
-
-                websocket.onopen = function (message) {
-                    isConnected = true;
-                    var senderEmail = document.getElementById('emailSend').value;
-                    websocket.send(JSON.stringify({type: "connect", email: senderEmail}));
-                    console.log("Server reconnected successfully");
-                };
-
-                websocket.onmessage = function (message) {
-                    console.log("Message received: ", message.data);
-                    processMessage(message);
-                };
-
-                websocket.onerror = function (event) {
-                    console.error("WebSocket error: ", event);
-                    isConnected = false;
-                    setTimeout(reconnectWebSocket, 5000);
-                };
-
-                websocket.onclose = function (event) {
-                    console.log("WebSocket connection closed: ", event);
-                    isConnected = false;
-                    setTimeout(reconnectWebSocket, 5000);
-                };
+                reconnectWebSocket();
+                setTimeout(function () {
+                    if (isConnected) {
+                        sendMessage();
+                    } else {
+                        alert("Cannot connect to the chat server. Please try again later.");
+                    }
+                }, 1000);
+                return;
             }
+
+            var senderEmail = document.getElementById('emailSend').value;
+            var receiverEmail = document.getElementById('emailRecieved').value;
+
+            if (senderEmail && receiverEmail) {
+                var messageData = {
+                    type: "message",
+                    sender: senderEmail,
+                    receiver: receiverEmail,
+                    message: messageText
+                };
+
+                websocket.send(JSON.stringify(messageData));
+                console.log("Sent message:", messageData);
+                input.value = "";
+            } else {
+                console.error("Email elements not found.");
+            }
+        } else {
+            console.log("Message is empty, not sending.");
         }
-    </script>
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var messageInput = document.getElementById('message-input');
+        var sendButton = document.getElementById('send-button');
+
+        messageInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        sendButton.addEventListener('click', function () {
+            sendMessage();
+        });
+
+        scrollToBottom();
+        var style = document.createElement('style');
+        style.innerHTML = `
+            .new-message {
+                background-color: rgba(0, 123, 255, 0.1);
+                font-weight: bold;
+            }
+            .new-message .time {
+                font-weight: bold;
+                color: #000000 !important;
+            }
+        `;
+        document.head.appendChild(style);
+    });
+    
+    function reconnectWebSocket() {
+        if (!isConnected) {
+            console.log("Attempting to reconnect...");
+            if (websocket) {
+                websocket.close();
+            }
+            websocket = new WebSocket("ws://localhost:8080/ManagerApartment/chatRoomServer");
+
+            websocket.onopen = function (message) {
+                isConnected = true;
+                var senderEmail = document.getElementById('emailSend').value;
+                websocket.send(JSON.stringify({type: "connect", email: senderEmail}));
+                console.log("Server reconnected successfully");
+            };
+
+            websocket.onmessage = function (message) {
+                console.log("Message received: ", message.data);
+                processMessage(message);
+            };
+
+            websocket.onerror = function (event) {
+                console.error("WebSocket error: ", event);
+                isConnected = false;
+                setTimeout(reconnectWebSocket, 5000);
+            };
+
+            websocket.onclose = function (event) {
+                console.log("WebSocket connection closed: ", event);
+                isConnected = false;
+                setTimeout(reconnectWebSocket, 5000);
+            };
+        }
+    }
+</script>
 </html>

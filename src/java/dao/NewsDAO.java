@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class NewsDAO implements DAOInterface<News, Integer> {
 
@@ -326,5 +327,98 @@ public class NewsDAO implements DAOInterface<News, Integer> {
             System.out.println("Lỗi khi cập nhật tin tức: " + ex.getMessage());
         }
     }
+    public List<News> getRelatedNews(int currentNewsId, int limit) {
+    List<News> list = new ArrayList<>();
+    
+    // 1. Lấy thông tin về bài news hiện tại
+    News currentNews = selectById(currentNewsId);
+    if (currentNews == null) {
+        return list; // Trả về danh sách rỗng nếu không tìm thấy bài hiện tại
+    }
+    
+    // 2. Tạo query để tìm các bài liên quan dựa trên từ khóa trong tiêu đề
+    // và thời gian gần với bài hiện tại, nhưng loại trừ bài hiện tại
+    String sql = "SELECT TOP " + limit + " n.* FROM [News] n " +
+                "WHERE n.NewsID != ? " + 
+                "ORDER BY " +
+                "CASE " +
+                "   WHEN n.Title LIKE ? THEN 10 " + // Ưu tiên bài có tiêu đề tương tự
+                "   ELSE 0 " +
+                "END + " +
+                "(10 - ABS(DATEDIFF(DAY, n.SentDate, ?)) * 0.1) DESC"; // Ưu tiên bài có thời gian gần với bài hiện tại
+    
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        
+        // 3. Set các tham số
+        ps.setInt(1, currentNewsId);
+        
+        // Tìm bài viết có chứa từ khóa trong tiêu đề của bài hiện tại
+        String[] titleWords = currentNews.getTitle().split("\\s+");
+        StringBuilder titlePattern = new StringBuilder();
+        for (String word : titleWords) {
+            if (word.length() > 3) { // Chỉ sử dụng từ có ít nhất 4 ký tự
+                if (titlePattern.length() > 0) {
+                    titlePattern.append(" OR ");
+                }
+                titlePattern.append("n.Title LIKE '%").append(word).append("%'");
+            }
+        }
+        
+        // Nếu không tìm được từ khóa nào, dùng tiêu đề gốc
+        if (titlePattern.length() == 0) {
+            ps.setString(2, "%" + currentNews.getTitle() + "%");
+        } else {
+            ps.setString(2, "%" + titlePattern.toString() + "%");
+        }
+        
+        // Thời gian của bài hiện tại
+        ps.setTimestamp(3, Timestamp.valueOf(currentNews.getSentDate()));
+        
+        // 4. Thực thi query và lấy kết quả
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            News news = new News(
+                rs.getInt("NewsID"),
+                rs.getString("Title"),
+                rs.getString("Description"),
+                rs.getTimestamp("SentDate").toLocalDateTime(),
+                staffdao.selectById(rs.getInt("StaffID")),
+                imagedao.selectById(rs.getInt("ImageID"))
+            );
+            list.add(news);
+        }
+        
+        // 5. Nếu không đủ số lượng bài liên quan, lấy thêm các bài mới nhất
+        if (list.size() < limit) {
+            String additionalSql = "SELECT TOP " + (limit - list.size()) + " * FROM [News] " +
+                                 "WHERE NewsID != ? AND NewsID NOT IN (" +
+                                 list.stream().map(n -> String.valueOf(n.getNewsID()))
+                                     .collect(Collectors.joining(",", "", "")) +
+                                 ") ORDER BY SentDate DESC";
+            
+            try (PreparedStatement psAdditional = connection.prepareStatement(additionalSql)) {
+                psAdditional.setInt(1, currentNewsId);
+                ResultSet rsAdditional = psAdditional.executeQuery();
+                while (rsAdditional.next()) {
+                    News news = new News(
+                        rsAdditional.getInt("NewsID"),
+                        rsAdditional.getString("Title"),
+                        rsAdditional.getString("Description"),
+                        rsAdditional.getTimestamp("SentDate").toLocalDateTime(),
+                        staffdao.selectById(rsAdditional.getInt("StaffID")),
+                        imagedao.selectById(rsAdditional.getInt("ImageID"))
+                    );
+                    list.add(news);
+                }
+            }
+        }
+        
+    } catch (SQLException ex) {
+        Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return list;
+}
 
 }

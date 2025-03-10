@@ -25,8 +25,6 @@
             form {
                 margin-bottom: 20px;
                 padding: 15px;
-                border: 1px solid #ddd;
-                background-color: #f9f9f9;
             }
             .form-group {
                 margin-bottom: 10px;
@@ -96,7 +94,7 @@
                 const newField = document.createElement('div');
                 newField.className = 'url-input-container';
                 newField.innerHTML = '<input type="text" name="urlPatterns" placeholder="URL Pattern" required> ' +
-                        '<button type="button" onclick="this.parentNode.remove()" class="delete-btn">Xóa</button>';
+                        '<button type="button" onclick="this.parentNode.remove()" class="delete-btn">Delete</button>';
                 container.appendChild(newField);
             }
             
@@ -112,7 +110,7 @@
                 if (pattern === '') {
                     input.classList.add('input-error');
                     if (errorSpan) {
-                        errorSpan.textContent = 'URL pattern không được để trống';
+                        errorSpan.textContent = 'URL pattern cannot be empty.';
                         errorSpan.style.display = 'block';
                     }
                     return false;
@@ -122,7 +120,7 @@
                 if (!pattern.startsWith('/') && !pattern.startsWith('*.') && pattern !== '/*') {
                     input.classList.add('input-error');
                     if (errorSpan) {
-                        errorSpan.textContent = 'URL pattern phải bắt đầu bằng / hoặc *. hoặc /*';
+                        errorSpan.textContent = 'URL pattern must start with `/`, `*.`, or `/*`.';
                         errorSpan.style.display = 'block';
                     }
                     return false;
@@ -131,7 +129,7 @@
                     pattern.includes("'") || pattern.includes('&') || pattern.includes('%')) {
                     input.classList.add('input-error');
                     if (errorSpan) {
-                        errorSpan.textContent = 'URL pattern chứa ký tự không hợp lệ';
+                        errorSpan.textContent = 'URL pattern contains invalid characters.';
                         errorSpan.style.display = 'block';
                     }
                     return false;
@@ -141,7 +139,7 @@
                 if (pattern.includes('../') || pattern.includes('./')) {
                     input.classList.add('input-error');
                     if (errorSpan) {
-                        errorSpan.textContent = 'URL pattern không được chứa đường dẫn tương đối';
+                        errorSpan.textContent = 'URL pattern must not contain a relative path.';
                         errorSpan.style.display = 'block';
                     }
                     return false;
@@ -151,7 +149,7 @@
                 if (pattern.length > 200) {
                     input.classList.add('input-error');
                     if (errorSpan) {
-                        errorSpan.textContent = 'URL pattern quá dài (tối đa 200 ký tự)';
+                        errorSpan.textContent = 'URL pattern is too long (maximum 200 characters).';
                         errorSpan.style.display = 'block';
                     }
                     return false;
@@ -180,18 +178,18 @@
         <%@include file="menumanager.jsp" %>
         <div id="main">
             <div class="container" style="background-color: white">
-                <h1>Quản lý Filter Mapping</h1>
+                <h1>Filter Mapping Management</h1>
 
                 <c:if test="${param.success == 'true'}">
-                    <div class="notification">Filter mapping đã được thêm thành công!</div>
+                    <div class="notification">Filter mapping has been added successfully!</div>
                 </c:if>
 
                 <c:if test="${param.deleted == 'true'}">
-                    <div class="notification">Filter mapping đã được xóa thành công!</div>
+                    <div class="notification">Filter mapping has been deleted successfully!</div>
                 </c:if>
                 
                 <c:if test="${param.updated == 'true'}">
-                    <div class="notification">Filter mapping đã được cập nhật thành công!</div>
+                    <div class="notification">Filter mapping has been updated successfully!</div>
                 </c:if>
 
                 <c:if test="${not empty sessionScope.reloadMessage}">
@@ -206,13 +204,13 @@
                 <c:choose>
                     <c:when test="${not empty editMapping}">
                         <!-- Update Form -->
-                        <h2>Cập nhật Filter Mapping</h2>
+                        <h2>Manager Filter Mapping</h2>
                         <form id="updateForm" method="post" action="manage-urls" onsubmit="return validateForm('updateForm')">
                             <input type="hidden" name="action" value="update">
                             <input type="hidden" name="mappingId" value="${editMapping.id}">
 
                             <div class="form-group">
-                                <label for="updateFilterName">Tên Filter:</label>
+                                <label for="updateFilterName">Name Filter:</label>
                                 <select id="updateFilterName" name="filterName" required>
                                     <option value="ManagerFilter" ${editMapping.filterName == 'ManagerFilter' ? 'selected' : ''}>ManagerFilter</option>
                                     <option value="AccountantFilter" ${editMapping.filterName == 'AccountantFilter' ? 'selected' : ''}>AccountantFilter</option>
@@ -232,17 +230,17 @@
                                             <input type="text" name="urlPatterns" value="${pattern}" placeholder="URL Pattern" required
                                                    onblur="validateUrlPattern(this)">
                                             <span class="invalid-feedback"></span>
-                                            <button type="button" onclick="this.parentNode.remove()" class="delete-btn">Xóa</button>
+                                            <button type="button" onclick="this.parentNode.remove()" class="delete-btn">Delete</button>
                                         </div>
                                     </c:forEach>
                                 </div>
-                                <button type="button" onclick="addUrlPatternField('updateForm')" style="margin-left: 100px;">Thêm URL Pattern</button>
+                                <button type="button" onclick="addUrlPatternField('updateForm')" style="margin-left: 100px;">Add URL Pattern</button>
                             </div>
 
                             <div style="margin-left: 100px; margin-top: 15px;">
-                                <button type="submit">Cập nhật Filter Mapping</button>
+                                <button type="submit">Update Filter Mapping</button>
                                 <a href="manage-urls" style="margin-left: 10px; text-decoration: none;">
-                                    <button type="button" style="background-color: #757575;">Hủy</button>
+                                    <button type="button" style="background-color: #757575;">Cancel</button>
                                 </a>
                             </div>
                         </form>
@@ -274,22 +272,22 @@
                                         <span class="invalid-feedback"></span>
                                     </div>
                                 </div>
-                                <button type="button" onclick="addUrlPatternField('addForm')" style="margin-left: 100px;">Thêm URL Pattern</button>
+                                <button type="button" onclick="addUrlPatternField('addForm')" style="margin-left: 100px;">Add URL Pattern</button>
                             </div>
 
-                            <button type="submit" style="margin-left: 100px; margin-top: 15px;">Lưu Filter Mapping</button>
+                            <button type="submit" style="margin-left: 100px; margin-top: 15px;">Save Filter Mapping</button>
                         </form>
                     </c:otherwise>
                 </c:choose>
 
-                <h2>Filter Mappings Hiện Tại</h2>
+                <h2>Current Filter Mappings</h2>
 
                 <table>
                     <tr>
                         <th>ID</th>
-                        <th>Tên Filter</th>
+                        <th>Name Filter</th>
                         <th>URL Patterns</th>
-                        <th>Thao tác</th>
+                        <th>Action</th>
                     </tr>
 
                     <c:forEach items="${filterMappings}" var="mapping">
@@ -304,12 +302,12 @@
                                 </ul>
                             </td>
                             <td>
-                                <a href="?edit=${mapping.id}" class="edit-btn" style="display: inline-block; padding: 5px 10px; margin-right: 5px; text-decoration: none; color: white;">Sửa</a>
+                                <a href="?edit=${mapping.id}" class="edit-btn" style="display: inline-block; padding: 5px 10px; margin-right: 5px; text-decoration: none; color: white;">Update</a>
                                 <form method="post" action="manage-urls" style="display: inline-block;"
-                                      onsubmit="return confirm('Bạn có chắc chắn muốn xóa filter mapping này?');">
+                                      onsubmit="return confirm('Are you sure you want to delete this filter mapping?');">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="urlId" value="${mapping.id}">
-                                    <button type="submit" class="delete-btn">Xóa</button>
+                                    <button type="submit" class="delete-btn">Delete</button>
                                 </form>
                             </td>
                         </tr>

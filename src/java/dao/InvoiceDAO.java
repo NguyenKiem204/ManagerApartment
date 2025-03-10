@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -292,6 +293,31 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
             e.printStackTrace();
         }
     }
+    public List<Double> getRevenueByMonth(int year) {
+    String sql = "SELECT MONTH(DueDate) AS month, SUM(TotalAmount) AS revenue " +
+                 "FROM Invoice WHERE YEAR(DueDate) = ? AND [Status] = 'Paid' " +
+                 "GROUP BY MONTH(DueDate) ORDER BY month";
+    
+    List<Double> revenueList = new ArrayList<>(Collections.nCopies(12, 0.0));
+
+    try (Connection connection = DBContext.getConnection(); 
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        
+        ps.setInt(1, year);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            int month = rs.getInt("month");
+            double revenue = rs.getDouble("revenue");
+            revenueList.set(month - 1, revenue);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    
+    return revenueList;
+}
+
 
     public void insertInvoiceDetail(int invoiceId, InvoiceDetail invoiceDetail) {
         String sql = "INSERT INTO InvoiceDetail (Amount, [Description], InvoiceID, TypeBillID) "

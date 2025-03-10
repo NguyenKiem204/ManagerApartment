@@ -4,6 +4,7 @@
  */
 package dao;
 
+import com.oracle.wls.shaded.org.apache.bcel.generic.AALOAD;
 import java.io.InputStream;
 import java.security.Timestamp;
 import java.sql.Date;
@@ -13,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import model.Apartment;
+import model.Comment;
 import model.Feedback;
 import model.Image;
 import model.ImageFeedback;
@@ -44,11 +46,23 @@ public class Test {
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
         ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
         NotificationDAO notificationDAO = new NotificationDAO();
+        InvoiceDAO invoiceDAO = new InvoiceDAO();
+        CommentDAO commentDAO = new CommentDAO();
         
-        List<String> list = apartmentDAO.getApartmentNames("a");
-        for (String string : list) {
-            System.out.println(string);
-        }
+        // List<Comment> list = commentDAO.getCommentsByNewsId(22);
+        // for (Comment comment : list) {
+        //     System.out.println(comment);
+        // }
+        
+//        List<Double> list = invoiceDAO.getRevenueByMonth(2025);
+//        for (Double double1 : list) {
+//            System.out.println(double1);
+//        }
+        
+        // List<String> list = apartmentDAO.getApartmentNames("a");
+        // for (String string : list) {
+        //     System.out.println(string);
+        // }
         
 //        ManagerFeedback managerFeedback = managerFeedbackDAO.selectById(21);
 //        managerFeedback.setStaffResponse("toi da update response. HEHE");
