@@ -42,11 +42,33 @@
     </head>
     <body>
         <%@include file="/manager/menumanager.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
+<%
+    Integer roleId = (Integer) session.getAttribute("roleId"); // Lấy role từ session
+    String homeUrl = request.getContextPath() + "/home"; // Đường dẫn mặc định
+
+    if (roleId != null) {
+        switch (roleId) {
+            case 4: // Technical role
+                homeUrl = request.getContextPath() + "/technical/home";
+                break;
+            case 2: // Administrative role
+                homeUrl = request.getContextPath() + "/administrative/home";
+                break;
+            case 3: // Example: Manager role
+                homeUrl = request.getContextPath() + "/accountant/home";
+                break;
+            // Thêm case nếu có các vai trò khác
+            default:
+                homeUrl = request.getContextPath() + "/home"; // Mặc định nếu roleId không khớp
+        }
+    }
+%>
         <div id = "main">
             <div class="container">
                 <h2>Thank You!</h2>
                 <p>Your form response has been submitted successfully.</p>
-                <button onclick="window.location.href = 'home'">Comeback Home</button>
+                <button onclick="window.location.href = '<%= homeUrl %>'">Comeback Home</button>
             </div>
         </div>
         <script src="assets/js/bootstrap.bundle.min.js"></script>

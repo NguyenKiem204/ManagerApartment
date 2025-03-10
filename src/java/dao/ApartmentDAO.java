@@ -540,7 +540,7 @@ public List<Apartment> getNotNullOwnerApartments() {
         String sql = "SELECT TOP 5 ApartmentName FROM Apartment WHERE ApartmentName LIKE ?"; // Giới hạn kết quả
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, searchQuery + "%"); // Tìm kiếm theo tiền tố
+            ps.setString(1, "%" + searchQuery + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 apartments.add(rs.getString("ApartmentName"));

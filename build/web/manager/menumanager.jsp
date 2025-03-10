@@ -28,6 +28,7 @@
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <style>
             #notificationContainer {
                 position: relative;
@@ -347,7 +348,7 @@
                                                 href="<%= request.getContextPath() %>/manager/request">Request</a>
                                         </li>
                                         <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>formfeedbackmanager">Feedback Statistics</a>
+                                            <a href="<%= request.getContextPath() %>/manager/formfeedbackmanager">Feedback Statistics</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 2}">
@@ -522,7 +523,7 @@
         </div>
 
         <!--Notify-->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        
         <script>
             $(document).ready(function () {
                 $("#notificationBell").click(function (event) {
@@ -538,11 +539,13 @@
                 });
 
                 function checkNotifications() {
-                    let roleId = <c:out value="${sessionScope.staff.role.roleID}" />;
+                    let roleId = "<c:out value='${sessionScope.roleId}' />";
+                    let residentId = "<c:out value='${sessionScope.resident.residentId}' />";
+                    let staffId = "<c:out value='${sessionScope.staff.staffId}' />";
                     $.ajax({
                         url: "<%= request.getContextPath() %>/GetNotifications",
                         type: "GET",
-                        data: {roleId: roleId},
+                        data: {roleId: roleId, residentId: residentId, staffId: staffId},
                         success: function (response) {
                             console.log("Dữ liệu từ server:", response);
 
@@ -557,8 +560,6 @@
                                     // Xác định URL dựa trên referenceTable
                                     let notificationUrl = getNotificationUrl(notif);
                                     
-                                    console.log("da doc ch: " + liClass);
-                                    console.log("notificationId la: " + notif.notificationId);
                                     $("#notificationList").append(
                                             `<li class="notification-item ` + liClass + `" data-id="`
                                             + notif.notificationId + `"><a href="`+ notificationUrl +`">
@@ -589,7 +590,7 @@ function getNotificationUrl(notif) {
         case "ManagerFeedback":
             return baseUrl + `/feedbackreviewdetail?managerFeedbackId=` + notif.referenceId;
         case "Request":
-            return `#`;
+            return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
         case "Invoice":
             return `#`;
         default:

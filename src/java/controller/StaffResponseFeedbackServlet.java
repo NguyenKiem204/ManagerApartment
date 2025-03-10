@@ -5,6 +5,8 @@
 package controller;
 
 import dao.ManagerFeedbackDAO;
+import dao.NotificationDAO;
+import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,7 +15,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import model.ManagerFeedback;
+import model.Notification;
 import model.Resident;
 import model.Staff;
 
@@ -89,6 +94,13 @@ public class StaffResponseFeedbackServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
               throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
+        Resident resident = (Resident) session.getAttribute("resident");
+        Staff staff = (Staff) session.getAttribute("staff");
+        
+        NotificationDAO notificationDAO = new NotificationDAO();
+        StaffDAO staffDAO = new StaffDAO();
         String managerFeedbackId_raw = request.getParameter("managerFeedbackId");
         String staffResponse = request.getParameter("staffResponse");
         int managerFeedbackId = 0;
@@ -99,6 +111,17 @@ public class StaffResponseFeedbackServlet extends HttpServlet {
             managerFb.setStaffResponse(staffResponse);
             //update staffresponse in DB
             managerFeedbackDAO.update(managerFb);
+
+            //manager received notifycation
+//            Notification notification = new Notification("Staff response feedback review of this month.", "Response", LocalDate.now(), false, managerFeedbackId, "ManagerFeedback", staffDAO.getStaffByRoleIDAndStatus(1, "Adctive"), null);
+            Notification notification = new Notification(staff.getStaffId(), 
+                      "Staff", "Staff response feedback review of this month.",
+                      "Response", LocalDateTime.now(), false, 
+                      managerFeedbackId, "ManagerFeedback", 
+                      staffDAO.getStaffByRoleIDAndStatus(1, "Adctive"), 
+                      null);
+
+            notificationDAO.insert(notification);
         } catch (NumberFormatException e) {
         }
         request.getRequestDispatcher("staffresponsefeedbacksuccessfull.jsp").forward(request, response);

@@ -43,6 +43,12 @@ public class Test {
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
         ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
+        NotificationDAO notificationDAO = new NotificationDAO();
+        
+        List<String> list = apartmentDAO.getApartmentNames("a");
+        for (String string : list) {
+            System.out.println(string);
+        }
         
 //        ManagerFeedback managerFeedback = managerFeedbackDAO.selectById(21);
 //        managerFeedback.setStaffResponse("toi da update response. HEHE");
@@ -56,7 +62,6 @@ public class Test {
 //            System.out.println(request.toString());
 //        }
 
-        NotificationDAO notificationDAO = new NotificationDAO();
         
 //        ManagerFeedback t = new ManagerFeedback(LocalDate.now(), 10, 4.3, 82, 18, "Good luck", "Can cai thien nhieu", null, "training more", LocalDate.now().plusDays(3), LocalDate.now(), staffDAO.getStaffByID(2));
 //        managerFeedbackDAO.insert(t);

@@ -3,16 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/FeedbackReviewDetailServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/owner/RequestServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/LoginServlet.java</file>
             <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/manager/menumanager.jsp</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/feedbackreviewdetail.jsp</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/model/ManagerFeedback.java</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/manager/feedbackdetail.jsp</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/manager/formfeedbackmanager.jsp</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/manager/feedback.jsp</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/newsdetail.jsp</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/dao/Test.java</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/dao/ManagerFeedbackDAO.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/manager/UpdateRequestStatusServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/dao/RequestDAO.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/manager/request.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/GetNotificationsServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/dao/NotificationDAO.java</file>
         </group>
     </open-files>
 </project-private>

@@ -14,7 +14,12 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <!--<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>-->
+        <script>
+            if (typeof jQuery === 'undefined') {
+                document.write('<script src="https://code.jquery.com/jquery-3.6.4.min.js"><\/script>');
+            }
+        </script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -32,6 +37,7 @@
                 margin: auto;
                 border-radius: 10px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                position: relative;
             }
             h2 {
                 text-align: center;
@@ -107,14 +113,14 @@
 
             /*CSS cho gợi ý tên department*/
             .suggestions {
-                border: 1px solid #ccc;
+                border: 0.5px solid #ccc;
                 max-height: 200px;
                 overflow-y: auto;
                 list-style: none;
                 padding: 0;
                 position: absolute;
                 background: white;
-                width: calc(100% - 20px);
+                width: calc(100% - 40px);
                 z-index: 1000;
             }
             .suggestions li {
@@ -127,7 +133,7 @@
         </style>
     </head>
     <body>
-        <%@include file="menuowner.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
         <div id = "main">
             <div class="container">
                 <h2>Resident Request Form</h2>
@@ -136,7 +142,7 @@
                     <input type="text" id="apartment" name="apartment" placeholder="Enter your apartment" required>
                     <span class="error" id="apartmentError">Please enter your apartment</span>
 
-                    <ul id="apartmentSuggestions" class="suggestions"></ul>
+                    <span><ul id="apartmentSuggestions" class="suggestions"></ul></span>
 
                     <label for="title">Title</label>
                     <input type="text" id="title" name="title" placeholder="Enter the title" required>
@@ -168,42 +174,8 @@
                 </form>
             </div>
         </div>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const form = document.getElementById("feedbackForm");
-                const resultText = document.querySelector(".result");
-                const ratingInputs = document.querySelectorAll(".rating input");
-
-                // Form validation
-                form.addEventListener("submit", function (event) {
-                    event.preventDefault();
-                    let isValid = true;
-
-                    function validateField(id, errorId) {
-                        const field = document.getElementById(id);
-                        const error = document.getElementById(errorId);
-                        if (!field.value.trim()) {
-                            error.style.display = "block";
-                            isValid = false;
-                        } else {
-                            error.style.display = "none";
-                        }
-                    }
-
-                    validateField("apartment", "apartmentError");
-                    validateField("title", "titleError");
-                    validateField("service", "serviceError");
-                    validateField("feedback", "feedbackError");
-
-                    if (isValid) {
-                        alert("Feedback submitted successfully!");
-                        form.reset();
-                        resultText.innerText = "You have not rated yet";
-                    }
-                });
-            });
-        </script>
+        <!-- Kiểm tra xem jQuery đã có chưa, nếu chưa mới tải -->
+        
         <script>
             $(document).ready(function () {
                 $('#request').summernote({
@@ -215,39 +187,52 @@
         </script>
 
         <script>
+            // ========== Gợi ý căn hộ ==========
             $(document).ready(function () {
-                $("#apartment").on("input", function () {
-                    let query = $(this).val().trim();
-                    if (query.length >= 1) {
+                const $apartmentInput = $("#apartment");
+                const $suggestions = $("#apartmentSuggestions");
+                let debounceTimer;
+
+                function fetchApartmentSuggestions(query) {
+                    if (query.length < 1) {
+                        $suggestions.empty();
+                        return;
+                    }
+
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
                         $.ajax({
-                            url: "GetApartmentServlet",
+                            url: "<%= request.getContextPath() %>/owner/GetApartmentServlet",
                             method: "GET",
                             data: {search: query},
                             success: function (data) {
-                                console.log(data);
-                                let suggestions = $("#apartmentSuggestions");
-                                suggestions.empty(); // Xóa gợi ý cũ
-                                data.forEach(function (apartment) {
-                                    suggestions.append(`<li>${apartment}</li>`);
-                                });
-
-                                error: function (xhr, status, error) {
-                                    console.error("AJAX error: " + status + " - " + error);
-                                };
-                                $(".suggestions li").click(function () {
-                                    $("#apartment").val($(this).text());
-                                    suggestions.empty(); // Ẩn danh sách sau khi chọn
-                                });
+                                $suggestions.empty();
+                                if (data.length > 0) {
+                                    data.forEach(apartment => {
+                                        console.log("Apartment: " + apartment);
+                                        $suggestions.append(`<li>` + apartment + `</li>`);
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("AJAX error:", status, error);
                             }
                         });
-                    } else {
-                        $("#apartmentSuggestions").empty();
-                    }
+                    }, 300); // Debounce 300ms
+                }
+
+                $apartmentInput.on("input", function () {
+                    fetchApartmentSuggestions($(this).val().trim());
+                });
+
+                $suggestions.on("click", "li", function () {
+                    $apartmentInput.val($(this).text());
+                    $suggestions.empty();
                 });
 
                 $(document).click(function (e) {
                     if (!$(e.target).closest("#apartmentSuggestions, #apartment").length) {
-                        $("#apartmentSuggestions").empty();
+                        $suggestions.empty();
                     }
                 });
             });

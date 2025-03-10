@@ -140,6 +140,7 @@ public class LoginServlet extends HttpServlet {
             Staff staff = staffDAO.checkLogin(email, password);
             if (staff != null) {
                 session.setAttribute("staff", staff);
+                session.setAttribute("roleId", staff.getRole().getRoleID());
 
                 // Kiểm tra nếu mật khẩu có đúng 5 ký tự (lần đầu đăng nhập)
                 if (password.length() == 5) {
@@ -154,6 +155,7 @@ public class LoginServlet extends HttpServlet {
             Resident resident = residentDAO.checkLogin(email, password);
             if (resident != null) {
                 session.setAttribute("resident", resident);
+                session.setAttribute("roleId", resident.getRole().getRoleID());
 
                 // Kiểm tra nếu mật khẩu có đúng 5 ký tự (lần đầu đăng nhập)
                 if (password.length() == 5) {
