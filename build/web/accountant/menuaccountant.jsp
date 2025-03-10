@@ -157,16 +157,19 @@
                                     <span>Request</span>
                                 </a>
                             </li>
+
                             <li class="sidebar-item ">
                                 <a href="index.html" class="sidebar-link">
                                     <i class="bi bi-chat-dots-fill"></i>
                                     <span>FeedBack</span>
                                 </a>
                             </li>
-
-
-
-
+                            <li class="sidebar-item ">
+                                <a href="<%= request.getContextPath() %>/rule" class="sidebar-link">
+                                    <i class="bi bi-receipt-cutoff"></i>
+                                    <span>Regulations</span>
+                                </a>
+                            </li>                            
                             <!-- =================================??ng nh?p, log out..==================== -->
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">

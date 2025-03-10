@@ -1,30 +1,42 @@
 <component name="libraryTable">
   <library name="jar">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/jar/httpclient-4.5.5.jar!/" />
       <root url="jar://$PROJECT_DIR$/jar/sqljdbc42.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/jakarta.servlet.jsp.jstl-2.0.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/jakarta.servlet.jsp.jstl-api-2.0.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/jakarta.activation-2.0.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/jaxb-api-2.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/jjwt-api-0.12.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/jar/annotations-2.0.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/bytes-1.5.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/gson-2.8.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/jakarta.servlet-api-6.1.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/fluent-hc-4.5.5.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/jakarta.mail-2.0.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/httpcore-4.4.9.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/jjwt-impl-0.12.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/jakarta.servlet-api-6.0.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/jakarta.activation-2.0.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/bcrypt-0.10.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/jjwt-jackson-0.12.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/jar/commons-logging-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jakarta.servlet.jsp.jstl-api-2.0.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/jar/lombok.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jsoup-1.18.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/commons-logging-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/commons-codec-1.15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/httpcore-4.4.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/httpclient-4.5.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/logback-classic-1.5.16.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jakarta.servlet-api-6.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/tomcat-websocket-10.1.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jakarta.mail-2.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/bytes-1.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jjwt-api-0.12.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jakarta.websocket-api-2.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jakarta.activation-2.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jakarta.el-api-5.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/bcrypt-0.10.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/jar/java-jwt-4.4.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jjwt-jackson-0.12.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/gson-2.8.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jakarta.activation-2.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jjwt-impl-0.12.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jcl-over-slf4j-2.0.16.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jakarta.websocket-api-2.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/json-20250107.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jakarta.servlet-api-6.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jakarta.servlet-api-5.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/fluent-hc-4.5.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jaxb-api-2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jar/jakarta.servlet.jsp.jstl-2.0.0.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/jar/annotations-2.0.1.jar!/" />
+    </SOURCES>
   </library>
 </component>

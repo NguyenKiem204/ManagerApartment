@@ -313,11 +313,19 @@
                                     <span>Service Fee Information</span>
                                 </a>
                             </li>
-                            <li class="sidebar-item">
-                                <a href="!#" class="sidebar-link">
-                                    <i class="bi bi-puzzle"></i>
+                             <li class="sidebar-item has-sub">
+                                <a href="#" class="sidebar-link">
+                                    <i class="fa-solid fa-users-gear"></i>
                                     <span>Regulations</span>
                                 </a>
+                                <ul class="submenu">
+                                    <li class="submenu-item">
+                                        <a href="<%= request.getContextPath()%>/manager/managerregulations" class="sidebar-link">View Regulations</a>
+                                    </li>
+                                    <li class="submenu-item">
+                                        <a href="<%= request.getContextPath()%>/manager/rule-management">Regulations Management</a>
+                                    </li>
+                                </ul>
                             </li>
                             <!-- =================================Login, Logout..==================== -->
                             <li class="sidebar-item has-sub">

@@ -218,7 +218,7 @@
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="!#" class="sidebar-link">
+                                <a href="<%= request.getContextPath()%>/owner/regulations" class="sidebar-link">
                                     <i class="bi bi-puzzle"></i>
                                     <span>Regulations</span>
                                 </a>
