@@ -24,7 +24,7 @@ import model.Invoices;
  *
  * @author nguye
  */
-@WebServlet(name = "UpdateStatusInvoice", urlPatterns = {"/UpdateStatusInvoice"})
+@WebServlet(name = "UpdateStatusInvoice", urlPatterns = {"/accountant/UpdateStatusInvoice"})
 public class UpdateStatusInvoice extends HttpServlet {
 
     /**
@@ -87,7 +87,7 @@ public class UpdateStatusInvoice extends HttpServlet {
             if (search != null && !search.isEmpty()) {
                 List<Invoices> searchResults = new ArrayList<>();
                 for (Invoices inv : list) {
-                    if (inv.getDescription().toLowerCase().contains(search.toLowerCase())) {
+                    if (inv.getDescription().toLowerCase().contains(search.toLowerCase()) || inv.getApartment().getApartmentName().toLowerCase().contains(search.toLowerCase())) {
                         searchResults.add(inv);
                     }
                 }
@@ -115,7 +115,7 @@ public class UpdateStatusInvoice extends HttpServlet {
             request.setAttribute("selectedFromDate", fromDateStr);
             request.setAttribute("selectedDueDate", dueDateStr);
             session.setAttribute("ListInvoices", list);
-            request.getRequestDispatcher("accountant/UpdateStatusInvoice.jsp").forward(request, response);
+            request.getRequestDispatcher("UpdateStatusInvoice.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             e.printStackTrace();

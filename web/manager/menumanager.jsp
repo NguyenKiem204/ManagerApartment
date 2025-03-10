@@ -29,8 +29,124 @@
               crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css"
+              rel="stylesheet" />
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+        <style>
+            #notificationContainer {
+                position: relative;
+                display: inline-block;
+            }
+
+            #notificationBell {
+                cursor: pointer;
+                font-size: 24px;
+                position: relative;
+            }
+
+            #notificationCount {
+                display: none;
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background: red;
+                color: white;
+                font-size: 12px;
+                font-weight: bold;
+                width: 18px;
+                height: 18px;
+                text-align: center;
+                line-height: 18px;
+                border-radius: 50%;
+            }
+
+            #notificationList {
+                display: none;
+                position: absolute;
+                right: 10px;
+                top: 35px;
+                background: white;
+                border: 1px solid #ddd;
+                width: 300px;
+                max-height: 400px;
+                overflow-y: auto;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                list-style: none;
+                padding: 10px;
+                z-index: 1000;
+                border-radius: 5px;
+            }
+
+            #notificationList li {
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+                cursor: pointer;
+                transition: background 0.2s, font-weight 0.2s;
+                position: relative;
+            }
+
+            #notificationList li.unread {
+                font-weight: bold;
+                background-color: #f9f9f9;
+            }
+
+            #notificationList li.read {
+                font-weight: normal;
+                background-color: white;
+            }
+
+            #notificationList li:hover {
+                background: #f5f5f5;
+            }
+
+            #notificationList li:last-child {
+                border-bottom: none;
+            }
+
+            .notif-header {
+                font-weight: bold;
+                color: #333;
+            }
+
+            .notif-time {
+                display: block;
+                font-size: 12px;
+                color: gray;
+                margin-top: 5px;
+                text-align: right;
+            }
+
+            .notification-item {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .notification-message {
+                font-size: 14px;
+                color: #333;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                /* Hiển thị tối đa 2 dòng */
+                line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-height: 3em;
+                /* Đảm bảo không vượt quá 2 dòng */
+                word-wrap: break-word;
+            }
+
+            .notification-date {
+                font-size: 12px;
+                color: gray;
+                text-align: right;
+                /*margin-top: 5px;*/
+            }
+        </style>
     </head>
 
     <body>
@@ -66,14 +182,14 @@
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                                 <img src="<%= request.getContextPath() %>/${user.image.imageURL}"
                                      class="user-image rounded-circle shadow" alt="User Image" />
-                                <span class="d-none d-md-inline"><c:out value="${user.fullName}"></c:out></span>
+                                <span class="d-none d-md-inline">${user.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                 <li class="user-header text-bg-primary img-drop">
                                     <img src="<%= request.getContextPath() %>/${user.image.imageURL}"
                                          class="rounded-circle shadow" alt="User Image" />
                                     <p>
-                                        <c:out value="${user.fullName}"></c:out> - ${role}
+                                        ${user.fullName} - ${role}
                                         <small>Member since Nov. 2024</small>
                                     </p>
                                 </li>
@@ -463,13 +579,13 @@
                                             `"><a href="` +
                                             notificationUrl +
                                             `">
-                        <div class="notification-message">` +
+            <div class="notification-message">` +
                                             notif.message +
                                             `</div>
-                        <div class="notification-date">` +
+            <div class="notification-date">` +
                                             formattedDate +
                                             `</div>
-                            </a></li>`
+                </a></li>`
                                             );
                                 });
 

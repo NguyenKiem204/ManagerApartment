@@ -23,7 +23,7 @@ import model.TypeBill;
  *
  * @author nguye
  */
-@WebServlet(name = "DetailInvoice", urlPatterns = {"/DetailInvoice"})
+@WebServlet(name = "DetailInvoice", urlPatterns = {"/accountant/DetailInvoice"})
 public class DetailInvoice extends HttpServlet {
 
     /**
@@ -72,7 +72,7 @@ public class DetailInvoice extends HttpServlet {
             List<TypeBill> lt = idao.getAllTypeBills();
 
             request.setAttribute("invoice", inv);
-            request.getRequestDispatcher("accountant/DetailInvoice.jsp").forward(request, response);
+            request.getRequestDispatcher("DetailInvoice.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }

@@ -500,7 +500,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                 params.add(statusID);
                 params.add(roleID);
             } else {
-                sql += " AND StatusID in (2, 3, 4, 5, 6, 7) AND ro.roleID = ? AND st.status = 'Active'";
+                sql += " AND StatusID in (2, 3, 4, 5, 6, 7, 9) AND ro.roleID = ? AND st.status = 'Active'";
                 params.add(roleID);
             }
 
@@ -690,7 +690,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                 params.add(statusID);
                 params.add(roleID);
             } else {
-                sql += " AND StatusID in (2, 3, 4, 5, 6, 7) AND ro.roleID = ? AND st.status = 'Active'";
+                sql += " AND StatusID in (2, 3, 4, 5, 6, 7, 9) AND ro.roleID = ? AND st.status = 'Active'";
                 params.add(roleID);
             }
 
@@ -781,7 +781,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                          FROM Request t Join TypeRequest tr on t.TypeRqID = tr.TypeRqID 
                      		join role ro on tr.RoleID = ro.RoleID 
                      		join Staff st on st.RoleID = ro.RoleID
-                         where t.StatusID in (2, 3, 4, 5, 6, 7) AND tr.RoleID = ? AND st.Status = 'Active'
+                         where t.StatusID in (2, 3, 4, 5, 6, 7, 9) AND tr.RoleID = ? AND st.Status = 'Active'
                          ORDER BY [RequestID] OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY""";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -821,7 +821,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                      SELECT * FROM Request r 
                      join TypeRequest tr on r.TypeRqID = tr.TypeRqID
                      join Staff st on tr.RoleID = st.RoleID 
-                     where StatusID in (2, 3, 4, 5, 6, 7) AND st.RoleID = ? AND st.Status = 'Active'""";
+                     where StatusID in (2, 3, 4, 5, 6, 7, 9) AND st.RoleID = ? AND st.Status = 'Active'""";
         int num = 0;
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {

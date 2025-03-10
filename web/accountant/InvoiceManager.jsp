@@ -125,11 +125,11 @@
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                     <h2>Invoices Manager</h2>
                     <div class="d-flex align-items-center">
-                        <a href="<%= request.getContextPath() %>/UpdateStatusInvoice" class="btn btn-primary d-flex align-items-center me-2">
+                        <a href="<%= request.getContextPath() %>/accountant/UpdateStatusInvoice" class="btn btn-primary d-flex align-items-center me-2">
                             <i class="bi bi-arrow-repeat me-1"></i> Update Status
                         </a>
 
-                        <a href="<%= request.getContextPath() %>/addnewinvoice" class="btn btn-success d-flex align-items-center">
+                        <a href="<%= request.getContextPath() %>/accountant/addnewinvoice" class="btn btn-success d-flex align-items-center">
                             <i class="bi bi-plus-lg me-1"></i> Add New Invoice
                         </a>
                     </div>
@@ -155,7 +155,7 @@
 
                                 <button type="submit" class="btn btn-primary" style="width: 70px;">Filter</button>
 
-                                <a href="<%= request.getContextPath() %>/InvoicesManager" class="btn btn-info btn-sm">
+                                <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-info btn-sm">
                                     <i class="fas fa-sync-alt"></i> <!-- Icon reload -->
                                 </a>
 
@@ -184,12 +184,12 @@
                         <tr>
                             <th>Invoice Code</th>
                             <th>Title</th>
-                            <th>Amount</th>
                             <th>Apartment</th>
                             <th>Status</th>
                             <th>Payment Term</th>
                             <th>Payment Date</th>
                             <th>Public Date</th>
+                            <th>Amount</th>
                             <th>Late(0,1%/d)</th>
                             <th  style="width:30px">Actions</th>
                         </tr>
@@ -199,10 +199,10 @@
                             <tr>
                                 <td>${l.invoiceID}</td>
                                 <td>${l.description}</td>
-                                <td>${l.totalAmount+ l.muon}</td>
+
                                 <td>${l.apartment.apartmentName}</td>
                                 <td>
-                               
+
                                     <c:if test="${'Unpaid' eq l.status}">
                                         <p style="background-color: orange; color: white; border-radius: 8px; padding: 5px; display: inline-block; text-align: center;">
                                             ${l.status}
@@ -217,13 +217,14 @@
                                 <td>${l.dueDateft}</td>
                                 <td>${l.paydateft}</td>
                                 <td>${l.publicDateft}</td>
+                                <td><fmt:formatNumber value="${l.totalAmount + l.muon}" pattern="#0.00"/></td>
                                 <td>
                                     <c:if test="${l.muon != 0}">
                                         <p style="color:red">Islate</p>
                                     </c:if>
                                 </td>
                                 <td style="width:30px">
-                                    <a href="<%= request.getContextPath() %>/DetailInvoice?invoiceID=${l.invoiceID}" class="btn btn-info btn-sm">
+                                    <a href="<%= request.getContextPath() %>/accountant/DetailInvoice?invoiceID=${l.invoiceID}" class="btn btn-info btn-sm">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                 </td>
@@ -231,8 +232,26 @@
                             </tr>
                         </c:forEach>
                     </tbody>
+
                 </table>
-                <c:if test="${not empty  sessionScope.ListInvoices}">
+                <c:set var="totalAmount" value="0"/>
+                <c:forEach items="${sessionScope.ListInvoices}" var="l">
+                    <c:set var="totalAmount" value="${totalAmount + l.totalAmount + l.muon}"/>
+                </c:forEach>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                    <div></div> <!-- Chừa khoảng trống để không ảnh hưởng đến layout -->
+                    <div style="text-align: right; font-size: 18px; font-weight: bold;">
+                        Total Invoice Amount: 
+                        <span style="color: red;">
+                            <fmt:formatNumber value="${totalAmount}" type="number" pattern="#,##0.00"/>
+
+                        </span>
+                    </div>
+                </div>
+
+                <c:if test="${not empty sessionScope.ListInvoices && requestScope.totalPage > 1}">
+
                     <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
                         <c:set var="startPage" value="${requestScope.currentPage - 1}" />
                         <c:set var="endPage" value="${requestScope.currentPage + 1}" />
@@ -277,8 +296,33 @@
 
             </div>
         </div>
+        <% if (request.getAttribute("message") != null) { %>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let errorMessage = "<%= request.getAttribute("message") %>";
+                let notification = document.createElement("div");
+                notification.innerText = errorMessage;
+                notification.style.position = "fixed";
+                notification.style.top = "20px";
+                notification.style.right = "20px";
+                notification.style.backgroundColor = "red";
+                notification.style.color = "white";
+                notification.style.padding = "15px";
+                notification.style.borderRadius = "5px";
+                notification.style.boxShadow = "0px 0px 10px rgba(0,0,0,0.5)";
+                notification.style.zIndex = "1000";
+                notification.style.fontSize = "16px";
+                notification.style.fontWeight = "bold";
+                document.body.appendChild(notification);
 
-
+                // Hiển thị thông báo từ 5 đến 10 giây (ngẫu nhiên)
+                let displayTime = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
+                setTimeout(() => {
+                    notification.remove();
+                }, displayTime);
+            });
+        </script>
+        <% } %>
 
 
 
