@@ -31,8 +31,9 @@
             <div class="custom-select">
                 <label for="userType">User Type</label>
                 <select name="userType" id="userType">
-                    <option value="staff" ${requestScope.userType == 'staff' ? 'selected' : ''}>Staff</option>
-                    <option value="resident" ${(requestScope.userType == null && cookie.remember.value == null) || requestScope.userType == 'resident' ? 'selected' : ''}>Resident</option>
+                    <c:set var="userType" value="${requestScope.userType != null ? requestScope.userType : cookie.userType.value}" />
+                    <option value="staff" ${userType == 'staff' ? 'selected' : ''}>Staff</option>
+                    <option value="resident" ${userType == 'resident' ? 'selected' : ''}>Resident</option>
                 </select>
 
                 <i class="fa fa-chevron-down"></i>

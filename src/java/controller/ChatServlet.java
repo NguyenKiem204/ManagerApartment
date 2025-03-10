@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.Timestamp;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -123,28 +122,5 @@ public class ChatServlet extends HttpServlet {
             request.setAttribute("errorMessage", "An error occurred while loading the chat. Please try again.");
             request.getRequestDispatcher("error.jsp").forward(request, response);
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String action = request.getParameter("action");
-
-        if ("sendMessage".equals(action)) {
-            String sender = request.getParameter("sender");
-            String receiver = request.getParameter("receiver");
-            String message = request.getParameter("message");
-
-            MessageDAO messageDAO = new MessageDAO();
-            messageDAO.sendMessage(sender, receiver, message);
-
-            response.setContentType("application/json");
-            response.getWriter().write("{\"status\":\"success\"}");
-        }
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "Chat Servlet for handling real-time messaging";
     }
 }

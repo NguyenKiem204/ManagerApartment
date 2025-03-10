@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import model.News;
 
 /**
@@ -57,6 +58,8 @@ public class NewsDetailServlet extends HttpServlet {
         }
         NewsDAO newsDAO = new NewsDAO();
         News news = newsDAO.selectById(newsID);
+        List<News> listRelatedNews = newsDAO.getRelatedNews(newsID, 6);
+        request.setAttribute("listRelatedNews", listRelatedNews);
         request.setAttribute("news", news);
         request.getRequestDispatcher("newsdetail.jsp").forward(request, response);
     } 

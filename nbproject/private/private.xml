@@ -1,70 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2"
-                      lastBookmarkId="0" />
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/InvoiceDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/owner/GetApartmentServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/assets/css/error-exception.css</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/owner/DetailInvoiceOwner.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/InvoicesManager.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/error-430.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/MenuServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/LoginServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/manager/managernews.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/auth/TenantFilter.java</file>
-            <file>file:/D:/PR2/ManagerApartment/nbproject/build-impl.xml</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/AddNewInvoices.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/manager/menumanager.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/web/error-404.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/HomeAccountantServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/error-exception.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/auth/AdministrativeFilter.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/CommentDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/css/news.css</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/NewsDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/js/comments.js</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/Request.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/Invoices.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/StaffDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/News.java</file>
             <file>file:/D:/PR2/ManagerApartment/web/manager/home.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/web/assets/vendors/apexcharts/apexcharts.js</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/DBContext.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/owner/CheckPaymentStatusServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/auth/AccountantFilter.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/accountant/menuaccountant.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/Test.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/changepasswordsuccess.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/manager/FormFeedbackManagerServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/ApartmentDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/accountant/InvoiceManager.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/UrlDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/UpdateStatusInvoice.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/ResidentDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/manager/UpdateNewsServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/manager/manage-urls.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/auth/TechnicalFilter.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/tenant/home.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/manager/AdminUrlServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/config/EmailSender.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/ErrorServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/manager/HomeManagerServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/validation/UrlUtils.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/model/Apartment.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/owner/FeedbackSuccessfullServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/UpdateProfileServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/menu.html</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/HomeRedirectServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/error-authorization.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/manager/WebXmlInitializer.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/owner/RequestServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/auth/ServiceFilter.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/owner/FeedbackServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/login.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/auth/ManagerFilter.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/WEB-INF/web.xml</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/Error403Servlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/js/pages/ui-chartjs.js</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/InvoiceDetail.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/Comment.java</file>
             <file>file:/D:/PR2/ManagerApartment/web/assets/js/pages/dashboard.js</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/validation/Validate.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/auth/BlockJspHtmlFilter.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/DetailInvoice.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/Test.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/FeedbackDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/js/bootstrap.min.js.map</file>
             <file>file:/D:/PR2/ManagerApartment/web/news.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/auth/OwnerFilter.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/config/Iconstant.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/css/newsdetail.css</file>
+            <file>file:/D:/PR2/ManagerApartment/web/newsdetail.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/js/main.js</file>
+            <file>file:/D:/PR2/ManagerApartment/web/assets/js/bootstrap.min.js</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/CommentServlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/NewsDetailServlet.java</file>
         </group>
     </open-files>
 </project-private>

@@ -4,12 +4,14 @@
  */
 package dao;
 
+import com.oracle.wls.shaded.org.apache.bcel.generic.AALOAD;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import model.Apartment;
+import model.Comment;
 import model.Feedback;
 import model.Image;
 import model.ImageFeedback;
@@ -41,6 +43,18 @@ public class Test {
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
         ManagerFeedbackDAO managerFeedbackDAO = new ManagerFeedbackDAO();
         NotificationDAO notificationDAO = new NotificationDAO();
+        InvoiceDAO invoiceDAO = new InvoiceDAO();
+        CommentDAO commentDAO = new CommentDAO();
+        
+        List<Comment> list = commentDAO.getCommentsByNewsId(22);
+        for (Comment comment : list) {
+            System.out.println(comment);
+        }
+        
+//        List<Double> list = invoiceDAO.getRevenueByMonth(2025);
+//        for (Double double1 : list) {
+//            System.out.println(double1);
+//        }
 //        }
         
 //        ManagerFeedback t = new ManagerFeedback(LocalDate.now(), 10, 4.3, 82, 18, "Good luck", "Can cai thien nhieu", null, "training more", LocalDate.now().plusDays(3), LocalDate.now(), staffDAO.getStaffByID(2));
@@ -77,9 +91,9 @@ public class Test {
 //        residentDAO.insert(resident);
 //       /
 //        imageDAO.insert(image);
-
-        Staff staff = new Staff("Nguyễn Văn b", "123", "0931654542", "66349834131194", "nkiem349@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(3).build());
-        staffDAO.insert(staff);
+//
+//        Staff staff = new Staff("Nguyễn Văn b", "123", "0931654542", "66349834131194", "nkiem349@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(3).build());
+//        staffDAO.insert(staff);
 
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);

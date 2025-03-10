@@ -64,6 +64,12 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        loadCookies(request);
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
@@ -99,6 +105,17 @@ public class LoginServlet extends HttpServlet {
         for (Cookie cookie : cookies) {
             cookie.setMaxAge(maxAge);
             response.addCookie(cookie);
+        }
+    }
+
+    private void loadCookies(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("userType".equals(cookie.getName())) {
+                    request.setAttribute("userType", cookie.getValue());
+                }
+            }
         }
     }
 
@@ -168,28 +185,28 @@ public class LoginServlet extends HttpServlet {
     private void redirectBasedOnRole(HttpServletResponse response, HttpServletRequest request, int roleID) throws IOException {
         switch (roleID) {
             case 1:
-                redirectToPage(response, request,"/manager/home");
+                redirectToPage(response, request, "/manager/home");
                 break;
             case 2:
-                redirectToPage(response, request,"/administrative/home");
+                redirectToPage(response, request, "/administrative/home");
                 break;
             case 3:
-                redirectToPage(response, request,"/accountant/home");
+                redirectToPage(response, request, "/accountant/home");
                 break;
             case 4:
-                redirectToPage(response, request,"/technical/home");
+                redirectToPage(response, request, "/technical/home");
                 break;
             case 5:
-                redirectToPage(response, request,"/service/home");
+                redirectToPage(response, request, "/service/home");
                 break;
             case 6:
-                redirectToPage(response, request,"/tenant/home");
+                redirectToPage(response, request, "/tenant/home");
                 break;
             case 7:
-                redirectToPage(response, request,"/owner/home");
+                redirectToPage(response, request, "/owner/home");
                 break;
             default:
-                redirectToPage(response, request,"error-403");
+                redirectToPage(response, request, "error-403");
                 break;
         }
     }
@@ -218,4 +235,3 @@ public class LoginServlet extends HttpServlet {
     }// </editor-fold>
 
 }
-

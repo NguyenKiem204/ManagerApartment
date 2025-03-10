@@ -476,10 +476,10 @@
                                 <div class="col-12">
                                     <div class="card border-cam">
                                         <div class="card-header">
-                                            <h4>Số tiền điện</h4>
+                                            <h4>Revenue</h4>
                                         </div>
                                         <div class="card-body">
-                                            <div id="chart-profile-visit"></div>
+                                            <div id="chart-profile-visit" ></div>
                                         </div>
                                     </div>
                                 </div>
@@ -654,6 +654,9 @@
 
             </div>
         </div>
+        <script>
+           var revenueData = ${listRevenue};
+        </script>
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
         <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 

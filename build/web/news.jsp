@@ -11,6 +11,7 @@
     </head>
 
     <body>
+        
         <%@include file="/manager/menumanager.jsp" %>
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/news.css" />
         <div id="main">

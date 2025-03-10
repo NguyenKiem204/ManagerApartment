@@ -28,7 +28,7 @@ public class AdminUrlServlet extends HttpServlet {
                     request.setAttribute("editMapping", mapping);
                 }
             } catch (NumberFormatException e) {
-                request.setAttribute("error", "ID không hợp lệ");
+                request.setAttribute("error", "Invalid ID.");
             }
         }
         
@@ -51,7 +51,7 @@ public class AdminUrlServlet extends HttpServlet {
                 List<String> urlPatterns = validateUrlPatterns(urlPatternsArray);
                 
                 if (urlPatterns.isEmpty()) {
-                    request.setAttribute("error", "Tất cả URL pattern không hợp lệ. Vui lòng kiểm tra lại.");
+                    request.setAttribute("error", "All URL patterns are invalid. Please check again.");
                     doGet(request, response);
                     return;
                 }
@@ -60,7 +60,7 @@ public class AdminUrlServlet extends HttpServlet {
                 reloadFilterMappings(request);
                 response.sendRedirect(request.getContextPath() + "/manager/manage-urls?success=true");
             } else {
-                request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin");
+                request.setAttribute("error", "Please enter all required information.");
                 doGet(request, response);
             }
         } else if ("update".equals(action)) {
@@ -74,7 +74,7 @@ public class AdminUrlServlet extends HttpServlet {
                     List<String> urlPatterns = validateUrlPatterns(urlPatternsArray);
                     
                     if (urlPatterns.isEmpty()) {
-                        request.setAttribute("error", "Tất cả URL pattern không hợp lệ. Vui lòng kiểm tra lại.");
+                        request.setAttribute("error", "All URL patterns are invalid. Please check again.");
                         request.setAttribute("editMapping", urlDAO.getFilterMapping(id));
                         doGet(request, response);
                         return;
@@ -85,11 +85,11 @@ public class AdminUrlServlet extends HttpServlet {
                     reloadFilterMappings(request);
                     response.sendRedirect(request.getContextPath() + "/manager/manage-urls?updated=true");
                 } catch (NumberFormatException e) {
-                    request.setAttribute("error", "ID không hợp lệ");
+                    request.setAttribute("error", "Invalid ID.");
                     doGet(request, response);
                 }
             } else {
-                request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin");
+                request.setAttribute("error", "Please enter all required information.");
                 doGet(request, response);
             }
         } else if ("delete".equals(action)) {
@@ -101,7 +101,7 @@ public class AdminUrlServlet extends HttpServlet {
                     reloadFilterMappings(request);
                     response.sendRedirect(request.getContextPath() + "/manager/manage-urls?deleted=true");
                 } catch (NumberFormatException e) {
-                    request.setAttribute("error", "ID không hợp lệ");
+                    request.setAttribute("error", "Invalid ID.");
                     doGet(request, response);
                 }
             }
