@@ -26,6 +26,16 @@
             <file>file:/D:/PR2/ManagerApartment/web/assets/js/bootstrap.min.js</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/controller/CommentServlet.java</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/controller/NewsDetailServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/owner/RequestServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/FeedbackReviewDetailServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/manager/menumanager.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/feedbackreviewdetail.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/manager/UpdateRequestStatusServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/dao/RequestDAO.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/manager/request.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/owner/request.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/StaffResponseFeedbackServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/owner/menuowner.jsp</file>
         </group>
     </open-files>
 </project-private>

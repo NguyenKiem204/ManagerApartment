@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -83,7 +83,7 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         String userType = request.getParameter("userType");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -119,8 +119,32 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
+//    private void handleLogin(HttpServletRequest request, HttpServletResponse response, String userType, String email, String password)
+//            throws ServletException, IOException {
+//        StaffDAO staffDAO = new StaffDAO();
+//        ResidentDAO residentDAO = new ResidentDAO();
+//        HttpSession session = request.getSession();
+//        session.setMaxInactiveInterval(600);
+//
+//        if ("staff".equalsIgnoreCase(userType)) {
+//            Staff staff = staffDAO.checkLogin(email, password);
+//            if (staff != null) {
+//                session.setAttribute("staff", staff);
+//                redirectBasedOnRole(response, request, staff.getRole().getRoleID());
+//                return;
+//            }
+//        } else if ("resident".equalsIgnoreCase(userType)) {
+//            Resident resident = residentDAO.checkLogin(email, password);
+//            if (resident != null) {
+//                session.setAttribute("resident", resident);
+//                redirectBasedOnRole(response, request, resident.getRole().getRoleID());
+//                return;
+//            }
+//        }
+//        handleLoginFailure(request, response, userType, email, password);
+//    }
     private void handleLogin(HttpServletRequest request, HttpServletResponse response, String userType, String email, String password)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         StaffDAO staffDAO = new StaffDAO();
         ResidentDAO residentDAO = new ResidentDAO();
         HttpSession session = request.getSession();
@@ -130,6 +154,14 @@ public class LoginServlet extends HttpServlet {
             Staff staff = staffDAO.checkLogin(email, password);
             if (staff != null) {
                 session.setAttribute("staff", staff);
+                session.setAttribute("roleId", staff.getRole().getRoleID());
+
+                // Kiểm tra nếu mật khẩu có đúng 5 ký tự (lần đầu đăng nhập)
+                if (password.length() == 5) {
+                    response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
+                    return;
+                }
+
                 redirectBasedOnRole(response, request, staff.getRole().getRoleID());
                 return;
             }
@@ -137,50 +169,20 @@ public class LoginServlet extends HttpServlet {
             Resident resident = residentDAO.checkLogin(email, password);
             if (resident != null) {
                 session.setAttribute("resident", resident);
+                session.setAttribute("roleId", resident.getRole().getRoleID());
+
+                // Kiểm tra nếu mật khẩu có đúng 5 ký tự (lần đầu đăng nhập)
+                if (password.length() == 5) {
+                    response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
+                    return;
+                }
+
                 redirectBasedOnRole(response, request, resident.getRole().getRoleID());
                 return;
             }
         }
         handleLoginFailure(request, response, userType, email, password);
     }
-//private void handleLogin(HttpServletRequest request, HttpServletResponse response, String userType, String email, String password)
-//        throws ServletException, IOException {
-//    StaffDAO staffDAO = new StaffDAO();
-//    ResidentDAO residentDAO = new ResidentDAO();
-//    HttpSession session = request.getSession();
-//    session.setMaxInactiveInterval(600);
-//
-//    if ("staff".equalsIgnoreCase(userType)) {
-//        Staff staff = staffDAO.checkLogin(email, password);
-//        if (staff != null) {
-//            session.setAttribute("staff", staff);
-//            
-//            // Kiểm tra nếu mật khẩu có đúng 5 ký tự (lần đầu đăng nhập)
-//            if (password.length() == 5) {
-//                response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
-//                return;
-//            }
-//
-//            redirectBasedOnRole(response, request, staff.getRole().getRoleID());
-//            return;
-//        }
-//    } else if ("resident".equalsIgnoreCase(userType)) {
-//        Resident resident = residentDAO.checkLogin(email, password);
-//        if (resident != null) {
-//            session.setAttribute("resident", resident);
-//
-//            // Kiểm tra nếu mật khẩu có đúng 5 ký tự (lần đầu đăng nhập)
-//            if (password.length() == 5) {
-//                response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
-//                return;
-//            }
-//
-//            redirectBasedOnRole(response, request, resident.getRole().getRoleID());
-//            return;
-//        }
-//    }
-//    handleLoginFailure(request, response, userType, email, password);
-//}
 
     private void redirectBasedOnRole(HttpServletResponse response, HttpServletRequest request, int roleID) throws IOException {
         switch (roleID) {
@@ -216,7 +218,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void handleLoginFailure(HttpServletRequest request, HttpServletResponse response, String userType, String email, String password)
-            throws ServletException, IOException {
+              throws ServletException, IOException {
         request.setAttribute("userType", userType);
         request.setAttribute("email", email);
         request.setAttribute("password", password);

@@ -70,6 +70,7 @@ public class FeedbackManagerServlet extends HttpServlet {
         // Lấy tham số từ request
         String pageSize_raw = request.getParameter("pageSize");
         String xpage = request.getParameter("page");
+        System.out.println("Page size: " + pageSize_raw);
 
         // Khai báo biến
         int page = 1; // Trang mặc định
@@ -122,7 +123,7 @@ public class FeedbackManagerServlet extends HttpServlet {
 // Nếu có tham số lọc, thực hiện tìm kiếm
             if (keySearch_raw != null || roleID != 0 || rating != 0 || keySort != 0 || xpage != null) {
                 listFirstPage = fbDAO.getAllFeedbacksBySearchOrFilterOrSort(keySearch, roleID, rating, keySort, page, pageSize);
-                int numberOfLine = fbDAO.getNumberOfFeedbacksBySearchOrFilterOrSort(keySearch, roleID, rating, keySort);
+                int numberOfLine = fbDAO.getNumberOfFeedbacksBySearchOrFilterOrSort(keySearch, roleID, rating);
                 num = (numberOfLine % pageSize == 0) ? (numberOfLine / pageSize) : (numberOfLine / pageSize + 1);
             }
         } catch (NumberFormatException e) {

@@ -82,7 +82,7 @@ public class FeedbackServlet extends HttpServlet {
         RoleDAO rdao = new RoleDAO();
         FeedbackDAO feedbackDAO = new FeedbackDAO();
         int latestFeedbackID = feedbackDAO.getLatestFeedbackID();
-        List<Role> listrole = rdao.selectAll();
+        List<Role> listrole = rdao.getListRoleWithStaffExits();
         request.setAttribute("listrole", listrole);
         response.setContentType("text/plain");
         response.getWriter().write(String.valueOf(latestFeedbackID));
@@ -111,11 +111,9 @@ public class FeedbackServlet extends HttpServlet {
         String rating_raw = request.getParameter("rating");
         String description = request.getParameter("description");
         // Loại bỏ HTML & ký tự khoảng trắng
-        String cleanText = Jsoup.parse(description).text().trim();
+        String cleanText = (description != null) ? Jsoup.parse(description).text().trim() : "";
         String error = "error";
-
         RoleDAO rdao = new RoleDAO();
-//        List<Role> listrole = rdao.selectAll();
         List<Role> listrole = rdao.getListRoleWithStaffExits();
 
         //validate title
@@ -152,26 +150,19 @@ public class FeedbackServlet extends HttpServlet {
             request.setAttribute("listrole", listrole);
             request.getRequestDispatcher("feedback.jsp").forward(request, response);
         }
-
+        
         //validate description
         if (description != null) {
-            description = description.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
+            description = description.replaceAll("[\\s\\u00A0]+", " ").trim(); // Loại bỏ khoảng trắng dư thừa
         }
-        
         //check description null or not
-        if (cleanText == null || cleanText.trim().isEmpty()) {
-            request.setAttribute(error, "Description cannot be empty!");
+        if (cleanText.trim().isEmpty() || cleanText.length() < 10) {
+            request.setAttribute(error, "You need to describe this feedback! More 10 characters.");
             request.setAttribute("listrole", listrole);
             request.getRequestDispatcher("feedback.jsp").forward(request, response);
             return;
         }
-        //         Kiểm tra ký tự đặc biệt (chỉ cho phép chữ, số, khoảng trắng, và một số dấu câu)
-//        if (!description.matches("/^[A-Za-zÀ-Ỹà-ỹ0-9.,?!\\-()\\[\\]:; \\n]{10,1000}$")) {
-//            request.setAttribute(error, "Description contains invalid characters hehe!");
-//            request.setAttribute("listrole", listrole);
-//            request.getRequestDispatcher("feedback.jsp").forward(request, response);
-//            return;
-//        };
+         
 
         int rating;
         int roleID;
@@ -191,15 +182,6 @@ public class FeedbackServlet extends HttpServlet {
             return;
         }
 
-        Collection<Part> fileParts = request.getParts();
-        List<ImageFeedback> images = new ArrayList<>();
-
-        for (Part part : fileParts) {
-            if (part.getName().equals("imgURL") && part.getSize() > 0) {
-                InputStream inputStream = part.getInputStream();
-                images.add(new ImageFeedback(inputStream, part.getSize())); // Đọc dữ liệu nhị phân
-            }
-        }
         FeedbackDAO fbDAO = new FeedbackDAO();
         try {
             // Tạo đối tượng Feedback và lưu vào DB

@@ -615,7 +615,7 @@
 <div id="insertApartmentModal" class="modal">
     <div class="modal-content">
         <span class="modal-close">&times;</span>
-        <h2 class="modal-title">Add resident</h2>
+        <h2 class="modal-title">Add apartment</h2>
         <form id="insertApartmentForm">
             <label for="apartmentName" class="modal-label">Apartment Name:</label>
             <input type="text" id="apartmentName" name="apartmentName" class="modal-input" required>

@@ -6,7 +6,10 @@ package dao;
 
 import com.oracle.wls.shaded.org.apache.bcel.generic.AALOAD;
 import java.io.InputStream;
+import java.security.Timestamp;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,16 +49,33 @@ public class Test {
         InvoiceDAO invoiceDAO = new InvoiceDAO();
         CommentDAO commentDAO = new CommentDAO();
         
-        List<Comment> list = commentDAO.getCommentsByNewsId(22);
-        for (Comment comment : list) {
-            System.out.println(comment);
-        }
+        // List<Comment> list = commentDAO.getCommentsByNewsId(22);
+        // for (Comment comment : list) {
+        //     System.out.println(comment);
+        // }
         
 //        List<Double> list = invoiceDAO.getRevenueByMonth(2025);
 //        for (Double double1 : list) {
 //            System.out.println(double1);
 //        }
+        
+        // List<String> list = apartmentDAO.getApartmentNames("a");
+        // for (String string : list) {
+        //     System.out.println(string);
+        // }
+        
+//        ManagerFeedback managerFeedback = managerFeedbackDAO.selectById(21);
+//        managerFeedback.setStaffResponse("toi da update response. HEHE");
+//        managerFeedbackDAO.update(managerFeedback);
+        
+//        ManagerFeedback t = new ManagerFeedback(LocalDate.now(), 16, 4.3, 60, 40, "niceeeeeeeeeeeeeeee", "need to improve moreeeee", null, "skill trainning", LocalDate.of(2025, 3, 12), LocalDateTime.now(), staffDAO.selectById(4));
+//        managerFeedbackDAO.insert(t);
+        
+//        List<Request> list = requestDAO.selectFirstPageOfStaff(4);
+//        for (Request request : list) {
+//            System.out.println(request.toString());
 //        }
+
         
 //        ManagerFeedback t = new ManagerFeedback(LocalDate.now(), 10, 4.3, 82, 18, "Good luck", "Can cai thien nhieu", null, "training more", LocalDate.now().plusDays(3), LocalDate.now(), staffDAO.getStaffByID(2));
 //        managerFeedbackDAO.insert(t);
@@ -91,7 +111,11 @@ public class Test {
 //        residentDAO.insert(resident);
 //       /
 //        imageDAO.insert(image);
-//
+
+
+//        Staff staff = new Staff("Nguyễn Quang Dũng", "123", "0325476595", "035204007777", "quangdungvt5822@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(1).build());
+//        staffDAO.insert(staff);
+
 //        Staff staff = new Staff("Nguyễn Văn b", "123", "0931654542", "66349834131194", "nkiem349@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(3).build());
 //        staffDAO.insert(staff);
 

@@ -5,6 +5,7 @@
 package controller.owner;
 
 import dao.ApartmentDAO;
+import dao.NotificationDAO;
 import dao.RequestDAO;
 import dao.StaffDAO;
 import dao.StatusRequestDAO;
@@ -18,10 +19,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import model.Apartment;
+import model.Notification;
 import model.Request;
 import model.Resident;
+import model.Staff;
 import model.TypeRequest;
 import org.jsoup.Jsoup;
 import validation.Validate;
@@ -89,9 +93,12 @@ public class RequestServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
               throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Resident resident = (Resident) session.getAttribute("resident"); // Loi vi dang xung dot resident va resident detail
-
+        Resident resident = (Resident) session.getAttribute("resident");
+        Staff staff = (Staff) session.getAttribute("staff");
+        
         StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
+        RequestDAO requestDAO = new RequestDAO();
+        NotificationDAO notificationDAO = new NotificationDAO();
         StaffDAO staffDAO = new StaffDAO();
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
         ApartmentDAO apartmentDAO = new ApartmentDAO();
@@ -159,7 +166,7 @@ public class RequestServlet extends HttpServlet {
         
         //check description empty or not
         if (description != null) {
-            description = description.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
+            description = description.trim().replaceAll("[\\s\\u00A0]+", " "); // Loại bỏ khoảng trắng dư thừa
         }
 //        if (!description.matches("^[a-zA-Z0-9 .,!?()-]+$")) {
 //            request.setAttribute(error, "Description contains invalid characters!");
@@ -168,8 +175,8 @@ public class RequestServlet extends HttpServlet {
 //            return;
 //        }
         //check description null or not
-        if (cleanText == null || cleanText.trim().isEmpty()) {
-            request.setAttribute(error, "Description cannot be empty!");
+        if (cleanText.trim().isEmpty() || cleanText.length() < 10) {
+            request.setAttribute(error, "You need to describe this feedback! More 10 characters.");
             request.setAttribute("listtyperq", listrq);
             request.getRequestDispatcher("request.jsp").forward(request, response);
             return;
@@ -180,7 +187,7 @@ public class RequestServlet extends HttpServlet {
         try {
             typerq = Integer.parseInt(typerq_raw);
             Apartment apartment = apartmentDAO.getApartmentByName(apartmentName);
-            Request rq = new Request(description, title, LocalDate.now(), statusRequestDAO.selectById(1), resident, typeRequestDAO.selectById(typerq), apartmentDAO.getApartmentByName(apartmentName));
+            Request rq = new Request(description, title, LocalDate.now(), statusRequestDAO.selectById(1), resident, typeRequestDAO.selectById(typerq), apartment);
             System.out.println(rq.toString());
             int row = rqDAO.insert(rq);
             if (row != 0) {
@@ -189,6 +196,16 @@ public class RequestServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Invalid service type");
         }
+        
+        Staff staffRole = staffDAO.getStaffByRoleIDAndStatus(1, "Active");
+        
+        //gửi thông báo đến manager
+        Notification notification = new Notification(resident.getResidentId(), 
+                  "Resident", "New request form resident.", "request",
+                  LocalDateTime.now(), false, requestDAO.selectLastId(), 
+                  "Request", staffRole, null);
+        notificationDAO.insert(notification);
+        
         request.setAttribute("listtyperq", listrq);
         request.getRequestDispatcher("request.jsp").forward(request, response);
     }

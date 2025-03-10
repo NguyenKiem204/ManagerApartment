@@ -133,7 +133,50 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
 
     @Override
     public Request selectById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "SELECT * FROM [Request] WHERE RequestID = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Kiểm tra nếu CompletedAt không NULL thì chuyển thành LocalDate, nếu NULL thì gán null
+                    java.sql.Date completedAtSql = rs.getDate("CompletedAt");
+                    LocalDate completedAt = (completedAtSql != null) ? completedAtSql.toLocalDate() : null;
+
+                    // Kiểm tra nếu ViewedAt không NULL thì chuyển thành LocalDate, nếu NULL thì gán null
+                    java.sql.Date viewedAtSql = rs.getDate("ViewedAt");
+                    LocalDate viewedAt = (viewedAtSql != null) ? viewedAtSql.toLocalDate() : null;
+
+                    Request rq = new Request(rs.getInt("RequestID"),
+                              rs.getString("Description"),
+                              rs.getString("Title"),
+                              rs.getDate("Date").toLocalDate(),
+                              statusrequestdao.selectById(rs.getInt("StatusID")),
+                              residentdao.selectById(rs.getInt("ResidentID")),
+                              typerequestdao.selectById(rs.getInt("TypeRqID")),
+                              apartmentdao.selectById(rs.getInt("ApartmentID")),
+                              completedAt,
+                              viewedAt
+                    );
+                    return rq;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public int selectLastId() {
+        String sql = "SELECT MAX([RequestID]) FROM [ApartmentManagement].[dbo].[Request];";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1); // Lấy giá trị MAX(NotificationID)
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerFeedbackDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0; // Trả về 0 nếu không có dữ liệu
     }
 
     public List<Request> getAllRequestsSortedByResident() {

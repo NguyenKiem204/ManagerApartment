@@ -6,7 +6,10 @@ package controller.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import dao.NotificationDAO;
 import dao.RequestDAO;
+import dao.StaffDAO;
+import dao.StatusRequestDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,7 +17,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.BufferedReader;
+import java.time.LocalDateTime;
+import model.Notification;
+import model.Request;
+import model.Resident;
+import model.Staff;
+import model.StatusRequest;
 
 /**
  *
@@ -90,7 +100,36 @@ public class UpdateRequestStatusServlet extends HttpServlet {
             // Gọi DAO để cập nhật trạng thái trong DB
             RequestDAO requestDAO = new RequestDAO();
             boolean updated = requestDAO.updateStatus(requestId, newStatus);
+            Request rq = requestDAO.selectById(requestId);
+            //lay roleId dua vao typr request cua request duoc gui
+            int roleId = rq.getTypeRq().getRole().getRoleID();
+            
+            StatusRequestDAO statusRequestDAO = new StatusRequestDAO();
+            StatusRequest sr = statusRequestDAO.selectById(newStatus);
 
+            //gửi thông báo đến manager
+            HttpSession session = request.getSession();
+            Staff staff = (Staff) session.getAttribute("staff");
+            NotificationDAO notificationDAO = new NotificationDAO();
+            StaffDAO staffDAO = new StaffDAO();
+            Staff st = staffDAO.getStaffByRoleIDAndStatus(roleId, "Active");
+            Notification notification;
+            
+            //bảng notify có resident từ đầu đến cuối để theo dõi quá trình
+            if (newStatus != 1 && newStatus != 8) {
+                notification = new Notification(staff.getStaffId(),
+                      "Staff", "Request updated new status: " + sr.getStatusName(), "request", 
+                      LocalDateTime.now(), false, requestId, 
+                      "Request", st, rq.getResident());
+            }else{
+                notification = new Notification(staff.getStaffId(),
+                      "Staff", "Request updated new status: " + sr.getStatusName(), "request", 
+                      LocalDateTime.now(), false, requestId, "Request", 
+                          null, rq.getResident());
+            }
+            //bảng notify có staff khi statusId từ >=2
+            notificationDAO.insert(notification);
+            
             JsonObject jsonResponse = new JsonObject();
             jsonResponse.addProperty("success", updated);
             out.print(jsonResponse.toString());

@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller.technical;
+package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,8 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author admin
  */
-@WebServlet(name="FeedbackReviewDetailServlet", urlPatterns={"/technical/feedbackreviewdetail"})
-public class FeedbackReviewDetailServlet extends HttpServlet {
+@WebServlet(name="RequestDetailServlet", urlPatterns={"/requestdetail"})
+public class RequestDetailServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +35,10 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FeedbackReviewDetailServlet</title>");  
+            out.println("<title>Servlet RequestDetailServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet FeedbackReviewDetailServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet RequestDetailServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,7 +55,7 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
+        request.getRequestDispatcher("requestdetail.jsp").forward(request, response);
     } 
 
     /** 

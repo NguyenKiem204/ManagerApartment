@@ -125,9 +125,7 @@
                             <th>Rating (⭐)</th>
                             <th>Submission Date</th>
                         </tr>
-                        <!--                        <tbody id="feedback-list">
-                                                     Data will be added here 
-                                                </tbody>-->
+                        
                         <tbody id="feedback-list">
                             
                         </tbody>

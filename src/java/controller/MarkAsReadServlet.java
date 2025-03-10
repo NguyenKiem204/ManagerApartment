@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller.technical;
+package controller;
 
 import dao.NotificationDAO;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author admin
  */
-@WebServlet(name="MarkAsReadServlet", urlPatterns={"/technical/MarkAsRead"})
+@WebServlet(name="MarkAsReadServlet", urlPatterns={"/MarkAsRead"})
 public class MarkAsReadServlet extends HttpServlet {
    
     /** 
