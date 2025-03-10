@@ -78,8 +78,7 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
         Resident resident = (Resident) session.getAttribute("resident");
         Staff staff = (Staff) session.getAttribute("staff");
 
-        // Kiểm tra quyền truy cập (chỉ cho phép Staff ngoại trừ Manager)
-        if (resident != null || staff == null || staff.getRole().getRoleID() == 1) {
+        if (resident != null || staff == null) {
             request.setAttribute("errorCode", "403");
             request.setAttribute("errorMessage", "You do not have permission to access!");
             request.getRequestDispatcher("error-authorization.jsp").forward(request, response);

@@ -42,7 +42,6 @@
     </head>
     <body>
         <%@include file="/manager/menumanager.jsp" %>
-        <%@include file="/manager/menumanager.jsp" %>
 <%
     Integer roleId = (Integer) session.getAttribute("roleId"); // Lấy role từ session
     String homeUrl = request.getContextPath() + "/home"; // Đường dẫn mặc định

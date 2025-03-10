@@ -28,7 +28,7 @@
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
               crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        
         <style>
             #notificationContainer {
                 position: relative;
@@ -322,7 +322,7 @@
                                     </a>
                                 </li>
                             </c:if>
-                            <c:if test="${sessionScope.staff.role.roleID == 7}">
+                            <c:if test="${sessionScope.resident.role.roleID == 7}">
                                 <li class="sidebar-item">
                                     <a href="<%= request.getContextPath() %>/ViewInvoice"
                                        class="sidebar-link">
@@ -523,7 +523,7 @@
         </div>
 
         <!--Notify-->
-        
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <script>
             $(document).ready(function () {
                 $("#notificationBell").click(function (event) {

@@ -114,12 +114,17 @@ public class StaffResponseFeedbackServlet extends HttpServlet {
 
             //manager received notifycation
 //            Notification notification = new Notification("Staff response feedback review of this month.", "Response", LocalDate.now(), false, managerFeedbackId, "ManagerFeedback", staffDAO.getStaffByRoleIDAndStatus(1, "Adctive"), null);
+//            Notification notification = new Notification(staff.getStaffId(), 
+//                      "Staff", "Staff response feedback review of this month.",
+//                      "Response", LocalDateTime.now(), false, 
+//                      managerFeedbackId, "ManagerFeedback", 
+//                      staffDAO.getStaffByRoleIDAndStatus(1, "Adctive"), 
+//                      null);
+
             Notification notification = new Notification(staff.getStaffId(), 
-                      "Staff", "Staff response feedback review of this month.",
-                      "Response", LocalDateTime.now(), false, 
-                      managerFeedbackId, "ManagerFeedback", 
-                      staffDAO.getStaffByRoleIDAndStatus(1, "Adctive"), 
-                      null);
+                  "Staff", "Staff response feedback review of this month.", "ManagerFeedback",
+                  LocalDateTime.now(), false, managerFeedbackId, 
+                  "ManagerFeedback", staffDAO.getStaffByRoleIDAndStatus(1, "Active"), null);
 
             notificationDAO.insert(notification);
         } catch (NumberFormatException e) {
