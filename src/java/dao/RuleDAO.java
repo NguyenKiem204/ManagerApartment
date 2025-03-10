@@ -4,7 +4,6 @@
  */
 package dao;
 
-import com.oracle.wls.shaded.org.apache.bcel.generic.AALOAD;
 import model.Rule;
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,13 +21,13 @@ public class RuleDAO implements DAOInterface<Rule, Integer> {
     public int insert(Rule rule) {
         // TODO: chua add staffID
         int row = 0;
-        String sqlInsert = "INSERT INTO [Rule] (RuleName, RuleDescription, PublicDate) \n"
-                + "VALUES (?, ?, ?);";
+        String sqlInsert = "INSERT INTO [Rule] (RuleName, RuleDescription, PublicDate, StaffID) \n"
+                + "VALUES (?, ?, ?, ?);";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlInsert)) {
             ps.setString(1, rule.getRuleName());
             ps.setString(2, rule.getRuleDescription());
             ps.setDate(3, Date.valueOf(rule.getPublicDate()));
-//            ps.setInt(4, rule.getStaffID());
+            ps.setInt(4, rule.getStaff().getStaffId());
 
             row = ps.executeUpdate();
         } catch (SQLException ex) {
@@ -131,6 +130,40 @@ public class RuleDAO implements DAOInterface<Rule, Integer> {
         return list;
     }
 
+    public List<Rule> selectAllPaging(int pageNumber, int pageSize) {
+        List<Rule> list = new ArrayList<>();
+        StaffDAO staffDAO = new StaffDAO();
+        String sql = "SELECT [RuleID]\n"
+                + "	 , [RuleName]\n"
+                + "	 , [RuleDescription]\n"
+                + "	 , [PublicDate]\n"
+                + "	 , [StaffID]\n"
+                + "  FROM [Rule]\n"
+                + " ORDER BY RuleID\n"
+                + "OFFSET ? ROWS \n" // (PageNumber - 1) * PageSize
+                + "	FETCH NEXT ? ROWS ONLY;"; // PageSize 
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            int offset = (pageNumber - 1) * pageSize;
+            ps.setInt(1, offset);
+            ps.setInt(2, pageSize);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Rule rule = new Rule(
+                        rs.getInt("RuleID"),
+                        rs.getString("RuleName"),
+                        rs.getString("RuleDescription"),
+                        rs.getDate("PublicDate").toLocalDate(),
+                        staffDAO.getStaffByID(rs.getInt("StaffID"))
+                );
+                list.add(rule);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RuleDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
     public List<Rule> selectByName(String name) {
         List<Rule> list = new ArrayList<>();
         StaffDAO staffDAO = new StaffDAO();
@@ -174,6 +207,44 @@ public class RuleDAO implements DAOInterface<Rule, Integer> {
                 Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, "%" + str + "%"); // Đặt tham số cho câu lệnh SQL
 
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) { // Duyệt qua tất cả kết quả tìm được
+                    Rule rule = new Rule(
+                            rs.getInt("RuleID"),
+                            rs.getString("RuleName"),
+                            rs.getString("RuleDescription"),
+                            rs.getDate("PublicDate").toLocalDate(),
+                            staffDAO.getStaffByID(rs.getInt("StaffID"))
+                    );
+                    list.add(rule); // Thêm vào danh sách
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RuleDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list; // Trả về danh sách các Rule
+    }
+
+    public List<Rule> searchByNamePaging(String str, int pageNumber, int pageSize) {
+        List<Rule> list = new ArrayList<>();
+        StaffDAO staffDAO = new StaffDAO();
+        String sql = "SELECT [RuleID]\n"
+                + "	 , [RuleName]\n"
+                + "	 , [RuleDescription]\n"
+                + "	 , [PublicDate]\n"
+                + "	 , [StaffID]\n"
+                + "  FROM [Rule]\n"
+                + " WHERE RuleName LIKE ?\n"
+                + " ORDER BY RuleID\n"
+                + "OFFSET ? ROWS \n" // (PageNumber - 1) * PageSize
+                + "	FETCH NEXT ? ROWS ONLY;"; // PageSize 
+
+        try (
+                Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + str + "%"); // Đặt tham số cho câu lệnh SQL
+            int offset = (pageNumber - 1) * pageSize;
+            ps.setInt(2, offset);
+            ps.setInt(3, pageSize);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) { // Duyệt qua tất cả kết quả tìm được
                     Rule rule = new Rule(

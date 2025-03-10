@@ -42,11 +42,15 @@ public class Rule {
         this.ruleDescription = ruleDescription;
         this.publicDate = publicDate;
         // them staffID vao day
+        Staff staff = new Staff();
+        staff.setStaffId(1);
+        this.staff = staff;
     }
 
     public Rule(int ruleID) {
         this.ruleID = ruleID;
     }
+
     public String getFormattedPublicDate() {
         if (publicDate == null) {
             return "";
@@ -54,5 +58,5 @@ public class Rule {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return publicDate.format(formatter);
     }
-   
+
 }

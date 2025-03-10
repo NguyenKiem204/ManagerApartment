@@ -10,3 +10,4 @@ build/web/META-INF/
 *.war
 *.class
 .idea
+.class

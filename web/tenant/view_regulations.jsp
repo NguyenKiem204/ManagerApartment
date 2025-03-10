@@ -164,10 +164,8 @@
             }
         </style>
         <script>
-            function redirectToPage(url) {
-                if (url) {
-                    window.location.href = url;
-                }
+            function submitForm() {
+                document.getElementById("filterAndPagination").submit();
             }
 
         </script>
@@ -175,18 +173,19 @@
     <body>
         <div class="container-lg">
             <div class="table-responsive">
-                <div class="table-wrapper">			
-                    <div class="table-title">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <h2><b>Regulations</b></h2>
-                            </div>
-                            <div class="col-sm-6  d-flex justify-content-end">
-                                <form id="filterForm" 
-                                      action="/ManagerApartment/owner/regulations" 
-                                      method="POST" 
-                                      class="d-flex align-items-center mb-3"
-                                      >
+                <div class="table-wrapper">
+                    <form id="filterAndPagination" 
+                          action="/ManagerApartment/tenant/regulations" 
+                          method="POST" 
+                          class=""
+                          >
+                        <div class="table-title">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h2><b>Regulations</b></h2>
+                                </div>
+                                <div class="col-sm-6  d-flex justify-content-end">
+
                                     <div class="search-box">
                                         <div class="input-group">								
                                             <input type="text" 
@@ -201,69 +200,46 @@
                                             </button>
                                         </div>
                                     </div>
-                                </form>
+
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th style="width: 20%;">Regulations Name</th>
-                                <th style="width: 60%;">Description</th>
-                                <th>Public Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="rule" items = "${rulesList}" varStatus= "loop">
-
+                        <table class="table table-striped">
+                            <thead>
                                 <tr>
-                                    <td>${loop.index+1}</td>
-                                    <td>${rule.ruleName}</td>
-                                    <td>${rule.ruleDescription}</td>
-                                    <td>${rule.formattedPublicDate}</td>
+                                    <th>#</th>
+                                    <th style="width: 20%;">Regulations Name</th>
+                                    <th style="width: 60%;">Description</th>
+                                    <th>Public Date</th>
                                 </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                    <!-- Pagination -->
-<!--                    <div class="d-flex justify-content-end mt-3">
-                        ${pageNumber}/${totalPages}
-                        <select 
-                            id="pageSelector" 
-                            class="form-control w-auto"
-                            onchange="redirectToPage(this.value)"
-                            >
-                            <c:forEach var="i" begin="1" end="${totalPages}">
-                                <option 
-                                    value="?page=${i}" 
-                                    class="page-item
-                                    <c:if test="${pageNumber eq i}">selected</c:if>"
-                                        >
-                                        Page ${i}
-                                </option>
-                            </c:forEach>
-                        </select>
-                    </div>-->
-                    <div class="d-flex justify-content-end position-relative mt-2">
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" 
-                                    type="button" 
-                                    id="dropdownMenuButton" 
-                                    data-bs-toggle="dropdown" 
-                                    data-bs-display="static" 
-                                    aria-haspopup="true" 
-                                    aria-expanded="false">
-                                Page ${pageNumber}
-                            </button>
-                            <div class="dropdown-menu show-on-top" aria-labelledby="dropdownMenuButton">
-                                <c:forEach var="i" begin="1" end="${totalPages}">
-                                    <a class="dropdown-item" href="?page=${i}">Page ${i}</a>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="rule" items = "${rulesList}" varStatus= "loop">
+
+                                    <tr>
+                                        <td>${loop.index+1}</td>
+                                        <td>${rule.ruleName}</td>
+                                        <td>${rule.ruleDescription}</td>
+                                        <td>${rule.formattedPublicDate}</td>
+                                    </tr>
                                 </c:forEach>
-                            </div>
+                            </tbody>
+                        </table>
+                        <!-- Pagination -->
+                        <div class="d-flex justify-content-end mt-3">
+                            <select name="page" 
+                                    id="pageSelector" 
+                                    class="form-control w-auto d-inline" 
+                                    onchange="submitForm()">
+                                <c:forEach var="i" begin="1" end="${totalPages}">
+                                    <option value="${i}" ${pageNumber eq i ? 'selected' : ''}>
+                                        Page ${i}
+                                    </option>
+                                </c:forEach>
+                            </select>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
