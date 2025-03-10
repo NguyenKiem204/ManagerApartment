@@ -26,16 +26,16 @@
                 <!-- Bài viết chi tiết -->
                 <div class="card">
                     <div class="card-body">
-                        <h1 class="card-title fs-2 text-center fw-bold">${news.title}</h1>
+                        <h1 class="card-title fs-2 text-center fw-bold"><c:out value="${news.title}"></c:out></h1>
                         <!-- Thông tin tác giả -->
                         <div class="author-info">
                             <div class="author-avatar">
                                 <img src="<%= request.getContextPath() %>/${news.staff.image.imageURL}"
-                                     alt="Avatar ${news.staff.fullName}">
+                                 alt="Avatar <c:out value="${news.staff.fullName}"></c:out>">
                             </div>
                             <div class="author-details">
-                                <span class="author-name">${news.staff.fullName}</span>
-                                <span class="post-date">Create date: ${news.formattedDate}</span>
+                                <span class="author-name"><c:out value="${news.staff.fullName}"></c:out></span>
+                                <span class="post-date">Create date: <c:out value="${news.formattedDate}"></c:out></span>
                             </div>
                         </div>
                         <div class="card-text">
@@ -81,13 +81,13 @@
                             <c:when test="${sessionScope.staff != null}">
                                 <input type="hidden" id="userId" name="userId" value="${sessionScope.staff.staffId}">
                                 <input type="hidden" id="userType" name="userType" value="Staff">
-                                <input type="hidden" id="userName" name="userName" value="${sessionScope.staff.fullName}">
+                                <input type="hidden" id="userName" name="userName" value="<c:out value="${sessionScope.staff.fullName}"></c:out>">
                                 <input type="hidden" id="userAvatar" name="userAvatar" value="${pageContext.request.contextPath}/${sessionScope.staff.image.imageURL}">
                             </c:when>
                             <c:when test="${sessionScope.resident != null}">
                                 <input type="hidden" id="userId" name="userId" value="${sessionScope.resident.residentId}">
                                 <input type="hidden" id="userType" name="userType" value="Resident">
-                                <input type="hidden" id="userName" name="userName" value="${sessionScope.resident.fullName}">
+                                <input type="hidden" id="userName" name="userName" value="<c:out value="${sessionScope.resident.fullName}"></c:out>">
                                 <input type="hidden" id="userAvatar" name="userAvatar" value="${pageContext.request.contextPath}/${sessionScope.resident.image.imageURL}">
                             </c:when>
                             <c:otherwise>
@@ -113,7 +113,6 @@
                     <!-- Danh sách bình luận -->
                     <div class="mt-4">
                         <div id="comments-list">
-                            <!-- Comments will be loaded here via AJAX -->
                             <div class="text-center">
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="visually-hidden">Loading...</span>
@@ -155,9 +154,13 @@
                     }
                 });
             });
+            
+             var newsElement = document.querySelector('#news');
+            newsElement.classList.add("active");
+            document.querySelector('.news-active').classList.add('active')
+            document.querySelector('.news-itemm a').style.color = '#d5460d';
         </script>
         
-        <!-- Comments AJAX functionality -->
         <script src="<%= request.getContextPath() %>/assets/js/comments.js"></script>
     </body>
 

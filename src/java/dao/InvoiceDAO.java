@@ -633,6 +633,20 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         }
         return invoices;
     }
+    public int getCountInvoiceUnpaid() {
+        String sql = "SELECT count(*) FROM Invoice WHERE Status = 'Unpaid'";
+        int num = 0;
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                num = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InvoiceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return num;
+    }
     
     public static void main(String[] args) {
         // Create an instance of the class that contains the filterInvoices method (assuming it's named InvoiceDAO)

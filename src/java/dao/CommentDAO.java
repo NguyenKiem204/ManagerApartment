@@ -92,7 +92,71 @@ public class CommentDAO implements DAOInterface<Comment, Integer> {
         }
         return list;
     }
+    public List<Comment> selectTop2CommentRecent() {
+    List<Comment> list = new ArrayList<>();
+    String sql = "SELECT TOP 2 c.*, " +
+                "CASE " +
+                "   WHEN c.UserType = 'Staff' THEN s.FullName " +
+                "   WHEN c.UserType = 'Resident' THEN r.FullName " +
+                "   ELSE 'Unknown User' " +
+                "END AS UserName, " +
+                "CASE " +
+                "   WHEN c.UserType = 'Staff' THEN si.ImageURL " +
+                "   WHEN c.UserType = 'Resident' THEN ri.ImageURL " +
+                "   ELSE 'default_avatar.jpg' " +
+                "END AS UserAvatar " +
+                "FROM Comment c " +
+                "LEFT JOIN Staff s ON c.UserID = s.StaffID AND c.UserType = 'Staff' " +
+                "LEFT JOIN Resident r ON c.UserID = r.ResidentID AND c.UserType = 'Resident' " +
+                "LEFT JOIN Image si ON s.ImageID = si.ImageID " +
+                "LEFT JOIN Image ri ON r.ImageID = ri.ImageID " +
+                "ORDER BY c.CommentDate DESC";
 
+    try (Connection connection = DBContext.getConnection(); 
+         PreparedStatement ps = connection.prepareStatement(sql); 
+         ResultSet rs = ps.executeQuery()) {
+        
+        while (rs.next()) {
+            Comment comment = new Comment(
+                rs.getInt("CommentID"),
+                rs.getInt("NewsID"),
+                rs.getInt("UserID"),
+                rs.getString("UserType"),
+                rs.getString("Content"),
+                rs.getTimestamp("CommentDate").toLocalDateTime()
+            );
+            comment.setUserName(rs.getString("UserName"));
+            comment.setUserAvatar(rs.getString("UserAvatar"));
+            
+            list.add(comment);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(CommentDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return list;
+}
+
+   public int findCommentOffset(int newsId, int commentId, int limit) {
+    int position = 0;
+    String sql = "SELECT COUNT(*) AS commentPosition FROM Comment " +
+                 "WHERE NewsID = ? AND CommentDate > (SELECT CommentDate FROM Comment WHERE CommentID = ?)";
+    
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, newsId);
+        ps.setInt(2, commentId);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                position = rs.getInt("commentPosition");
+                // Round down to the nearest multiple of limit
+                position = (position / limit) * limit;
+            }
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(CommentDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return position;
+}
     @Override
     public Comment selectById(Integer id) {
         Comment comment = null;

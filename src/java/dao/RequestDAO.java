@@ -130,6 +130,20 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         }
         return num;
     }
+    public int getCountStatusPending() {
+        String sql = "SELECT count(*) FROM Request WHERE StatusID = 1";
+        int num = 0;
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                num = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return num;
+    }
 
     @Override
     public Request selectById(Integer id) {

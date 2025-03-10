@@ -22,54 +22,37 @@
     </head>
 
     <body>
-
         <%@include file="/manager/menumanager.jsp" %>
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/profile.css" />
-        <div id="main">
+        <div id="main" style="margin-top: -50px">
             <div class="container-fluid p-5">
                 <div class="row justify-content-center">
                     <div class="col-12">
                         <div class="profile-card">
                             <div class="row">
-                                <c:set var="staff" value="${sessionScope.staff}"/>
-                                <c:set var="resident" value="${sessionScope.resident}"/>
+                                <c:set var="staff" value="${sessionScope.staff}" />
                                 <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
-                                    <img src="<%= request.getContextPath() %>${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}"
+                                    <img src="<%= request.getContextPath() %>${staff.image.imageURL}"
                                          alt="Ảnh cá nhân" class="img-fluid rounded-circle profile-img" />
                                 </div>
                                 <div class="col-md-8 d-flex flex-column justify-content-center">
-                                    <!-- Hiển thị tên, ưu tiên staff trước, nếu không có thì lấy resident -->
-                                    <h2 class="user-name">
-                                        ${not empty staff ? staff.fullName : (not empty resident ? resident.fullName : 'Guest')}
-                                    </h2>
+                                    <h2 class="user-name"> <c:out value="${staff.fullName}"></c:out></h2>
+                                    <p class="user-role">${staff.role.roleName}</p>
 
-                                    <!-- Hiển thị vai trò nếu có -->
-                                    <p class="user-role"> ${not empty staff ? staff.role.roleName : (not empty resident ? resident.role.roleName : 'Guest')}</p>
-
-                                    <!-- Hiển thị thông tin -->
                                     <div class="profile-info">
-                                        <p><strong>Email:</strong> ${not empty staff ? staff.email : (not empty resident ? resident.email : 'N/A')}</p>
-                                        <p><strong>Phone:</strong> ${not empty staff ? staff.phoneNumber : (not empty resident ? resident.phoneNumber : 'N/A')}</p>
-                                        <p><strong>Address:</strong> Hà Nội</p>
-                                        <p><strong>Status: </strong>Active</p>
-                                        <%  
-                                          LocalDate dob = null;
-                                          Staff staff = (Staff) session.getAttribute("staff");
-                                          if (staff != null) {  
-                                              dob = staff.getDob();
-                                          } 
-                                          String dobString = (dob != null) ? dob.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) : "N/A";   
-                                        %>   
-
-                                        <p><strong>Date Of Birth:</strong> 
-                                            <%= dobString %>  
+                                        <p><strong>Email:</strong> <c:out value="${staff.email}"></c:out></p>
+                                        <p><strong>Phone:</strong> <c:out value="${staff.phoneNumber}"></c:out></p>
+                                            <p><strong>Address:</strong> Hà Nội</p>
+                                            <p><strong>Status:</strong> Active</p>
+                                            <p><strong>Date Of Birth:</strong> 
+                                            <fmt:formatDate value="${staff.formattedDate}" pattern="dd-MM-yyyy" />
                                         </p>
-                                        <p><strong>Sex:</strong> ${not empty staff ? staff.sex : (not empty resident ? resident.sex : 'N/A')}</p>
+                                        <p><strong>Sex:</strong> <c:out value="${staff.sex}"></c:out></p>
                                     </div>
                                 </div>
 
                                 <button class="btn edit-button mt-4" onclick="window.location.href = 'changeprofile-staff'">
-                                    Chỉnh sửa thông tin
+                                    Change Profile
                                 </button>
 
                             </div>
