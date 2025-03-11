@@ -175,6 +175,14 @@
             .btn-back:hover {
                 background-color: #0056b3;
             }
+            #description-content {
+                border: 2px solid #ddd;
+                padding: 15px;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+                margin-top: 10px;
+                width: 100%;
+            }
 
         </style>
     </head>
@@ -200,12 +208,19 @@
                     <span class="label">Service Type:</span> 
                     <span class="value">${rq.typeRq.typeName}</span>
                 </div>
-                <div class="detail-col">
+                <!--                <div class="detail-col">
+                                    <span class="label">Description:</span>
+                                    <textarea readonly class="value">${rq.description}</textarea>
+                                </div>-->
+                <div class="card-text detail-col">
                     <span class="label">Description:</span>
-                    <textarea readonly class="value">${rq.description}</textarea>
+                    <div id="description-content">
+                        ${rq.description}
+                    </div>
                 </div>
                 <div class="detail-row">
                     <span class="label">Status:</span>
+                    <input type="hidden" id="roleID" value="${sessionScope.staff.role.roleID}">
                     <span class="status" data-id="${rq.requestID}" data-status-id="${rq.status.statusID}" onclick="updateStatus(this)">
                         ${rq.status.statusName}
                     </span>
@@ -220,31 +235,57 @@
                 <c:if test="${sessionScope.staff.role.roleID == 1}">
                     <a href="<%= request.getContextPath() %>/manager/request" class="btn-back">Back to List</a>
                 </c:if>
-                <c:if test="${sessionScope.staff.role.roleID != 1}">
+                <c:if test="${sessionScope.staff.role.roleID == 2 || sessionScope.staff.role.roleID == 3 || sessionScope.staff.role.roleID == 4 || sessionScope.staff.role.roleID == 5}">
                     <a href="<%= request.getContextPath() %>/requeststaff" class="btn-back">Back to List</a>
                 </c:if>
+                <c:if test="${sessionScope.resident.role.roleID == 7}">
+                    <a href="<%= request.getContextPath() %>/redirect/home" class="btn-back">Back to List</a>
+                </c:if> 
             </div>
     </body>
     <script>
         function updateStatus(element) {
             const requestID = element.getAttribute("data-id");
             let statusID = parseInt(element.getAttribute("data-status-id"));
+            const roleID = parseInt(document.getElementById("roleID").value);
 
-            // Nếu trạng thái là Pending, hiển thị các nút Duyệt và Không Duyệt
-            if (statusID === 1) {
-                document.getElementById("actionButtons-" + requestID).style.display = "block";
-                return; // Không tiếp tục xử lý vì đã có hành động ở đây
+            // Nếu roleID là 1 (Manager)
+            if (roleID === 1) {
+                // Nếu trạng thái là Pending, hiển thị các nút Duyệt và Không Duyệt
+                if (statusID === 1) {
+                    document.getElementById("actionButtons-" + requestID).style.display = "block";
+                    return; // Không tiếp tục xử lý vì đã có hành động ở đây
+                }
+
+                // Logic chuyển trạng thái cho các trạng thái khác
+                if (statusID === 6) {
+                    statusID = 2; // Reopened → Assigned
+                } else {
+                    return; // Nếu đã là Resolved (3), không làm gì cả
+                }
             }
-
-            // Logic chuyển trạng thái cho các trạng thái khác
-            if (statusID === 6) {
-                statusID = 2; // Reopened → Assigned
+            // Nếu roleID thuộc nhóm nhân viên (2, 3, 4, 5)
+            else if ([2, 3, 4, 5].includes(roleID)) {
+                if (statusID === 2) {
+                    statusID = 3; // Assigned → In Progress
+                } else if (statusID === 3) {
+                    statusID = 4; // In Progress → Completed
+                } else {
+                    return;
+                }
             } else {
-                return; // Nếu đã là Resolved (3), không làm gì cả
+                console.log("Người dùng không có quyền cập nhật trạng thái.");
+                return;
             }
+
+            // Xác định đường dẫn API dựa trên roleID
+            const apiUrl = roleID === 1
+                    ? '${pageContext.request.contextPath}/manager/updateRequestStatus'
+                    : '${pageContext.request.contextPath}/updateRequestStatusStaff';
+
 
             // Gửi AJAX cập nhật trạng thái
-            fetch('${pageContext.request.contextPath}/manager/updateRequestStatus', {
+            fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -256,6 +297,7 @@
                         if (data.success) {
                             element.setAttribute("data-status-id", statusID);
                             updateStatusDisplay(element, statusID);
+                            window.location.reload();
                         } else {
                             alert("Lỗi cập nhật trạng thái!");
                         }

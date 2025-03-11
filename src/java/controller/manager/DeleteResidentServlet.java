@@ -25,7 +25,7 @@ public class DeleteResidentServlet extends HttpServlet {
         ResidentDAO residentDAO = new ResidentDAO();
         String msg = "";
         Resident resident = residentDAO.selectById(Integer.parseInt(residentId));
-        int isDeleted = residentDAO.delete(resident); 
+        int isDeleted = residentDAO.delete1(resident); 
         if (isDeleted == 1) {
             msg = "Delete resident " + residentId + " successfully!";
             

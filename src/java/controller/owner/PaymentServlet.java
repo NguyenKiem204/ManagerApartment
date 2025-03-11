@@ -29,7 +29,7 @@ import java.time.temporal.ChronoUnit;
  *
  * @author nguye
  */
-@WebServlet(name = "PaymentServlet", urlPatterns = {"/PaymentServlet"})
+@WebServlet(name = "PaymentServlet", urlPatterns = {"/owner/PaymentServlet"})
 public class PaymentServlet extends HttpServlet {
 
     /**
@@ -94,7 +94,7 @@ public class PaymentServlet extends HttpServlet {
             request.setAttribute("transactionId", encodedTransactionId);
             request.setAttribute("totalAmount", totalAmount);
             request.setAttribute("invoice", invoice);
-            request.getRequestDispatcher("owner/OnlinePayment.jsp").forward(request, response);
+            request.getRequestDispatcher("OnlinePayment.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();

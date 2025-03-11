@@ -53,5 +53,8 @@ public class ManagerFeedback {
         this.staff = staff;
     }
 
+    public Date getFormattedDate() {
+        return Date.valueOf(deadline); // Chuyển LocalDate -> SQL Date
+    }
     
 }

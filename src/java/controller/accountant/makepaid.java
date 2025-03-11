@@ -63,46 +63,46 @@ public class makepaid extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            int id = Integer.parseInt(request.getParameter("invoiceID"));
-            InvoiceDAO idao = new InvoiceDAO();
-            idao.updateStatusInvoice(id);
-            generateInvoicePDF(id);// Chuyển hướng về trang UpdateStatusInvoice
-            response.sendRedirect("UpdateStatusInvoice");
-
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            int id = Integer.parseInt(request.getParameter("invoiceID"));
+//            InvoiceDAO idao = new InvoiceDAO();
+//            idao.updateStatusInvoice(id);
+//            generateInvoicePDF(id);// Chuyển hướng về trang UpdateStatusInvoice
+//            response.sendRedirect("UpdateStatusInvoice");
+//
+//        } catch (NumberFormatException e) {
+//            e.printStackTrace();
+//        }
     }
 
-    private void generateInvoicePDF(int id) throws IOException {
-        String filePath = "path/to/save/invoice_" + id + ".pdf"; // Đường dẫn lưu file PDF
-        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
-        try {
-            PdfWriter.getInstance(document, new FileOutputStream(filePath));
-            document.open();
-
-            // Lấy thông tin hóa đơn từ database
-            InvoiceDAO invoiceDAO = new InvoiceDAO();
-            Invoices invoice = invoiceDAO.selectById(id);
-
-            if (invoice == null) {
-                document.add(new Paragraph("Invoice not found!"));
-            } else {
-                document.add(new Paragraph("Invoice ID: " + invoice.getInvoiceID()));
-                document.add(new Paragraph("Description: " + invoice.getDescription()));
-                document.add(new Paragraph("Total Amount: " + invoice.getTotalAmount()));
-                document.add(new Paragraph("Apartment: " + invoice.getApartment().getApartmentName()));
-                document.add(new Paragraph("Status: " + invoice.getStatus()));
-                document.add(new Paragraph("Due Date: " + invoice.getDueDate().toString()));
-                document.add(new Paragraph("Public Date: " + invoice.getPublicDate().toString()));
-            }
-
-            document.close();
-        } catch (DocumentException e) {
-            throw new IOException("Error while generating PDF", e);
-        }
-    }
+//    private void generateInvoicePDF(int id) throws IOException {
+//        String filePath = "path/to/save/invoice_" + id + ".pdf"; // Đường dẫn lưu file PDF
+//        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+//        try {
+//            PdfWriter.getInstance(document, new FileOutputStream(filePath));
+//            document.open();
+//
+//            // Lấy thông tin hóa đơn từ database
+//            InvoiceDAO invoiceDAO = new InvoiceDAO();
+//            Invoices invoice = invoiceDAO.selectById(id);
+//
+//            if (invoice == null) {
+//                document.add(new Paragraph("Invoice not found!"));
+//            } else {
+//                document.add(new Paragraph("Invoice ID: " + invoice.getInvoiceID()));
+//                document.add(new Paragraph("Description: " + invoice.getDescription()));
+//                document.add(new Paragraph("Total Amount: " + invoice.getTotalAmount()));
+//                document.add(new Paragraph("Apartment: " + invoice.getApartment().getApartmentName()));
+//                document.add(new Paragraph("Status: " + invoice.getStatus()));
+//                document.add(new Paragraph("Due Date: " + invoice.getDueDate().toString()));
+//                document.add(new Paragraph("Public Date: " + invoice.getPublicDate().toString()));
+//            }
+//
+//            document.close();
+//        } catch (DocumentException e) {
+//            throw new IOException("Error while generating PDF", e);
+//        }
+//    }
 
     /**
      * Handles the HTTP <code>POST</code> method.

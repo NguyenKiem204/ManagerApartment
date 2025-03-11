@@ -164,6 +164,88 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return row;
     }
+    
+    public int delete1(Resident resident) {
+    int row = 0;
+    Connection connection = null;
+    PreparedStatement ps = null;
+
+    try {
+        connection = DBContext.getConnection();
+        connection.setAutoCommit(false); // Bắt đầu transaction
+
+        int residentId = resident.getResidentId();
+        int roleId = resident.getRole().getRoleID();
+
+        // 1. Lấy ImageID của Resident
+        String getImageQuery = "SELECT ImageID FROM Resident WHERE ResidentID = ?";
+        int imageId = -1;
+
+        try (PreparedStatement getImageStmt = connection.prepareStatement(getImageQuery)) {
+            getImageStmt.setInt(1, residentId);
+            try (ResultSet rs = getImageStmt.executeQuery()) {
+                if (rs.next()) {
+                    imageId = rs.getInt("ImageID");
+                }
+            }
+        }
+
+        // 2. Nếu roleId = 7 (Owner), cập nhật OwnerID trong Apartment thành NULL
+        if (roleId == 7) {
+            String updateApartmentQuery = "UPDATE Apartment SET OwnerID = NULL WHERE OwnerID = ?";
+            try (PreparedStatement updateApartmentStmt = connection.prepareStatement(updateApartmentQuery)) {
+                updateApartmentStmt.setInt(1, residentId);
+                updateApartmentStmt.executeUpdate();
+            }
+        }
+
+        // 3. Nếu roleId = 6 (Tenant), xóa tất cả Contract liên quan trước khi xóa Tenant
+        if (roleId == 6) {
+            String deleteContractQuery = "DELETE FROM Contract WHERE ResidentID = ?";
+            try (PreparedStatement deleteContractStmt = connection.prepareStatement(deleteContractQuery)) {
+                deleteContractStmt.setInt(1, residentId);
+                deleteContractStmt.executeUpdate();
+            }
+        }
+
+        // 4. Xóa Resident
+        String deleteResidentQuery = "DELETE FROM Resident WHERE ResidentID = ?";
+        try (PreparedStatement deleteResidentStmt = connection.prepareStatement(deleteResidentQuery)) {
+            deleteResidentStmt.setInt(1, residentId);
+            row = deleteResidentStmt.executeUpdate();
+        }
+
+        // 5. Nếu có ImageID, xóa ảnh liên quan
+        if (imageId > 0) {
+            String deleteImageQuery = "DELETE FROM Image WHERE ImageID = ?";
+            try (PreparedStatement deleteImageStmt = connection.prepareStatement(deleteImageQuery)) {
+                deleteImageStmt.setInt(1, imageId);
+                deleteImageStmt.executeUpdate();
+            }
+        }
+
+        connection.commit(); // Xác nhận transaction
+    } catch (SQLException ex) {
+        if (connection != null) {
+            try {
+                connection.rollback(); // Rollback nếu có lỗi
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+        }
+        Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+    } finally {
+        try {
+            if (ps != null) ps.close();
+            if (connection != null) connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    return row;
+}
+
+
 
     @Override
     public List<Resident> selectAll() {
@@ -462,6 +544,108 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         }
         return false;
     }
+    public List<Resident> getTenantsByOwner(int ownerId, String keyword, String sex, String status, int page, int pageSize) {
+    List<Resident> tenants = new ArrayList<>();
+    String sql = "SELECT r.ResidentID, r.FullName, r.PhoneNumber, r.CCCD, r.Email, r.DOB, r.Sex, r.Status, a.ApartmentName, c.LeaseStartDate, c.LeaseEndDate " +
+                 "FROM Resident r " +
+                 "JOIN Contract c ON r.ResidentID = c.ResidentID " +
+                 "JOIN Apartment a ON c.ApartmentID = a.ApartmentID " +
+                 "WHERE r.RoleID = 6 AND a.OwnerID = ?";
+    if (keyword != null && !keyword.isEmpty()) {
+        sql += " AND (r.FullName LIKE ? OR r.Email LIKE ?)";
+    }
+    if (sex != null && !sex.isEmpty()) {
+        sql += " AND r.Sex = ?";
+    }
+    if (status != null && !status.isEmpty()) {
+        sql += " AND r.Status = ?";
+    }
+
+    // Phân trang
+    sql += " ORDER BY r.ResidentID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        int paramIndex = 1;
+        ps.setInt(paramIndex++, ownerId);
+
+        if (keyword != null && !keyword.isEmpty()) {
+            ps.setString(paramIndex++, "%" + keyword + "%");
+            ps.setString(paramIndex++, "%" + keyword + "%");
+        }
+        if (sex != null && !sex.isEmpty()) {
+            ps.setString(paramIndex++, sex);
+        }
+        if (status != null && !status.isEmpty()) {
+            ps.setString(paramIndex++, status);
+        }
+
+        // Phân trang
+        int offset = (page - 1) * pageSize;
+        ps.setInt(paramIndex++, offset);
+        ps.setInt(paramIndex++, pageSize);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Resident tenant = new Resident();
+            tenant.setResidentId(rs.getInt("ResidentID"));
+            tenant.setFullName(rs.getString("FullName"));
+            tenant.setPhoneNumber(rs.getString("PhoneNumber"));
+            tenant.setCccd(rs.getString("CCCD"));
+            tenant.setEmail(rs.getString("Email"));
+            tenant.setDob(rs.getDate("DOB").toLocalDate());
+            tenant.setSex(rs.getString("Sex"));
+            tenant.setStatus(rs.getString("Status"));
+            tenants.add(tenant);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return tenants;
+}
+public int countTenantsByOwner(int ownerId, String keyword, String sex, String status) {
+    int count = 0;
+    String query = "SELECT COUNT(*) FROM Resident r " +
+                   "JOIN Contract c ON r.ResidentID = c.ResidentID " +
+                   "JOIN Apartment a ON c.ApartmentID = a.ApartmentID " +
+                   "WHERE a.OwnerID = ? AND r.RoleID = 6";
+
+    if (keyword != null && !keyword.isEmpty()) {
+        query += " AND (r.FullName LIKE ? OR r.Email LIKE ?)";
+    }
+    if (sex != null && !sex.isEmpty()) {
+        query += " AND r.Sex = ?";
+    }
+    if (status != null && !status.isEmpty()) {
+        query += " AND r.Status = ?";
+    }
+
+    try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+        int paramIndex = 1;
+        ps.setInt(paramIndex++, ownerId);
+
+        if (keyword != null && !keyword.isEmpty()) {
+            ps.setString(paramIndex++, "%" + keyword + "%");
+            ps.setString(paramIndex++, "%" + keyword + "%");
+        }
+        if (sex != null && !sex.isEmpty()) {
+            ps.setString(paramIndex++, sex);
+        }
+        if (status != null && !status.isEmpty()) {
+            ps.setString(paramIndex++, status);
+        }
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return count;
+}
+
 
     public boolean isResidentExists(String phoneNumber, String cccd, String email) {
         String sql = "SELECT COUNT(*) FROM Resident WHERE PhoneNumber = ? OR CCCD = ? OR Email = ?";
@@ -628,4 +812,5 @@ public boolean updatePassword(int residentId, String newPassword) throws SQLExce
 
         return owner;
     }
+
 }

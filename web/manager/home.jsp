@@ -313,7 +313,7 @@
                         format: "dd/MM/yy",
                     },
                 },
-                
+
                 stroke: {
                     curve: 'smooth',
                     width: 2,

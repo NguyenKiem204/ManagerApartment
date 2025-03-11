@@ -128,7 +128,7 @@
                 <div class="description-content">
                     <p>${managerFb.actionPlan}</p>
                 </div>
-                <b>Response Deadline:</b> ${managerFb.deadline}
+                <b>Response Deadline:</b> <fmt:formatDate value="${managerFb.formattedDate}" pattern="dd/MM/yyyy" />
 
                 <h3>📩 Staff Response</h3>
 
@@ -140,7 +140,7 @@
                         <c:when test="${empty managerFb.staffResponse and now.isBefore(managerFb.deadline.plusDays(1))}">
                             <button id="toggleResponseForm" class="toggle-btn">➕ Add Response</button>
                             <div id="responseForm" style="display: none;">
-                                <form action="staffresponsefeedback" method="post">
+                                <form action="feedbackreviewdetail" method="post">
                                     <input type="hidden" name="managerFeedbackId" value="${managerFb.managerFeedbackId}" />
                                     <textarea name="staffResponse" placeholder="Write your response here..."></textarea>
                                     <button class="submit-btn" type="submit">Submit Response</button>

@@ -7,7 +7,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Trang chủ</title>
+        <title>Menu</title>
 
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
@@ -24,7 +24,6 @@
         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png"
               type="image/x-icon" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
-        <!-- Font Awesome cho biểu tượng -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
@@ -692,4 +691,4 @@
 
     </body>
 
-</html>
+    </html>

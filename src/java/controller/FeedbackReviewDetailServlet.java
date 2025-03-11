@@ -6,6 +6,7 @@ package controller;
 
 import dao.FeedbackDAO;
 import dao.ManagerFeedbackDAO;
+import dao.NotificationDAO;
 import dao.ResidentDAO;
 import dao.StaffDAO;
 import java.io.IOException;
@@ -16,12 +17,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import model.Feedback;
 import model.ManagerFeedback;
+import model.Notification;
 import model.Resident;
 import model.Staff;
+import validation.Validate;
 
 /**
  *
@@ -91,10 +95,28 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
         try {
             managerFeedbackId = Integer.parseInt(managerFeedbackId_raw);
             managerFeedback = managerFeedbackDAO.selectById(managerFeedbackId);
-
+            //get roleId from session
+            int roleStaff = staff.getRole().getRoleID();
+            System.out.println("role staff: " + roleStaff);
+            //get roleId from table
+            int roleId = managerFeedback.getStaff().getRole().getRoleID();
+            System.out.println("roleID laaaa: " + roleId);
+            if (roleStaff != 1) {
+                if (managerFeedback == null || roleId != roleStaff) {
+                    request.setAttribute("errorCode", "403");
+                    request.setAttribute("errorMessage", "You do not have permission to access this feedback!");
+                    request.getRequestDispatcher("error-authorization.jsp").forward(request, response);
+                    return;
+                }
+            }
             //truyền 1 list feedback detail theo tháng của từng staff
-            listFB = feedbackDAO.getFeedbackByMonthYearAndRoleID(managerFeedback.getMonthYear(), staff.getRole().getRoleID());
-
+            listFB = feedbackDAO.getFeedbackByMonthYearAndRoleID(managerFeedback.getMonthYear(), roleId);
+            if (listFB == null) {
+                System.out.println("KO CO LIST");
+            }
+            for (Feedback feedback : listFB) {
+                System.out.println("ketqua: " + feedback.toString());
+            }
         } catch (NumberFormatException e) {
         }
         request.setAttribute("managerFb", managerFeedback);
@@ -113,7 +135,106 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
               throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        Resident resident = (Resident) session.getAttribute("resident");
+        Staff staff = (Staff) session.getAttribute("staff");
+
+        NotificationDAO notificationDAO = new NotificationDAO();
+        StaffDAO staffDAO = new StaffDAO();
+        String managerFeedbackId_raw = request.getParameter("managerFeedbackId");
+        String staffResponse = request.getParameter("staffResponse");
+        int managerFeedbackId = 0;
+
+        //check toàn khoảng trắng
+        //chứa ký tự đặc biệt
+        //chứa ít hơn 5 ký tự
+        //check title empty or not
+        if (staffResponse != null) {
+            staffResponse = staffResponse.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
+        }
+
+        if (staffResponse == null || staffResponse.trim().isEmpty()) {
+            ManagerFeedback managerFeedback = new ManagerFeedback();
+            List<Feedback> listFB = new ArrayList<>();
+            try {
+                managerFeedbackId = Integer.parseInt(managerFeedbackId_raw);
+                managerFeedback = managerFeedbackDAO.selectById(managerFeedbackId);
+
+                //truyền 1 list feedback detail theo tháng của từng staff
+                listFB = feedbackDAO.getFeedbackByMonthYearAndRoleID(managerFeedback.getMonthYear(), staff.getRole().getRoleID());
+
+            } catch (NumberFormatException e) {
+            }
+            request.setAttribute("managerFb", managerFeedback);
+            request.setAttribute("listFb", listFB);
+            request.setAttribute("error", "Response cannot be empty!");
+            request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
+            return;
+        }
+
+        if (!Validate.isValidTitle(staffResponse)) {
+            ManagerFeedback managerFeedback = new ManagerFeedback();
+            List<Feedback> listFB = new ArrayList<>();
+            try {
+                managerFeedbackId = Integer.parseInt(managerFeedbackId_raw);
+                managerFeedback = managerFeedbackDAO.selectById(managerFeedbackId);
+
+                //truyền 1 list feedback detail theo tháng của từng staff
+                listFB = feedbackDAO.getFeedbackByMonthYearAndRoleID(managerFeedback.getMonthYear(), staff.getRole().getRoleID());
+
+            } catch (NumberFormatException e) {
+            }
+            request.setAttribute("managerFb", managerFeedback);
+            request.setAttribute("listFb", listFB);
+            request.setAttribute("error", "Response contains invalid characters!");
+            request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra độ dài title
+        if (staffResponse.length() < 5 || staffResponse.length() > 100) {
+            ManagerFeedback managerFeedback = new ManagerFeedback();
+            List<Feedback> listFB = new ArrayList<>();
+            try {
+                managerFeedbackId = Integer.parseInt(managerFeedbackId_raw);
+                managerFeedback = managerFeedbackDAO.selectById(managerFeedbackId);
+
+                //truyền 1 list feedback detail theo tháng của từng staff
+                listFB = feedbackDAO.getFeedbackByMonthYearAndRoleID(managerFeedback.getMonthYear(), staff.getRole().getRoleID());
+
+            } catch (NumberFormatException e) {
+            }
+            request.setAttribute("managerFb", managerFeedback);
+            request.setAttribute("listFb", listFB);
+            request.setAttribute("error", "Response must be between 5 and 100 characters!");
+            request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
+            return;
+        }
+
+        try {
+            managerFeedbackId = Integer.parseInt(managerFeedbackId_raw);
+            ManagerFeedback managerFb = managerFeedbackDAO.selectById(managerFeedbackId);
+            managerFb.setStaffResponse(staffResponse);
+            //update staffresponse in DB
+            managerFeedbackDAO.update(managerFb);
+
+            //manager received notifycation
+//            Notification notification = new Notification("Staff response feedback review of this month.", "Response", LocalDate.now(), false, managerFeedbackId, "ManagerFeedback", staffDAO.getStaffByRoleIDAndStatus(1, "Adctive"), null);
+//            Notification notification = new Notification(staff.getStaffId(), 
+//                      "Staff", "Staff response feedback review of this month.",
+//                      "Response", LocalDateTime.now(), false, 
+//                      managerFeedbackId, "ManagerFeedback", 
+//                      staffDAO.getStaffByRoleIDAndStatus(1, "Adctive"), 
+//                      null);
+            Notification notification = new Notification(staff.getStaffId(),
+                      "Staff", "Staff response feedback review of this month.", "ManagerFeedback",
+                      LocalDateTime.now(), false, managerFeedbackId,
+                      "ManagerFeedback", staffDAO.getStaffByRoleIDAndStatus(1, "Active"), null);
+
+            notificationDAO.insert(notification);
+        } catch (NumberFormatException e) {
+        }
+        request.getRequestDispatcher("staffresponsefeedbacksuccessfull.jsp").forward(request, response);
     }
 
     /**

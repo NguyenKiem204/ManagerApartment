@@ -533,6 +533,30 @@ public List<Apartment> getNotNullOwnerApartments() {
     }
     return apartments;
 }
+public List<Apartment> getApartmentsByOwner(int ownerId) {
+    List<Apartment> apartments = new ArrayList<>();
+    String sql = "SELECT * FROM Apartment WHERE OwnerID = ?";
+    
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, ownerId);
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Apartment apartment = new Apartment();
+            apartment.setApartmentId(rs.getInt("ApartmentID"));
+            apartment.setApartmentName(rs.getString("ApartmentName"));
+            apartment.setBlock(rs.getString("Block"));
+            apartment.setStatus(rs.getString("Status"));
+            apartment.setType(rs.getString("Type"));
+            apartment.setOwnerId(rs.getInt("ownerId"));
+            apartments.add(apartment);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return apartments;
+}
 
 
     public List<String> getApartmentNames(String searchQuery) {
