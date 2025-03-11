@@ -80,6 +80,10 @@ public class Resident {
         this.email = email;
     }
 
+    public Resident(int residentId) {
+        this.residentId = residentId;
+    }
+
     public Date getFormattedDate() {
         return Date.valueOf(dob); // Chuyển LocalDate -> SQL Date
     }

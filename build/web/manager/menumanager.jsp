@@ -169,15 +169,7 @@
                                                     <li class="submenu-item">
                                                         <a href="manageApartment">Apartment</a>
                                                     </li>
-                                                    <li class="submenu-item">
-                                                        <a href="component-badge.html">Floor</a>
-                                                    </li>
-                                                    <li class="submenu-item">
-                                                        <a href="component-breadcrumb.html">Apartment</a>
-                                                    </li>
-                                                    <li class="submenu-item">
-                                                        <a href="component-button.html">Utilities</a>
-                                                    </li>
+                                                    
                                                 </ul>
                                             </li>
 
@@ -202,30 +194,7 @@
                                                 </ul>
                                             </li>
 
-                                            <li class="sidebar-item has-sub">
-                                                <a href="#" class="sidebar-link">
-                                                    <i class="bi bi-collection-fill"></i>
-                                                    <span>Residents</span>
-                                                </a>
-                                                <ul class="submenu">
-                                                    <li class="submenu-item">
-                                                        <a href="extra-component-avatar.html">List</a>
-                                                    </li>
-                                                    <li class="submenu-item">
-                                                        <a href="extra-component-sweetalert.html">Vehicles</a>
-                                                    </li>
-                                                    <li class="submenu-item">
-                                                        <a href="extra-component-toastify.html">Notifications</a>
-                                                    </li>
-                                                    <li class="submenu-item">
-                                                        <a href="extra-component-rating.html">Complaints</a>
-                                                    </li>
-                                                    <li class="submenu-item">
-                                                        <a href="extra-component-divider.html">Divider</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-
+                                            
                                             <li class="sidebar-item has-sub">
                                                 <a href="#" class="sidebar-link">
                                                     <i class="fa-solid fa-users-gear"></i>
@@ -328,6 +297,13 @@
                                                         <a
                                                             href="<%= request.getContextPath() %>/owner/request">Request</a>
                                                     </li>
+                                                </c:if>
+                                                    <c:if test="${sessionScope.resident.role.roleID == 7}">
+                                                    <li class="submenu-item">
+                                                        <a
+                                                            href="<%= request.getContextPath() %>/owner/manageContract">Contract</a>
+                                                    </li>
+                                                    
                                                 </c:if>
                                                     <c:if test="${sessionScope.resident.role.roleID == 6}">
                                                     <li class="submenu-item">

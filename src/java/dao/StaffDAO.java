@@ -139,6 +139,66 @@ public class StaffDAO implements DAOInterface<Staff, Integer> {
         }
         return row;
     }
+public int delete1(Staff staff) {
+    int row = 0;
+    Connection connection = null;
+    PreparedStatement ps = null;
+
+    try {
+        connection = DBContext.getConnection();
+        connection.setAutoCommit(false); // Bắt đầu transaction
+
+        int staffId = staff.getStaffId();
+
+        // 1. Lấy ImageID của Staff
+        String getImageQuery = "SELECT ImageID FROM Staff WHERE StaffID = ?";
+        int imageId = -1;
+
+        try (PreparedStatement getImageStmt = connection.prepareStatement(getImageQuery)) {
+            getImageStmt.setInt(1, staffId);
+            try (ResultSet rs = getImageStmt.executeQuery()) {
+                if (rs.next()) {
+                    imageId = rs.getInt("ImageID");
+                }
+            }
+        }
+
+        // 2. Xóa Staff
+        String deleteStaffQuery = "DELETE FROM Staff WHERE StaffID = ?";
+        try (PreparedStatement deleteStaffStmt = connection.prepareStatement(deleteStaffQuery)) {
+            deleteStaffStmt.setInt(1, staffId);
+            row = deleteStaffStmt.executeUpdate();
+        }
+
+        // 3. Nếu có ImageID, xóa ảnh liên quan
+        if (imageId > 0) {
+            String deleteImageQuery = "DELETE FROM Image WHERE ImageID = ?";
+            try (PreparedStatement deleteImageStmt = connection.prepareStatement(deleteImageQuery)) {
+                deleteImageStmt.setInt(1, imageId);
+                deleteImageStmt.executeUpdate();
+            }
+        }
+
+        connection.commit(); // Xác nhận transaction
+    } catch (SQLException ex) {
+        if (connection != null) {
+            try {
+                connection.rollback(); // Rollback nếu có lỗi
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+        }
+        Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+    } finally {
+        try {
+            if (ps != null) ps.close();
+            if (connection != null) connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    return row;
+}
 
     @Override
     public List<Staff> selectAll() {

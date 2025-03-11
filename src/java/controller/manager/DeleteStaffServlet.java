@@ -26,7 +26,7 @@ public class DeleteStaffServlet extends HttpServlet {
         StaffDAO staffDAO = new StaffDAO();
         String msg = "";
         Staff staff = staffDAO.selectById(Integer.parseInt(StaffId));
-        int isDeleted = staffDAO.delete(staff); 
+        int isDeleted = staffDAO.delete1(staff); 
         if (isDeleted == 1) {
             msg = "Delete staff " + StaffId + " successfully!";
             

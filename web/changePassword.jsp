@@ -108,7 +108,9 @@
             <button type="button" id="submitChange">Change Password</button>
         </form>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        
         $(document).ready(function () {
             $("#submitChange").click(function () {
                 var newPassword = $("#newPassword").val().trim();
@@ -145,6 +147,8 @@
             });
         });
     </script>
+    
+
 </body>
 </html>
 
