@@ -23,6 +23,9 @@
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png"
               type="image/x-icon" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+        <!-- Font Awesome cho biểu tượng -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
               integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
@@ -182,19 +185,19 @@
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                                 <img src="<%= request.getContextPath() %>/${user.image.imageURL}"
                                      class="user-image rounded-circle shadow" alt="User Image" />
-                                <span class="d-none d-md-inline">${user.fullName}</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                                <li class="user-header text-bg-primary img-drop">
-                                    <img src="<%= request.getContextPath() %>/${user.image.imageURL}"
+                                <span class="d-none d-md-inline"><c:out value="${user.fullName}"></c:out></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                                    <li class="user-header text-bg-primary img-drop">
+                                        <img src="<%= request.getContextPath() %>/${user.image.imageURL}"
                                          class="rounded-circle shadow" alt="User Image" />
                                     <p>
-                                        ${user.fullName} - ${role}
-                                        <small>Member since Nov. 2024</small>
-                                    </p>
-                                </li>
-                                <li class="user-footer d-flex justify-content-between">
-                                    <a href="<%= request.getContextPath() %>/profile-${role}"
+                                        <c:out value="${user.fullName}"></c:out> - ${role}
+                                            <small>Member since Nov. 2024</small>
+                                        </p>
+                                    </li>
+                                    <li class="user-footer d-flex justify-content-between">
+                                        <a href="<%= request.getContextPath() %>/profile-${role}"
                                        class="btn btn-default btn-flat">Profile</a>
                                     <a href="#" class="btn btn-default btn-flat">Setting</a>
                                     <a href="<%= request.getContextPath() %>/logout"
@@ -640,8 +643,45 @@
                 // Kiểm tra thông báo mới mỗi 3 giây
                 setInterval(checkNotifications, 3000);
             });
-        </script>
+            $(function () {
+                // Cấu hình cơ bản cho date picker với định dạng dd/MM/yyyy
+                const datePickerConfig = {
+                    dateFormat: "d/m/Y",
+                    locale: "en",
+                    allowInput: true,
+                    maxDate: "today",
+                    disableMobile: "true"
+                };
+                // Khởi tạo Date Picker đơn giản
+                flatpickr("#datePicker", {
+                    ...datePickerConfig,
+                    maxDate: "today"
+                });
+                flatpickr("#dateRangePicker", {
+                    ...datePickerConfig,
+                    mode: "range",
+                    maxDate: null
+                });
+                const birthdayPicker = flatpickr("#birthdayPicker", {
+                    ...datePickerConfig,
+                    onChange: function (selectedDates, dateStr) {
+                        if (selectedDates.length > 0) {
+                            const birthDate = selectedDates[0];
+                            const today = new Date();
+                            let age = today.getFullYear() - birthDate.getFullYear();
+                            const monthDiff = today.getMonth() - birthDate.getMonth();
+                            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                                age--;
+                            }
 
+                            document.getElementById('ageInfo').textContent = `Tuổi của bạn: ${age} tuổi`;
+                        }
+                    }
+                });
+            });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/vn.min.js"></script>
         <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
         <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 
@@ -649,6 +689,7 @@
         <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
 
         <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
+
     </body>
 
 </html>

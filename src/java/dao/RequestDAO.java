@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import model.Request;
 
 /**
@@ -144,6 +148,48 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         }
         return num;
     }
+   public Map<String, Integer> getRequestCountLast7Days() {
+    // Get data from database
+    Map<String, Integer> dbResults = new LinkedHashMap<>();
+    String sql = """
+                 SELECT CAST(Date AS DATE) AS RequestDate, COUNT(*) AS RequestCount
+                 FROM Request
+                 WHERE Date >= DATEADD(DAY, -6, CAST(GETDATE() AS DATE))
+                 GROUP BY CAST(Date AS DATE)
+                 ORDER BY RequestDate ASC""";
+                 
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            String date = rs.getString("RequestDate");  // Date in 'yyyy-MM-dd' format
+            int count = rs.getInt("RequestCount");
+            dbResults.put(date, count);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(RequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    // Create a map with all 7 days, filling in zeros for missing days
+    Map<String, Integer> requestCounts = new LinkedHashMap<>();
+    
+    // Create a calendar to generate all 7 days
+    Calendar cal = Calendar.getInstance();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    
+    // Start from 6 days ago
+    cal.add(Calendar.DAY_OF_MONTH, -6);
+    
+    // Generate entries for all 7 days
+    for (int i = 0; i < 7; i++) {
+        String dateStr = dateFormat.format(cal.getTime());
+        // If we have data for this date, use it; otherwise use 0
+        requestCounts.put(dateStr, dbResults.getOrDefault(dateStr, 0));
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+    }
+    
+    return requestCounts;
+}
 
     @Override
     public Request selectById(Integer id) {

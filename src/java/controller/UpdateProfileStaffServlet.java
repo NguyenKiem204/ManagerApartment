@@ -23,6 +23,7 @@ import java.util.List;
 import jakarta.servlet.http.Part;
 import java.util.ArrayList;
 import validation.Validate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -104,6 +105,7 @@ public class UpdateProfileStaffServlet extends HttpServlet {
         String fullName = request.getParameter("fullName");
         String phoneNumber = request.getParameter("phoneNumber");
         String dobParam = request.getParameter("dob");
+        System.out.println(dobParam);
         String sex = request.getParameter("sex");
 
         List<String> errorMessages = new ArrayList<>();
@@ -128,9 +130,10 @@ public class UpdateProfileStaffServlet extends HttpServlet {
             request.getRequestDispatcher("changeprofilestaff.jsp").forward(request, response);
             return;
         }
-        LocalDate dob = LocalDate.parse(dobParam);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        LocalDate dob = LocalDate.parse(dobParam, formatter);
         fullName = fullName.trim().replaceAll("\\s+", " ");
-        
+
         HttpSession session = request.getSession();
         if (oldStaff != null) {
             Staff staff = createStaff(oldStaff, fullName, phoneNumber, dob, sex, newImageURL);

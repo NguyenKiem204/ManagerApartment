@@ -14,6 +14,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Change Profile</title>
+        
         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
     </head>
 
@@ -52,7 +53,8 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="dob" class="form-label">Date of Birth</label>
-                    <input type="date" class="form-control" id="dob" name="dob" value="${staff.formattedDate}">
+                    <input type="text" class="form-control" name="dob" value="<fmt:formatDate value="${staff.formattedDate}" pattern="dd/MM/yyyy" />" id="datePicker" placeholder="dd/MM/yyyy">
+
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="sex" class="form-label">Gender</label>
@@ -138,6 +140,7 @@
                     reader.readAsDataURL(file);
                 }
             });
+            
         </script>                  
     </body>
 

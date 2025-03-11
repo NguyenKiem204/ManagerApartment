@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import model.Apartment;
 import model.Comment;
 import model.Feedback;
@@ -49,6 +50,12 @@ public class Test {
         InvoiceDAO invoiceDAO = new InvoiceDAO();
         CommentDAO commentDAO = new CommentDAO();
         
+        Map<String, Integer> requestCounts = requestDAO.getRequestCountLast7Days();
+
+// Hiển thị danh sách số lượng request theo ngày
+for (Map.Entry<String, Integer> entry : requestCounts.entrySet()) {
+    System.out.println(entry.getKey() + " : " + entry.getValue());
+}
         // List<Comment> list = commentDAO.getCommentsByNewsId(22);
         // for (Comment comment : list) {
         //     System.out.println(comment);

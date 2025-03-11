@@ -10,6 +10,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Quản lý Filter Mapping</title>
+        <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
         <style>
             table {
                 border-collapse: collapse;
