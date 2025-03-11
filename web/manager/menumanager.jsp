@@ -359,41 +359,41 @@
                                     <c:if test="${sessionScope.staff.role.roleID == 2}">
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/administative/feedback">Feedback</a>
+                                                href="<%= request.getContextPath() %>/feedbackreview">Feedback</a>
                                         </li>
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/administative/request">Request</a>
+                                                href="<%= request.getContextPath() %>/requeststaff">Request</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 3}">
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/technical/feedback">Feedback</a>
+                                                href="<%= request.getContextPath() %>/feedbackreview">Feedback</a>
                                         </li>
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/technical/request">Request</a>
+                                                href="<%= request.getContextPath() %>/requeststaff">Request</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 4}">
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/technical/feedbackreview">Feedback</a>
+                                                href="<%= request.getContextPath() %>/feedbackreview">Feedback</a>
                                         </li>
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/technical/request">Request</a>
+                                                href="<%= request.getContextPath() %>/requeststaff">Request</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 5}">
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/service/feedback">Feedback</a>
+                                                href="<%= request.getContextPath() %>/feedbackreview">Feedback</a>
                                         </li>
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/service/request">Request</a>
+                                                href="<%= request.getContextPath() %>/requeststaff">Request</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.resident.role.roleID == 7}">
@@ -629,12 +629,12 @@
                         data: {notificationId: notificationId},
                         success: function () {
                             console.log("Thông báo đã được đánh dấu là đã đọc!");
-                        },
+                        }
                     });
                 });
 
-                // Kiểm tra thông báo mới mỗi 3 giây
-                setInterval(checkNotifications, 3000);
+                // Kiểm tra thông báo mới mỗi 1 giây
+                setInterval(checkNotifications, 1000);
             });
         </script>
 

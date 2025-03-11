@@ -30,6 +30,7 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import model.Feedback;
@@ -183,7 +184,7 @@ public class FormFeedbackManagerServlet extends HttpServlet {
 //        request.setAttribute("currentPage", page);
 //        request.setAttribute("totalPages", totalPages);
 //        request.setAttribute("pageSize", pageSize);
-
+        response.setLocale(new Locale("vi", "VN"));
         request.getRequestDispatcher("formfeedbackmanager.jsp").forward(request, response);
 
     }
@@ -418,7 +419,7 @@ public class FormFeedbackManagerServlet extends HttpServlet {
             System.out.println("Result last ID in form fb mmanager servlet: " + managerFeedbackDAO.selectLastId());
 
 //gửi thông báo tới staff
-            Notification notification = new Notification(staffss.getStaffId(), "Staff", "You have new feedback from your manager. Nhieu con vit xoe ra nhieu cai canh!", "feedback", LocalDateTime.now(), false, managerFeedbackDAO.selectLastId(), "ManagerFeedback", staff, null);
+            Notification notification = new Notification(staffss.getStaffId(), "Staff", "You have new feedback from your manager.", "feedback", LocalDateTime.now(), false, managerFeedbackDAO.selectLastId(), "ManagerFeedback", staff, null);
             notificationDAO.insert(notification);
         } catch (NumberFormatException e) {
             log("LOIIIII!");

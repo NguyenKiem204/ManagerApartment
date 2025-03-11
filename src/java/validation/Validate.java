@@ -109,7 +109,7 @@ public static String trim(String input) {
         return null;
     }
     public static boolean isValidTitle(String title) {
-        return title != null && title.matches("^[a-zA-Z0-9 .,!?()-]+$");
+        return title != null ;
     }
     
     // Kiểm tra input có rỗng hoặc chỉ chứa khoảng trắng không

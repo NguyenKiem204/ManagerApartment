@@ -108,23 +108,25 @@ public class UpdateRequestStatusStaffServlet extends HttpServlet {
             Staff staff = (Staff) session.getAttribute("staff");
             NotificationDAO notificationDAO = new NotificationDAO();
             StaffDAO staffDAO = new StaffDAO();
-            Staff st = staffDAO.getStaffByRoleIDAndStatus(roleId, "Active");
+            Staff st = staffDAO.getStaffByRoleIDAndStatus(1, "Active");
 
-            //bảng notify có staff o mot so trang thai do manager gui
-//            if (newStatus == 2 || newStatus == 9) {
-//                Notification notification_staff = new Notification(staff.getStaffId(),
-//                          "Staff", "Request updated new status: " + sr.getStatusName(), "request",
-//                          LocalDateTime.now(), false, requestId,
-//                          "Request", st, null);
-//                notificationDAO.insert(notification_staff);
-//            }
-//            //bảng notify có resident từ đầu đến cuối để theo dõi quá trình do manager gui
-//            Notification notification_resident = new Notification(staff.getStaffId(),
-//                      "Staff", "Request updated new status: " + sr.getStatusName(), "request",
-//                      LocalDateTime.now(), false, requestId, "Request",
-//                      null, rq.getResident());
-//
-//            notificationDAO.insert(notification_resident);
+            //staff gui thong bao cho manager khi staff xac nhan la da nhan duoc thong bao
+            //trang thai moi ma staff update cho request la: In progress va Completed -> thong bao toi manager
+            if (newStatus == 3 || newStatus == 4) {
+                Notification notification_staff = new Notification(staff.getStaffId(),
+                          "Staff", "Request updated new status: " + sr.getStatusName(), "request",
+                          LocalDateTime.now(), false, requestId,
+                          "Request", st, null);
+                notificationDAO.insert(notification_staff);
+            }
+            
+              //staff gui thong bao sau khi update trang thai moi cho owner(tat ca)
+            Notification notification_resident = new Notification(staff.getStaffId(),
+                      "Staff", "Request updated new status: " + sr.getStatusName(), "request",
+                      LocalDateTime.now(), false, requestId, "Request",
+                      null, rq.getResident());
+
+            notificationDAO.insert(notification_resident);
             
             JsonObject jsonResponse = new JsonObject();
             jsonResponse.addProperty("success", updated);

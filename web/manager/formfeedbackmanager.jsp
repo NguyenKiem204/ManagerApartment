@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Form feedback manager</title>
@@ -193,7 +193,7 @@
 
                     <h3>📅 Next Actions</h3>
                     <p><b>Improvement Suggestions:</b> <input type="text" id="action-plan" name="actionPlan" placeholder="E.g., skill training, process improvement..."></p>
-                    <p><b>Response Deadline:</b> <input type="date" id="deadline" name="deadline"></p>
+                    <p><b>Response Deadline:</b> <input type="date" id="deadline" name="deadline" placeholder="dd-MM-yyyy"></p>
 
                     <c:if test="${not empty error}">
                         <p style="color: red;">${error}</p>

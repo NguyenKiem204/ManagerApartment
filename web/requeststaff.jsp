@@ -302,7 +302,7 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="update-icon" onclick="goToDetail(${rq.requestID})">
+                                            <span class="update-icon" onclick="goToDetail(${rq.requestID})" style="cursor: pointer;">
                                                 📝 <!-- Biểu tượng cập nhật -->
                                             </span>
                                         </td>
@@ -385,6 +385,12 @@
         </div>
 
         <script>
+            function goToDetail(requestID) {
+                var basePath = "${pageContext.request.contextPath}";
+                window.location.href = basePath + "/requestdetail?requestId=" + requestID;
+            }
+        </script>                
+        <script>
             function updateStatus(element) {
                 const requestID = element.getAttribute("data-id");
                 let statusID = parseInt(element.getAttribute("data-status-id"));
@@ -397,9 +403,6 @@
                         break;
                     case 3: // In Progress → Completed
                         nextStatusID = 4;
-                        break;
-                    case 6: // Reopened → In Progress
-                        nextStatusID = 3;
                         break;
                     default:
                         return; // Nếu trạng thái không hợp lệ, thoát

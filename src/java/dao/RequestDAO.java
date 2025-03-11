@@ -390,12 +390,12 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                     case 1 ->
                         sql += " ORDER BY a.ApartmentName";
                     case 2 ->
-                        sql += " ORDER BY Date DESC";
+                        sql += " ORDER BY Date";
                     default ->
                         throw new AssertionError();
                 }
             } else {
-                sql += " ORDER BY RequestID";
+                sql += " ORDER BY RequestID DESC";
             }
 //xu ly phan trang
             sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
@@ -503,12 +503,12 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                     case 1 ->
                         sql += " ORDER BY a.ApartmentName";
                     case 2 ->
-                        sql += " ORDER BY Date DESC";
+                        sql += " ORDER BY Date";
                     default ->
                         throw new AssertionError();
                 }
             } else {
-                sql += " ORDER BY RequestID";
+                sql += " ORDER BY RequestID DESC";
             }
 //xu ly phan trang
             sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
@@ -634,18 +634,8 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
 
     public int getNumberOfRequestsBySearchOrFilterOrSortOfStaff(String keySearch,
               int typeRequestID, LocalDate date, int statusID, int keySort, int roleID) {
-        int num = 0;
         String sql = """
-                     SELECT [RequestID]
-                            ,r.Description
-                            ,[Title]
-                            ,[Date]
-                            ,r.ResidentID, CompletedAt, ViewedAt
-                            ,res.FullName
-                            ,r.TypeRqID
-                            ,r.StatusID
-                            ,a.ApartmentID
-                            ,a.ApartmentName
+                     SELECT COUNT(*)
                         FROM [ApartmentManagement].[dbo].[Request] r 
                             JOIN Apartment a ON r.ApartmentID = a.ApartmentID
                             JOIN Resident res ON r.ResidentID = res.ResidentID
@@ -708,13 +698,13 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
             }
 
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                num++;
+            if (rs.next()) {
+                return rs.getInt(1); // Trả về số lượng request
             }
         } catch (SQLException ex) {
             Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return num;
+        return 0;
     }
 
     public List<Request> getListByPage(List<Request> list, int start, int end) {
@@ -727,7 +717,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
 
     public List<Request> selectFirstPage() {
         List<Request> list = new ArrayList<>();
-        String sql = "SELECT * FROM Request ORDER BY [RequestID] OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY";
+        String sql = "SELECT * FROM Request ORDER BY [RequestID] DESC OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -768,7 +758,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                      		join role ro on tr.RoleID = ro.RoleID 
                      		join Staff st on st.RoleID = ro.RoleID
                          where t.StatusID in (2, 3, 4, 5, 6, 7, 9) AND tr.RoleID = ? AND st.Status = 'Active'
-                         ORDER BY [RequestID] OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY""";
+                         ORDER BY [RequestID] DESC OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY""";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, roleID);
@@ -804,22 +794,21 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
 
     public int numberfLineOStaff(int roleID) {
         String sql = """
-                     SELECT * FROM Request r 
+                     SELECT COUNT(*) FROM Request r 
                      join TypeRequest tr on r.TypeRqID = tr.TypeRqID
                      join Staff st on tr.RoleID = st.RoleID 
                      where StatusID in (2, 3, 4, 5, 6, 7, 9) AND st.RoleID = ? AND st.Status = 'Active'""";
-        int num = 0;
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, roleID);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                num++;
+            if (rs.next()) {
+                return rs.getInt(1); // Lấy số lượng từ COUNT(*)
             }
         } catch (SQLException ex) {
             Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return num;
+        return 0;
     }
 
     public boolean updateStatus(int requestID, int newStatus) {
