@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author nguye
  */
-@WebServlet(name = "CheckPaymentStatusServlet", urlPatterns = {"/CheckPaymentStatusServlet"})
+@WebServlet(name = "CheckPaymentStatusServlet", urlPatterns = {"/owner/CheckPaymentStatusServlet"})
 public class CheckPaymentStatusServlet extends HttpServlet {
 
     /**

@@ -20,7 +20,7 @@ import model.TypeBill;
  *
  * @author nguye
  */
-@WebServlet(name = "DetailInvoiceOwner", urlPatterns = {"/DetailInvoiceOwner"})
+@WebServlet(name = "DetailInvoiceOwner", urlPatterns = {"/owner/DetailInvoiceOwner"})
 public class DetailInvoiceOwner extends HttpServlet {
 
     /**
@@ -70,7 +70,7 @@ public class DetailInvoiceOwner extends HttpServlet {
             List<TypeBill> lt = idao.getAllTypeBills();
             request.setAttribute("page", page);
             request.setAttribute("invoice", inv);
-            request.getRequestDispatcher("owner/DetailInvoiceOnwer.jsp").forward(request, response);
+            request.getRequestDispatcher("DetailInvoiceOnwer.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }

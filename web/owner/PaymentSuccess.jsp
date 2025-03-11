@@ -26,7 +26,7 @@
     </head>
     <body>
         <h1>Payment Successful!</h1>
-        <a href="<%= request.getContextPath() %>/ViewInvoice">Back to Invoices</a>
+        <a href="<%= request.getContextPath() %>/owner/ViewInvoice">Back to Invoices</a>
 
         <script>
             let timeLeft = 5;
@@ -38,7 +38,7 @@
                     timeLeft--;
                     setTimeout(updateCountdown, 1000);
                 } else {
-                    window.location.href = "<%= request.getContextPath() %>/InvoicesManager";
+                    window.location.href = "<%= request.getContextPath() %>/owner/ViewInvoice";
                 }
             }
 

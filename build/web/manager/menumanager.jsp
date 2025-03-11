@@ -490,7 +490,7 @@
                             </c:if>
                             <c:if test="${sessionScope.resident.role.roleID == 7}">
                                 <li class="sidebar-item">
-                                    <a href="<%= request.getContextPath() %>/ViewInvoice"
+                                    <a href="<%= request.getContextPath() %>/owner/ViewInvoice"
                                        class="sidebar-link">
                                         <i class="bi bi-receipt-cutoff"></i>
                                         <span>Invoice Management</span>
