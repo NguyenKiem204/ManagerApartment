@@ -137,7 +137,7 @@
                     <div class="d-flex align-items-center">
 
 
-                        <a href="<%= request.getContextPath() %>/InvoicesManager" class="btn btn-success d-flex align-items-center">
+                        <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-success d-flex align-items-center">
                             <i class="bi bi-plus-lg me-1"></i>Back to Invoice Manager
                         </a>
                     </div>
@@ -189,69 +189,69 @@
                         </tr>
                     </thead>
                     <tbody style="background:white" id="tableBody">
-                            <c:forEach items="${sessionScope.ListInvoices}" var="l">
+                        <c:forEach items="${sessionScope.ListInvoices}" var="l">
 
-                                <tr>
-                                    <td>${l.invoiceID}</td>
-                                    <td>${l.description}</td>
-                                    <td>${l.totalAmount}</td>
-                                    <td>${l.apartment.apartmentName}</td>
-                                    <td>${l.status}</td>
-                                    <td>${l.dueDate}</td>
-                                    <td>${l.publicDate}</td>
-                                    <td>
-                                        <c:if test="${l.muon == 1}">
+                            <tr>
+                                <td>${l.invoiceID}</td>
+                                <td>${l.description}</td>
+                                <td>${l.totalAmount}</td>
+                                <td>${l.apartment.apartmentName}</td>
+                                <td>${l.status}</td>
+                                <td>${l.dueDate}</td>
+                                <td>${l.publicDate}</td>
+                                <td>
+                                    <c:if test="${l.muon == 1}">
 
-                                            <p>Islate</p>
-                                        </c:if>
-                                    </td>
+                                        <p>Islate</p>
+                                    </c:if>
+                                </td>
 
-                                    <td style="width:50px">
+                                <td style="width:50px">
 
-                                        <button onclick="confirmDelete('${l.invoiceID}')" class="btn btn-success ">Payment</button>
-                                    </td>
+                                    <button onclick="confirmDelete('${l.invoiceID}')" class="btn btn-success ">Payment</button>
+                                </td>
 
-                                </tr>
+                            </tr>
 
-                            </c:forEach>
-                  
+                        </c:forEach>
+
                     </tbody>
                 </table>
                 <div style="display: flex; align-items: center; gap: 10px;margin-top:10px">
-
-                    <c:set var="startPage" value="${requestScope.currentPage - 1}" />
-                    <c:set var="endPage" value="${requestScope.currentPage + 1}" />
-                    <c:if test="${startPage < 1}">
-                        <c:set var="startPage" value="1"/>
-                        <c:set var="endPage" value="3"/>
-                    </c:if>
-                    <c:if test="${endPage > requestScope.totalPage}">
-                        <c:set var="endPage" value="${requestScope.totalPage}"/>
-                        <c:set var="startPage" value="${endPage - 2}" />
+                    <c:if test="${not empty sessionScope.ListInvoices && requestScope.totalPage > 1}">
+                        <c:set var="startPage" value="${requestScope.currentPage - 1}" />
+                        <c:set var="endPage" value="${requestScope.currentPage + 1}" />
                         <c:if test="${startPage < 1}">
                             <c:set var="startPage" value="1"/>
+                            <c:set var="endPage" value="3"/>
                         </c:if>
-                    </c:if>
+                        <c:if test="${endPage > requestScope.totalPage}">
+                            <c:set var="endPage" value="${requestScope.totalPage}"/>
+                            <c:set var="startPage" value="${endPage - 2}" />
+                            <c:if test="${startPage < 1}">
+                                <c:set var="startPage" value="1"/>
+                            </c:if>
+                        </c:if>
 
-                    <!-- Previous Button -->
-                    <c:if test="${requestScope.currentPage > 1}">
-                        <a href="UpdateStatusInvoice?page=${requestScope.currentPage - 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
-                           style="padding: 6px 12px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; cursor: pointer;">
-                            &lt;
-                        </a>
-                    </c:if>
-                    <c:forEach begin="${startPage}" end="${endPage}" var="page">
-                        <a href="UpdateStatusInvoice?page=${page}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
-                           style="padding: 6px 12px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;
-                           <c:if test='${page == requestScope.currentPage}'> background-color: #007bff; color: white; </c:if>">
-                            ${page}
-                        </a>
-                    </c:forEach>
-                    <c:if test="${requestScope.currentPage < requestScope.totalPage}">
-                        <a href="UpdateStatusInvoice?page=${requestScope.currentPage + 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
-                           style="padding: 6px 12px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; cursor: pointer;">
-                            &gt;
-                        </a>
+                        <c:if test="${requestScope.currentPage > 1}">
+                            <a href="UpdateStaqtusInvoice?page=${requestScope.currentPage - 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                               style="padding: 6px 12px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; cursor: pointer;">
+                                &lt;
+                            </a>
+                        </c:if>
+                        <c:forEach begin="${startPage}" end="${endPage}" var="page">
+                            <a href="UpdateStatusInvoice?page=${page}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                               style="padding: 6px 12px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;
+                               <c:if test='${page == requestScope.currentPage}'> background-color: #007bff; color: white; </c:if>">
+                                ${page}
+                            </a>
+                        </c:forEach>
+                        <c:if test="${requestScope.currentPage < requestScope.totalPage}">
+                            <a href="UpdateStatusInvoice?page=${requestScope.currentPage + 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                               style="padding: 6px 12px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; cursor: pointer;">
+                                &gt;
+                            </a>
+                        </c:if>
                     </c:if>
                 </div>
             </div>
@@ -287,13 +287,30 @@
         <!-- JavaScript -->
         <script src="assets/js/bootstrap.bundle.min.js"></script>
         <script>
-                                            function confirmDelete(invoiceID) {
-                                                let deleteUrl = "<%= request.getContextPath() %>/makepaid?invoiceID=" + invoiceID;
-                                                document.getElementById("deleteConfirmBtn").href = deleteUrl;
-                                                var myModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
-                                                myModal.show();
-                                            }
-        </script>
-    </body>
+                                    function confirmDelete(invoiceID) {
+                                        let deleteUrl = "<%= request.getContextPath() %>/accountant/makepaid?invoiceID=" + invoiceID;
+                                        document.getElementById("deleteConfirmBtn").href = deleteUrl;
+                                        var myModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+                                        myModal.show();
+                                    }
 
-</html>
+        </script>
+        <script>
+                window.onload = function () {
+                // Kiểm tra nếu có thông báo tải file PDF
+                const invoiceID = new URLSearchParams(window.location.search).get("invoiceID");
+                        if (invoiceID) {
+                // Tạo URL tải file PDF
+                const pdfUrl = `<%= request.getContextPath() %>/accountant/makepaid?invoiceID=${invoiceID}`;
+                            // Tạo một thẻ <a> ẩn để tải file PDF
+                            const link = document.createElement("a");
+                            link.href = pdfUrl;
+                            link.download = `invoice_${invoiceID}.pdf`;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                                }
+                    </<script>
+                                        </body>
+              
+              </html>

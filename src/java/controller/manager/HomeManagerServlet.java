@@ -5,7 +5,10 @@
 package controller.manager;
 
 import dao.ApartmentDAO;
+import dao.CommentDAO;
+import dao.InvoiceDAO;
 import dao.MessageDAO;
+import dao.RequestDAO;
 import dao.ResidentDAO;
 import dao.StaffDAO;
 import java.io.IOException;
@@ -16,10 +19,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import model.Comment;
 import model.Resident;
 import model.Staff;
 
@@ -70,14 +75,27 @@ public class HomeManagerServlet extends HttpServlet {
             throws ServletException, IOException {
         ApartmentDAO apartmentDAO = new ApartmentDAO();
         ResidentDAO residentDAO = new ResidentDAO();
+        InvoiceDAO invoiceDAO = new InvoiceDAO();
+        CommentDAO commentDAO = new CommentDAO();
+        RequestDAO requestDAO = new RequestDAO();
+        InvoiceDAO invoiceDAO1 = new InvoiceDAO();
+        List<Comment> comments = commentDAO.selectTop2CommentRecent();
+        int numberRequest = requestDAO.getCountStatusPending();
+        int numberUnpaidInvoice = invoiceDAO.getCountInvoiceUnpaid();
         int numberAptm = apartmentDAO.numberApartment();
         int numberResident = residentDAO.numberResident();
         int numberApartmentOccupied = apartmentDAO.numberApartmentOccupied();
         int numberApartmentAvailable = apartmentDAO.numberApartmentAvailable();
+        int year = LocalDate.now().getYear();
+        List<Double> listRevenue = invoiceDAO.getRevenueByMonth(year);
+        request.setAttribute("listRevenue", listRevenue);
         request.setAttribute("numberApartment", numberAptm);
         request.setAttribute("numberResident", numberResident);
         request.setAttribute("numberApartmentOccupied", numberApartmentOccupied);
         request.setAttribute("numberApartmentAvailable", numberApartmentAvailable);
+        request.setAttribute("comments", comments);
+        request.setAttribute("numberRequest", numberRequest);
+        request.setAttribute("numberUnpaidInvoice", numberUnpaidInvoice);
         Staff staff = (Staff) request.getSession().getAttribute("staff");
         String currentUserEmail = staff.getEmail();
         StaffDAO staffDAO = new StaffDAO();

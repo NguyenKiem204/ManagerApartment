@@ -130,10 +130,67 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         }
         return num;
     }
+    public int getCountStatusPending() {
+        String sql = "SELECT count(*) FROM Request WHERE StatusID = 1";
+        int num = 0;
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                num = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return num;
+    }
 
     @Override
     public Request selectById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "SELECT * FROM [Request] WHERE RequestID = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Kiểm tra nếu CompletedAt không NULL thì chuyển thành LocalDate, nếu NULL thì gán null
+                    java.sql.Date completedAtSql = rs.getDate("CompletedAt");
+                    LocalDate completedAt = (completedAtSql != null) ? completedAtSql.toLocalDate() : null;
+
+                    // Kiểm tra nếu ViewedAt không NULL thì chuyển thành LocalDate, nếu NULL thì gán null
+                    java.sql.Date viewedAtSql = rs.getDate("ViewedAt");
+                    LocalDate viewedAt = (viewedAtSql != null) ? viewedAtSql.toLocalDate() : null;
+
+                    Request rq = new Request(rs.getInt("RequestID"),
+                              rs.getString("Description"),
+                              rs.getString("Title"),
+                              rs.getDate("Date").toLocalDate(),
+                              statusrequestdao.selectById(rs.getInt("StatusID")),
+                              residentdao.selectById(rs.getInt("ResidentID")),
+                              typerequestdao.selectById(rs.getInt("TypeRqID")),
+                              apartmentdao.selectById(rs.getInt("ApartmentID")),
+                              completedAt,
+                              viewedAt
+                    );
+                    return rq;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public int selectLastId() {
+        String sql = "SELECT MAX([RequestID]) FROM [ApartmentManagement].[dbo].[Request];";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1); // Lấy giá trị MAX(NotificationID)
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerFeedbackDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0; // Trả về 0 nếu không có dữ liệu
     }
 
     public List<Request> getAllRequestsSortedByResident() {
@@ -443,7 +500,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                 params.add(statusID);
                 params.add(roleID);
             } else {
-                sql += " AND StatusID in (2, 3, 4, 5, 6, 7) AND ro.roleID = ? AND st.status = 'Active'";
+                sql += " AND StatusID in (2, 3, 4, 5, 6, 7, 9) AND ro.roleID = ? AND st.status = 'Active'";
                 params.add(roleID);
             }
 
@@ -633,7 +690,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                 params.add(statusID);
                 params.add(roleID);
             } else {
-                sql += " AND StatusID in (2, 3, 4, 5, 6, 7) AND ro.roleID = ? AND st.status = 'Active'";
+                sql += " AND StatusID in (2, 3, 4, 5, 6, 7, 9) AND ro.roleID = ? AND st.status = 'Active'";
                 params.add(roleID);
             }
 
@@ -724,7 +781,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                          FROM Request t Join TypeRequest tr on t.TypeRqID = tr.TypeRqID 
                      		join role ro on tr.RoleID = ro.RoleID 
                      		join Staff st on st.RoleID = ro.RoleID
-                         where t.StatusID in (2, 3, 4, 5, 6, 7) AND tr.RoleID = ? AND st.Status = 'Active'
+                         where t.StatusID in (2, 3, 4, 5, 6, 7, 9) AND tr.RoleID = ? AND st.Status = 'Active'
                          ORDER BY [RequestID] OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY""";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -764,7 +821,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                      SELECT * FROM Request r 
                      join TypeRequest tr on r.TypeRqID = tr.TypeRqID
                      join Staff st on tr.RoleID = st.RoleID 
-                     where StatusID in (2, 3, 4, 5, 6, 7) AND st.RoleID = ? AND st.Status = 'Active'""";
+                     where StatusID in (2, 3, 4, 5, 6, 7, 9) AND st.RoleID = ? AND st.Status = 'Active'""";
         int num = 0;
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {

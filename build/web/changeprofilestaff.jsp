@@ -20,86 +20,85 @@
     <body>
         <%@include file="/manager/menumanager.jsp" %>
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/changeprofile.css" />
-        <div id="main">
-            <div class="container profile-container mt-5">
-                <h2 class="text-center mb-4">Chỉnh sửa thông tin cá nhân</h2>
-                <c:set var="staff" value="${sessionScope.staff}"/>
-                <c:set var="resident" value="${sessionScope.resident}"/>
-                <form action="update-profile-staff" method="POST" enctype="multipart/form-data">
-                    <div class="text-center mb-3">
-                        <img id="preview-img" 
-                             src="<%= request.getContextPath() %>/${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}" 
-                             alt="Ảnh cá nhân" class="profile-img rounded-circle" width="150" height="150">
 
-                        <input type="file" class="form-control mt-2" name="imgURL" id="upload-photo" accept="image/*">
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="fullName" class="form-label">Họ và tên</label>
-                            <input type="text" class="form-control" id="fullName" name="fullName" value="${not empty staff ? staff.fullName : (not empty resident ? resident.fullName : 'Guest')}">
-                            <input type="hidden" class="form-control" id="userID" name="userID" value="${not empty staff ? staff.staffId : (not empty resident ? resident.residentId : 'Guest')}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" disabled value="${not empty staff ? staff.email : (not empty resident ? resident.email : 'N/A')}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="phone" class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control" id="phone" name="phoneNumber" value="${not empty staff ? staff.phoneNumber : (not empty resident ? resident.phoneNumber : 'N/A')}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="address" class="form-label">Địa chỉ</label>
-                            <input type="text" class="form-control" id="address" name="address" value="Hà Nội">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="dob" class="form-label">Ngày sinh</label>
-                            <input type="date" class="form-control" id="dob" name="dob" value="${not empty staff ? staff.dob : (not empty resident ? resident.dob : 'N/A')}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="sex" class="form-label">Giới tính</label>
-                            <select class="form-select" id="sex" name="sex">
-                                <option value="Male" ${((not empty staff ? staff.sex : resident.sex) == 'Male') ? 'selected' : ''}>Nam</option>
-                                <option value="Female" ${((not empty staff ? staff.sex : resident.sex) == 'Female') ? 'selected' : ''}>Nữ</option>
-                                <option value="Other" ${((not empty staff ? staff.sex : resident.sex) == 'Other') ? 'selected' : ''}>Khác</option>
-                            </select>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label for="password" class="form-label">Mật khẩu</label>
-                            <input type="password" class="form-control" id="password" value="*******" disabled>
-                        </div>
-
-                    </div>
-                    <c:if test="${not empty errors}">
-                        <div class="alert alert-danger">
-                            <strong>An error has occurred:</strong>
-                            <ul class="mb-0">
-                                <c:forEach var="error" items="${errors}">
-                                    <li>${error}</li>
-                                    </c:forEach>
-                            </ul>
-                        </div>
-                    </c:if>
-                    <div class="d-flex justify-content-between">
-                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                        <button type="reset" class="btn btn-secondary">Hủy</button>
-                    </div>
-                </form>
+<div id="main">
+    <div class="container profile-container mt-5">
+        <h2 class="text-center mb-4">Edit Personal Information</h2>
+        <c:set var="staff" value="${sessionScope.staff}" />
+        <form action="update-profile-staff" method="POST" enctype="multipart/form-data">
+            <div class="text-center mb-3">
+                <img id="preview-img" 
+                     src="<%= request.getContextPath() %>${staff.image.imageURL}" 
+                     alt="Profile Picture" class="profile-img rounded-circle" width="150" height="150">
+                <input type="file" class="form-control mt-2" name="imgURL" id="upload-photo" accept="image/*">
             </div>
-            <footer>
-                <div class="footer clearfix mb-0 text-muted">
-                    <div class="float-start">
-                        <p>2025 &copy; Kiemm</p>
-                    </div>
-                    <div class="float-end">
-                        <p>
-                            Crafted with
-                            <span class="text-danger"><i class="bi bi-heart"></i></span> by
-                            <a href="http://ahmadsaugi.com">NguyenKiem</a>
-                        </p>
-                    </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="fullName" name="fullName" value="<c:out value="${staff.fullName}"></c:out>">
+                    <input type="hidden" class="form-control" id="userID" name="userID" value="${staff.staffId}">
                 </div>
-            </footer>
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" disabled value="<c:out value="${staff.email}"></c:out>">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="phone" name="phoneNumber" value="<c:out value="${staff.phoneNumber}"></c:out>">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" name="address" value="Hanoi">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="dob" class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" id="dob" name="dob" value="${staff.formattedDate}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="sex" class="form-label">Gender</label>
+                    <select class="form-select" id="sex" name="sex">
+                        <option value="Male" ${staff.sex == 'Male' ? 'selected' : ''}>Male</option>
+                        <option value="Female" ${staff.sex == 'Female' ? 'selected' : ''}>Female</option>
+                        <option value="Other" ${staff.sex == 'Other' ? 'selected' : ''}>Other</option>
+                    </select>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" value="*******" disabled>
+                </div>
+            </div>
+            <c:if test="${not empty errors}">
+                <div class="alert alert-danger">
+                    <strong>An error has occurred:</strong>
+                    <ul class="mb-0">
+                        <c:forEach var="error" items="${errors}">
+                            <li>${error}</li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </c:if>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="reset" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <footer>
+        <div class="footer clearfix mb-0 text-muted">
+            <div class="float-start">
+                <p>2025 &copy; Kiemm</p>
+            </div>
+            <div class="float-end">
+                <p>
+                    Crafted with
+                    <span class="text-danger"><i class="bi bi-heart"></i></span> by
+                    <a href="http://ahmadsaugi.com">NguyenKiem</a>
+                </p>
+            </div>
         </div>
+    </footer>
+</div>
+
         <style>
             .alert-danger {
                 padding: 10px;
@@ -139,13 +138,7 @@
                     reader.readAsDataURL(file);
                 }
             });
-        </script>                        
-        <script src="assets/js/bootstrap.bundle.min.js"></script>
-
-        <script src="assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="assets/js/pages/dashboard.js"></script>
-
-        <script src="assets/js/main.js"></script>
+        </script>                  
     </body>
 
 </html>

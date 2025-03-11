@@ -5,6 +5,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,18 +23,22 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Notification {
-    
-    int notificationID;
+
+    int notificationId;
+    int senderId;
+    String senderTable;
     String message;
     String type;
-    LocalDate createdAt;
+    LocalDateTime createdAt;
     boolean isRead;
     int referenceId;
     String referenceTable;
     Staff staff;
     Resident resident;
 
-    public Notification(String message, String type, LocalDate createdAt, boolean isRead, int referenceId, String referenceTable, Staff staff, Resident resident) {
+    public Notification(int senderId, String senderTable, String message, String type, LocalDateTime createdAt, boolean isRead, int referenceId, String referenceTable, Staff staff, Resident resident) {
+        this.senderId = senderId;
+        this.senderTable = senderTable;
         this.message = message;
         this.type = type;
         this.createdAt = createdAt;
@@ -43,4 +48,5 @@ public class Notification {
         this.staff = staff;
         this.resident = resident;
     }
+
 }

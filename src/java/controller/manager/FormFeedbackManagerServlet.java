@@ -20,10 +20,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.Console;
+import java.security.Timestamp;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeParseException;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +35,7 @@ import java.util.Objects;
 import model.Feedback;
 import model.ManagerFeedback;
 import model.Notification;
+import model.Resident;
 import model.Role;
 import model.Staff;
 import org.jsoup.Jsoup;
@@ -194,6 +199,18 @@ public class FormFeedbackManagerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
               throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
+        Resident resident = (Resident) session.getAttribute("resident");
+        Staff staffss = (Staff) session.getAttribute("staff");
+        // Kiểm tra quyền truy cập (chỉ cho phép Staff ngoại trừ Manager)
+        if (resident != null || staffss == null || staffss.getRole().getRoleID() != 1) {
+            request.setAttribute("errorCode", "403");
+            request.setAttribute("errorMessage", "You do not have permission to access!");
+            request.getRequestDispatcher("error-authorization.jsp").forward(request, response);
+            return;
+        }
+        
         FeedbackDAO feedbackDAO = new FeedbackDAO();
         Validate validate = new Validate();
         StaffDAO staffDAO = new StaffDAO();
@@ -396,12 +413,12 @@ public class FormFeedbackManagerServlet extends HttpServlet {
             ManagerFeedback managerFeedback = new ManagerFeedback(monthYear,
                       totalFeedback, avgRating, positivePercentage, negativePercentage,
                       strengths, weaknesses, null, actionPlan,
-                      deadline, LocalDate.now(), staff);
+                      deadline, LocalDateTime.now(), staff);
             managerFeedbackDAO.insert(managerFeedback);
             System.out.println("Result last ID in form fb mmanager servlet: " + managerFeedbackDAO.selectLastId());
 
 //gửi thông báo tới staff
-            Notification notification = new Notification("You have new feedback from your manager.", "feedback", LocalDate.now(), false, managerFeedbackDAO.selectLastId(), "ManagerFeedback", staff, null);
+            Notification notification = new Notification(staffss.getStaffId(), "Staff", "You have new feedback from your manager. Nhieu con vit xoe ra nhieu cai canh!", "feedback", LocalDateTime.now(), false, managerFeedbackDAO.selectLastId(), "ManagerFeedback", staff, null);
             notificationDAO.insert(notification);
         } catch (NumberFormatException e) {
             log("LOIIIII!");

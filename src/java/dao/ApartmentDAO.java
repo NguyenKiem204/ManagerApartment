@@ -193,8 +193,8 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                             rs.getString("ApartmentName"),
                             rs.getString("Block"),
                             rs.getString("Status"),
-                            rs.getString("Type"),
-                            rs.getInt("OwnerID")
+                            rs.getString("Type")
+                            
                     );
                 }
             }
@@ -256,8 +256,8 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                             rs.getString("ApartmentName"),
                             rs.getString("Block"),
                             rs.getString("Status"),
-                            rs.getString("Type"),
-                            rs.getInt("OwnerID")
+                            rs.getString("Type")
+                           
                     );
                 }
             }
@@ -278,8 +278,8 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                         rs.getString("ApartmentName"),
                         rs.getString("Block"),
                         rs.getString("Status"),
-                        rs.getString("Type"),
-                        rs.getInt("OwnerID")
+                        rs.getString("Type")
+                       
                 );
                 list.add(apartment);
             }
@@ -564,7 +564,7 @@ public List<Apartment> getApartmentsByOwner(int ownerId) {
         String sql = "SELECT TOP 5 ApartmentName FROM Apartment WHERE ApartmentName LIKE ?"; // Giới hạn kết quả
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, searchQuery + "%"); // Tìm kiếm theo tiền tố
+            ps.setString(1, "%" + searchQuery + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 apartments.add(rs.getString("ApartmentName"));

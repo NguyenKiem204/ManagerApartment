@@ -97,32 +97,77 @@
                 font-weight: bold;
                 display: inline-block;
                 text-align: center;
-                min-width: 100px;
+                min-width: 120px;
                 color: white;
             }
 
-            .status[data-status-id="1"] { /* Pending */
-                background-color: #FF5722; /* Cam đậm */
-                border: 2px solid #E64A19;
-                box-shadow: 0 0 5px rgba(255, 87, 34, 0.5);
+            /* Pending */
+            .status[data-status-id="1"] {
+                background-color: #FF5722; /* Dark Orange */
+                border-color: #E64A19;
+                box-shadow: 0 0 8px rgba(255, 87, 34, 0.6);
             }
 
-            .status[data-status-id="2"] { /* Processing */
-                background-color: #03A9F4; /* Xanh dương sáng */
-                border: 2px solid #0288D1;
-                box-shadow: 0 0 5px rgba(3, 169, 244, 0.5);
+            /* Assigned */
+            .status[data-status-id="2"] {
+                background-color: #FFC107; /* Amber */
+                border-color: #FFA000;
+                box-shadow: 0 0 8px rgba(255, 193, 7, 0.6);
             }
 
-            .status[data-status-id="3"] { /* Resolved */
-                background-color: #4CAF50; /* Xanh lá đậm */
-                border: 2px solid #388E3C;
-                box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+            /* In Progress */
+            .status[data-status-id="3"] {
+                background-color: #03A9F4; /* Bright Blue */
+                border-color: #0288D1;
+                box-shadow: 0 0 8px rgba(3, 169, 244, 0.6);
             }
 
-            .status[data-status-id="4"] { /* Canceled */
-                background-color: #B0BEC5; /* Màu xám cho trạng thái hủy */
-                border: 2px solid #78909C;
-                box-shadow: 0 0 5px rgba(176, 190, 197, 0.5);
+            /* Completed */
+            .status[data-status-id="4"] {
+                background-color: #4CAF50; /* Green */
+                border-color: #388E3C;
+                box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+            }
+
+            /* Expired */
+            .status[data-status-id="5"] {
+                background-color: #9E9E9E; /* Gray */
+                border-color: #757575;
+                box-shadow: 0 0 8px rgba(158, 158, 158, 0.6);
+            }
+
+            /* Reopened */
+            .status[data-status-id="6"] {
+                background-color: #E91E63; /* Pink */
+                border-color: #C2185B;
+                box-shadow: 0 0 8px rgba(233, 30, 99, 0.6);
+            }
+
+            /* Resolved */
+            .status[data-status-id="7"] {
+                background-color: #673AB7; /* Purple */
+                border-color: #512DA8;
+                box-shadow: 0 0 8px rgba(103, 58, 183, 0.6);
+            }
+
+            .status[data-status-id="8"] {
+                background-color: #B0BEC5; /* Xám nhạt */
+                border-color: #78909C;
+                box-shadow: 0 0 8px rgba(176, 190, 197, 0.6);
+            }
+
+            /* Review */
+            .status[data-status-id="9"] {
+                background-color: #FF9800; /* Orange */
+                border-color: #F57C00; /* Darker Orange */
+                box-shadow: 0 0 8px rgba(255, 152, 0, 0.6);
+            }
+
+            /* Default (Unknown) */
+            .status[data-status-id="0"] {
+                background-color: #607D8B; /* Blue Gray */
+                border-color: #455A64;
+                box-shadow: 0 0 8px rgba(96, 125, 139, 0.6);
             }
 
             .filter-container {
@@ -184,7 +229,7 @@
         </style>
     </head>
     <body>
-        <%@include file="home.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
         <div id="main">
             <div class="container">
                 <h2>Resident Requests Dashboard</h2>
@@ -204,8 +249,13 @@
                             <select id="statusFilter">
                                 <option value="0">Filter by Status</option>
                                 <c:forEach var="status" items="${listStatus}">
-                                    <option value="${status.statusID}" ${param.status == status.statusID ? 'selected' : ''}>${status.statusName}</option>
+                                    <c:if test="${status.statusID == 2 || status.statusID == 3 || status.statusID == 4 || status.statusID == 7 || status.statusID == 9}">
+                                        <option value="${status.statusID}" ${param.status == status.statusID ? 'selected' : ''}>
+                                            ${status.statusName}
+                                        </option>
+                                    </c:if>
                                 </c:forEach>
+
                             </select>
                         </div>
 
@@ -234,21 +284,31 @@
                             <th>Service</th>
                             <th>Date</th>
                             <th>Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
                         <c:forEach var="rq" items="${listrq}">
-                            <tr>
-                                <td>${rq.resident.fullName}</td>
-                                <td>${rq.apartment.apartmentName}</td>
-                                <td>${rq.typeRq.typeName}</td>
-                                <td><fmt:formatDate value="${rq.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate></td>
-                                    <td>
-                                        <span class="status" data-id="${rq.requestID}" data-status-id="${rq.status.statusID}" onclick="updateStatus(this)">
-                                        ${rq.status.statusName}
-                                    </span>
-                                </td>
-                            </tr>
+                            <c:choose>
+                                <c:when test="${rq.status.statusID == 2 || rq.status.statusID == 3 || rq.status.statusID == 4 || rq.status.statusID == 7 || rq.status.statusID == 9}">
+                                    <tr>
+                                        <td>${rq.resident.fullName}</td>
+                                        <td>${rq.apartment.apartmentName}</td>
+                                        <td>${rq.typeRq.typeName}</td>
+                                        <td><fmt:formatDate value="${rq.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate></td>
+                                            <td>
+                                                <span class="status" data-id="${rq.requestID}" data-status-id="${rq.status.statusID}" onclick="updateStatus(this)">
+                                                ${rq.status.statusName}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="update-icon" onclick="goToDetail(${rq.requestID})">
+                                                📝 <!-- Biểu tượng cập nhật -->
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </c:when>
+                            </c:choose>
                         </c:forEach>
                     </tbody>
                 </table>
@@ -329,78 +389,49 @@
                 const requestID = element.getAttribute("data-id");
                 let statusID = parseInt(element.getAttribute("data-status-id"));
 
-                // Nếu trạng thái là Pending, hiển thị các nút Duyệt và Không Duyệt
-//                if (statusID === 1) {
-//                    document.getElementById("actionButtons-" + requestID).style.display = "block";
-//                    return; // Không tiếp tục xử lý vì đã có hành động ở đây
-//                }
-
-                // Logic chuyển trạng thái cho các trạng thái khác
-                if (statusID === 3) {
-                    statusID = 4; // Inprogress → Completed
-                } else {
-                    return; // Nếu đã là Resolved (3), không làm gì cả
+                // Xác định trạng thái tiếp theo
+                let nextStatusID;
+                switch (statusID) {
+                    case 2: // Assigned → In Progress
+                        nextStatusID = 3;
+                        break;
+                    case 3: // In Progress → Completed
+                        nextStatusID = 4;
+                        break;
+                    case 6: // Reopened → In Progress
+                        nextStatusID = 3;
+                        break;
+                    default:
+                        return; // Nếu trạng thái không hợp lệ, thoát
                 }
 
                 // Gửi AJAX cập nhật trạng thái
-                fetch('${pageContext.request.contextPath}/manager/updateRequestStatus', {
+                fetch('${pageContext.request.contextPath}/updateRequestStatusStaff', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({id: requestID, statusID: statusID})
+                    body: JSON.stringify({id: requestID, statusID: nextStatusID})
                 })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                element.setAttribute("data-status-id", statusID);
+                                element.setAttribute("data-status-id", nextStatusID);
                                 updateStatusDisplay(element, statusID);
+                                window.location.reload();
                             } else {
                                 alert("Lỗi cập nhật trạng thái!");
                             }
                         })
                         .catch(error => console.error('Lỗi:', error));
             }
-            function approveRequest(requestID) {
-                // Cập nhật trạng thái thành Processing khi "Duyệt"
-                updateRequestStatus(requestID, 2);
-            }
-
-            function rejectRequest(requestID) {
-                // Cập nhật trạng thái thành Cancel khi "Không Duyệt"
-                updateRequestStatus(requestID, 4); // Giả sử 4 là trạng thái Cancel
-            }
-
-            function updateRequestStatus(requestID, statusID) {
-                fetch('${pageContext.request.contextPath}/technical/updateRequestStatus', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({id: requestID, statusID: statusID})
-                })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log("Response Data:", data); // Debugging
-                            if (data.success) {
-                                window.location.reload();
-                                const statusElement = document.querySelector(`[data-id='${requestID}']`);
-                                statusElement.setAttribute("data-status-id", statusID);
-                                updateStatusDisplay(statusElement, statusID);
-                                document.getElementById("actionButtons-" + requestID).style.display = "none"; // Ẩn các nút sau khi lựa chọn
-                                
-                            } else {
-                                alert("Failed to update status: ");
-                            }
-                        })
-                        .catch(error => console.error('Lỗi:', error));
-            }
 
             function updateStatusDisplay(element, statusID) {
+
                 switch (statusID) {
                     case 1:
                         element.innerText = "Pending";
-                        element.style.backgroundColor = "#FF5722"; // Orange
+                        element.style.backgroundColor = "#FF5722";// Orange
                         break;
                     case 2:
                         element.innerText = "Assigned";
@@ -425,6 +456,14 @@
                     case 7:
                         element.innerText = "Resolved";
                         element.style.backgroundColor = "#673AB7"; // Purple
+                        break;
+                    case 8:
+                        element.innerText = "Cancel";
+                        element.style.backgroundColor = "#B0BEC5"; // Purple
+                        break;
+                    case 9:
+                        element.innerText = "Review";
+                        element.style.backgroundColor = "#FF9800"; // Orange
                         break;
                     default:
                         element.innerText = "Unknown";

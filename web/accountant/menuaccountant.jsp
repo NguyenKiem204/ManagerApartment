@@ -146,7 +146,7 @@
                                 </a>
                             </li>
                             <li class="sidebar-item ">
-                                <a href="<%= request.getContextPath() %>/InvoicesManager" class="sidebar-link">
+                                <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="sidebar-link">
                                     <i class="bi bi-receipt-cutoff"></i>
                                     <span>Invoice Management</span>
                                 </a>
@@ -178,7 +178,7 @@
                                         <a href="auth-login.html">Profile</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="LogoutServlet">Logout</a>
+                                        <a href="<%= request.getContextPath() %>/logout">Logout</a>
                                     </li>
                                 </ul>
                             </li>

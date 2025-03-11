@@ -3,8 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller.technical;
+package controller;
 
+import dao.NotificationDAO;
+import dao.RequestDAO;
+import dao.StaffDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,13 +15,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import model.Notification;
+import model.Request;
+import model.TypeRequest;
 
 /**
  *
  * @author admin
  */
-@WebServlet(name="FeedbackReviewDetailServlet", urlPatterns={"/technical/feedbackreviewdetail"})
-public class FeedbackReviewDetailServlet extends HttpServlet {
+@WebServlet(name="MarkAsReadServlet", urlPatterns={"/MarkAsRead"})
+public class MarkAsReadServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +42,10 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FeedbackReviewDetailServlet</title>");  
+            out.println("<title>Servlet MarkAsReadServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet FeedbackReviewDetailServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet MarkAsReadServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,7 +62,7 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
+        
     } 
 
     /** 
@@ -68,7 +75,43 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String notificationId_raw = request.getParameter("notificationId");
+        System.out.println("notificationID LA: " + notificationId_raw);
+        int notificationId = 0;
+        try {
+            notificationId = Integer.parseInt(notificationId_raw);
+        } catch (NumberFormatException e) {
+        }
+        NotificationDAO notificationDAO = new NotificationDAO();
+        RequestDAO requestDAO = new RequestDAO();
+        StaffDAO staffDAO = new StaffDAO();
+        
+        notificationDAO.updateIsRead(notificationId);
+        // Cập nhật trạng thái trong DB
+        /*TH là thông báo request của staff, khi bấm vào xem là xác nhận chuyển
+        từ status 2 -> 3 (Inprogress)*/
+        Notification notification = notificationDAO.selectById(notificationId);
+        if (notification.getReferenceTable().equalsIgnoreCase("Request")) {
+            Request request1 = requestDAO.selectById(notification.getReferenceId());
+            //get roleId -> xac dinh la staffId nao quan ly
+            int roleId = request1.getTypeRq().getRole().getRoleID();
+            //get staffId by roleId
+            int staffId = staffDAO.getStaffByRoleIDAndStatus(roleId, "Active").getStaffId();
+            
+            if (request1.getStatus().getStatusID() == 2) {
+                //update status assign to in progress
+                requestDAO.updateStatus(request1.getRequestID(), 3);
+                
+                String statusName = requestDAO.selectById(notification.getReferenceId()).getStatus().getStatusName();
+                //resident received notify about change status 
+                Notification notification_resident = new Notification(staffId,
+                      "Staff", "Request updated new status: " + statusName, "request",
+                      LocalDateTime.now(), false, notification.getReferenceId(), "Request",
+                      null, request1.getResident());
+                notificationDAO.insert(notification_resident);
+            }
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     /** 

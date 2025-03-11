@@ -32,6 +32,13 @@
             h2, h3 {
                 color: #e67e22; /* Orange color */
             }
+            #feedback-container {
+                max-height: 400px; /* Giới hạn chiều cao */
+                overflow-y: auto;  /* Kích hoạt thanh cuộn dọc */
+                border: 1px solid #e67e22; /* Viền giống bảng */
+                padding: 5px;
+            }
+
             table {
                 width: 100%;
                 border-collapse: collapse;
@@ -117,21 +124,19 @@
                     </table>
 
                     <h3>📑 Feedback Details</h3>
-                    
-                    <table>
-                        <tr>
-                            <th>#</th>
-                            <th>Title</th>
-                            <th>Rating (⭐)</th>
-                            <th>Submission Date</th>
-                        </tr>
-                        <!--                        <tbody id="feedback-list">
-                                                     Data will be added here 
-                                                </tbody>-->
-                        <tbody id="feedback-list">
-                            
-                        </tbody>
-                    </table>
+                    <div id="feedback-container">
+                        <table>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Rating (⭐)</th>
+                                <th>Submission Date</th>
+                            </tr>
+                            <tbody id="feedback-list">
+                                <!-- Feedback sẽ được thêm vào đây bằng JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
 
                     <!--                    <div class="pagination" style="justify-content: end">
                                             <ul style="list-style: none; display: flex; justify-content: center; padding: 0;">

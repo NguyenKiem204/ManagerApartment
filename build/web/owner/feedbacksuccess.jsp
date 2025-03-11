@@ -109,7 +109,7 @@
         </style>
     </head>
     <body>
-        <%@include file="menuowner.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
 
         <div id = "main">
             <div class="container">

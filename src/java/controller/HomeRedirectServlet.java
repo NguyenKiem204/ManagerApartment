@@ -14,7 +14,7 @@ import model.Staff;
 public class HomeRedirectServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        String homeUrl = request.getContextPath() + "/home";
+        String homeUrl = request.getContextPath() + "/login";
 
         if (session != null) {
             Resident resident = (Resident) session.getAttribute("resident");
