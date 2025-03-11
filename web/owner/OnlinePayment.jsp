@@ -109,7 +109,7 @@
                     <p><strong>Late Bill Penalty:</strong> $<c:out value="${invoice.muon}" /></p>
                     <p><strong>Total Amount:</strong> $<c:out value="${invoice.totalAmount}" /></p>
                     <div class="d-flex justify-content-end mt-4">
-                        <a href="<%= request.getContextPath() %>/ViewInvoice" class="btn btn-secondary">
+                        <a href="<%= request.getContextPath() %>/owner/ViewInvoice" class="btn btn-secondary">
                             <i class="fa fa-arrow-left"></i> Cancel
                         </a>
                     </div>
@@ -200,12 +200,12 @@
                 const transactionId = "${transactionId}"; // Lấy transactionId từ server
                 const invoiceID = "${invoice.invoiceID}"; // Lấy invoiceID từ server
 
-                fetch('<%= request.getContextPath() %>/CheckPaymentStatusServlet?transactionId=' + transactionId)
+                fetch('<%= request.getContextPath() %>/owner/CheckPaymentStatusServlet?transactionId=' + transactionId)
                         .then(response => response.json())
                         .then(data => {
                             if (data.status === "completed") {
                                 // Thanh toán thành công, chuyển hướng đến trang thành công
-                                window.location.href = "<%= request.getContextPath() %>/paymentSuccess?invoiceID=" + invoiceID;
+                                window.location.href = "<%= request.getContextPath() %>/owner/paymentSuccess?invoiceID=" + invoiceID;
                             } else {
                                 // Kiểm tra lại sau 3 giây
                                 setTimeout(checkPaymentStatus, 1000);

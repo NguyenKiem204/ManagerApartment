@@ -4,9 +4,9 @@
     Author     : nkiem
 --%>
 
-<%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem --%>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,44 +20,44 @@
         <div id="main">
             <div class="container profile-container mt-5">
                 <h2 class="text-center mb-4">Change Profile</h2>
-                <c:set var="staff" value="${sessionScope.staff}"/>
                 <c:set var="resident" value="${sessionScope.resident}"/>
+
                 <form action="update-profile" method="POST" enctype="multipart/form-data">
                     <div class="text-center mb-3">
                         <img id="preview-img" 
-                             src="<%= request.getContextPath() %>/${not empty staff ? staff.image.imageURL : (not empty resident ? resident.image.imageURL : 'Guest')}" 
-                             alt="Ảnh cá nhân" class="profile-img rounded-circle" width="150" height="150">
+                             src="<%= request.getContextPath() %><c:out value='${resident.image.imageURL}'/>" 
+                             alt="Profile Picture" class="profile-img rounded-circle" width="150" height="150">
 
                         <input type="file" class="form-control mt-2" name="imgURL" id="upload-photo" accept="image/*">
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="fullName" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="fullName" name="fullName" value="${not empty staff ? staff.fullName : (not empty resident ? resident.fullName : 'Guest')}">
-                            <input type="hidden" class="form-control" id="userID" name="userID" value="${not empty staff ? staff.staffId : (not empty resident ? resident.residentId : 'Guest')}">
+                            <input type="text" class="form-control" id="fullName" name="fullName" value="<c:out value='${resident.fullName}'/>">
+                            <input type="hidden" class="form-control" id="userID" name="userID" value="<c:out value='${resident.residentId}'/>">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" disabled name="email" value="${not empty staff ? staff.email : (not empty resident ? resident.email : 'N/A')}">
+                            <input type="email" class="form-control" id="email" disabled name="email" value="<c:out value='${resident.email}'/>">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="phone" class="form-label">Phone</label>
-                            <input type="text" class="form-control" id="phone" name="phoneNumber" value="${not empty staff ? staff.phoneNumber : (not empty resident ? resident.phoneNumber : 'N/A')}">
+                            <input type="text" class="form-control" id="phone" name="phoneNumber" value="<c:out value='${resident.phoneNumber}'/>">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="address" class="form-label">Address</label>
-                            <input type="text" class="form-control" id="address" name="address" value="Hà Nội">
+                            <input type="text" class="form-control" id="address" name="address" value="Hanoi">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="dob" class="form-label">Date Of Birth</label>
-                            <input type="date" class="form-control" id="dob" name="dob" value="${not empty staff ? staff.dob : (not empty resident ? resident.dob : 'N/A')}">
+                            <input type="date" class="form-control" id="dob" name="dob" value="<c:out value='${resident.formattedDate}'/>">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="sex" class="form-label">Sex</label>
                             <select class="form-select" id="sex" name="sex">
-                                <option value="Male" ${((not empty staff ? staff.sex : resident.sex) == 'Male') ? 'selected' : ''}>Nam</option>
-                                <option value="Female" ${((not empty staff ? staff.sex : resident.sex) == 'Female') ? 'selected' : ''}>Nữ</option>
-                                <option value="Other" ${((not empty staff ? staff.sex : resident.sex) == 'Other') ? 'selected' : ''}>Khác</option>
+                                <option value="Male" ${resident.sex == 'Male' ? 'selected' : ''}>Male</option>
+                                <option value="Female" ${resident.sex == 'Female' ? 'selected' : ''}>Female</option>
+                                <option value="Other" ${resident.sex == 'Other' ? 'selected' : ''}>Other</option>
                             </select>
                         </div>
                         <div class="col-md-12 mb-3">
@@ -65,16 +65,18 @@
                             <input type="password" class="form-control" id="password" value="*******" disabled>
                         </div>
                     </div>
+
                     <c:if test="${not empty errors}">
                         <div class="alert alert-danger">
                             <strong>An error has occurred:</strong>
                             <ul class="mb-0">
                                 <c:forEach var="error" items="${errors}">
-                                    <li>${error}</li>
+                                    <li><c:out value='${error}'/></li>
                                     </c:forEach>
                             </ul>
                         </div>
                     </c:if>
+
                     <div class="d-flex justify-content-between">
                         <button type="submit" class="btn btn-primary">Save</button>
                         <button type="reset" class="btn btn-secondary">Cancel</button>

@@ -5,7 +5,7 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,6 +41,27 @@
                 scrollbar-width: none;
             }
         </style>
+        <script>
+                            function formatDecimal(input) {
+                                let value = input.value.replace(/[^0-9.]/g, '').trim(); // Chỉ giữ lại số và dấu chấm
+                                let floatValue = parseFloat(value);
+
+                                if (!isNaN(floatValue)) {
+                                    input.value = floatValue.toFixed(2); // Hiển thị dưới dạng xxx.00
+                                } else {
+                                    input.value = "0.00"; // Nếu không hợp lệ, đặt thành 0.00
+                                }
+                            }
+
+                            function handleAmountInput(event, input) {
+                                if (event.key === "Enter" || event.type === "blur") {
+                                    formatDecimal(input);
+                                }
+                            }
+
+                           
+</script>
+
     </head>
 
     <body>
@@ -66,11 +87,7 @@
                             <input type="text" class="form-control" id="description" name="description" required>
                         </div>
                         <!-- Hiển thị lỗi chung -->
-                        <c:if test="${not empty errorde}">
-                            <div class="alert alert-danger" role="alert">
-                                ${errorde}
-                            </div>
-                        </c:if>
+
 
                         <div class="form-group mb-3">
                             <label for="dueDate">Due Date</label>
@@ -130,7 +147,10 @@
                                             <tr>
                                                 <td>${loop.index + 1}</td>
                                                 <td><input type="text" class="form-control" name="descriptionde" value="${de.description}" required></td>
-                                                <td><input type="text" class="form-control" name="amount" value="${de.amount}" required></td>
+                                                <td>
+                                                    <input type="text" class="form-control" name="amount" required onblur="formatInputAmount(event, this)" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+                                                </td>
+
                                                 <td>
                                                     <select name="typebills" class="form-select" required>
                                                         <c:forEach items="${listType}" var="o">
@@ -153,9 +173,13 @@
                                 </div>
                             </c:if>
                         </table>
-                        <button type="button" class="btn btn-primary" onclick="addInvoiceDetail()">Add Invoice Detail</button>
+                        <button type="button" class="btn btn-primary" onclick="addInvoiceDetail()">Add Invoice Detail</button> <c:if test="${not empty errorde}">
+                            <div class="alert alert-danger" role="alert">
+                                ${errorde}
+                            </div>
+                        </c:if>
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="<%= request.getContextPath() %>/InvoicesManager" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+                            <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back</a>
                             <button type="submit" class="btn btn-success">Save <i class="bi bi-plus-lg"></i></button>
                         </div>
                     </form>
@@ -169,6 +193,8 @@
 <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
 <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
 <script>
+                           
+
                             function addInvoiceDetail() {
                                 const table = document.getElementById("invoiceDetailsTable");
                                 const rowCount = table.rows.length;
@@ -182,7 +208,7 @@
 
                                 cell1.innerHTML = rowCount + 1;
                                 cell2.innerHTML = '<input type="text" class="form-control" name="descriptionde" required>';
-                                cell3.innerHTML = '<input type="text" class="form-control" name="amount" required>';
+                                cell3.innerHTML = '<input type="text" class="form-control" name="amount" required onblur="formatDecimal(this)" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\')">';
                                 cell4.innerHTML = `
             <select name="typebills" class="form-select" required>
     <c:forEach items="${listType}" var="o">
@@ -196,13 +222,14 @@
                             function removeInvoiceDetail(button) {
                                 const row = button.closest('tr');
                                 row.remove();
-                                // Update row numbers
+                                // Cập nhật số thứ tự các dòng
                                 const table = document.getElementById("invoiceDetailsTable");
                                 for (let i = 0; i < table.rows.length; i++) {
                                     table.rows[i].cells[0].innerHTML = i + 1;
                                 }
                             }
 </script>
+
 </body>
 
 </html>

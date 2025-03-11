@@ -34,6 +34,7 @@
                 -ms-overflow-style: none;
                 scrollbar-width: none;
             }
+
         </style>
     </head>
 
@@ -101,17 +102,17 @@
                             </c:forEach>
                         </tbody>
                     </table>
-                  
-                       <div class="mb-3">
+
+                    <div class="mb-3">
                         <strong>late bill penalty: </strong> $<c:out value="${invoice.muon}" />
                     </div>
-                   
+
                     <div class="mb-3">
                         <strong>Total Amount:</strong> $<c:out value="${invoice.totalAmount}" />
                     </div>
 
                     <div class="d-flex justify-content-end mt-4">
-                        <a href="<%= request.getContextPath() %>/InvoicesManager" class="btn btn-secondary">
+                        <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-secondary">
                             <i class="bi bi-arrow-left"></i> Back
                         </a>
                     </div>

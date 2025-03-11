@@ -193,8 +193,8 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                             rs.getString("ApartmentName"),
                             rs.getString("Block"),
                             rs.getString("Status"),
-                            rs.getString("Type"),
-                            rs.getInt("OwnerID")
+                            rs.getString("Type")
+                            
                     );
                 }
             }
@@ -256,8 +256,8 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                             rs.getString("ApartmentName"),
                             rs.getString("Block"),
                             rs.getString("Status"),
-                            rs.getString("Type"),
-                            rs.getInt("OwnerID")
+                            rs.getString("Type")
+                           
                     );
                 }
             }
@@ -278,8 +278,8 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                         rs.getString("ApartmentName"),
                         rs.getString("Block"),
                         rs.getString("Status"),
-                        rs.getString("Type"),
-                        rs.getInt("OwnerID")
+                        rs.getString("Type")
+                       
                 );
                 list.add(apartment);
             }
@@ -527,6 +527,30 @@ public List<Apartment> getNotNullOwnerApartments() {
                 rs.getString("Type"),
                 rs.getObject("OwnerID") != null ? rs.getInt("OwnerID") : -1
             ));
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return apartments;
+}
+public List<Apartment> getApartmentsByOwner(int ownerId) {
+    List<Apartment> apartments = new ArrayList<>();
+    String sql = "SELECT * FROM Apartment WHERE OwnerID = ?";
+    
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, ownerId);
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Apartment apartment = new Apartment();
+            apartment.setApartmentId(rs.getInt("ApartmentID"));
+            apartment.setApartmentName(rs.getString("ApartmentName"));
+            apartment.setBlock(rs.getString("Block"));
+            apartment.setStatus(rs.getString("Status"));
+            apartment.setType(rs.getString("Type"));
+            apartment.setOwnerId(rs.getInt("ownerId"));
+            apartments.add(apartment);
         }
     } catch (SQLException e) {
         e.printStackTrace();

@@ -38,10 +38,20 @@ public class Comment {
         this.commentDate = commentDate;
     }
 
+    public String getLastName() {
+        if (userName == null || userName.trim().isEmpty()) {
+            return "";
+        }
+
+        String[] words = userName.trim().split("\\s+");
+        return words[words.length - 1];
+    }
+
     public String getFormattedDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return commentDate.format(formatter);
     }
+
     public String getTimeAgo() {
         LocalDateTime now = LocalDateTime.now();
         long minutes = java.time.Duration.between(commentDate, now).toMinutes();

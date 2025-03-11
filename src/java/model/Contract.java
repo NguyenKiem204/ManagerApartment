@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,4 +27,11 @@ public class Contract {
     Apartment apartment;
     LocalDate leaseStartDate;
     LocalDate leaseEndDate;
+    public Date getFormattedDate1() {
+        return Date.valueOf(leaseStartDate); // Chuyển LocalDate -> SQL Date
+    }
+    public Date getFormattedDate2() {
+        return Date.valueOf(leaseEndDate); // Chuyển LocalDate -> SQL Date
+    }
 }
+

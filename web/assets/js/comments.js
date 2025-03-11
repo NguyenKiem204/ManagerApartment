@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    // Xóa loading spinner trước
-    loadComments();
-    
+    const urlParams = new URLSearchParams(window.location.search);
+    const highlightCommentId = urlParams.get('commentId');
+    loadComments(0, highlightCommentId);
     $("#comment-form").off("submit").on("submit", function (e) {
         e.preventDefault();
         const newsId = $("#newsId").val();
@@ -10,12 +10,12 @@ $(document).ready(function () {
         const content = $("#comment-content").val();
         const userName = $("#userName").val();
         const userAvatar = $("#userAvatar").val();
-        
+
         if (!content.trim()) {
             showAlert("Vui lòng nhập nội dung bình luận", "danger");
             return;
         }
-        
+
         $.ajax({
             url: "comment",
             type: "POST",
@@ -42,36 +42,39 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     $("#load-more-comments").on("click", function () {
         const offset = $(".comment").length;
         loadComments(offset);
     });
 });
 
-function loadComments(offset = 0) {
+function loadComments(offset = 0, highlightCommentId = null) {
     const newsId = $("#newsId").val();
     const limit = 4;
-    
+    const commentIdParam = (offset === 0 && highlightCommentId) ? highlightCommentId : null;
+
     $.ajax({
         url: "comment",
         type: "GET",
-        data: { 
-            newsId: newsId, 
+        data: {
+            newsId: newsId,
             offset: offset,
-            limit: limit
+            limit: limit,
+            commentId: commentIdParam
         },
         dataType: "json",
         success: function (response) {
             if (offset === 0) {
                 $("#comments-list").empty();
             }
-            
+
             if (response.length > 0) {
                 response.forEach(function (comment) {
-                    addCommentToDOM(comment, false);
+                    const isHighlighted = (highlightCommentId && comment.commentId == highlightCommentId);
+                    addCommentToDOM(comment, false, isHighlighted);
                 });
-                
+
                 if (response.length < limit) {
                     $("#load-more-comments").hide();
                 } else {
@@ -94,7 +97,16 @@ function loadComments(offset = 0) {
     });
 }
 
-function addCommentToDOM(comment, isNew) {
+function escapeHtml(unsafe) {
+    return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+}
+
+function addCommentToDOM(comment, isNew, isHighlighted = false) {
     const contextPath = window.location.pathname.split('/')[1];
     let fixedAvatarPath = comment.userAvatar;
     if (fixedAvatarPath && !fixedAvatarPath.startsWith(`/${contextPath}`)) {
@@ -104,24 +116,37 @@ function addCommentToDOM(comment, isNew) {
             fixedAvatarPath = `/${contextPath}/${fixedAvatarPath}`;
         }
     }
-    
+    const highlightClass = isHighlighted ? 'highlighted-comment' : '';
+
     const commentHtml = `
-        <div class="comment mb-3">
-            <div class="comment-avatar">
-                <img src="${fixedAvatarPath}" alt="Avatar">
-            </div>
-            <div class="comment-content">
-                <strong>${comment.userName}:</strong>
-                <p>${comment.content}</p>
-                <small class="text-muted" title="${comment.formattedDate}" >${comment.date || 'Just now'}</small>
-            </div>
+    <div id="comment-${comment.commentId}" class="comment mb-3 ${highlightClass}">
+        <div class="comment-avatar">
+            <img src="${fixedAvatarPath}" alt="Avatar">
         </div>
-    `;
+        <div class="comment-content">
+            <strong>${escapeHtml(comment.userName)}:</strong>
+            <p>${escapeHtml(comment.content)}</p>
+            <small class="text-muted" title="${escapeHtml(comment.formattedDate)}">
+                ${escapeHtml(comment.date) || 'Just now'}
+            </small>
+        </div>
+    </div>
+`;
+
+
     if (isNew) {
         $("#comments-list").prepend(commentHtml);
     } else {
         $("#comments-list").append(commentHtml);
     }
+    if (isHighlighted) {
+        setTimeout(() => {
+            const element = document.getElementById(`comment-${comment.commentId}`);
+            if (element) {
+                element.scrollIntoView({behavior: 'smooth', block: 'center'});
+            }
+        }, 500);
+}
 }
 function showAlert(message, type) {
     const alertHtml = `
@@ -130,7 +155,7 @@ function showAlert(message, type) {
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     `;
-    
+
     $("#comment-alerts").html(alertHtml);
     setTimeout(function () {
         $(".alert").alert('close');

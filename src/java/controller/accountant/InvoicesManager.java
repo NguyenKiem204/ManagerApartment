@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import model.Apartment;
 import model.Invoices;
 
@@ -24,7 +25,7 @@ import model.Invoices;
  *
  * @author nguye
  */
-@WebServlet(name = "InvoicesManager", urlPatterns = {"/InvoicesManager"})
+@WebServlet(name = "InvoicesManager", urlPatterns = {"/accountant/InvoicesManager"})
 public class InvoicesManager extends HttpServlet {
 
     /**
@@ -86,14 +87,19 @@ public class InvoicesManager extends HttpServlet {
             List<Invoices> list = Idao.filterInvoices(status, fromDate, dueDate);
 
             if (search != null && !search.isEmpty()) {
-                search = search.trim().replaceAll("\\s+", " ");
-                List<Invoices> searchResults = new ArrayList<>();
-                for (Invoices inv : list) {
-                    if (inv.getDescription().toLowerCase().contains(search.toLowerCase()) || inv.getApartment().getApartmentName().toLowerCase().contains(search.toLowerCase())) {
-                        searchResults.add(inv);
+                search = search.trim().replaceAll("\\s+", " ").replace('"', '\'');
+                if (!Pattern.matches("^[a-zA-Z0-9 ,.!?'-]+$", search)) {
+                    request.setAttribute("message", "Invalid search input");
+                } else {
+                    List<Invoices> searchResults = new ArrayList<>();
+                    for (Invoices inv : list) {
+                        if (inv.getDescription().toLowerCase().contains(search.toLowerCase())
+                                || inv.getApartment().getApartmentName().toLowerCase().contains(search.toLowerCase())) {
+                            searchResults.add(inv);
+                        }
                     }
+                    list = searchResults;
                 }
-                list = searchResults;
             }
             String page = request.getParameter("page");
             if (page == null) {
@@ -114,7 +120,7 @@ public class InvoicesManager extends HttpServlet {
             request.setAttribute("selectedFromDate", fromDateStr);
             request.setAttribute("selectedDueDate", dueDateStr);
             session.setAttribute("ListInvoices", list);
-            request.getRequestDispatcher("accountant/InvoiceManager.jsp").forward(request, response);
+            request.getRequestDispatcher("InvoiceManager.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             e.printStackTrace();

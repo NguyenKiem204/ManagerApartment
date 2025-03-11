@@ -31,4 +31,8 @@ public class Apartment {
         this.status = status;
         this.type = type;
     }
+
+    public Apartment(int apartmentId) {
+        this.apartmentId = apartmentId;
+    }
 }

@@ -25,7 +25,7 @@ import model.Resident;
  *
  * @author nguye
  */
-@WebServlet(name="ViewHistoryInvoice", urlPatterns={"/ViewHistoryInvoice"})
+@WebServlet(name="ViewHistoryInvoice", urlPatterns={"/owner/ViewHistoryInvoice"})
 public class ViewHistoryInvoice extends HttpServlet {
    
     /** 
@@ -114,7 +114,7 @@ public class ViewHistoryInvoice extends HttpServlet {
             request.setAttribute("selectedFromDate", fromDateStr);
             request.setAttribute("selectedDueDate", dueDateStr);
             session.setAttribute("ListHistory", list);
-            request.getRequestDispatcher("owner/ViewHistoryInvoice.jsp").forward(request, response);
+            request.getRequestDispatcher("ViewHistoryInvoice.jsp").forward(request, response);
         } catch (Exception e) {
             System.out.println(e);
         }

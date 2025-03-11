@@ -34,8 +34,8 @@
                                     <div class="card news-item">
                                         <img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="card-img-top img-fluid" alt="News Image">
                                         <div class="card-body">
-                                            <h5 class="card-title truncated-text" style="height: 65px">${news.title}</h5>
-                                            <p class="text-muted">Create date: ${news.formattedDate}</p>
+                                            <h5 class="card-title truncated-text" style="height: 65px"><c:out value="${news.title}"></c:out></h5>
+                                            <p class="text-muted">Create date: <c:out value="${news.formattedDate}"></c:out></p>
                                             <a href="news-detail?newsId=${news.newsID}" class="btn btn-primary mt-1">Đọc thêm</a>
                                         </div>
                                     </div>

@@ -30,7 +30,7 @@ import model.TypeBill;
  *
  * @author nguye
  */
-@WebServlet(name = "AddNewInvoices", urlPatterns = {"/addnewinvoice"})
+@WebServlet(name = "AddNewInvoices", urlPatterns = {"/accountant/addnewinvoice"})
 public class AddNewInvoices extends HttpServlet {
 
     /**
@@ -101,7 +101,7 @@ public class AddNewInvoices extends HttpServlet {
         if (errorde != null) {
             request.setAttribute("errorde", errorde);
         }
-        request.getRequestDispatcher("accountant/AddNewInvoice.jsp").forward(request, response);
+        request.getRequestDispatcher("AddNewInvoice.jsp").forward(request, response);
     }
 
     /**
@@ -121,6 +121,12 @@ public class AddNewInvoices extends HttpServlet {
             String description = request.getParameter("description");
             String dueDateStr = request.getParameter("dueDate");
             description = description.trim().replaceAll("\\s+", " ");
+            if (!isValidDescription(description)) {
+                request.setAttribute("errorde", "Description contains invalid characters.");
+                doGet(request, response);
+                return;
+            }
+
             if (apartmentIdStr == null || apartmentIdStr.isEmpty()
                     || description == null || description.trim().isEmpty()
                     || dueDateStr == null || dueDateStr.isEmpty()) {
@@ -184,6 +190,12 @@ public class AddNewInvoices extends HttpServlet {
                         doGet(request, response);
                         return;
                     }
+                    if (!isValidDescription(desc)) {
+                        request.setAttribute("errorde", "Description contains invalid characters.");
+                        doGet(request, response);
+                        return;
+                    }
+
                     if (amount <= 0) {
                         request.setAttribute("amountError", "Amount cannot be negative");
                         doGet(request, response);
@@ -225,5 +237,9 @@ public class AddNewInvoices extends HttpServlet {
          *
          * @return a String containing servlet description
          */
+    }
+
+    public boolean isValidDescription(String input) {
+        return input.matches("^[a-zA-Z0-9\\s.,!?'\"()\\-_/]{1,500}$");
     }
 }

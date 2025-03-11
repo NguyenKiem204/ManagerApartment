@@ -19,7 +19,7 @@ import java.lang.System.Logger.Level;
  *
  * @author nguye
  */
-@WebServlet(name = "paymentSuccess", urlPatterns = {"/paymentSuccess"})
+@WebServlet(name = "paymentSuccess", urlPatterns = {"/owner/paymentSuccess"})
 public class paymentSuccess extends HttpServlet {
 
     /**
@@ -60,7 +60,7 @@ public class paymentSuccess extends HttpServlet {
             }
 
             // Chuyển hướng sang trang PaymentSuccess.jsp
-            request.getRequestDispatcher("owner/PaymentSuccess.jsp").forward(request, response);
+            request.getRequestDispatcher("PaymentSuccess.jsp").forward(request, response);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().println("Internal server error: " + e.getMessage());
