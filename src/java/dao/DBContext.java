@@ -16,7 +16,7 @@ public class DBContext {
 
              String url = "jdbc:sqlserver://localhost:1433;databaseName=ApartmentManagement;encrypt=false;trustServerCertificate=true";
             String userName = "sa";
-            String password = "123456789";
+            String password = "123";
 
             return DriverManager.getConnection(url, userName, password);
         } catch (ClassNotFoundException e) {

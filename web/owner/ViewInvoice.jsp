@@ -124,7 +124,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                     <h2>Invoices</h2>
                     <div class="d-flex align-items-center">
-                        <a href="<%= request.getContextPath() %>/ViewHistoryInvoice" class="btn d-flex align-items-center me-2" 
+                        <a href="<%= request.getContextPath() %>/owner/ViewHistoryInvoice" class="btn d-flex align-items-center me-2" 
                            style="background-color: orange; border-color: orange; color: white;">
                             View History
                         </a>
@@ -184,10 +184,10 @@
                                         <p>Islate</p>
                                     </c:if>
                                 </td>
-                                <td style="width:100px"><a href="<%= request.getContextPath() %>/PaymentServlet?invoiceID=${l.invoiceID}" class="btn btn-success btn-sm">
+                                <td style="width:100px"><a href="<%= request.getContextPath() %>/owner/PaymentServlet?invoiceID=${l.invoiceID}" class="btn btn-success btn-sm">
                                         <i class="fas fa-credit-card"></i> 
                                     </a>
-                                    <a href="<%= request.getContextPath() %>/DetailInvoiceOwner?invoiceID=${l.invoiceID}&page=viewinvoice" class="btn btn-info btn-sm">
+                                    <a href="<%= request.getContextPath() %>/owner/DetailInvoiceOwner?invoiceID=${l.invoiceID}&page=viewinvoice" class="btn btn-info btn-sm">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                 </td>
@@ -213,20 +213,20 @@
                             </c:if>
                         </c:if>
                         <c:if test="${requestScope.currentPage > 1}">
-                            <a href="ViewInvoice?page=${requestScope.currentPage - 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="/ownerViewInvoice?page=${requestScope.currentPage - 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
                                 &lt;
                             </a>
                         </c:if>
                         <c:forEach begin="${startPage}" end="${endPage}" var="page">
-                            <a href="ViewInvoice?page=${page}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="/ownerViewInvoice?page=${page}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;
                                <c:if test='${page == requestScope.currentPage}'> background-color: #007bff; color: white; </c:if>">
                                 ${page}
                             </a>
                         </c:forEach>
                         <c:if test="${requestScope.currentPage < requestScope.totalPage}">
-                            <a href="ViewInvoice?page=${requestScope.currentPage + 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="/ownerViewInvoice?page=${requestScope.currentPage + 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
                                 &gt;
                             </a>

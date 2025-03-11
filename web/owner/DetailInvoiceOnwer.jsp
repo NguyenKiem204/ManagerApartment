@@ -113,14 +113,14 @@
 
                     <c:if test="${page eq 'viewhistory'}">
                         <div class="d-flex justify-content-end mt-4">
-                            <a href="<%= request.getContextPath() %>/ViewHistoryInvoice" class="btn btn-secondary">
+                            <a href="<%= request.getContextPath() %>/owner/ViewHistoryInvoice" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left"></i> Back
                             </a>
                         </div>
                     </c:if>
                      <c:if test="${page eq 'viewinvoice'}">
                         <div class="d-flex justify-content-end mt-4">
-                            <a href="<%= request.getContextPath() %>/ViewInvoice" class="btn btn-secondary">
+                            <a href="<%= request.getContextPath() %>/owner/ViewInvoice" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left"></i> Back
                             </a>
                         </div>
