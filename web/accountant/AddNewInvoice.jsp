@@ -14,21 +14,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Invoice Manager</title>
         <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />   
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="<%= request.getContextPath() %>/https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
-              rel="stylesheet" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
-
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
-
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css"/>
-        <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
-        <link rel="shortcut icon" href="<%= request.getContextPath() %>assets/images/favicon/favicon.png" type="image/x-icon" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer" />
+       
         <style>
 
             .active::-webkit-scrollbar {
@@ -41,37 +27,40 @@
                 scrollbar-width: none;
             }
         </style>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script>
-                            function formatDecimal(input) {
-                                let value = input.value.replace(/[^0-9.]/g, '').trim(); // Chỉ giữ lại số và dấu chấm
-                                let floatValue = parseFloat(value);
+            function formatDecimal(input) {
+                let value = input.value.replace(/[^0-9.]/g, '').trim(); // Chỉ giữ lại số và dấu chấm
+                let floatValue = parseFloat(value);
 
-                                if (!isNaN(floatValue)) {
-                                    input.value = floatValue.toFixed(2); // Hiển thị dưới dạng xxx.00
-                                } else {
-                                    input.value = "0.00"; // Nếu không hợp lệ, đặt thành 0.00
-                                }
-                            }
+                if (!isNaN(floatValue)) {
+                    input.value = floatValue.toFixed(2); // Hiển thị dưới dạng xxx.00
+                } else {
+                    input.value = "0.00"; // Nếu không hợp lệ, đặt thành 0.00
+                }
+            }
 
-                            function handleAmountInput(event, input) {
-                                if (event.key === "Enter" || event.type === "blur") {
-                                    formatDecimal(input);
-                                }
-                            }
+            function handleAmountInput(event, input) {
+                if (event.key === "Enter" || event.type === "blur") {
+                    formatDecimal(input);
+                }
+            }
 
-                           
-</script>
+
+        </script>
 
     </head>
 
     <body>
-        <%@include file="menuaccountant.jsp" %>
+         <%@include file="/manager/menumanager.jsp" %>
         <div id="main">
 
             <main  id="content">
                 <div class="card p-4 shadow-lg rounded-4" style="max-width: 1000px; margin: 0 auto;">
                     <h4 class="text-center mb-4">Add New Invoice</h4>
-                    <form action="addnewinvoice" method="post">
+                    <form action="addnewinvoice" method="post" >
                         <div class="form-group mb-3">
 
                             <label>Apartment</label>
@@ -91,7 +80,7 @@
 
                         <div class="form-group mb-3">
                             <label for="dueDate">Due Date</label>
-                            <input type="date" class="form-control" id="dueDate" name="dueDate" required>
+                            <input type="text" class="form-control" id="dueDate" name="dueDate" required>
 
                         </div>
                         <!-- Hiển thị lỗi Due Date -->
@@ -186,50 +175,70 @@
                 </div>
             </main>
         </div>
-    </div>
-</div>
-<script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
-<script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
-<script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
-<script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
-<script>
-                           
 
-                            function addInvoiceDetail() {
-                                const table = document.getElementById("invoiceDetailsTable");
-                                const rowCount = table.rows.length;
-                                const row = table.insertRow(rowCount);
 
-                                const cell1 = row.insertCell(0);
-                                const cell2 = row.insertCell(1);
-                                const cell3 = row.insertCell(2);
-                                const cell4 = row.insertCell(3);
-                                const cell5 = row.insertCell(4);
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                flatpickr("#dueDate", {
+                    dateFormat: "d/m/Y", // Hiển thị dd/MM/yyyy
+                    allowInput: true
+                });
+            });
+        </script>
+        <script>
 
-                                cell1.innerHTML = rowCount + 1;
-                                cell2.innerHTML = '<input type="text" class="form-control" name="descriptionde" required>';
-                                cell3.innerHTML = '<input type="text" class="form-control" name="amount" required onblur="formatDecimal(this)" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\')">';
-                                cell4.innerHTML = `
-            <select name="typebills" class="form-select" required>
-    <c:forEach items="${listType}" var="o">
-                    <option value="${o.id}">${o.name}</option>
-    </c:forEach>
-            </select>
-        `;
-                                cell5.innerHTML = '<button type="button" class="btn btn-danger" onclick="removeInvoiceDetail(this)">Remove</button>';
-                            }
 
-                            function removeInvoiceDetail(button) {
-                                const row = button.closest('tr');
-                                row.remove();
-                                // Cập nhật số thứ tự các dòng
-                                const table = document.getElementById("invoiceDetailsTable");
-                                for (let i = 0; i < table.rows.length; i++) {
-                                    table.rows[i].cells[0].innerHTML = i + 1;
-                                }
-                            }
-</script>
 
-</body>
+            function addInvoiceDetail() {
+                const table = document.getElementById("invoiceDetailsTable");
+                const rowCount = table.rows.length;
+                const row = table.insertRow(rowCount);
+
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                const cell3 = row.insertCell(2);
+                const cell4 = row.insertCell(3);
+                const cell5 = row.insertCell(4);
+
+                cell1.innerHTML = rowCount + 1;
+                cell2.innerHTML = '<input type="text" class="form-control" name="descriptionde" required>';
+                cell3.innerHTML = '<input type="text" class="form-control" name="amount" required onblur="formatDecimal(this)" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\')">';
+                cell4.innerHTML = `
+                    <select name="typebills" class="form-select" required>
+            <c:forEach items="${listType}" var="o">
+                            <option value="${o.id}">${o.name}</option>
+            </c:forEach>
+                    </select>
+                `;
+                cell5.innerHTML = '<button type="button" class="btn btn-danger" onclick="removeInvoiceDetail(this)">Remove</button>';
+            }
+
+            function removeInvoiceDetail(button) {
+                const row = button.closest('tr');
+                row.remove();
+                const table = document.getElementById("invoiceDetailsTable");
+                for (let i = 0; i < table.rows.length; i++) {
+                    table.rows[i].cells[0].innerHTML = i + 1;
+                }
+            }
+            document.addEventListener("DOMContentLoaded", function () {
+                const dueDateInput = document.getElementById("dueDate");
+
+                dueDateInput.addEventListener("change", function () {
+                    if (this.value) {
+                        const date = new Date(this.value);
+                        const formattedDate = date.toLocaleDateString("vi-VN"); // Hiển thị theo dd/MM/yyyy
+                        this.setAttribute("data-formatted-date", formattedDate);
+                        console.log("Selected Date:", formattedDate); // Kiểm tra trong console
+                    }
+                });
+            });
+
+        </script>
+
+
+
+
+    </body>
 
 </html>

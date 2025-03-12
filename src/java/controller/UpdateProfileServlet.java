@@ -23,7 +23,6 @@ import java.util.List;
 import jakarta.servlet.http.Part;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 import validation.Validate;
 
 /**
@@ -133,7 +132,8 @@ public class UpdateProfileServlet extends HttpServlet {
             request.getRequestDispatcher("changeprofile.jsp").forward(request, response);
             return;
         }
-        LocalDate dob = LocalDate.parse(dobParam);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        LocalDate dob = LocalDate.parse(dobParam, formatter);
         fullName = fullName.trim().replaceAll("\\s+", " ");
         HttpSession session = request.getSession();
 

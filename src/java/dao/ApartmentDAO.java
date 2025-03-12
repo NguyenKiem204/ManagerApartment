@@ -193,7 +193,8 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                             rs.getString("ApartmentName"),
                             rs.getString("Block"),
                             rs.getString("Status"),
-                            rs.getString("Type")
+                            rs.getString("Type"),
+                            rs.getInt("OwnerID")
                             
                     );
                 }
@@ -278,8 +279,8 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                         rs.getString("ApartmentName"),
                         rs.getString("Block"),
                         rs.getString("Status"),
-                        rs.getString("Type")
-                       
+                        rs.getString("Type"),
+                       rs.getInt("OwnerID")
                 );
                 list.add(apartment);
             }

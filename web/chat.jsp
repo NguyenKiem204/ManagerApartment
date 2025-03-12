@@ -26,14 +26,14 @@
                         <c:forEach var="user" items="${list}">
                             <a href="chat?email=${user.email}">
                                 <div class="contact ${user.email == chatwith.email ? 'active' : ''}">
-                                    <img alt="Profile picture of ${user.fullName}" height="40" src="<%= request.getContextPath() %>/${user.image.imageURL}"
+                                    <img alt="Profile picture of <c:out value="${user.fullName}"></c:out>" height="40" src="<%= request.getContextPath() %>/${user.image.imageURL}"
                                          width="40" />
                                     <div>
                                         <div class="name">${user.fullName}</div>
                                         <div class="time">
                                             <c:choose>
                                                 <c:when test="${user.lastMessage != null}">
-                                                    ${user.lastMessage}
+                                                    <c:out value="${user.lastMessage}"></c:out>
                                                 </c:when>
                                                 <c:otherwise>
                                                     Bắt đầu cuộc trò chuyện
@@ -51,7 +51,7 @@
                         <c:if test="${not empty chatwith}">
                             <c:set var="user" value="${chatwith}" />
                             <div class="user-info">
-                                <img alt="Profile picture of ${user.fullName}" height="40" 
+                                <img alt="Profile picture of <c:out value="${user.fullName}"></c:out> " height="40" 
                                      src="<%= request.getContextPath() %>/${user.image.imageURL}" width="40" />
                                 <div>
                                     ${user.fullName} 

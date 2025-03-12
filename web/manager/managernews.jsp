@@ -61,9 +61,9 @@
                             <c:forEach var="news" items="${newsList}">
                                 <tr>
                                     <td>${i+1}</td>
-                                    <td class="title">${news.title}</th>
-                                    <td>${news.formattedDate}</td>
-                                    <td><img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="image-news shadow" alt="${news.title}" /></td>
+                                    <td class="title"><c:out value="${news.title}"></c:out></th>
+                                    <td><c:out value="${news.formattedDate}"></c:out></td>
+                                    <td><img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="image-news shadow" alt="<c:out value="${news.title}"></c:out>" /></td>
                                     <td><div class="btn1">
                                             <button 
                                                 data-id="${news.newsID}"

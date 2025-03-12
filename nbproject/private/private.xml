@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/assets/css/menu.css</file>
             <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/feedbackreviewdetail.jsp</file>
             <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/manager/menumanager.jsp</file>
@@ -18,6 +19,46 @@
             <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/manager/FormFeedbackManagerServlet.java</file>
             <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/manager/RequestManagerServlet.java</file>
             <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/model/Notification.java</file>
+=======
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/owner/feedback.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/owner/SepayWebhookServlet.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/HomeAccountantServlet.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/PaymentTransactionDAO.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/owner/DetailInvoiceOnwer.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/changePassword.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/makepaid.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/UpdateStatusInvoice.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/owner/OnlinePayment.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/owner/home.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/ViewExpense.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/ViewExpense.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/manager/mngapartment.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/AddNewInvoice.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/ExpenseDAO.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/TypeExpense.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/owner/CheckPaymentStatusServlet.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/InvoiceManager.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/owner/ViewInvoice.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/AddNewInvoices.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/UpdateStatusInvoice.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/auth/LoginFilter.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/owner/ViewHistoryInvoice.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/owner/paymentSuccess.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/Expense.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/owner/DetailInvoiceOwner.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/owner/ViewHistoryInvoice.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/owner/ViewInvoice.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/owner/PaymentServlet.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/InvoiceDAO.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/ApartmentDAO.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/owner/PaymentSuccess.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/Test.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/manager/menumanager.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/Invoices.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/ResidentDAO.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/auth/AccountantFilter.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/changepasswordsuccess.jsp</file>
+>>>>>>> 0e5f1ba3966d88a7d82d704f2db818c0f8fca006
         </group>
     </open-files>
 </project-private>

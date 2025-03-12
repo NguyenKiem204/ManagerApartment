@@ -27,6 +27,7 @@ import java.util.Map;
 import model.Comment;
 import model.Resident;
 import model.Staff;
+import org.json.JSONArray;
 
 /**
  *
@@ -78,7 +79,18 @@ public class HomeManagerServlet extends HttpServlet {
         InvoiceDAO invoiceDAO = new InvoiceDAO();
         CommentDAO commentDAO = new CommentDAO();
         RequestDAO requestDAO = new RequestDAO();
-        InvoiceDAO invoiceDAO1 = new InvoiceDAO();
+        Map<String, Integer> requestData = requestDAO.getRequestCountLast7Days();
+
+        JSONArray dateArray = new JSONArray();
+        JSONArray valueArray = new JSONArray();
+
+        for (Map.Entry<String, Integer> entry : requestData.entrySet()) {
+            dateArray.put(entry.getKey() + "T00:00:00.000Z");
+            valueArray.put(entry.getValue());
+        }
+        request.setAttribute("requests", requestData);
+        request.setAttribute("chartDates", dateArray.toString());
+        request.setAttribute("chartData", valueArray.toString());
         List<Comment> comments = commentDAO.selectTop2CommentRecent();
         int numberRequest = requestDAO.getCountStatusPending();
         int numberUnpaidInvoice = invoiceDAO.getCountInvoiceUnpaid();

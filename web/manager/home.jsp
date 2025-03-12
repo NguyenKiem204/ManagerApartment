@@ -119,46 +119,29 @@
                             <div class="col-12 col-xl-4">
                                 <div class="card border-cam">
                                     <div class="card-header">
-                                        <h4>Number of Population</h4>
+                                        <h4>Request Last 7days</h4>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex align-items-center">
-                                                    <svg class="bi text-primary" width="32" height="32" fill="blue"
-                                                         style="width:10px">
-                                                    <use
-                                                        xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
+                                                    <svg class="bi text-primary" width="32" height="32" fill="blue" style="width:10px">
+                                                    <use xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
                                                     </svg>
-                                                    <h5 class="mb-0 ms-3">Thanh</h5>
+                                                    <h5 class="mb-0 ms-3">Total</h5>
                                                 </div>
                                             </div>
                                             <div class="col-6">
-                                                <h5 class="mb-0">862</h5>
+                                                <c:set var="totalRequests" value="0" />
+                                                <c:forEach items="${requests}" var="entry">
+                                                    <c:set var="totalRequests" value="${totalRequests + entry.value}" />
+                                                </c:forEach>
+                                                <h5 class="mb-0">${totalRequests}</h5>
                                             </div>
                                             <div class="col-12">
-                                                <div id="chart-europe"></div>
+                                                <div id="chart-requests"></div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="d-flex align-items-center">
-                                                    <svg class="bi text-success" width="32" height="32" fill="blue"
-                                                         style="width:10px">
-                                                    <use
-                                                        xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
-                                                    </svg>
-                                                    <h5 class="mb-0 ms-3">Thanh</h5>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <h5 class="mb-0">375</h5>
-                                            </div>
-                                            <div class="col-12">
-                                                <div id="chart-america"></div>
-                                            </div>
-                                        </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -227,19 +210,19 @@
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-xl">
                                         <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" alt="<c:out value="${staff.fullName}"></c:out>">
-                                    </div>
-                                    <div class="ms-3 name">
-                                        <h5 class="font-bold">Admin</h5>
-                                        <h6 class="text-muted mb-0"><c:out value="${staff.fullName}"></c:out></h6>
+                                        </div>
+                                        <div class="ms-3 name">
+                                            <h5 class="font-bold">Admin</h5>
+                                            <h6 class="text-muted mb-0"><c:out value="${staff.fullName}"></c:out></h6>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card border-cam">
-                            <div class="card-header">
-                                <h4>Recent Messages</h4>
-                            </div>
-                            <div class="card-content pb-4">
+                            <div class="card border-cam">
+                                <div class="card-header">
+                                    <h4>Recent Messages</h4>
+                                </div>
+                                <div class="card-content pb-4">
                                 <c:forEach var="user" items="${list}">
                                     <div class="recent-message d-flex px-4 py-3">
                                         <div class="avatar avatar-lg">
@@ -248,8 +231,8 @@
                                         <div class="name ms-4">
                                             <h5 class="mb-1 text-truncation"><c:out value="${user.fullName}"></c:out></h5>
                                             <h6 class="text-muted mb-0 text-truncation"> <c:out value="${user.email}"></c:out></h6>
+                                            </div>
                                         </div>
-                                    </div>
                                 </c:forEach>
 
                                 <div class="px-4">
@@ -275,6 +258,75 @@
         </div>
         <script>
             var revenueData = ${listRevenue};
+            var chartDates = ${chartDates};
+            var chartData = ${chartData};
+
+            var optionsRequests = {
+                series: [
+                    {
+                        name: "Request Count",
+                        data: chartData,
+                    },
+                ],
+                chart: {
+                    height: 80,
+                    type: "area",
+                    toolbar: {
+                        show: false,
+                    },
+                },
+                colors: ["#5350e9"],
+                stroke: {
+                    width: 2,
+                },
+                grid: {
+                    show: false,
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                xaxis: {
+                    type: "datetime",
+                    categories: chartDates,
+                    axisBorder: {
+                        show: false,
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    labels: {
+                        show: false,
+                    },
+                },
+                yaxis: {
+                    labels: {
+                        show: false,
+                    },
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (value) {
+                            return value.toFixed(0);
+                        }
+                    },
+                    x: {
+                        format: "dd/MM/yy",
+                    },
+                },
+
+                stroke: {
+                    curve: 'smooth',
+                    width: 2,
+                },
+                markers: {
+                    size: 4,
+                    hover: {
+                        size: 6
+                    }
+                }
+            };
+            var chartRequests = new ApexCharts(document.querySelector("#chart-requests"), optionsRequests);
+            chartRequests.render();
         </script>
     </body>
 

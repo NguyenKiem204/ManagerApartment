@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -50,7 +51,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="dob" class="form-label">Date Of Birth</label>
-                            <input type="date" class="form-control" id="dob" name="dob" value="<c:out value='${resident.formattedDate}'/>">
+                            <input type="text" class="form-control" name="dob" value="<fmt:formatDate value="${resident.formattedDate}" pattern="dd/MM/yyyy"/>" id="datePicker" placeholder="dd/MM/yyyy">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="sex" class="form-label">Sex</label>
@@ -140,12 +141,6 @@
                 }
             });
         </script>
-        <script src="assets/js/bootstrap.bundle.min.js"></script>
-
-        <script src="assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="assets/js/pages/dashboard.js"></script>
-
-        <script src="assets/js/main.js"></script>
     </body>
 
 </html>
