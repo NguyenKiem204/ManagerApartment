@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package controller.accountant;
+
 import dao.InvoiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -66,10 +67,9 @@ public class makepaid extends HttpServlet {
 //        try {
 //            int id = Integer.parseInt(request.getParameter("invoiceID"));
 //            InvoiceDAO idao = new InvoiceDAO();
-//            idao.updateStatusInvoice(id);
-//            generateInvoicePDF(id);// Chuyển hướng về trang UpdateStatusInvoice
-//            response.sendRedirect("UpdateStatusInvoice");
-//
+//            idao.updateStatusInvoice(id); // Cập nhật trạng thái hóa đơn
+//            generateInvoicePDF(id); // Tạo file PDF
+//            response.sendRedirect("UpdateStatusInvoice"); // Chuyển hướng về trang UpdateStatusInvoice
 //        } catch (NumberFormatException e) {
 //            e.printStackTrace();
 //        }

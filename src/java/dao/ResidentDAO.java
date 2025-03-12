@@ -782,14 +782,13 @@ public boolean updatePassword(int residentId, String newPassword) throws SQLExce
 
     public Resident getApartmentOwnerByDepartment(int departmentID) {
         String sql = "SELECT "
-                + "    r.ResidentID, "
-                + "    r.FullName, "
-                + "    r.PhoneNumber, "
-                + "    r.Email "
-                + "FROM Contract c "
-                + "JOIN Resident r ON c.ResidentID = r.ResidentID "
-                + "JOIN Apartment a ON c.ApartmentID = a.ApartmentID "
-                + "WHERE a.ApartmentID = ? AND r.RoleID = 7 AND r.Status ='Active' ";
+            + "    r.ResidentID, "
+            + "    r.FullName, "
+            + "    r.PhoneNumber, "
+            + "    r.Email "
+            + "FROM Apartment a "
+            + "JOIN Resident r ON a.OwnerID = r.ResidentID "
+            + "WHERE a.ApartmentID = ? AND r.Status = 'Active'";
 
         Resident owner = null;
 

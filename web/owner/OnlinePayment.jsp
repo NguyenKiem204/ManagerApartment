@@ -54,7 +54,7 @@
         </style>
     </head>
     <body>
-        <%@include file="menuowner.jsp" %>
+         <%@include file="/manager/menumanager.jsp" %>
         <div class="main-content">
             <h2 class="text-center mt-4">Online Payment</h2>
             <div class="payment-container">
@@ -117,104 +117,28 @@
             </div>
         </div>
 
-        <!-- Thông báo thanh toán thành công hoặc thất bại -->
-        <c:if test="${not empty sessionScope.paymentSuccess}">
-            <div class="alert alert-success text-center" role="alert">
-                ${sessionScope.paymentSuccess}
-            </div>
-            <script>
-                setTimeout(function () {
-                    window.location.href = "<%= request.getContextPath() %>/InvoicesManager";
-                }, 5000); // Chuyển hướng sau 5 giây
-            </script>
-            <c:remove var="paymentSuccess" scope="session" />
-        </c:if>
 
-        <c:if test="${not empty sessionScope.paymentError}">
-            <div class="alert alert-danger text-center" role="alert">
-                ${sessionScope.paymentError}
-            </div>
-            <script>
-                setTimeout(function () {
-                    window.location.href = "<%= request.getContextPath() %>/InvoicesManager";
-                }, 5000); // Chuyển hướng sau 5 giây
-            </script>
-            <c:remove var="paymentError" scope="session" />
-        </c:if>
 
-        <c:if test="${not empty sessionScope.paymentSuccess}">
-            <div class="alert alert-success text-center" role="alert">
-                ${sessionScope.paymentSuccess}
-            </div>
-            <script>
-                setTimeout(function () {
-                    window.location.href = "<%= request.getContextPath() %>/InvoicesManager";
-                }, 5000); // Chuyển hướng sau 5 giây
-            </script>
-            <c:remove var="paymentSuccess" scope="session" />
-        </c:if>
-
-        <c:if test="${not empty sessionScope.paymentError}">
-            <div class="alert alert-danger text-center" role="alert">
-                ${sessionScope.paymentError}
-            </div>
-            <script>
-                setTimeout(function () {
-                    window.location.href = "<%= request.getContextPath() %>/InvoicesManager";
-                }, 5000); // Chuyển hướng sau 5 giây
-            </script>
-            <c:remove var="paymentError" scope="session" />
-        </c:if>
 
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                function startCountdown(duration) {
-                    let countdownElement = document.getElementById("countdown");
-                    if (!countdownElement)
-                        return;
 
-                    let timeLeft = duration;
-
-                    function updateCountdown() {
-                        let minutes = Math.floor(timeLeft / 60);
-                        let seconds = timeLeft % 60;
-                        countdownElement.textContent = `${minutes}m ${seconds}s`;
-
-                        if (timeLeft > 0) {
-                            timeLeft--;
-                            setTimeout(updateCountdown, 1000);
-                        } else {
-                            countdownElement.textContent = "Time expired!";
-                        }
-                    }
-
-                    updateCountdown();
-                }
-
-                startCountdown(300); // 300 giây = 5 phút
-            });
-        </script>
-        <script>
-            // Hàm kiểm tra trạng thái thanh toán
             function checkPaymentStatus() {
-                const transactionId = "${transactionId}"; // Lấy transactionId từ server
-                const invoiceID = "${invoice.invoiceID}"; // Lấy invoiceID từ server
+                const transactionId = "${transactionId}";
+                const invoiceID = "${invoice.invoiceID}";
 
                 fetch('<%= request.getContextPath() %>/owner/CheckPaymentStatusServlet?transactionId=' + transactionId)
                         .then(response => response.json())
                         .then(data => {
                             if (data.status === "completed") {
-                                // Thanh toán thành công, chuyển hướng đến trang thành công
                                 window.location.href = "<%= request.getContextPath() %>/owner/paymentSuccess?invoiceID=" + invoiceID;
                             } else {
-                                // Kiểm tra lại sau 3 giây
+
                                 setTimeout(checkPaymentStatus, 1000);
                             }
                         })
                         .catch(error => console.error('Lỗi kiểm tra trạng thái thanh toán:', error));
             }
 
-            // Bắt đầu kiểm tra trạng thái thanh toán khi trang được tải
             document.addEventListener("DOMContentLoaded", function () {
                 checkPaymentStatus();
             });

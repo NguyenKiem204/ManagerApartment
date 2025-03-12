@@ -214,5 +214,4 @@ public class Invoices {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return dueDate.format(formatter);
     }
-
 }

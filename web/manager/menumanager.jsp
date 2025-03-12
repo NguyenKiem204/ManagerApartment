@@ -273,7 +273,7 @@
                             </c:if>
                             <c:if test="${sessionScope.staff.role.roleID == 3}">
                                 <li class="sidebar-item">
-                                    <a href="<%= request.getContextPath() %>/InvoicesManager"
+                                    <a href="<%= request.getContextPath() %>/accountant/InvoicesManager"
                                        class="sidebar-link">
                                         <i class="bi bi-receipt-cutoff"></i>
                                         <span>Invoice Management</span>
@@ -282,7 +282,7 @@
                             </c:if>
                             <c:if test="${sessionScope.resident.role.roleID == 7}">
                                 <li class="sidebar-item">
-                                    <a href="<%= request.getContextPath() %>/ViewInvoice"
+                                    <a href="<%= request.getContextPath() %>/owner/ViewInvoice"
                                        class="sidebar-link">
                                         <i class="bi bi-receipt-cutoff"></i>
                                         <span>Invoice Management</span>
@@ -336,6 +336,7 @@
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 3}">
+                                        
                                         <li class="submenu-item">
                                             <a
                                                 href="<%= request.getContextPath() %>/technical/feedback">Feedback</a>
@@ -366,6 +367,10 @@
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.resident.role.roleID == 7}">
+                                        <li class="submenu-item">
+                                            <a
+                                                href="<%= request.getContextPath() %>/owner/ViewInvoice">Invoices</a>
+                                        </li>
                                         <li class="submenu-item">
                                             <a
                                                 href="<%= request.getContextPath() %>/owner/feedback">Feedback</a>
@@ -475,7 +480,7 @@
                                         <a href="login">Login</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="logout">Logout</a>
+                                        <a href="<%= request.getContextPath() %>/logout">Logout</a>
                                     </li>
                                     <li class="submenu-item">
                                         <a href="forgot-password">Forgot Password</a>
@@ -611,13 +616,13 @@
                     dateFormat: "d/m/Y",
                     locale: "en",
                     allowInput: true,
-                    maxDate: "today",
+                    maxDate: null,
                     disableMobile: "true"
                 };
                 // Khởi tạo Date Picker đơn giản
                 flatpickr("#datePicker", {
                     ...datePickerConfig,
-                    maxDate: "today"
+                    maxDate: null
                 });
                 flatpickr("#dateRangePicker", {
                     ...datePickerConfig,
