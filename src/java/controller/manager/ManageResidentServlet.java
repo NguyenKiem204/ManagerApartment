@@ -18,6 +18,7 @@ import dao.ResidentDAO;
 import dao.RoleDAO;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import model.Apartment;
@@ -26,6 +27,7 @@ import model.Image;
 import model.Resident;
 import model.Role;
 import org.json.JSONObject;
+import validation.Validate;
 
 /**
  *
@@ -219,7 +221,13 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             out.write(jsonResponse.toString());
             return;
         }
-
+        String dobError = Validate.validateDob(dobStr);
+        if(dobError != null) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", dobError);
+            out.write(jsonResponse.toString());
+            return;
+        }
         if (!phoneNumber.matches("\\d{10}")) {
             jsonResponse.put("success", false);
             jsonResponse.put("message", "Phone number must have 10 digits!");
@@ -247,8 +255,8 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             out.write(jsonResponse.toString());
             return;
         }
-
-        LocalDate dob = LocalDate.parse(dobStr);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        LocalDate dob = LocalDate.parse(dobStr, formatter);
         String status = "Active";
         String password = generateRandomPassword(5);
         Role role = roleDAO.selectById(roleId);

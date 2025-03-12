@@ -83,7 +83,6 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
     return rowUpdated;
 }
 
-
     @Override
     public int delete(Apartment apartment) {
         int row = 0;
@@ -500,7 +499,7 @@ public int getTotalApartments(String name, int ownerId, String type, String stat
     return total;
 }
 public int updateOwner(int apartmentId, int residentId) {
-    String sql = "UPDATE Apartment SET OwnerID = ? WHERE ApartmentID = ?";
+    String sql = "UPDATE Apartment SET OwnerID = ?, Status = 'Occupied' WHERE ApartmentID = ?";
     try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
         ps.setInt(1, residentId);
         ps.setInt(2, apartmentId);
@@ -557,7 +556,6 @@ public List<Apartment> getApartmentsByOwner(int ownerId) {
     }
     return apartments;
 }
-
 
     public List<String> getApartmentNames(String searchQuery) {
         List<String> apartments = new ArrayList<>();

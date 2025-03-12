@@ -251,58 +251,7 @@
                                             <a href="manageApartment">Apartment</a>
                                         </li>
                                         <li class="submenu-item">
-                                            <a href="component-badge.html">Floor</a>
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="component-breadcrumb.html">Apartment</a>
-                                        </li>
-                                        <li class="submenu-item">
                                             <a href="component-button.html">Utilities</a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                                <li class="sidebar-item has-sub">
-                                    <a href="#" class="sidebar-link">
-                                        <i class="bi bi-people-fill"></i>
-                                        <span>Staff</span>
-                                    </a>
-                                    <ul class="submenu">
-                                        <li class="submenu-item">
-                                            <a href="#">Administrative Staff</a>
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="#">Accountant</a>
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="#">Technical Board</a>
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="#">Service Provider</a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                                <li class="sidebar-item has-sub">
-                                    <a href="#" class="sidebar-link">
-                                        <i class="bi bi-collection-fill"></i>
-                                        <span>Residents</span>
-                                    </a>
-                                    <ul class="submenu">
-                                        <li class="submenu-item">
-                                            <a href="extra-component-avatar.html">List</a>
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="extra-component-sweetalert.html">Vehicles</a>
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="extra-component-toastify.html">Notifications</a>
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="extra-component-rating.html">Complaints</a>
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="extra-component-divider.html">Divider</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -337,6 +286,20 @@
                                        class="sidebar-link">
                                         <i class="bi bi-receipt-cutoff"></i>
                                         <span>Invoice Management</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="<%= request.getContextPath() %>/owner/manageContract"
+                                       class="sidebar-link">
+                                        <i class="fa-solid fa-user"></i>
+                                        <span>Tenant and Contract</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="<%= request.getContextPath() %>/owner/manageOwnerApartment"
+                                       class="sidebar-link">
+                                        <i class="fa-solid fa-house"></i>
+                                        <span>Apartment</span>
                                     </a>
                                 </li>
                             </c:if>

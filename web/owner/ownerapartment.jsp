@@ -1,6 +1,6 @@
 <%-- 
-    Document   : mngapartment
-    Created on : Mar 2, 2025, 2:17:47 AM
+    Document   : ownerapartment
+    Created on : Mar 13, 2025, 1:40:03 AM
     Author     : fptshop
 --%>
 
@@ -12,7 +12,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Manage Apartment</title>
+        <title>Owner Apartment</title>
         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
         <style>
             body {
@@ -177,156 +177,46 @@
             input:checked + .slider:before {
                 transform: translateX(14px);
             }
-
-            /* Modal content */
-            /* Modal background */
-            .modal {
-                display: none;
-
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5); /* Làm mờ nền */
-                padding-left: 600px;
-                padding-top: 30px;
+            .action-btn {
+                background-color: #007bff; 
+                color: white; 
+                border: none; 
+                padding: 2px 8px; 
+                font-size: 10px; 
+                font-weight: bold; 
+                border-radius: 5px; 
+                cursor: pointer; 
+                transition: all 0.3s ease-in-out; 
             }
 
-            .modal-content {
-                width: 40%;  /* Chiếm 40% màn hình */
-                max-width: 400px; /* Giới hạn tối đa */
-                max-height: 700px;
-
-                background: #fff;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                position: relative;
+            .action-btn:hover {
+                background-color: #0056b3; 
+                transform: scale(1.05); 
             }
 
-
-            .modal-title {
-                text-align: center;
-                color: #333;
+            .action-btn:active {
+                background-color: #004494; 
+                transform: scale(0.98); 
             }
-
-            .modal-label {
-                display: block;
-                margin-top: 5px;
-            }
-
-            .modal-input,
-            .modal-select,
-            .modal-button {
-                width: 100%;
-                padding: 10px;
-                margin-top: 0px;
-                margin-bottom: 5px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-            }
-
-            .modal-button {
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                cursor: pointer;
-                font-size: 14px;
-            }
-
-            .modal-button:hover {
-                background-color: #45a049;
-            }
-
-            .modal-close {
-                position: absolute;
-                top: 10px;
-                right: 15px;
-                font-size: 20px;
-                cursor: pointer;
-            }
-
-            .modal-close:hover {
-                color: red;
-            }
-
-            .modal-back-button {
-                display: block;
-                text-align: center;
-                margin-top: 15px;
-                text-decoration: none;
-                color: #333;
-                font-size: 14px;
-            }
-
-            .modal-back-button:hover {
-                text-decoration: underline;
-            }
-
-
 
         </style>
     </head>
 
     <body>
-        <%@include file="menumanager.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
         <!--=============================CONTENT HERE=======================-->
         <div class="w-100" style="display: flex;">
             <div class="col-3"></div>
             <div  class="col-9">
-                <h1>Apartments List</h1>
+                <h1>My Apartments</h1>
                 <%-- Hiển thị thông báo nếu có --%>
                 <c:if test="${not empty mess}">
                     <div class="message">${mess}</div>
                 </c:if>
-                <!-- Nút Thêm Cư Dân -->
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <button class="add-apartment-button btn btn-success" id="openInsertModal">Add new apartment</button>
-                </div>
-
-                <!-- Modal Form -->
-                <div id="insertApartmentModal" class="modal">
-                    <div class="modal-content">
-                        <span class="modal-close">&times;</span>
-                        <h2 class="modal-title">Add apartment</h2>
-                        <form id="insertApartmentForm">
-                            <label for="apartmentName" class="modal-label">Apartment Name:</label>
-                            <input type="text" id="apartmentName" name="apartmentName" class="modal-input" required>
-
-                            <label for="block" class="modal-label">Block:</label>
-                            <select id="block" name="block" class="modal-select" required>
-                                <option value="Male">Block A</option>
-                                <option value="Female">Block B</option>
-                                <option value="Female">Block C</option>
-                            </select>
-
-                            <label for="status" class="modal-label">Status:</label>
-                            <select id="status" name="status" class="modal-select" required>
-                                <option value="Available">Available</option>
-                                <option value="Occupied">Occupied</option>
-                                <option value="Maintenance">Maintenance</option>
-                            </select>
-
-                            <label for="type" class="modal-label">Block:</label>
-                            <select id="type" name="type" class="modal-select" required>
-                                <option value="1 Bedroom">1 Bedroom</option>
-                                <option value="2 Bedrooms">2 Bedrooms</option>
-                                <option value="3 Bedrooms">3 Bedrooms</option>
-                            </select>
-
-                            <label for="ownerId" class="modal-label">OwnerId:</label>
-                            <input type="text" id="ownerId" name="ownerId" class="modal-input" pattern="\d{4}" required>
-
-                            <button type="button" id="submitBtn" class="modal-button">Add</button>
-                        </form>
-                        <div id="message"></div>
-                    </div>
-                </div>
                 <div class=" row mb-3">
                     <!-- Cột bên trái: Bộ lọc (45%) -->
                     <div class="d-flex gap-2">
-                        <form action="manageApartment" method="get" class="d-flex gap-2 flex-grow-1">
+                        <form action="manageOwnerApartment" method="get" class="d-flex gap-2 flex-grow-1">
                             <select name="type" id="typeFilter" class="form-select" style="width: 100%;">
                                 <option value="">AllTypes</option>
                                 <option value="1 Bedroom" ${selectedType == '1 Bedroom' ? 'selected' : ''}>1 Bedroom</option>
@@ -353,23 +243,13 @@
 
                     <!-- Cột bên phải: Tìm kiếm (45%) -->
                     <div class="col-md-6">
-                        <form action="manageApartment" method="get" class="d-flex">
+                        <form action="manageOwnerApartment" method="get" class="d-flex">
                             <input type="text" name="name" placeholder="Enter an apartment name..." value="${selectedName}" class="form-control me-2" style="width: 70%;">
                             <button type="submit" class="btn btn-primary" style="width: 30%;">Search</button>
                         </form>
                     </div>
-                    <div class="col-md-5">
-                        <form action="manageApartment" method="get" class="d-flex">
-                            <input type="text" name="ownerId" placeholder="Enter an ownerId..." value="${selectedOwnerId}" class="form-control me-2" style="width: 70%;">
-                            <button type="submit" class="btn btn-primary" style="width: 30%;">Search</button>
-                        </form>
-                    </div>
+                    
                 </div>
-
-
-
-
-
                 <div class="table-container">
                     <table>
                         <thead>
@@ -379,7 +259,6 @@
                                 <th>Block</th>
                                 <th>Status</th>
                                 <th>Type</th>
-                                <th>Owner ID</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -391,9 +270,8 @@
                                     <td>${apartment.block}</td>
                                     <td>${apartment.status}</td>
                                     <td>${apartment.type}</td>
-                                    <td>${apartment.ownerId}</td>
                                     <td>
-                                        <button class="btn btn-primary btn-edit" data-id="${apartment.apartmentId}">Edit</button>
+                                        <button class="action-btn" onclick="showTenants(${apartment.apartmentId})">View Tenants</button>
                                     </td>
 
                                 </tr>
@@ -421,7 +299,6 @@
                         <li class="page-item">
                             <a class="page-link" href="?page=${currentPage - 1}
                                <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
-                               <c:if test="${selectedOwnerId != -1}">&ownerId=${selectedOwnerId}</c:if>
                                <c:if test="${not empty selectedType}">&type=${selectedType}</c:if>
                                <c:if test="${not empty selectedStatus}">&status=${selectedStatus}</c:if>
                                <c:if test="${not empty selectedBlock}">&block=${selectedBlock}</c:if>
@@ -433,7 +310,6 @@
                         <li class="page-item ${i == currentPage ? 'active' : ''}">
                             <a class="page-link" href="?page=${i}
                                <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
-                               <c:if test="${selectedOwnerId != -1}">&ownerId=${selectedOwnerId}</c:if>
                                <c:if test="${not empty selectedType}">&type=${selectedType}</c:if>
                                <c:if test="${not empty selectedStatus}">&status=${selectedStatus}</c:if>
                                <c:if test="${not empty selectedBlock}">&block=${selectedBlock}</c:if>
@@ -445,7 +321,6 @@
                         <li class="page-item">
                             <a class="page-link" href="?page=${currentPage + 1}
                                <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
-                               <c:if test="${selectedOwnerId != -1}">&ownerId=${selectedOwnerId}</c:if>
                                <c:if test="${not empty selectedType}">&type=${selectedType}</c:if>
                                <c:if test="${not empty selectedStatus}">&status=${selectedStatus}</c:if>
                                <c:if test="${not empty selectedBlock}">&block=${selectedBlock}</c:if>
@@ -459,112 +334,14 @@
                 </c:if>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            $(document).ready(function () {
-                $(".btn-edit").click(function () {
-                    var apartmentId = $(this).data("id");
+        function showTenants(apartmentId) {
+            window.location.href = "viewTenants?apartmentId="+apartmentId;
+        }
+    </script>                    
 
-                    $.ajax({
-                        url: "/ManagerApartment/manager/updateApartment",
-                        type: "GET",
-                        data: {apartmentId: apartmentId},
-                        success: function (data) {
-                            if (data.trim() === "") {
-                                alert("No data returned. Please check your server.");
-                            } else {
-                                $("#editModal .modal-body").html(data); // Hiển thị dữ liệu vào modal
-                                $("#editModal").modal("show"); // Mở modal
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("GET Error:", xhr.responseText);
-                            alert("Error loading apartment data: " + xhr.responseText);
-                        }
-                    });
-                });
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-// Xử lý lưu cập nhật
-                $(document).on("click", "#saveUpdate", function () {
-                    var formData = $("#updateApartmentForm").serialize();
-
-                    $.ajax({
-                        url: "/ManagerApartment/manager/updateApartment",
-                        type: "POST",
-                        data: formData,
-                        success: function (response) {
-                            $("#editModal").modal("hide"); // Đóng modal
-                            alert("Apartment updated successfully!"); // Thông báo thành công
-                            location.reload(); // Refresh danh sách
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("POST Error:", xhr.responseText);
-                            alert("Error updating apartment: " + xhr.responseText);
-                        }
-                    });
-                });
-
-// Xử lý sự kiện bấm vào dấu "X"
-                $(document).on("click", ".close", function () {
-                    $("#editModal").modal("hide"); // Đóng modal khi bấm dấu "X"
-                });
-
-// Xử lý sự kiện bấm ra ngoài modal để đóng
-                $(document).on("click", function (event) {
-                    if ($(event.target).is("#editModal")) {
-                        $("#editModal").modal("hide"); // Đóng modal nếu bấm ra ngoài modal
-                    }
-                });
-            });
-
-        </script>
-        <script>
-            $(document).ready(function () {
-
-                // Mở Modal
-                $("#openInsertModal").click(function () {
-                    $("#insertApartmentModal").show();
-                });
-
-                // Đóng Modal khi nhấn dấu X
-                $(".modal-close").click(function () {
-                    $("#insertApartmentModal").hide();
-                });
-
-                // Đóng Modal khi click ra ngoài
-                $(window).click(function (event) {
-                    if (event.target.id === "insertApartmentModal") {
-                        $("#insertApartmentModal").hide();
-                    }
-                });
-
-                // Gửi form bằng AJAX
-                $("#submitBtn").click(function () {
-                    let formData = $("#insertApartmentForm").serialize();
-                    $.ajax({
-                        type: "POST",
-                        url: "manageApartment",
-                        data: formData,
-                        dataType: "json",
-                        success: function (response) {
-                            if (response.success) {
-                                $("#message").html("<span style='color: green;'>" + response.message + "</span>");
-                                $("#insertApartmentForm")[0].reset(); // Reset form
-                                setTimeout(() => {
-                                    $("#insertApartmentModal").hide();
-                                    location.reload();
-                                }, 1500);
-                            } else {
-                                $("#message").html("<span style='color: red;'>" + response.message + "</span>");
-                            }
-                        },
-                        error: function () {
-                            $("#message").html("<span style='color: red;'>Lỗi khi gửi dữ liệu!</span>");
-                        }
-                    });
-                });
-            });
-        </script>
 </body>
 
 </html>

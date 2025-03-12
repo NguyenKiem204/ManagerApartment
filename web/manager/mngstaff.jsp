@@ -14,24 +14,8 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Trang chủ</title>
-
-        <link rel="preconnect" href="<%= request.getContextPath() %>/https://fonts.gstatic.com" />
-        <link href="<%= request.getContextPath() %>/https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
-              rel="stylesheet" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
-
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
-
-         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> 
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
+        <title>Manage Staff</title>
         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -317,7 +301,7 @@
             <input type="email" id="email" name="email" class="modal-input" required>
 
             <label for="dob" class="modal-label">Birth Date:</label>
-            <input type="date" id="dob" name="dob" class="modal-input" required>
+            <input type="text" id="dob" name="dob" class="modal-input" id="datePicker" placeholder="dd/MM/yyyy" required>
 
             <label for="sex" class="modal-label">Gender:</label>
             <select id="sex" name="sex" class="modal-select" required>
@@ -513,32 +497,7 @@
             });
         });
     });
-</script>
-                <!--==============================END================================-->
-
-                <footer>
-                    <div class="footer clearfix mb-0 text-muted">
-                        <div class="float-start">
-                            <p>2025 &copy; Kiemm</p>
-                        </div>
-                        <div class="float-end">
-                            <p>
-                                Crafted with
-                                <span class="text-danger"><i class="bi bi-heart"></i></span> by
-                                <a href="http://ahmadsaugi.com">NguyenKiem</a>
-                            </p>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-        </div>
-         <script src="<%= request.getContextPath() %>/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-        <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
-
-        <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
-
-        <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
+</script>         
     </body>
 
 </html>

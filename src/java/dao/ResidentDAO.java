@@ -812,5 +812,40 @@ public boolean updatePassword(int residentId, String newPassword) throws SQLExce
 
         return owner;
     }
+    public List<Resident> getTenantsByApartment(int apartmentId) {
+    String sql = "SELECT " +
+                 "    r.ResidentID, " +
+                 "    r.FullName, " +
+                 "    r.PhoneNumber, " +
+                 "    r.Email, " +
+                 "    r.Status " +
+                 "FROM Contract c " +
+                 "JOIN Resident r ON c.ResidentID = r.ResidentID " +
+                 "WHERE c.ApartmentID = ? AND r.RoleID = 6";
+
+    List<Resident> tenants = new ArrayList<>();
+
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+
+        ps.setInt(1, apartmentId);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Resident tenant = new Resident();
+                tenant.setResidentId(rs.getInt("ResidentID"));
+                tenant.setFullName(rs.getString("FullName"));
+                tenant.setPhoneNumber(rs.getString("PhoneNumber"));
+                tenant.setEmail(rs.getString("Email"));
+                tenant.setStatus(rs.getString("Status"));
+                tenants.add(tenant);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return tenants;
+}
 
 }
