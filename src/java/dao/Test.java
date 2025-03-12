@@ -114,8 +114,8 @@ for (Map.Entry<String, Integer> entry : requestCounts.entrySet()) {
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
-//        Resident resident = new Resident("Nguyễn Văn Kiem2", "123", "0331471047", "3984136534764", "nkiem348@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
-//        residentDAO.insert(resident);
+        Resident resident = new Resident("Nguyễn Văn Kiem2", "123", "0331471047", "3984136534764", "a@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
+        residentDAO.insert(resident);
 //       /
 //        imageDAO.insert(image);
 
@@ -123,8 +123,8 @@ for (Map.Entry<String, Integer> entry : requestCounts.entrySet()) {
 //        Staff staff = new Staff("Nguyễn Quang Dũng", "123", "0325476595", "035204007777", "quangdungvt5822@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(5).build());
 //        staffDAO.insert(staff);
 
-//        Staff staff = new Staff("Nguyễn Văn b", "123", "0931654542", "66349834131194", "nkiem349@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(3).build());
-//        staffDAO.insert(staff);
+        Staff staff = new Staff("Nguyễn Văn b", "123", "0931654542", "66349834131194", "b@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(3).build());
+        staffDAO.insert(staff);
 
 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);

@@ -16,7 +16,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Invoice Manager</title>
-       <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" /> 
+          <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" /> 
         <style>
 
             body {
@@ -100,7 +100,7 @@
 
     <body>
 
-         <%@include file="/manager/menumanager.jsp" %>
+        <%@include file="menuaccountant.jsp" %>
 
 
 
@@ -110,34 +110,39 @@
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                     <h2>Invoices Manager</h2>
                     <div class="d-flex align-items-center">
-                        <a href="<%= request.getContextPath() %>/accountant/UpdateStatusInvoice" class="btn btn-primary d-flex align-items-center me-2">
-                            <i class="bi bi-arrow-repeat me-1"></i> Update Status
+                        <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-success d-flex align-items-center">
+                            <i class="bi bi-plus-lg me-1"></i> Import Expense
                         </a>
-                        <a href="<%= request.getContextPath() %>/accountant/ViewExpense" class="btn btn-warning d-flex align-items-center me-2">
-                            <i class="bi bi-cash-stack me-1"></i> Expense
-                        </a>
-                        <a href="<%= request.getContextPath() %>/accountant/addnewinvoice" class="btn btn-success d-flex align-items-center">
-                            <i class="bi bi-plus-lg me-1"></i> Add New Invoice
+                        <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-success d-flex align-items-center">
+                            <i class="bi bi-plus-lg me-1"></i> Back Invoice Manager
                         </a>
                     </div>
                 </div>
                 <div class="search-sort-container">
                     <div class="row mb-3 align-items-center" >
+
                         <div class="col-md-8">
-                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
+                            <form action="ViewExpense" method="get" class="d-flex gap-2">
 
                                 <select class="form-select" name="status">
                                     <option value="">All Status</option>
-                                    <option value="Paid" ${selectedStatus == 'Paid' ? 'selected' : ''}>Paid</option>
-                                    <option value="Unpaid" ${selectedStatus == 'Unpaid' ? 'selected' : ''}>Unpaid</option>
+                                    <option value="Pending" ${selectedStatus == 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Approved" ${selectedStatus == 'Approved' ? 'selected' : ''}>Approved</option>
+                                    <option value="Rejected" ${selectedStatus == 'Rejected' ? 'selected' : ''}>Rejected</option>
                                 </select>
                                 <label for="FromDate" class="form-label align-self-center">From:</label>
-                                <input type="date" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="FromDate" 
+                                <input type="date" class="form-control" id="FromDate" name="FromDate" 
                                        value="${selectedFromDate}">
                                 <label for="dueDate" class="form-label align-self-center">Due:</label>
-                                <input type="date" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="dueDate" 
+                                <input type="date" class="form-control" id="dueDate" name="dueDate" 
                                        value="${selectedDueDate}">
-
+                                <label>Type</label>
+                                <select name="typeid" class="form-select" aria-label="Default select example">
+                                    <c:forEach items="${lte}" var="o">
+                                        <option value="0">All Status</option>
+                                        <option value="${o.typeExpenseID}" ${o.typeExpenseID == typeexp ? 'selected' : ''}>${o.typeName}</option>
+                                    </c:forEach>
+                                </select>
 
                                 <button type="submit" class="btn btn-primary" style="width: 70px;">Filter</button>
 
@@ -150,9 +155,9 @@
 
 
                         <div class="col-md-4">
-                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
+                            <form action="ViewExpense" method="get" class="d-flex gap-2">
                                 <input type="text" name="search" placeholder="Search by title.." value="${search}" class="form-control me-2">
-
+                                <input type="hidden" name="typeid" value="${typeid}">
                                 <input type="hidden" name="status" value="${selectedStatus}">  
                                 <input type="hidden" name="FromDate" value="${selectedFromDate}">  
                                 <input type="hidden" name="dueDate" value="${selectedDueDate}"> 
@@ -168,75 +173,46 @@
                 <table class="tableinvoice ">
                     <thead class="table">
                         <tr>
-                            <th>Invoice Code</th>
-                            <th>Title</th>
-                            <th>Apartment</th>
-                            <th>Status</th>
-                            <th>Payment Term</th>
-                            <th>Payment Date</th>
-                            <th>Public Date</th>
+                            <th>Expense Code</th>
+                            <th>Description</th>
+                            <th>Expense Date</th>
                             <th>Amount</th>
-                            <th>Late(0,1%/d)</th>
+                            <th>Type Expense</th>
+                            <th>Status</th>
                             <th  style="width:30px">Actions</th>
                         </tr>
                     </thead>
                     <tbody style="background:white" id="tableBody">
-                        <c:forEach items="${sessionScope.ListInvoices}" var="l">
+                        <c:forEach items="${sessionScope.ListExpense}" var="l">
                             <tr>
-                                <td>${l.invoiceID}</td>
+                                <td>${l.expenseID}</td>
                                 <td>${l.description}</td>
-
-                                <td>${l.apartment.apartmentName}</td>
+                                <td></td>
                                 <td>
-
-                                    <c:if test="${'Unpaid' eq l.status}">
-                                        <p style="background-color: orange; color: white; border-radius: 8px; padding: 5px; display: inline-block; text-align: center;">
-                                            ${l.status}
-                                        </p>
-                                    </c:if>
-                                    <c:if test="${'Paid' eq l.status}">
-                                        <p style="background-color: green; color: white; border-radius: 8px; padding: 5px; display: inline-block; text-align: center;">
-                                            ${l.status}
-                                        </p>
-                                    </c:if>
+                                    ${l.amount}
                                 </td>
-                                <td>${l.dueDateft}</td>
-                                <td>${l.paydateft}</td>
-                                <td>${l.publicDateft}</td>
-                                <td><fmt:formatNumber value="${l.totalAmount + l.muon}" pattern="#0.00"/></td>
                                 <td>
-                                    <c:if test="${l.muon != 0}">
-                                        <p style="color:red">Islate</p>
-                                    </c:if>
+                                    ${l.typeid}
                                 </td>
-                                <td style="width:30px">
-                                    <a href="<%= request.getContextPath() %>/accountant/DetailInvoice?invoiceID=${l.invoiceID}" class="btn btn-info btn-sm">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                </td>
+                                <td>
+                        
 
-                            </tr>
-                        </c:forEach>
+                        </td>
+
+                        <td style="width:30px">
+                            <a href="" class="btn btn-info btn-sm">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+
+                        </tr>
+                    </c:forEach>
                     </tbody>
 
                 </table>
-                <c:set var="totalAmount" value="0"/>
-                <c:forEach items="${sessionScope.ListInvoices}" var="l">
-                    <c:set var="totalAmount" value="${totalAmount + l.totalAmount + l.muon}"/>
-                </c:forEach>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                    <div></div> <!-- Chừa khoảng trống để không ảnh hưởng đến layout -->
-                    <div style="text-align: right; font-size: 18px; font-weight: bold;">
-                        Total Invoice Amount: 
-                        <span style="color: red;">
-                            <fmt:formatNumber value="${totalAmount}" type="number" pattern="#,##0.00"/>
 
-                        </span>
-                    </div>
-                </div>
-
-                <c:if test="${not empty sessionScope.ListInvoices && requestScope.totalPage > 1}">
+                <c:if test="${not empty sessionScope.ListExpense && requestScope.totalPage > 1}">
 
                     <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
                         <c:set var="startPage" value="${requestScope.currentPage - 1}" />
@@ -253,20 +229,20 @@
                             </c:if>
                         </c:if>
                         <c:if test="${requestScope.currentPage > 1}">
-                            <a href="InvoicesManager?page=${requestScope.currentPage - 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="ViewExpense?page=${requestScope.currentPage - 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}&typeid=${typeexp}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
                                 &lt;
                             </a>
                         </c:if>
                         <c:forEach begin="${startPage}" end="${endPage}" var="page">
-                            <a href="InvoicesManager?page=${page}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="ViewExpense?page=${page}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}&typeid=${typeexp}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;
                                <c:if test='${page == requestScope.currentPage}'> background-color: #007bff; color: white; </c:if>">
                                 ${page}
                             </a>
                         </c:forEach>
                         <c:if test="${requestScope.currentPage < requestScope.totalPage}">
-                            <a href="InvoicesManager?page=${requestScope.currentPage + 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="ViewExpense?page=${requestScope.currentPage + 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}&typeid=${typeexp}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
                                 &gt;
                             </a>
@@ -274,7 +250,7 @@
                     </div>
 
                 </c:if>
-                <c:if test="${empty sessionScope.ListInvoices}">
+                <c:if test="${empty sessionScope.ListExpense}">
                     <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
                         <p style="font-size: 20px;">${message}</p>
                     </div>
@@ -309,6 +285,8 @@
             });
         </script>
         <% } %>
+
+
 
 
 

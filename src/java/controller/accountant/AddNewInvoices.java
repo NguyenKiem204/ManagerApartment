@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -139,9 +140,10 @@ public class AddNewInvoices extends HttpServlet {
             LocalDate dueDate;
             try {
                 apartmentId = Integer.parseInt(apartmentIdStr);
-                dueDate = LocalDate.parse(dueDateStr);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                dueDate = LocalDate.parse(dueDateStr, formatter);
             } catch (NumberFormatException | DateTimeParseException e) {
-                request.setAttribute("dueDateError", "Invalid date format (MM/DD/YYYY)");
+                request.setAttribute("dueDateError", "Invalid date format (dd/MM/yyyy)");
                 doGet(request, response);
                 return;
             }
