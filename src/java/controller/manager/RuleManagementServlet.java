@@ -14,6 +14,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Rule;
 import validation.Validate;
 
@@ -48,16 +50,32 @@ public class RuleManagementServlet extends HttpServlet {
         } else if (method.equalsIgnoreCase("DELETE")) { // delete rule: method DELETE
             doDelete(request, response);
         } else { // create rule: method POST
-            String name = request.getParameter("ruleName").trim();
-            String description = request.getParameter("ruleDescription").trim();
-            LocalDate publicDate = LocalDate.parse(
-                    request.getParameter("publicDate"),
-                    DateTimeFormatter.ISO_DATE);
+            String ruleName = "";
+            String errorMsg = "";
+            try {
+                ruleName = Validate.validateRuleName(request.getParameter("ruleName"));
+            } catch (Exception ex) {
+                errorMsg += ex.getMessage() + "\n";
+            }
+            String description = "";
+            try {
+                description = Validate.validateRuleDescription(request.getParameter("ruleDescription"));
+            } catch (Exception ex) {
+                errorMsg += ex.getMessage() + "\n";
+            }
 
-            Rule rule = new Rule(name, description, publicDate);
-            RuleDAO ruleDAO = new RuleDAO();
-            int inserted = ruleDAO.insert(rule);
-            doGet(request, response);
+            if (!errorMsg.isEmpty()) { // có lỗi validate ruleName/description
+                request.setAttribute("error", errorMsg);
+                request.getRequestDispatcher("/manager/add_rule.jsp").forward(request, response);
+            } else { // ok
+                LocalDate publicDate = LocalDate.parse(
+                        request.getParameter("publicDate"),
+                        DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                Rule rule = new Rule(ruleName, description, publicDate);
+                RuleDAO ruleDAO = new RuleDAO();
+                int inserted = ruleDAO.insert(rule);
+                doGet(request, response);
+            }
         }
 
     }
@@ -69,7 +87,7 @@ public class RuleManagementServlet extends HttpServlet {
         int pageNumber = Integer.parseInt(request.getParameter("page"));
         String searchName = "";
         if (request.getParameter("search") != null) {
-            searchName = request.getParameter("search").trim(); // remove trailing spaces
+            searchName = Validate.normalizeSearchString(request.getParameter("search")); // remove trailing spaces
         }
 
         List<Rule> ruleList;
@@ -107,14 +125,33 @@ public class RuleManagementServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("ruleID"));
-        String name = request.getParameter("ruleName").trim();
-        String description = request.getParameter("ruleDescription").trim();
-        LocalDate publicDate = LocalDate.parse(request.getParameter("publicDate"),
-                DateTimeFormatter.ISO_DATE);
-        Rule rule = new Rule(id, name, description, publicDate);
 
-        RuleDAO ruleDAO = new RuleDAO();
-        int update = ruleDAO.update(rule);
-        doGet(request, response);
+        String ruleName = "";
+        String errorMsg = "";
+        try {
+            ruleName = Validate.validateRuleName(request.getParameter("ruleName"));
+        } catch (Exception ex) {
+            errorMsg += ex.getMessage() + "\n";
+        }
+        String description = "";
+        try {
+            description = Validate.validateRuleDescription(request.getParameter("ruleDescription"));
+        } catch (Exception ex) {
+            errorMsg += ex.getMessage() + "\n";
+        }
+
+        if (!errorMsg.isEmpty()) { // có lỗi validate ruleName/description
+            request.getSession().setAttribute("error", errorMsg);
+            response.sendRedirect(request.getContextPath() + "/manager/rule/edit?id=" + id);
+        } else { // ok
+            request.getSession().removeAttribute("error");
+            LocalDate publicDate = LocalDate.parse(
+                    request.getParameter("publicDate"),
+                    DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            Rule rule = new Rule(id, ruleName, description, publicDate);
+            RuleDAO ruleDAO = new RuleDAO();
+            int update = ruleDAO.update(rule);
+            doGet(request, response);
+        }
     }
 }

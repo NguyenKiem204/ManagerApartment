@@ -20,8 +20,11 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-        <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>  
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <style>
             body {
                 color: #566787;
@@ -257,6 +260,11 @@
                                 <h4 id="editRuleTitle" class="modal-title">Edit Rule</h4>
                             </div>
                             <div class="modal-body">
+                                <c:if test="${not empty error}">
+                                    <div class="alert alert-danger">
+                                        <p>${error}</p>
+                                    </div>
+                                </c:if>
                                 <input 
                                     type="hidden"
                                     id="ruleID"
@@ -283,14 +291,16 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Public Date</label>
-                                    <input type="date" 
-                                           class="form-control"
-                                           id="publicDate"
-                                           name="publicDate"
-                                           value="${rule.publicDate}"
-                                           required>
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="publicDate"
+                                        id="publicDate" 
+                                        placeholder="dd/MM/yyyy"
+                                        value="${rule.formattedPublicDate}"
+                                        required
+                                        >
                                 </div>
-                                <!-- TODO: add them list Staff -->
                             </div>
                             <div class="modal-footer">
                                 <input type="submit" class="btn btn-info" value="Save"  >
@@ -303,7 +313,9 @@
                 </div>
             </div>
     </body>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+
         document.addEventListener("DOMContentLoaded", function () {
             if (typeof CKEDITOR !== "undefined") {
                 CKEDITOR.replace("ruleDescription", {
@@ -315,6 +327,23 @@
             } else {
                 console.error("CKEditor not loaded");
             }
+        });
+
+        $(document).ready(function () {
+            $('#ruleDescription').summernote({
+                height: 300,
+                tabsize: 2,
+                placeholder: "Nhập nội dung bài viết..."
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr("#publicDate", {
+                dateFormat: "d/m/Y", // Định dạng hiển thị là DD/MM/YYYY
+                altInput: true,
+                altFormat: "d/m/Y", // Định dạng gửi đi là YYYY/MM/DD
+                allowInput: true
+            });
         });
     </script>
 </html>

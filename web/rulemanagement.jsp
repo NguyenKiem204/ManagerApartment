@@ -9,7 +9,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@include file="/manager\menumanager.jsp" %>
+<%@include file="/manager/menumanager.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
