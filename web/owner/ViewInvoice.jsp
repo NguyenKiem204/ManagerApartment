@@ -16,7 +16,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Invoice Manager</title>
-         <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />   
+        <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />   
         <style>
 
             body {
@@ -121,12 +121,15 @@
                         <div class="col-md-8">
                             <form action="ViewInvoice" method="get" class="d-flex gap-2">
                                 <label for="FromDate" class="form-label align-self-center">From:</label>
-                                <input type="date" class="form-control" id="FromDate" name="FromDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="FromDate" 
                                        value="${selectedFromDate}">
                                 <label for="dueDate" class="form-label align-self-center">Due:</label>
-                                <input type="date" class="form-control" id="dueDate" name="dueDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="dueDate" 
                                        value="${selectedDueDate}">
                                 <button type="submit" class="btn btn-primary" style="width: 70px;">Filter</button>
+                                <a href="<%= request.getContextPath() %>/owner/ViewInvoice" class="btn btn-info btn-sm">
+                                    <i class="fas fa-sync-alt"></i> <!-- Icon reload -->
+                                </a>
                             </form>
                         </div>
                         <div class="col-md-4">

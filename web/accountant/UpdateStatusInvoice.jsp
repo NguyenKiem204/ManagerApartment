@@ -132,15 +132,16 @@
 
                         <div class="col-md-8">
                             <form action="UpdateStatusInvoice" method="get" class="d-flex gap-2">
-
-
                                 <label for="FromDate" class="form-label align-self-center">From:</label>
-                                <input type="date" class="form-control" id="FromDate" name="FromDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="FromDate" 
                                        value="${selectedFromDate}">
                                 <label for="dueDate" class="form-label align-self-center">Due:</label>
-                                <input type="date" class="form-control" id="dueDate" name="dueDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="dueDate" 
                                        value="${selectedDueDate}">
                                 <button type="submit" class="btn btn-primary" style="width: 70px;">Filter</button>
+                                <a href="<%= request.getContextPath() %>/accountant/UpdateStatusInvoice" class="btn btn-info btn-sm">
+                                    <i class="fas fa-sync-alt"></i> <!-- Icon reload -->
+                                </a>
                             </form>
                         </div>
 
@@ -244,7 +245,7 @@
 
 
 
-        
+
 
         <script src="assets/js/main.js"></script>
         <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
@@ -265,8 +266,7 @@
             </div>
         </div>
 
-        <!-- JavaScript -->
-        <script src="assets/js/bootstrap.bundle.min.js"></script>
+
         <script>
                                         function confirmDelete(invoiceID) {
                                             let deleteUrl = "<%= request.getContextPath() %>/accountant/makepaid?invoiceID=" + invoiceID;
@@ -287,4 +287,4 @@
                                                     }
                                                     </<script>
                                                     </body>
-                                                            </html>
+                </html>

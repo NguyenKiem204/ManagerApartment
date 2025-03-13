@@ -132,10 +132,10 @@
                                     <option value="Unpaid" ${selectedStatus == 'Unpaid' ? 'selected' : ''}>Unpaid</option>
                                 </select>
                                 <label for="FromDate" class="form-label align-self-center">From:</label>
-                                <input type="date" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="FromDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="FromDate" 
                                        value="${selectedFromDate}">
                                 <label for="dueDate" class="form-label align-self-center">Due:</label>
-                                <input type="date" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="dueDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="dueDate" 
                                        value="${selectedDueDate}">
 
 
