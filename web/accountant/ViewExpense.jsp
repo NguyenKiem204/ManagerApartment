@@ -15,8 +15,13 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Invoice Manager</title>
-          <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" /> 
+        <title>Expense Manager</title>
+        <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" /> 
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Bootstrap JS (cần cho dropdown) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <style>
 
             body {
@@ -170,47 +175,60 @@
                 </div>
 
 
-                <table class="tableinvoice ">
+                <table class="tableinvoice">
                     <thead class="table">
                         <tr>
                             <th>Expense Code</th>
-                            <th>Description</th>
                             <th>Expense Date</th>
-                            <th>Amount</th>
-                            <th>Type Expense</th>
-                            <th>Status</th>
-                            <th  style="width:30px">Actions</th>
+                            <th>Total Amount</th>
+                            <th>Details</th>
+                            <th style="width:30px">Actions</th>
                         </tr>
                     </thead>
                     <tbody style="background:white" id="tableBody">
-                        <c:forEach items="${sessionScope.ListExpense}" var="l">
+                        <c:forEach items="${sessionScope.ListExpense}" var="expense">
+                            <!-- Hàng chính hiển thị thông tin Expense -->
                             <tr>
-                                <td>${l.expenseID}</td>
-                                <td>${l.description}</td>
-                                <td></td>
-                                <td>
-                                    ${l.amount}
+                                <td>${expense.expenseID}</td>
+                                <td>${expense.expenseDate}</td>
+                                <td>${expense.totalAmount}</td>
+                                <td style="width:30px">
+                                    <!-- Nút để hiển thị/ẩn chi tiết -->
+                                    <button class="btn btn-secondary btn-sm" type="button" onclick="toggleDetails(${expense.expenseID})">
+                                        View Details
+                                    </button>
                                 </td>
-                                <td>
-                                    ${l.typeid}
+                            </tr>
+                            <!-- Hàng ẩn hiển thị chi tiết ExpenseDetail -->
+                            <tr id="details-${expense.expenseID}" style="display: none;">
+                                <td colspan="5">
+                                    <table class="table table-bordered mt-2">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="${expense.expenseDetails}" var="detail">
+                                                <tr>
+                                                    <td>${detail.typeExpense.typeName}</td>
+                                                    <td>${detail.amount}</td>
+                                                    <td>${detail.status}</td>
+                                                    <td>${detail.description}</td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
                                 </td>
-                                <td>
-                        
-
-                        </td>
-
-                        <td style="width:30px">
-                            <a href="" class="btn btn-info btn-sm">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                        </td>
-
-                        </tr>
-                    </c:forEach>
+                            </tr>
+                        </c:forEach>
                     </tbody>
-
                 </table>
 
+                
 
                 <c:if test="${not empty sessionScope.ListExpense && requestScope.totalPage > 1}">
 
@@ -285,6 +303,16 @@
             });
         </script>
         <% } %>
+        <script>
+                    function toggleDetails(expenseID) {
+                        const detailsRow = document.getElementById(`details-${expenseID}`);
+                        if (detailsRow.style.display === "none") {
+                            detailsRow.style.display = "table-row"; // Hiển thị hàng chi tiết
+                        } else {
+                            detailsRow.style.display = "none"; // Ẩn hàng chi tiết
+                        }
+                    }
+                </script>
 
 
 

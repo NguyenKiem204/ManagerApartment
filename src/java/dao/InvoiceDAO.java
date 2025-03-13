@@ -19,6 +19,7 @@ import model.InvoiceDetail;
 import model.Invoices;
 import model.Resident;
 import model.TypeBill;
+import org.eclipse.jdt.internal.compiler.ast.Statement;
 
 public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
 
@@ -84,11 +85,13 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                 + "    inv.PublicDate, \n"
                 + "    inv.Status AS InvoiceStatus, \n"
                 + "    inv.Description AS InvoiceDescription, \n"
-                + "    inv.DueDate,inv.islate,inv.PaymentDate, \n"
+                + "    inv.DueDate, \n"
+                + "    inv.islate, \n"
+                + "    inv.PaymentDate, \n"
                 + "    idt.DetailID, \n"
                 + "    idt.Amount, \n"
                 + "    idt.Description AS DetailDescription, \n"
-                + "    idt.TypeBillID AS TypeBillID , \n"
+                + "    idt.TypeBillID, \n"
                 + "    tb.TypeName AS BillType, \n"
                 + "    res.ResidentID, \n"
                 + "    res.FullName AS ResidentName, \n"
@@ -98,14 +101,13 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                 + "    apt.ApartmentName, \n"
                 + "    apt.Block, \n"
                 + "    apt.Status AS ApartmentStatus, \n"
-                + "    apt.Type AS ApartmentType,\n"
-                + "    tb.TypeName AS TypeName\n"
-                + "FROM Invoice inv\n"
-                + "JOIN Resident res ON inv.ResidentID = res.ResidentID\n"
-                + "JOIN Apartment apt ON res.ResidentID = apt.OwnerID\n"
-                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID\n"
-                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID\n"
-                + "WHERE inv.InvoiceID=?;";
+                + "    apt.Type AS ApartmentType \n"
+                + "FROM Invoice inv \n"
+                + "JOIN Resident res ON inv.ResidentID = res.ResidentID \n"
+                + "JOIN Apartment apt ON inv.ApartmentID = apt.ApartmentID \n"
+                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID \n"
+                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID \n"
+                + "WHERE inv.InvoiceID = ?;";
 
         Invoices invoice = null;
 
@@ -115,6 +117,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     if (invoice == null) {
+                        // Tạo đối tượng Resident
                         Resident resident = new Resident(
                                 rs.getInt("ResidentID"),
                                 rs.getString("ResidentName"),
@@ -122,6 +125,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                                 rs.getString("ResidentPhone")
                         );
 
+                        // Tạo đối tượng Apartment
                         Apartment apartment = new Apartment(
                                 rs.getInt("ApartmentID"),
                                 rs.getString("ApartmentName"),
@@ -130,9 +134,12 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                                 rs.getString("ApartmentType")
                         );
 
+                        // Lấy các giá trị từ ResultSet
                         LocalDate publicDate = rs.getDate("PublicDate") != null ? rs.getDate("PublicDate").toLocalDate() : null;
                         LocalDate dueDate = rs.getDate("DueDate") != null ? rs.getDate("DueDate").toLocalDate() : null;
-                        LocalDate paydate = rs.getDate("PaymentDate") != null ? rs.getDate("PaymentDate").toLocalDate() : null;
+                        LocalDate payDate = rs.getDate("PaymentDate") != null ? rs.getDate("PaymentDate").toLocalDate() : null;
+
+                        // Tạo đối tượng Invoices
                         invoice = new Invoices(
                                 rs.getInt("InvoiceID"),
                                 rs.getDouble("TotalAmount"),
@@ -142,11 +149,12 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                                 dueDate,
                                 resident,
                                 apartment,
-                                rs.getInt("islate"),
-                                paydate
+                                rs.getDouble("islate"),
+                                payDate
                         );
                     }
 
+                    // Thêm chi tiết hóa đơn nếu có
                     int detailID = rs.getInt("DetailID");
                     if (detailID > 0) {
                         InvoiceDetail detail = new InvoiceDetail(
@@ -154,7 +162,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                                 rs.getDouble("Amount"),
                                 rs.getString("DetailDescription"),
                                 rs.getInt("TypeBillID"),
-                                rs.getString("TypeName")
+                                rs.getString("BillType")
                         );
                         invoice.addDetail(detail);
                     }
@@ -185,20 +193,25 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return typeBills;
     }
 
-    public void insertInvoice(Invoices invoice) {
-        String sql = "INSERT INTO Invoice (ResidentID, TotalAmount, [Description], DueDate, [Status], StaffID,islate) "
-                + "VALUES (?, ?, ?, ?, ?, ?,?)";
+    public void insertInvoice(Invoices invoice, int apid) {
+        String sql = "INSERT INTO Invoice "
+                + "(ResidentID, TotalAmount, PublicDate, Status, StaffID, Description, DueDate, islate, ApartmentID) "
+                + "VALUES (?, ?, GETDATE(), ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setInt(1, invoice.getResident().getResidentId());
             ps.setDouble(2, invoice.getTotalAmount());
-            ps.setString(3, invoice.getDescription());
-            ps.setDate(4, java.sql.Date.valueOf(invoice.getDueDate()));
-            ps.setString(5, "Unpaid");
-            ps.setInt(6, 2);
-            ps.setInt(7, 0);
+            ps.setString(3, "Unpaid"); // Trạng thái mặc định
+            ps.setInt(4, 3); // StaffID giả định
+            ps.setString(5, invoice.getDescription());
+            ps.setDate(6, java.sql.Date.valueOf(invoice.getDueDate()));
+            ps.setFloat(7, 0.0f); // islate là float
+            ps.setInt(8, apid); // ApartmentID
+
             ps.executeUpdate();
+            System.out.println("Invoice inserted successfully!");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -317,7 +330,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                 + "    apt.Type AS ApartmentType \n"
                 + "FROM Invoice inv \n"
                 + "JOIN Resident res ON inv.ResidentID = res.ResidentID \n"
-                + "JOIN Apartment apt ON res.ResidentID = apt.OwnerID\n"
+                + "JOIN Apartment apt ON inv.ApartmentID = apt.ApartmentID \n"
                 + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID \n"
                 + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID \n"
                 + "WHERE 1=1";
@@ -411,8 +424,6 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         }
         return invoices;
     }
-    
-    
 
     public <T> int getTotalPage(List<T> list, int numberPerPape) {
         int totalPage;
@@ -445,17 +456,33 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         List<Invoices> invoices = new ArrayList<>();
         List<Object> parameters = new ArrayList<>();
 
-        String sql = "SELECT inv.InvoiceID, inv.TotalAmount, inv.PublicDate, inv.Status AS InvoiceStatus, "
-                + "inv.Description AS InvoiceDescription, inv.DueDate, inv.islate, inv.PaymentDate, "
-                + "idt.DetailID, idt.Amount, idt.Description AS DetailDescription, "
-                + "tb.TypeName AS BillType, "
-                + "res.ResidentID, res.FullName AS ResidentName, res.PhoneNumber AS ResidentPhone, res.Email AS ResidentEmail, "
-                + "apt.ApartmentID, apt.ApartmentName, apt.Block, apt.Status AS ApartmentStatus, apt.Type AS ApartmentType "
-                + "FROM Invoice inv "
-                + "JOIN Resident res ON inv.ResidentID = res.ResidentID "
-                + "JOIN Apartment apt ON res.ResidentID = apt.OwnerID "
-                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID "
-                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID "
+        String sql = "SELECT \n"
+                + "    inv.InvoiceID, \n"
+                + "    inv.TotalAmount, \n"
+                + "    inv.PublicDate, \n"
+                + "    inv.Status AS InvoiceStatus, \n"
+                + "    inv.Description AS InvoiceDescription, \n"
+                + "    inv.DueDate, \n"
+                + "    inv.islate, \n"
+                + "    inv.PaymentDate, \n"
+                + "    idt.DetailID, \n"
+                + "    idt.Amount, \n"
+                + "    idt.Description AS DetailDescription, \n"
+                + "    tb.TypeName AS BillType, \n"
+                + "    res.ResidentID, \n"
+                + "    res.FullName AS ResidentName, \n"
+                + "    res.PhoneNumber AS ResidentPhone, \n"
+                + "    res.Email AS ResidentEmail, \n"
+                + "    apt.ApartmentID, \n"
+                + "    apt.ApartmentName, \n"
+                + "    apt.Block, \n"
+                + "    apt.Status AS ApartmentStatus, \n"
+                + "    apt.Type AS ApartmentType \n"
+                + "FROM Invoice inv \n"
+                + "JOIN Resident res ON inv.ResidentID = res.ResidentID \n"
+                + "JOIN Apartment apt ON inv.ApartmentID = apt.ApartmentID \n"
+                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID \n"
+                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID \n"
                 + "WHERE inv.ResidentID = ?"; // Thêm điều kiện lọc theo ResidentID
 
         parameters.add(residentId); // Thêm residentId vào danh sách tham số
