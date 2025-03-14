@@ -73,7 +73,8 @@ public class ViewExpense extends HttpServlet {
         String fromDateStr = request.getParameter("FromDate");
         String dueDateStr = request.getParameter("dueDate");
         String search = request.getParameter("search");
-        String typeid = request.getParameter("typeid");
+        String typeexp = request.getParameter("typeid");
+
         try {
             ExpenseDAO Edao = new ExpenseDAO();
             LocalDate fromDate = (fromDateStr != null && !fromDateStr.isEmpty())
@@ -82,21 +83,27 @@ public class ViewExpense extends HttpServlet {
             LocalDate dueDate = (dueDateStr != null && !dueDateStr.isEmpty())
                     ? LocalDate.parse(dueDateStr)
                     : null;
-            int typeexp = 0;
-            typeexp=Integer.parseInt(typeid);
-            List<Expense> list = Edao.filterExpenses(status, typeexp, fromDate, dueDate);
+            int typeId = 0; // Giá trị mặc định
+            if (typeexp != null && !typeexp.isEmpty()) {
+                try {
+                    typeId = Integer.parseInt(typeexp);
+                } catch (NumberFormatException e) {
+                    request.setAttribute("message", "Invalid expense type");
+                }
+            }
+            List<Expense> list = Edao.filterExpenses(status, typeId, fromDate, dueDate);
             if (search != null && !search.isEmpty()) {
                 search = search.trim().replaceAll("\\s+", " ").replace('"', '\'');
                 if (!Pattern.matches("^[a-zA-Z0-9 ,.!?'-]+$", search)) {
                     request.setAttribute("message", "Invalid search input");
                 } else {
-                    List<Expense> searchResults = new ArrayList<>();
-                    for (Expense exp : list) {
-                        if (exp.getDescription().contains(search)) {
-                            searchResults.add(exp);
-                        }
-                    }
-                    list = searchResults;
+//                    List<Expense> searchResults = new ArrayList<>();
+//                    for (Expense exp : list) {
+//                        if (exp.getDescription().contains(search)) {
+//                            searchResults.add(exp);
+//                        }
+//                    }
+//                    list = searchResults;
                 }
             }
             List<TypeExpense> lte = Edao.getAllTypeExpenses();
@@ -115,13 +122,13 @@ public class ViewExpense extends HttpServlet {
                 request.setAttribute("message", "No result");
             }
             request.setAttribute("lte", lte);
-            request.setAttribute("typeexp", typeexp);
+            request.setAttribute("typeid", typeId);
             request.setAttribute("search", search);
             request.setAttribute("selectedStatus", status);
             request.setAttribute("selectedFromDate", fromDateStr);
             request.setAttribute("selectedDueDate", dueDateStr);
             session.setAttribute("ListExpense", list);
-            request.getRequestDispatcher("InvoiceManager.jsp").forward(request, response);
+            request.getRequestDispatcher("ViewExpense.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             e.printStackTrace();

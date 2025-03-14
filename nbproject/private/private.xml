@@ -2,6 +2,18 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/ExpenseDetail.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/ExpenseDAO.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/Expense.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/TypeExpense.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/Test.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/manager/menumanager.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/Invoices.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/TypeBill.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/InvoiceDetail.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/ViewExpense.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/ViewExpense.jsp</file>
+        </group>
     </open-files>
 </project-private>

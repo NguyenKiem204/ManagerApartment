@@ -16,7 +16,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Invoice Manager</title>
-       <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" /> 
+        <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" /> 
         <style>
 
             body {
@@ -100,7 +100,7 @@
 
     <body>
 
-         <%@include file="/manager/menumanager.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
 
 
 
@@ -132,10 +132,10 @@
                                     <option value="Unpaid" ${selectedStatus == 'Unpaid' ? 'selected' : ''}>Unpaid</option>
                                 </select>
                                 <label for="FromDate" class="form-label align-self-center">From:</label>
-                                <input type="date" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="FromDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="FromDate" 
                                        value="${selectedFromDate}">
                                 <label for="dueDate" class="form-label align-self-center">Due:</label>
-                                <input type="date" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="dueDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="dueDate" 
                                        value="${selectedDueDate}">
 
 

@@ -204,6 +204,26 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return apartment;
     }
 
+    public static void main(String[] args) {
+        ApartmentDAO apartmentDAO = new ApartmentDAO();
+        int testApartmentId = 7; // Thay thế bằng ID thực tế trong DB
+        
+        Apartment apartment = apartmentDAO.selectById(testApartmentId);
+        
+        if (apartment != null) {
+            System.out.println("Apartment Found:");
+         
+            System.out.println("Name: " + apartment.getApartmentName());
+            System.out.println("Block: " + apartment.getBlock());
+            System.out.println("Status: " + apartment.getStatus());
+            System.out.println("Type: " + apartment.getType());
+    
+        } else {
+            System.out.println("No apartment found with ID: " + testApartmentId);
+        }
+    }
+
+
     public Apartment getApartmentByName(String apartmentName) {
         Apartment apartment = null;
         String sql = "SELECT * FROM Apartment WHERE ApartmentName = ?";

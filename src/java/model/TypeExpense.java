@@ -9,17 +9,23 @@ package model;
  * @author nguye
  */
 public class TypeExpense {
+
     private int typeExpenseID;
     private String typeName;
+    private boolean fixed; // 1 (true) là cố định, 0 (false) là không cố định
 
+    // Constructors
     public TypeExpense() {
     }
 
-    public TypeExpense(int typeExpenseID, String typeName) {
+    public TypeExpense(int typeExpenseID, String typeName, boolean fixed) {
         this.typeExpenseID = typeExpenseID;
         this.typeName = typeName;
+        this.fixed = fixed;
     }
 
+
+    // Getters and Setters
     public int getTypeExpenseID() {
         return typeExpenseID;
     }
@@ -36,6 +42,12 @@ public class TypeExpense {
         this.typeName = typeName;
     }
 
-  
-    
+    public boolean isFixed() {
+        return fixed;
+    }
+
+    public void setFixed(boolean fixed) {
+        this.fixed = fixed;
+    }
+
 }
