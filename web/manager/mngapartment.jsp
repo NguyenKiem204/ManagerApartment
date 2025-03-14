@@ -417,6 +417,20 @@
 
 
                 <ul class="pagination justify-content-center">
+                    <!-- Nút First -->
+                    <c:if test="${currentPage > 1}">
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1
+                               <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
+                               <c:if test="${selectedOwnerId != -1}">&ownerId=${selectedOwnerId}</c:if>
+                               <c:if test="${not empty selectedType}">&type=${selectedType}</c:if>
+                               <c:if test="${not empty selectedStatus}">&status=${selectedStatus}</c:if>
+                               <c:if test="${not empty selectedBlock}">&block=${selectedBlock}</c:if>
+                                   ">First</a>
+                            </li>
+                    </c:if>
+
+                    <!-- Nút Previous -->
                     <c:if test="${currentPage > 1}">
                         <li class="page-item">
                             <a class="page-link" href="?page=${currentPage - 1}
@@ -429,7 +443,26 @@
                             </li>
                     </c:if>
 
-                    <c:forEach begin="1" end="${totalPages}" var="i">
+                    <!-- Xác định phạm vi trang hiển thị -->
+                    <c:set var="startPage" value="${currentPage - 1}" />
+                    <c:set var="endPage" value="${currentPage + 1}" />
+
+                    <c:if test="${startPage < 1}">
+                        <c:set var="startPage" value="1" />
+                        <c:set var="endPage" value="3" />
+                    </c:if>
+
+                    <c:if test="${endPage > totalPages}">
+                        <c:set var="endPage" value="${totalPages}" />
+                        <c:set var="startPage" value="${totalPages - 2}" />
+                    </c:if>
+
+                    <c:if test="${startPage < 1}">
+                        <c:set var="startPage" value="1" />
+                    </c:if>
+
+                    <!-- Hiển thị 3 trang liên tiếp -->
+                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
                         <li class="page-item ${i == currentPage ? 'active' : ''}">
                             <a class="page-link" href="?page=${i}
                                <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
@@ -441,6 +474,7 @@
                         </li>
                     </c:forEach>
 
+                    <!-- Nút Next -->
                     <c:if test="${currentPage < totalPages}">
                         <li class="page-item">
                             <a class="page-link" href="?page=${currentPage + 1}
@@ -452,11 +486,25 @@
                                    ">Next</a>
                             </li>
                     </c:if>
+
+                    <!-- Nút Last -->
+                    <c:if test="${currentPage < totalPages}">
+                        <li class="page-item">
+                            <a class="page-link" href="?page=${totalPages}
+                               <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
+                               <c:if test="${selectedOwnerId != -1}">&ownerId=${selectedOwnerId}</c:if>
+                               <c:if test="${not empty selectedType}">&type=${selectedType}</c:if>
+                               <c:if test="${not empty selectedStatus}">&status=${selectedStatus}</c:if>
+                               <c:if test="${not empty selectedBlock}">&block=${selectedBlock}</c:if>
+                                   ">Last</a>
+                            </li>
+                    </c:if>
                 </ul>
 
                 <c:if test="${totalPages == 0}">
                     <p class="text-center text-muted">No apartments found.</p>
                 </c:if>
+
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -565,7 +613,7 @@
                 });
             });
         </script>
-</body>
+    </body>
 
 </html>
 
