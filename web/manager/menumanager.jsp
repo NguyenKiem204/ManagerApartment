@@ -373,7 +373,7 @@
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 3}">
-                                        
+
                                         <li class="submenu-item">
                                             <a
                                                 href="<%= request.getContextPath() %>/technical/feedback">Feedback</a>
@@ -604,6 +604,7 @@
                                     $("#notificationCount").hide();
                                 }
                             } else {
+                                $("#notificationList").html("<li class='no-notifications'>There are no notifications yet.</li>");
                                 $("#notificationCount").hide();
                             }
                         },
@@ -644,8 +645,8 @@
                     });
                 });
 
-                // Kiểm tra thông báo mới mỗi 3 giây
-                setInterval(checkNotifications, 3000);
+                // Kiểm tra thông báo mới mỗi 0.5 giây
+                setInterval(checkNotifications, 500);
             });
             $(function () {
                 // Cấu hình cơ bản cho date picker với định dạng dd/MM/yyyy
@@ -665,6 +666,15 @@
                     ...datePickerConfig,
                     mode: "range",
                     maxDate: null
+                });
+                flatpickr("#deadline", {
+                    ...datePickerConfig,
+                    maxDate: null
+                });
+
+                flatpickr("#boughtOn", {
+                    ...datePickerConfig,
+                    maxDate: "today"
                 });
                 const birthdayPicker = flatpickr("#birthdayPicker", {
                     ...datePickerConfig,
@@ -696,4 +706,4 @@
 
     </body>
 
-    </html>
+</html>

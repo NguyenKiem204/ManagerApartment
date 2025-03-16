@@ -400,8 +400,14 @@
 
                 // Nếu trạng thái là Pending, hiển thị các nút Duyệt và Không Duyệt
                 if (statusID === 1) {
-                    document.getElementById("actionButtons-" + requestID).style.display = "block";
-                    return; // Không tiếp tục xử lý vì đã có hành động ở đây
+//                    document.getElementById("actionButtons-" + requestID).style.display = "block";
+                    var actionButtons = document.getElementById("actionButtons-" + requestID);
+                    if (actionButtons.style.display === "none" || actionButtons.style.display === "") {
+                        actionButtons.style.display = "block";
+                    } else {
+                        actionButtons.style.display = "none";
+                    }
+//                    return; // Không tiếp tục xử lý vì đã có hành động ở đây
                 }
 
                 // Logic chuyển trạng thái cho các trạng thái khác

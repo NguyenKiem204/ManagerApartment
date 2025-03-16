@@ -192,7 +192,7 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
         }
 
         // Kiểm tra độ dài title
-        if (staffResponse.length() < 5 || staffResponse.length() > 100) {
+        if (staffResponse.length() > 100) {
             ManagerFeedback managerFeedback = new ManagerFeedback();
             List<Feedback> listFB = new ArrayList<>();
             try {
@@ -206,7 +206,7 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
             }
             request.setAttribute("managerFb", managerFeedback);
             request.setAttribute("listFb", listFB);
-            request.setAttribute("error", "Response must be between 5 and 100 characters!");
+            request.setAttribute("error", "Response must be <100 characters!");
             request.getRequestDispatcher("feedbackreviewdetail.jsp").forward(request, response);
             return;
         }
@@ -218,14 +218,6 @@ public class FeedbackReviewDetailServlet extends HttpServlet {
             //update staffresponse in DB
             managerFeedbackDAO.update(managerFb);
 
-            //manager received notifycation
-//            Notification notification = new Notification("Staff response feedback review of this month.", "Response", LocalDate.now(), false, managerFeedbackId, "ManagerFeedback", staffDAO.getStaffByRoleIDAndStatus(1, "Adctive"), null);
-//            Notification notification = new Notification(staff.getStaffId(), 
-//                      "Staff", "Staff response feedback review of this month.",
-//                      "Response", LocalDateTime.now(), false, 
-//                      managerFeedbackId, "ManagerFeedback", 
-//                      staffDAO.getStaffByRoleIDAndStatus(1, "Adctive"), 
-//                      null);
             Notification notification = new Notification(staff.getStaffId(),
                       "Staff", "Staff response feedback review of this month.", "ManagerFeedback",
                       LocalDateTime.now(), false, managerFeedbackId,

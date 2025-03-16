@@ -182,6 +182,9 @@
                 background-color: #f9f9f9;
                 margin-top: 10px;
                 width: 100%;
+                max-height: 200px; /* Giới hạn chiều cao */
+                overflow-y: auto;  /* Bật thanh cuộn dọc nếu nội dung dài */
+                word-wrap: break-word;
             }
 
         </style>
