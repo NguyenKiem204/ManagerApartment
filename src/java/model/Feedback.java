@@ -6,110 +6,41 @@ package model;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 /**
  *
  * @author admin
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Feedback {
+    int feedbackID;
+    String title;
+    String description;
+    LocalDate date;
+    int rate;
+    Staff staff;
+    Resident resident;
 
-    /*
-    FeedbackID INT IDENTITY(1,1) PRIMARY KEY,
-	Title NVARCHAR(100),
-	[Description] NVARCHAR(500),
-	[Date] DATETIME DEFAULT GETDATE(),
-	StaffID INT NOT NULL,
-	ResidentID INT,
-     */
-    private int feedbackID;
-    private String title;
-    private String description;
-    private LocalDate date;
-    private int rate;
-    private int staffID;
-    private int residentID;
-
-    public Feedback() {
-    }
-
-    public Feedback(int feedbackID, String title, String description, LocalDate date, int rate, int staffID, int residentID) {
-        this.feedbackID = feedbackID;
+    public Feedback(String title, String description, LocalDate date, int rate, Staff staff, Resident resident) {
         this.title = title;
         this.description = description;
         this.date = date;
         this.rate = rate;
-        this.staffID = staffID;
-        this.residentID = residentID;
+        this.staff = staff;
+        this.resident = resident;
     }
-
-    public Feedback(String title, String description, LocalDate date, int rate, int staffID, int residentID) {
-        this.title = title;
-        this.description = description;
-        this.date = date;
-        this.rate = rate;
-        this.staffID = staffID;
-        this.residentID = residentID;
+    public Date getFormattedDate() {
+        return Date.valueOf(date); // Chuyển LocalDate -> SQL Date
     }
-
-    public int getFeedbackID() {
-        return feedbackID;
-    }
-
-    public void setFeedbackID(int feedbackID) {
-        this.feedbackID = feedbackID;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public int getStaffID() {
-        return staffID;
-    }
-
-    public void setStaffID(int staffID) {
-        this.staffID = staffID;
-    }
-
-    public int getResidentID() {
-        return residentID;
-    }
-
-    public void setResidentID(int residentID) {
-        this.residentID = residentID;
-    }
-
-    public int getRate() {
-        return rate;
-    }
-
-    public void setRate(int rate) {
-        this.rate = rate;
-    }
-
-    @Override
-    public String toString() {
-        return "Feedback{" + "feedbackID=" + feedbackID + ", title=" + title + ", description=" + description + ", date=" + date + ", rate=" + rate + ", staffID=" + staffID + ", residentID=" + residentID + '}';
-    }
-
+    
 }

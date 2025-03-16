@@ -1,5 +1,10 @@
 package model;
 
+<<<<<<< HEAD
+=======
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+>>>>>>> main
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +12,7 @@ public class Invoices {
 
     private int invoiceID;
     private double totalAmount;
+<<<<<<< HEAD
     private String publicDate;
     private String status;
     private String description;
@@ -19,6 +25,19 @@ public class Invoices {
     public Invoices(int invoiceID, double totalAmount, String publicDate, String status,
             String description, String dueDate, Resident resident,
             Apartment apartment, boolean isLate) {
+=======
+    private LocalDate publicDate;
+    private String status;
+    private String description;
+    private LocalDate dueDate;
+    private Resident resident;
+    private Apartment apartment;
+    private List<InvoiceDetail> details;
+    private double muon;// muon =islate
+    private LocalDate paydate;
+
+    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment,double muon, LocalDate paydate) {
+>>>>>>> main
         this.invoiceID = invoiceID;
         this.totalAmount = totalAmount;
         this.publicDate = publicDate;
@@ -27,13 +46,32 @@ public class Invoices {
         this.dueDate = dueDate;
         this.resident = resident;
         this.apartment = apartment;
+<<<<<<< HEAD
         this.isLate = isLate;
         this.details = new ArrayList<>();
+=======
+        this.muon = muon;
+        this.paydate = paydate;
+    }
+
+    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment, List<InvoiceDetail> details, double muon) {
+        this.invoiceID = invoiceID;
+        this.totalAmount = totalAmount;
+        this.publicDate = publicDate;
+        this.status = status;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.resident = resident;
+        this.apartment = apartment;
+        this.details = details;
+        this.muon = muon;
+>>>>>>> main
     }
 
     public Invoices() {
     }
 
+<<<<<<< HEAD
     public Invoices(int invoiceID, double totalAmount, String description, String dueDate) {
         this.invoiceID = invoiceID;
         this.totalAmount = totalAmount;
@@ -51,6 +89,9 @@ public class Invoices {
     }
 
     public Invoices(int invoiceID, double totalAmount, String publicDate, String status, String description, String dueDate, Resident resident, Apartment apartment, List<InvoiceDetail> details, boolean isLate) {
+=======
+    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment, double muon) {
+>>>>>>> main
         this.invoiceID = invoiceID;
         this.totalAmount = totalAmount;
         this.publicDate = publicDate;
@@ -59,11 +100,33 @@ public class Invoices {
         this.dueDate = dueDate;
         this.resident = resident;
         this.apartment = apartment;
+<<<<<<< HEAD
         this.details = details;
         this.isLate = isLate;
     }
 
     public Invoices(double totalAmount, String description, String dueDate, Resident resident, Apartment apartment, List<InvoiceDetail> details) {
+=======
+        this.muon = muon;
+    }
+
+    public Invoices(int invoiceID, double totalAmount, String description, LocalDate dueDate) {
+        this.invoiceID = invoiceID;
+        this.totalAmount = totalAmount;
+        this.description = description;
+        this.dueDate = dueDate;
+    }
+
+    public Invoices(int invoiceID, double totalAmount, String description, LocalDate dueDate, List<InvoiceDetail> details) {
+        this.invoiceID = invoiceID;
+        this.totalAmount = totalAmount;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.details = details;
+    }
+
+    public Invoices(double totalAmount, String description, LocalDate dueDate, Resident resident, Apartment apartment, List<InvoiceDetail> details) {
+>>>>>>> main
         this.totalAmount = totalAmount;
         this.description = description;
         this.dueDate = dueDate;
@@ -100,6 +163,7 @@ public class Invoices {
         this.totalAmount = totalAmount;
     }
 
+<<<<<<< HEAD
     public String getPublicDate() {
         return publicDate;
     }
@@ -108,6 +172,8 @@ public class Invoices {
         this.publicDate = publicDate;
     }
 
+=======
+>>>>>>> main
     public String getStatus() {
         return status;
     }
@@ -124,11 +190,27 @@ public class Invoices {
         this.description = description;
     }
 
+<<<<<<< HEAD
     public String getDueDate() {
         return dueDate;
     }
 
     public void setDueDate(String dueDate) {
+=======
+    public LocalDate getPublicDate() {
+        return publicDate;
+    }
+
+    public void setPublicDate(LocalDate publicDate) {
+        this.publicDate = publicDate;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+>>>>>>> main
         this.dueDate = dueDate;
     }
 
@@ -160,11 +242,55 @@ public class Invoices {
         this.details = details;
     }
 
+<<<<<<< HEAD
     public boolean isLate() {
         return isLate;
     }
 
     public void setIsLate(boolean isLate) {
         this.isLate = isLate;
+=======
+    public double getMuon() {
+        return muon;
+    }
+
+    public void setMuon(double muon) {
+        this.muon = muon;
+    }
+
+
+
+
+    public LocalDate getPaydate() {
+        return paydate;
+    }
+
+    public void setPaydate(LocalDate paydate) {
+        this.paydate = paydate;
+    }
+
+    public String getPublicDateft() {
+        if (publicDate == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return publicDate.format(formatter);
+    }
+
+    public String getPaydateft() {
+        if (paydate == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return paydate.format(formatter);
+    }
+
+    public String getDueDateft() {
+        if (dueDate == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return dueDate.format(formatter);
+>>>>>>> main
     }
 }

@@ -7,7 +7,6 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
         <title>Login Apartment Building</title>
 
         <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -32,8 +31,9 @@
             <div class="custom-select">
                 <label for="userType">User Type</label>
                 <select name="userType" id="userType">
-                    <option value="staff" ${requestScope.userType == 'staff' ? 'selected' : ''}>Staff</option>
-                    <option value="resident" ${(requestScope.userType == null && cookie.remember.value == null) || requestScope.userType == 'resident' ? 'selected' : ''}>Resident</option>
+                    <c:set var="userType" value="${requestScope.userType != null ? requestScope.userType : cookie.userType.value}" />
+                    <option value="staff" ${userType == 'staff' ? 'selected' : ''}>Staff</option>
+                    <option value="resident" ${userType == 'resident' ? 'selected' : ''}>Resident</option>
                 </select>
 
                 <i class="fa fa-chevron-down"></i>
@@ -60,10 +60,11 @@
             </div>
 
             <button type="submit">Log In</button>
-            <div class="social">
-                <div class="go"><img src="./assets/images/logo/logo-google.svg" width="20px" alt="logo-google">
-                    Google</div>
-            </div>
+            <a href="">
+                <div class="social">
+                    <div class="go"><img src="./assets/images/logo/logo-google.svg" width="20px" alt="logo-google">Google</div>
+                </div>
+            </a>
         </form>
 
         <script type="text/javascript">

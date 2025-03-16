@@ -4,7 +4,6 @@
  */
 package config;
 
-
 import dao.ResidentDAO;
 import dao.StaffDAO;
 import java.io.IOException;
@@ -16,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.GoogleAccount;
+import model.Resident;
+import model.Staff;
 
 /**
  *
@@ -65,25 +66,64 @@ public class LoginGoogle extends HttpServlet {
         String code = request.getParameter("code");
         String accessToken = GoogleLogin.getToken(code);
         GoogleAccount account = GoogleLogin.getUserInfo(accessToken);
-        HttpSession session = request.getSession();
+        String email = null;
+        if (account != null) {
+            email = account.getEmail();
+        }
         if (account != null) {
             StaffDAO staffDAO = new StaffDAO();
             ResidentDAO residentDAO = new ResidentDAO();
-//            if
-//            User user = new User(account.getId(), account.getFamily_name(), account.getGiven_name(), account.getEmail(), "qưertyuiop", "+84 123 456 789", "Việt Nam", "User", account.getPicture());
-//            User userCheck = userDAO.selectByEmail(account.getEmail());
-//            if (userCheck==null) {
-//                userDAO.insertFull(user);
-//                session.setAttribute("account", user);
-//                response.sendRedirect("home");
-//            }else if(userCheck!=null){
-//                session.setAttribute("account", userCheck);
-//                response.sendRedirect("home");
-//            }
+            if (staffDAO.existEmail(email)) {
+                Staff staff = staffDAO.selectByEmail(email);
+                if (staff.getStatus().equalsIgnoreCase("ACTIVE")) {
+                    request.getSession().setAttribute("staff", staff);
+                    redirectBasedOnRole(response, request, staff.getRole().getRoleID());
+                }
+            } else if (residentDAO.existEmail(email)) {
+                Resident resident = residentDAO.selectByEmail(email);
+                if (resident.getStatus().equalsIgnoreCase("ACTIVE")) {
+                    request.getSession().setAttribute("resident", resident);
+                    redirectBasedOnRole(response, request, resident.getRole().getRoleID());
+                }
 
-        } else {
-            request.getRequestDispatcher("login").forward(request, response);
+            } else {
+                request.setAttribute("error", "Email or Account not exist!");
+                request.getRequestDispatcher("login").forward(request, response);
+            }
         }
+    }
+
+    private void redirectBasedOnRole(HttpServletResponse response, HttpServletRequest request, int roleID) throws IOException {
+        switch (roleID) {
+            case 1:
+                redirectToPage(response, request, "/manager/home");
+                break;
+            case 2:
+                redirectToPage(response, request, "/administrative/menuadministrative.jsp");
+                break;
+            case 3:
+                redirectToPage(response, request, "/accountant/home");
+                break;
+            case 4:
+                redirectToPage(response, request, "/technical/home");
+                break;
+            case 5:
+                redirectToPage(response, request, "menuservice.jsp");
+                break;
+            case 6:
+                redirectToPage(response, request, "/tenant/home");
+                break;
+            case 7:
+                redirectToPage(response, request, "/owner/home");
+                break;
+            default:
+                redirectToPage(response, request, "error-403");
+                break;
+        }
+    }
+
+    private void redirectToPage(HttpServletResponse response, HttpServletRequest request, String page) throws IOException {
+        response.sendRedirect(request.getContextPath() + page);
     }
 
     /**

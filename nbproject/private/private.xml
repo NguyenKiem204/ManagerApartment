@@ -3,11 +3,34 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/TestProject/ManagerApartment/src/java/config/Iconstant.java</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/TestProject/ManagerApartment/src/java/controller/LoginServlet.java</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/TestProject/ManagerApartment/src/java/dao/Test.java</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/TestProject/ManagerApartment/web/menuadministrative.jsp</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/TestProject/ManagerApartment/web/profile.jsp</file>
+<<<<<<< Updated upstream
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/ExpenseDetail.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/ExpenseDAO.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/Expense.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/TypeExpense.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/Test.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/manager/menumanager.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/Invoices.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/TypeBill.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/InvoiceDetail.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/ViewExpense.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/ViewExpense.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/FeedbackReviewDetailServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/manager/menumanager.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/feedbackreviewdetail.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/owner/FeedbackServlet.java</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/manager/feedbackdetail.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/manager/request.jsp</file>
+            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/requestdetail.jsp</file>
+=======
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/DetailInvoice.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/InvoiceDAO.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/DetailInvoice.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/InvoiceManager.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/UpdateStatusInvoice.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/makepaid.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/UpdateStatusInvoice.jsp</file>
+>>>>>>> Stashed changes
         </group>
     </open-files>
 </project-private>

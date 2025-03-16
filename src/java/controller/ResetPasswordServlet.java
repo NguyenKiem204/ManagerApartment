@@ -80,7 +80,7 @@ public class ResetPasswordServlet extends HttpServlet {
         String confirmPassword = request.getParameter("confirmPassword");
 
         if (email == null || password == null || confirmPassword == null) {
-            response.sendRedirect("error-403.html");
+            response.sendRedirect("error-403");
             return;
         }
 
@@ -90,7 +90,7 @@ public class ResetPasswordServlet extends HttpServlet {
             return;
         }
 
-        if (!password.matches("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).+$")) {
+        if (!password.matches("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])(?!.*\\s).+$")) {
             request.setAttribute("passwordError", "The password must contain at least one digit, one special character, and one letter!");
             request.getRequestDispatcher("newpasword.jsp").forward(request, response);
             return;
@@ -115,9 +115,9 @@ public class ResetPasswordServlet extends HttpServlet {
         }
 
         if (success) {
-            response.sendRedirect("changepasswordsuccess.jsp");
+            response.sendRedirect("changepasswordsuccess");
         } else {
-            response.sendRedirect("error-403.html");
+            response.sendRedirect("error-403");
         }
     }
 

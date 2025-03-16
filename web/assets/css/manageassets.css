@@ -1,0 +1,274 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 15, 2025, 12:23:43 PM
+    Author     : admin
+*/
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+}
+.container {
+    max-width: 900px;
+    background-color: #fff;
+    padding: 20px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h2 {
+    text-align: center;
+    color: #ff9800;
+}
+.search-sort-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+input, select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+input {
+    width: 70%;
+}
+select {
+    width: 28%;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+table, th, td {
+    border: 1px solid #ddd;
+}
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+th {
+    background-color: #ff9800;
+    color: white;
+    cursor: pointer;
+    position: relative;
+}
+th .sort-icon {
+    margin-left: 5px;
+    font-size: 12px;
+}
+.rating {
+    color: #FFD700;
+    font-size: 20px;
+}
+.pagination {
+    text-align: center;
+    margin-top: 10px;
+}
+.pagination button {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+#pageNumber {
+    color: black;
+    font-weight: bold;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-row {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-row select, .filter-row input {
+    flex: 1;
+}
+
+.date-filter {
+    width: 100%;
+}
+tbody tr:hover {
+    background-color: #ffe0b2;
+    cursor: pointer;
+}
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px; /* Adjust the width as needed */
+}
+.truncate_min {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px; /* Adjust the width as needed */
+}
+/* Màu chủ đạo */
+:root {
+    --primary-color: #FF7F00;
+    --hover-color: #E66A00;
+    --background-overlay: rgba(0, 0, 0, 0.5);
+    --modal-bg: #fff;
+    --border-radius: 10px;
+    --input-bg: #f9f9f9;
+}
+
+
+
+/* Hiệu ứng mở modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Tiêu đề */
+h2 {
+    text-align: center;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* Form label */
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #333;
+}
+
+/* Input & Select */
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius);
+    background: var(--input-bg);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover Input */
+input:focus, select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0px 0px 5px var(--primary-color);
+}
+
+/* Button */
+button {
+    width: 48%;
+    padding: 10px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+/* Nút Save */
+button:first-of-type {
+    background: var(--primary-color);
+    color: white;
+}
+
+button:first-of-type:hover {
+    background: var(--hover-color);
+    transform: scale(1.05);
+}
+
+/* Nút Cancel */
+button:last-of-type {
+    background: #ccc;
+    color: black;
+}
+
+button:last-of-type:hover {
+    background: #bbb;
+    transform: scale(1.05);
+}
+
+/* Canh chỉnh button */
+button[type="button"] {
+    margin-top: 15px;
+    display: inline-block;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between; /* Căn cách đều */
+    gap: 20px; /* Khoảng cách giữa 2 ô */
+}
+
+/* Mỗi input chiếm 50% */
+.flex-item {
+    flex: 1;
+}
+
+/* Đảm bảo input có cùng chiều cao */
+.flex-item input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+    transition: all 0.3s ease-in-out;
+}
+
+/*css cho node add asset*/
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.header-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+#addAssetBtn {
+    background: #4CAF50;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    width: 80px;
+    margin-left: auto;
+}
+
+
+

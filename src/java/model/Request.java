@@ -4,125 +4,64 @@
  */
 package model;
 
+import java.sql.Date;
 import java.time.LocalDate;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 /**
  *
  * @author admin
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Request {
 
-    /*
-    RequestID INT IDENTITY(1,1) PRIMARY KEY,
-    [Description] VARCHAR(1000) NOT NULL,
-    Title VARCHAR(255) NOT NULL,
-    [Status] VARCHAR(50) NOT NULL,-- CHECK (Status IN ('Pending', 'Processing', 'Resolved'))
-	[Date] DATETIME DEFAULT GETDATE(),
-    StaffID INT NULL, -- Nhân viên xử lý (nếu có)
-    ResidentID INT NOT NULL,
-	TypeRqID INT,
-     */
-    private int requestID;
-    private String description;
-    private String title;
-    private String status;
-    private LocalDate date;
-    private int staffID;
-    private int residentID;
-    private int typeID;
+    int requestID;
+    String description;
+    String title;
+    LocalDate date;
+    StatusRequest status;
+    Resident resident;
+    TypeRequest typeRq;
+    Apartment apartment;
+    LocalDate completedAt;
+    LocalDate viewedDate;
 
-    public Request() {
-    }
-
-    public Request(String description, String title, String status, LocalDate date, int staffID, int residentID, int typeID) {
+    public Request(String description, String title, LocalDate date, StatusRequest status, Resident resident, TypeRequest typeRq, Apartment apartment) {
         this.description = description;
         this.title = title;
-        this.status = status;
         this.date = date;
-        this.staffID = staffID;
-        this.residentID = residentID;
-        this.typeID = typeID;
+        this.status = status;
+        this.resident = resident;
+        this.typeRq = typeRq;
+        this.apartment = apartment;
     }
     
 
-    public Request(int requestID, String description, String title, String status, LocalDate date, int staffID, int residentID, int typeID) {
-        this.requestID = requestID;
+    public Request(String description, String title, LocalDate date, StatusRequest status, Resident resident, TypeRequest typeRq, Apartment apartment, LocalDate completedAt, LocalDate viewedDate) {
         this.description = description;
         this.title = title;
-        this.status = status;
         this.date = date;
-        this.staffID = staffID;
-        this.residentID = residentID;
-        this.typeID = typeID;
-    }
-
-    public int getRequestID() {
-        return requestID;
-    }
-
-    public void setRequestID(int requestID) {
-        this.requestID = requestID;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
         this.status = status;
+        this.resident = resident;
+        this.typeRq = typeRq;
+        this.apartment = apartment;
+        this.completedAt = completedAt;
+        this.viewedDate = viewedDate;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
+    
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public Date getFormattedDate() {
+        return Date.valueOf(date); // Chuyển LocalDate -> SQL Date
     }
-
-    public int getStaffID() {
-        return staffID;
-    }
-
-    public void setStaffID(int staffID) {
-        this.staffID = staffID;
-    }
-
-    public int getResidentID() {
-        return residentID;
-    }
-
-    public void setResidentID(int residentID) {
-        this.residentID = residentID;
-    }
-
-    public int getTypeID() {
-        return typeID;
-    }
-
-    public void setTypeID(int typeID) {
-        this.typeID = typeID;
-    }
-
-    @Override
-    public String toString() {
-        return "Request{" + "requestID=" + requestID + ", description=" + description + ", title=" + title + ", status=" + status + ", date=" + date + ", staffID=" + staffID + ", residentID=" + residentID + ", typeID=" + typeID + '}';
-    }
-
+    
 }

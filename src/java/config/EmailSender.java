@@ -14,13 +14,12 @@ import java.util.Properties;
 public class EmailSender {
 
     public void sendVerificationEmail(HttpServletRequest request, String toEmail) throws MessagingException, UnsupportedEncodingException {
-    // Tạo token với BCrypt
+
     String token = generateToken(toEmail);
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.MINUTE, 5);
     Date expirationTime = calendar.getTime();
 
-    // Định dạng thời gian hết hạn
     SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
     String formattedExpirationTime = dateFormat.format(expirationTime);
 

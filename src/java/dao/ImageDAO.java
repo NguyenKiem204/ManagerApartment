@@ -25,6 +25,28 @@ public class ImageDAO implements DAOInterface<Image, Integer> {
         }
         return row;
     }
+    public int insert1(Image image) {
+    int imageId = -1;
+    String sqlInsert = "INSERT INTO [Image] (ImageURL) VALUES (?)";
+    
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS)) {
+        
+        ps.setString(1, image.getImageURL());
+        int row = ps.executeUpdate();
+
+        if (row > 0) {
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    imageId = rs.getInt(1); // Lấy ID của ảnh vừa thêm vào
+                }
+            }
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(ImageDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return imageId;  
+}
 
     @Override
     public int update(Image image) {

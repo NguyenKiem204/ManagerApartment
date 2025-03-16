@@ -8,9 +8,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 public class DBContext {
-    private DBContext() {
-        throw new UnsupportedOperationException("Utility class");
-    }
 
     public static Connection getConnection() throws SQLException {
         try {
@@ -50,6 +47,19 @@ public class DBContext {
             System.out.println("Lỗi khi kết nối: " + e.getMessage());
         } finally {
             closeConnection(connection);
+        }
+    }
+     public static void main(String[] args) {
+        try {
+            Connection conn = new DBContext().getConnection();
+            if (conn != null) {
+                System.out.println("Connection established successfully!");
+                conn.close();
+            } else {
+                System.out.println("Failed to establish connection!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

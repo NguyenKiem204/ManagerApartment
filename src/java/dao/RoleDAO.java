@@ -95,4 +95,27 @@ public class RoleDAO implements DAOInterface<Role, Integer> {
         }
         return role;
     }
+
+    public List<Role> getListRoleWithStaffExits() {
+        List<Role> list = new ArrayList<>();
+        String sql = """
+                     SELECT DISTINCT r.RoleID, r.RoleName, r.[Description]
+                     FROM [Role] r
+                     JOIN Staff s ON r.RoleID = s.RoleID
+                     WHERE s.[Status] = 'Active'""";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Role role = new Role(
+                        rs.getInt("RoleID"),
+                        rs.getString("RoleName"),
+                        rs.getString("Description")
+                );
+                list.add(role);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoleDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 }
