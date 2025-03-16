@@ -105,8 +105,7 @@
 
     <body>
 
-        <%@include file="menuaccountant.jsp" %>
-
+        <%@include file="/manager/menumanager.jsp" %>
 
 
         <div id="main">
@@ -115,7 +114,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                     <h2>Invoices Manager</h2>
                     <div class="d-flex align-items-center">
-                        <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-success d-flex align-items-center">
+                        <a href="<%= request.getContextPath() %>/accountant/ImportExpense" class="btn btn-success d-flex align-items-center">
                             <i class="bi bi-plus-lg me-1"></i> Import Expense
                         </a>
                         <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-success d-flex align-items-center">
@@ -136,22 +135,23 @@
                                     <option value="Rejected" ${selectedStatus == 'Rejected' ? 'selected' : ''}>Rejected</option>
                                 </select>
                                 <label for="FromDate" class="form-label align-self-center">From:</label>
-                                <input type="date" class="form-control" id="FromDate" name="FromDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="FromDate" 
                                        value="${selectedFromDate}">
                                 <label for="dueDate" class="form-label align-self-center">Due:</label>
-                                <input type="date" class="form-control" id="dueDate" name="dueDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="dueDate" 
                                        value="${selectedDueDate}">
                                 <label>Type</label>
                                 <select name="typeid" class="form-select" aria-label="Default select example">
+                                    <option value="0">All Status</option>
                                     <c:forEach items="${lte}" var="o">
-                                        <option value="0">All Status</option>
+
                                         <option value="${o.typeExpenseID}" ${o.typeExpenseID == typeexp ? 'selected' : ''}>${o.typeName}</option>
                                     </c:forEach>
                                 </select>
 
                                 <button type="submit" class="btn btn-primary" style="width: 70px;">Filter</button>
 
-                                <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-info btn-sm">
+                                <a href="<%= request.getContextPath() %>/accountant/ViewExpense" class="btn btn-info btn-sm">
                                     <i class="fas fa-sync-alt"></i> <!-- Icon reload -->
                                 </a>
 
@@ -162,7 +162,7 @@
                         <div class="col-md-4">
                             <form action="ViewExpense" method="get" class="d-flex gap-2">
                                 <input type="text" name="search" placeholder="Search by title.." value="${search}" class="form-control me-2">
-                                <input type="hidden" name="typeid" value="${typeid}">
+                                <input type="hidden" name="typeid" value="${typeexp}">
                                 <input type="hidden" name="status" value="${selectedStatus}">  
                                 <input type="hidden" name="FromDate" value="${selectedFromDate}">  
                                 <input type="hidden" name="dueDate" value="${selectedDueDate}"> 
@@ -182,7 +182,6 @@
                             <th>Expense Date</th>
                             <th>Total Amount</th>
                             <th>Details</th>
-                            <th style="width:30px">Actions</th>
                         </tr>
                     </thead>
                     <tbody style="background:white" id="tableBody">
@@ -190,10 +189,10 @@
                             <!-- Hàng chính hiển thị thông tin Expense -->
                             <tr>
                                 <td>${expense.expenseID}</td>
-                                <td>${expense.expenseDate}</td>
-                                <td>${expense.totalAmount}</td>
+                                <td>${expense.expenseDateft}</td>
+                                <td><fmt:formatNumber value="${expense.totalAmount}" pattern="#0.00"/></td>
                                 <td style="width:30px">
-                                    <!-- Nút để hiển thị/ẩn chi tiết -->
+
                                     <button class="btn btn-secondary btn-sm" type="button" onclick="toggleDetails(${expense.expenseID})">
                                         View Details
                                     </button>
@@ -215,7 +214,8 @@
                                             <c:forEach items="${expense.expenseDetails}" var="detail">
                                                 <tr>
                                                     <td>${detail.typeExpense.typeName}</td>
-                                                    <td>${detail.amount}</td>
+
+                                                    <td><fmt:formatNumber value="${detail.amount}" pattern="#0.00"/></td>
                                                     <td>${detail.status}</td>
                                                     <td>${detail.description}</td>
                                                 </tr>
@@ -228,7 +228,7 @@
                     </tbody>
                 </table>
 
-                
+
 
                 <c:if test="${not empty sessionScope.ListExpense && requestScope.totalPage > 1}">
 
@@ -304,15 +304,15 @@
         </script>
         <% } %>
         <script>
-                    function toggleDetails(expenseID) {
-                        const detailsRow = document.getElementById(`details-${expenseID}`);
-                        if (detailsRow.style.display === "none") {
-                            detailsRow.style.display = "table-row"; // Hiển thị hàng chi tiết
-                        } else {
-                            detailsRow.style.display = "none"; // Ẩn hàng chi tiết
-                        }
-                    }
-                </script>
+            function toggleDetails(expenseID) {
+                const detailsRow = document.getElementById("details-" + expenseID);
+                if (detailsRow.style.display === "none") {
+                    detailsRow.style.display = "table-row";
+                } else {
+                    detailsRow.style.display = "none";
+                }
+            }
+        </script>
 
 
 

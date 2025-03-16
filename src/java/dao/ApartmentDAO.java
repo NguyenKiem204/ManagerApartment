@@ -264,7 +264,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
     }
     public Apartment getApartmentById(int apartmentId) {
         Apartment apartment = null;
-        String sql = "SELECT * FROM Apartment WHERE ApartmentID = ?";
+        String sql = "SELECT * FROM Apartment WHERE ApartmentID = ? ";
         System.out.println(sql);
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {

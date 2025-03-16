@@ -79,34 +79,34 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
     }
 
     public Invoices selectById(Integer id) {
-        String sql = "SELECT \n"
-                + "    inv.InvoiceID, \n"
-                + "    inv.TotalAmount, \n"
-                + "    inv.PublicDate, \n"
-                + "    inv.Status AS InvoiceStatus, \n"
-                + "    inv.Description AS InvoiceDescription, \n"
-                + "    inv.DueDate, \n"
-                + "    inv.islate, \n"
-                + "    inv.PaymentDate, \n"
-                + "    idt.DetailID, \n"
-                + "    idt.Amount, \n"
-                + "    idt.Description AS DetailDescription, \n"
-                + "    idt.TypeBillID, \n"
-                + "    tb.TypeName AS BillType, \n"
-                + "    res.ResidentID, \n"
-                + "    res.FullName AS ResidentName, \n"
-                + "    res.PhoneNumber AS ResidentPhone, \n"
-                + "    res.Email AS ResidentEmail, \n"
-                + "    apt.ApartmentID, \n"
-                + "    apt.ApartmentName, \n"
-                + "    apt.Block, \n"
-                + "    apt.Status AS ApartmentStatus, \n"
-                + "    apt.Type AS ApartmentType \n"
-                + "FROM Invoice inv \n"
-                + "JOIN Resident res ON inv.ResidentID = res.ResidentID \n"
-                + "JOIN Apartment apt ON inv.ApartmentID = apt.ApartmentID \n"
-                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID \n"
-                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID \n"
+        String sql = "SELECT "
+                + "    inv.InvoiceID, "
+                + "    inv.TotalAmount, "
+                + "    inv.PublicDate, "
+                + "    inv.Status AS InvoiceStatus, "
+                + "    inv.Description AS InvoiceDescription, "
+                + "    inv.DueDate, "
+                + "    inv.islate, "
+                + "    inv.PaymentDate, "
+                + "    idt.DetailID, "
+                + "    idt.Amount, "
+                + "    idt.Description AS DetailDescription, "
+                + "    idt.TypeBillID, "
+                +"    tb.TypeName AS BillType, "
+                + "    res.ResidentID, "
+                + "    res.FullName AS ResidentName, "
+                + "    res.PhoneNumber AS ResidentPhone, "
+                + "    res.Email AS ResidentEmail, "
+                + "    apt.ApartmentID, "
+                + "    apt.ApartmentName, "
+                + "    apt.Block, "
+                + "    apt.Status AS ApartmentStatus, "
+                + "    apt.Type AS ApartmentType "
+                + "FROM Invoice inv "
+                + "JOIN Resident res ON inv.ResidentID = res.ResidentID "
+                + "JOIN Apartment apt ON inv.ApartmentID = apt.ApartmentID "
+                + "LEFT JOIN InvoiceDetail idt ON inv.InvoiceID = idt.InvoiceID "
+                + "LEFT JOIN TypeBill tb ON idt.TypeBillID = tb.TypeBillID "
                 + "WHERE inv.InvoiceID = ?;";
 
         Invoices invoice = null;
@@ -134,7 +134,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                                 rs.getString("ApartmentType")
                         );
 
-                        // Lấy các giá trị từ ResultSet
+                        // Lấy các giá trị ngày
                         LocalDate publicDate = rs.getDate("PublicDate") != null ? rs.getDate("PublicDate").toLocalDate() : null;
                         LocalDate dueDate = rs.getDate("DueDate") != null ? rs.getDate("DueDate").toLocalDate() : null;
                         LocalDate payDate = rs.getDate("PaymentDate") != null ? rs.getDate("PaymentDate").toLocalDate() : null;
@@ -169,6 +169,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                 }
             }
         } catch (SQLException e) {
+            System.err.println("Lỗi khi truy vấn hóa đơn: " + e.getMessage());
             e.printStackTrace();
         }
 

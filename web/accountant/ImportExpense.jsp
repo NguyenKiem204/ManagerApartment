@@ -89,91 +89,32 @@
     </head>
 
     <body>
-        <%@include file="menuaccountant.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
         <div id="main">
-
-            <main  id="content">
+            <main id="content">
                 <div class="card p-4 shadow-lg rounded-4" style="max-width: 1000px; margin: 0 auto;">
-                    <h4 class="text-center mb-4">Add New Invoice</h4>
+                    <h4 class="text-center mb-4">Import Expense</h4>
                     <form action="addnewinvoice" method="post">
-                        <div class="form-group mb-3">
 
-                            <label>Apartment</label>
-                            <select name="apartmentId" class="form-select" aria-label="Default select example">
-                                <c:forEach items="${listApartment}" var="o">
-
-                                    <option value="${o.apartmentId}">${o.apartmentName}</option>
-                                </c:forEach>
-                            </select>
-                        </div>  
                         <div class="form-group mb-3">
                             <label for="description">Description</label>
                             <input type="text" class="form-control" id="description" name="description" required>
                         </div>
-                        <!-- Hiển thị lỗi chung -->
-
-
                         <div class="form-group mb-3">
-                            <label for="dueDate">Due Date</label>
-                            <input type="date" class="form-control" id="dueDate" name="dueDate" required>
-
+                            <label for="description">Amount</label>
+                            <input type="text" class="form-control" id="description" name="description" required>
                         </div>
-                        <!-- Hiển thị lỗi Due Date -->
-                        <c:if test="${not empty dueDateError}">
-                            <div class="alert alert-danger" role="alert">
-                                ${dueDateError}
-                            </div>
-                        </c:if>
+                        <div class="form-group mb-3">
+                            <label>Type</label>
+                            <select name="typeid" class="form-select" aria-label="Default select example">
+                                <c:forEach items="${lte}" var="o">
+                                    <option value="${o.typeExpenseID}" ${o.typeExpenseID == typeexp ? 'selected' : ''}>${o.typeName}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
 
-
-                        <h5 class="mt-4">Invoice Details</h5>
-                        <table class="table table-bordered mt-3">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Description</th>
-                                    <th>Amount</th>
-                                    <th>Type Bill</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="invoiceDetailsTable">
-                                <c:choose>
-                                    <c:when test="${empty invoice.details}">
-                                        <tr>
-                                            <td>1</td>
-                                            <td><input type="text" class="form-control" name="descriptionde" required></td>
-                                            <td>
-                                                <input type="text" class="form-control" name="amount" required onblur="formatDecimal(this)" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
-                                            </td>
-                                            <td>
-                                                <select name="typebills" class="form-select" required>
-                                                    <c:forEach items="${listType}" var="o">
-                                                        <option value="${o.id}">${o.name}</option>
-                                                    </c:forEach>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-danger" onclick="removeInvoiceDetail(this)">Remove</button>
-                                            </td>
-                                        </tr>
-                                    </c:when>
-                                </c:choose>
-                            </tbody>
-                            <!-- Hiển thị lỗi Detail -->
-                            <c:if test="${not empty detailError}">
-                                <div class="alert alert-danger" role="alert">
-                                    ${detailError}
-                                </div>
-                            </c:if>
-                        </table>
-                        <button type="button" class="btn btn-primary" onclick="addInvoiceDetail()">Add Invoice Detail</button> <c:if test="${not empty errorde}">
-                            <div class="alert alert-danger" role="alert">
-                                ${errorde}
-                            </div>
-                        </c:if>
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+                            <a href="<%= request.getContextPath() %>/accountant/ViewExpense" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back</a>
                             <button type="submit" class="btn btn-success">Save <i class="bi bi-plus-lg"></i></button>
                         </div>
                     </form>

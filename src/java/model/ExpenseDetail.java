@@ -16,11 +16,8 @@ public class ExpenseDetail {
     private double amount;
     private String status;
     private String description;
-    public ExpenseDetail() {
-    }
 
-    public ExpenseDetail(int aInt, int expenseID, int aInt0, double aDouble, String string, String string0, TypeExpense typeExpense) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ExpenseDetail() {
     }
 
     public ExpenseDetail(int expenseDetailID, int expenseID, TypeExpense typeExpense, double amount, String status, String description) {
@@ -31,7 +28,7 @@ public class ExpenseDetail {
         this.status = status;
         this.description = description;
     }
- 
+
     public int getExpenseDetailID() {
         return expenseDetailID;
     }
@@ -48,8 +45,6 @@ public class ExpenseDetail {
         this.expenseID = expenseID;
     }
 
-   
-
     public String getStatus() {
         return status;
     }
@@ -58,8 +53,6 @@ public class ExpenseDetail {
         this.status = status;
     }
 
-   
-
     public TypeExpense getTypeExpense() {
         return typeExpense;
     }
@@ -67,7 +60,6 @@ public class ExpenseDetail {
     public void setTypeExpense(TypeExpense typeExpense) {
         this.typeExpense = typeExpense;
     }
-    
 
     public double getAmount() {
         return amount;
@@ -88,4 +80,5 @@ public class ExpenseDetail {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

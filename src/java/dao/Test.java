@@ -102,14 +102,23 @@ public class Test {
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
+<<<<<<< Updated upstream
 //        Resident resident = new Resident("Nguyễn Văn b", "123", "0331471047", "3984136534764", "b@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
 //        residentDAO.insert(resident);
+=======
+        Resident resident = new Resident("Nguyễn Văn Kiem", "123", "0353215889", "001204040218", "Cuongnmhe182472@fpt.edu.vn",  LocalDate.of(2004, 12, 3), "male", "ACTIVE", new Image().builder().imageID(1).build(), new Role().builder().roleID(7).build());
+        residentDAO.insert(resident);
+>>>>>>> Stashed changes
 //       /
 //        imageDAO.insert(image);
 //        Staff staff = new Staff("Nguyễn Quang Dũng", "123", "0325476595", "035204007777", "quangdungvt5822@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(5).build());
 //        staffDAO.insert(staff);
+<<<<<<< Updated upstream
 //        Staff staff = new Staff("Nguyễn Văn a", "123", "0931654542", "66349834131194", "a@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(1).build());
 //        staffDAO.insert(staff);
+=======
+//
+>>>>>>> Stashed changes
 //        Staff staff = new Staff("Nguyễn Văn b", "123", "0931654542", "66349834131194", "c@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(2).build(), new Role().builder().roleID(1).build());
 //        staffDAO.insert(staff);
 //        Staff staff1 = new Staff("Nguyễn Văn c", "123", "0934454542", "66322834134194", "b@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(3).build(), new Role().builder().roleID(3).build());

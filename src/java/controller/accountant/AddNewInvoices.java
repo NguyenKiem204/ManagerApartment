@@ -244,6 +244,6 @@ public class AddNewInvoices extends HttpServlet {
     }
 
     public boolean isValidDescription(String input) {
-        return input.matches("^[a-zA-Z0-9\\s.,!?'\"()\\-_/]{1,500}$");
+        return input.matches("^[\\p{L}0-9\\s.,!?'\"()\\-_/]{1,500}$");
     }
 }
