@@ -6,8 +6,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Add Asset</title>
 
-        <!-- Bootstrap 5 -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
 
         <!-- FontAwesome -->
@@ -87,10 +85,6 @@
                 </div>
             </div>
         </div>
-
-
-        <!-- Bootstrap 5 JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     </body>
 </html>

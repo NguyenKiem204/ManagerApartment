@@ -525,7 +525,6 @@
                         type: "GET",
                         data: {roleId: roleId, residentId: residentId, staffId: staffId},
                         success: function (response) {
-                            console.log("Dữ liệu từ server:", response);
 
                             if (response.length > 0) {
                                 $("#notificationBell").addClass("active");
@@ -608,8 +607,8 @@
                     });
                 });
 
-                // Kiểm tra thông báo mới mỗi 0.5 giây
-                setInterval(checkNotifications, 500);
+                // Kiểm tra thông báo mới mỗi 0.3 giây
+                setInterval(checkNotifications, 300);
             });
             $(function () {
                 // Cấu hình cơ bản cho date picker với định dạng dd/MM/yyyy

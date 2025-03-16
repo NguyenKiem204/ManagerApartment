@@ -14,10 +14,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.text.ParseException;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.ApartmentAssets;
 import model.AssetCategory;
 import model.StatusApartmentAssets;
@@ -101,7 +106,9 @@ public class AddAssetServlet extends HttpServlet {
         String location = request.getParameter("location");
         String boughtOn_raw = request.getParameter("boughtOn");
         String statusId_raw = request.getParameter("statusId");
-
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        
         int categoryId = 0;
         int quantity = 0;
         int statusId = 0;
@@ -110,7 +117,9 @@ public class AddAssetServlet extends HttpServlet {
             categoryId = Integer.parseInt(categoryId_raw);
             quantity = Integer.parseInt(quantity_raw);
             statusId = Integer.parseInt(statusId_raw);
-            boughtOn = Date.valueOf(boughtOn_raw);
+            LocalDate boughtOnDateLocalDate = LocalDate.parse(boughtOn_raw, formatter);
+            boughtOn = Date.valueOf(boughtOnDateLocalDate);
+            System.out.println("Bought on not raw:" + boughtOn);
 
             //check asset name
             if (assetName != null) {
@@ -128,7 +137,7 @@ public class AddAssetServlet extends HttpServlet {
                 return;
             }
 
-            // Kiểm tra độ dài title
+            // Kiểm tra độ dài ten asset
             if (assetName.length() > 100) {
                 request.setAttribute("error", "Asset name must be <100 characters!");
                 List<AssetCategory> listcategory = assetCategoryDAO.selectAll();
@@ -169,8 +178,8 @@ public class AddAssetServlet extends HttpServlet {
 
             
             // Kiểm tra độ dài title
-            if (assetName.length() > 100) {
-                request.setAttribute("error", "Asset name must be <100 characters!");
+            if (location.length() > 100) {
+                request.setAttribute("error", "Location must be <100 characters!");
                 List<AssetCategory> listcategory = assetCategoryDAO.selectAll();
                 List<StatusApartmentAssets> liststatus = statusApartmentAssetsDAO.selectAll();
 
@@ -181,8 +190,8 @@ public class AddAssetServlet extends HttpServlet {
             }
 
 //         Kiểm tra ký tự đặc biệt (chỉ cho phép chữ, số, khoảng trắng, và một số dấu câu)
-            if (!Validate.isValidTitle(assetName)) {
-                request.setAttribute("error", "Asset name contains invalid characters!");
+            if (!Validate.isValidLocation(location)) {
+                request.setAttribute("error", "Location contains invalid characters!");
                 List<AssetCategory> listcategory = assetCategoryDAO.selectAll();
                 List<StatusApartmentAssets> liststatus = statusApartmentAssetsDAO.selectAll();
 
@@ -192,7 +201,7 @@ public class AddAssetServlet extends HttpServlet {
                 return;
             }
             //bought on k duoc chon tuong lai
-            if (!Validate.validateBoughtOn(boughtOn_raw)) {
+            if (Validate.validateBoughtOn(boughtOn_raw)) {
                 request.setAttribute("error", "Bought on can not in the future!");
                 List<AssetCategory> listcategory = assetCategoryDAO.selectAll();
                 List<StatusApartmentAssets> liststatus = statusApartmentAssetsDAO.selectAll();
