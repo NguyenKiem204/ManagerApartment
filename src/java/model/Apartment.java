@@ -15,7 +15,18 @@ public class Apartment {
     String status;
     String type;
     int ownerId;
+    String ownerName;
 
+    public Apartment(int apartmentId, String apartmentName, String block, String status, String type, int ownerId) {
+        this.apartmentId = apartmentId;
+        this.apartmentName = apartmentName;
+        this.block = block;
+        this.status = status;
+        this.type = type;
+        this.ownerId = ownerId;
+    }
+
+    
     public Apartment(String apartmentName, String block, String status, String type, int ownerId) {
         this.apartmentName = apartmentName;
         this.block = block;

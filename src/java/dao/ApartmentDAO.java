@@ -103,28 +103,35 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
 
     @Override
     public List<Apartment> selectAll() {
-        List<Apartment> list = new ArrayList<>();
-        String sql = "SELECT * FROM Apartment";
-        System.out.println(sql);
+    List<Apartment> list = new ArrayList<>();
+    String sql = "SELECT * FROM Apartment";
+    System.out.println(sql);
 
-        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Apartment apartment = new Apartment(
-                        rs.getInt("ApartmentID"),
-                        rs.getString("ApartmentName"),
-                        rs.getString("Block"),
-                        rs.getString("Status"),
-                        rs.getString("Type"),
-                        rs.getInt("OwnerID")
-                );
-                list.add(apartment);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            int ownerId = rs.getInt("OwnerID");
+            Resident owner = residentDAO.selectById(ownerId);
+            String ownerName = (owner != null) ? owner.getFullName() : "N/A"; // Nếu null thì dùng "N/A"
+            
+            Apartment apartment = new Apartment(
+                    rs.getInt("ApartmentID"),
+                    rs.getString("ApartmentName"),
+                    rs.getString("Block"),
+                    rs.getString("Status"),
+                    rs.getString("Type"),
+                    ownerId,
+                    ownerName
+            );
+            list.add(apartment);
         }
-        return list;
+    } catch (SQLException ex) {
+        Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return list;
+}
+
 
     public int numberApartment() {
         int count = 0;

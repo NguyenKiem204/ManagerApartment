@@ -69,10 +69,7 @@ public class GetNotificationsServlet extends HttpServlet {
         String roleId_raw = request.getParameter("roleId");
         String residentId_raw = request.getParameter("residentId");
         String staffId_raw = request.getParameter("staffId");
-        System.out.println("RoleId raw: " + roleId_raw);
-        System.out.println("ResidentId raw: " + residentId_raw);
-        System.out.println("StaffId raw: " + staffId_raw);
-        System.out.println("------------");
+       
 
         int roleId = 1;
         int residentId = 0;
@@ -83,7 +80,6 @@ public class GetNotificationsServlet extends HttpServlet {
             staffId = Integer.parseInt(staffId_raw);
         } catch (NumberFormatException e) {
         }
-        System.out.println("roleID la: " + roleId);
         List<Notification> list = new ArrayList<>();
         if (roleId != 6 && roleId != 7) {
             list = notificationDAO.selectAllByStaffID(roleId);

@@ -307,12 +307,12 @@
                                     </ul>
                                 </li>
 
-                                <li class="sidebar-item has-sub">
-                                    <a href="#" class="sidebar-link">
+                                <li class="sidebar-item has-sub" id="accountId">
+                                    <a href="#"  class="sidebar-link">
                                         <i class="fa-solid fa-users-gear"></i>
                                         <span>Account</span>
                                     </a>
-                                    <ul class="submenu">
+                                    <ul class="submenu resident-active" >
                                         <li class="submenu-item">
                                             <a href="manageResident">Resident</a>
                                         </li>
@@ -340,7 +340,21 @@
                                     </a>
                                 </li>
                             </c:if>
+                            <li class="sidebar-item has-sub">
+                                <a href="#" class="sidebar-link">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <span>Utility Management</span>
+                                </a>
+                                <ul class="submenu">
+                                    <c:if test="${sessionScope.staff.role.roleID == 3}">
+                                        <li class="submenu-item managernews">
+                                            <a href="<%= request.getContextPath() %>/accountant/manager-meter-reading">Manager
+                                                EW</a>
+                                        </li>
 
+                                    </c:if>
+                                </ul>
+                            </li>
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="bi bi-grid-1x2-fill"></i>
@@ -468,6 +482,7 @@
                                     </li>
                                 </ul>
                             </li>
+
 
                             <li class="sidebar-item">
                                 <a href="<%= request.getContextPath() %>/chat" class="sidebar-link">
@@ -640,7 +655,7 @@
                 });
 
                 // Kiểm tra thông báo mới mỗi 3 giây
-                setInterval(checkNotifications, 3000);
+                setInterval(checkNotifications, 1000);
             });
             $(function () {
                 // Cấu hình cơ bản cho date picker với định dạng dd/MM/yyyy
@@ -654,7 +669,7 @@
                 // Khởi tạo Date Picker đơn giản
                 flatpickr("#datePicker", {
                     ...datePickerConfig,
-                    maxDate: "today"
+                    maxDate: null
                 });
                 flatpickr("#dateRangePicker", {
                     ...datePickerConfig,
@@ -691,4 +706,4 @@
 
     </body>
 
-    </html>
+</html>

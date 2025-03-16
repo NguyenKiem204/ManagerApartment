@@ -1,47 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2"
-                      lastBookmarkId="0" />
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/InvoiceDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/manager/manage-urls.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/web/profile-staff.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/web/changeprofilestaff.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/model/Resident.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/profile-resident.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/config/FileUploadUtil.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/manager/HomeManagerServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/model/Comment.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/ManagerFeedbackDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/assets/css/newsdetail.css</file>
-            <file>file:/D:/PR2/ManagerApartment/web/newsdetail.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/web/manager/managernews.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/web/manager/menumanager.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/CommentDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/ChatRoomServerEndpoint.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/assets/js/comments.js</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/makepaid.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/model/Request.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/ChangeProfileStaffServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/manager/home.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/RequestDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/model/Staff.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/assets/css/menu.css</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/UpdateProfileStaffServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/ChatServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/manager/addnews.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/DBContext.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/manager/AddNewsServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/chat.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/web/assets/js/pages/dashboard.js</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/validation/Validate.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/Test.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/news.jsp</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/CommentServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/ResidentDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/assets/js/main.js</file>
-            <file>file:/D:/PR2/ManagerApartment/web/changeprofile.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/web/accountant/edit-meter-reading.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/MeterReading.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/Meter.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/EditMeterReadingServlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/ManagerMeterReadingServlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/accountant/managermeterreading.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/MeterDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/MeterReadingDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/FeedbackReviewServlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/manager/menumanager.jsp</file>
         </group>
     </open-files>
 </project-private>

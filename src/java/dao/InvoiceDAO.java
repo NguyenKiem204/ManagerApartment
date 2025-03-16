@@ -276,8 +276,8 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
     }
 
     public void insertInvoice(Invoices invoice) {
-        String sql = "INSERT INTO Invoice (ResidentID, TotalAmount, [Description], DueDate, [Status], StaffID,islate) "
-                + "VALUES (?, ?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO Invoice (ResidentID, TotalAmount, [Description], DueDate, [Status], StaffID, islate, ApartmentID) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -288,6 +288,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
             ps.setString(5, "Unpaid");
             ps.setInt(6, 2);
             ps.setInt(7, 0);
+            ps.setInt(8, invoice.getApartment().getApartmentId());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
