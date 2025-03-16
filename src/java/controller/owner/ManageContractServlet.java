@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 import model.Apartment;
@@ -26,6 +27,7 @@ import model.EmailUtil;
 import model.Resident;
 import model.Role;
 import org.json.JSONObject;
+import validation.Validate;
 
 @WebServlet(name="ManageContractServlet", urlPatterns={"/owner/manageContract"})
 public class ManageContractServlet extends HttpServlet {
@@ -48,7 +50,7 @@ public class ManageContractServlet extends HttpServlet {
     String status = request.getParameter("status");
 
     int page = 1;
-    int pageSize = 1;
+    int pageSize = 5;
 
     if (request.getParameter("page") != null) {
         page = Integer.parseInt(request.getParameter("page"));
@@ -101,6 +103,13 @@ public class ManageContractServlet extends HttpServlet {
                 out.write(jsonResponse.toString());
                 return;
             }
+            String dobError = Validate.validateDob(dobStr);
+            if(dobError != null) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", dobError);
+                out.write(jsonResponse.toString());
+                return;
+            }
             if (!phoneNumber.matches("\\d{10}")) {
                 jsonResponse.put("success", false);
                 jsonResponse.put("message", "Phone number must have 10 digits!");
@@ -143,9 +152,9 @@ public class ManageContractServlet extends HttpServlet {
                 out.write(jsonResponse.toString());
                 return;
             }
-
-            LocalDate leaseStartDate = LocalDate.parse(leaseStartDateStr);
-            LocalDate leaseEndDate = LocalDate.parse(leaseEndDateStr);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+            LocalDate leaseStartDate = LocalDate.parse(leaseStartDateStr, formatter);
+            LocalDate leaseEndDate = LocalDate.parse(leaseEndDateStr, formatter);
 
             if (leaseStartDate.isAfter(leaseEndDate)) {
                 jsonResponse.put("success", false);
@@ -161,7 +170,8 @@ public class ManageContractServlet extends HttpServlet {
             }
 
 
-            LocalDate dob = LocalDate.parse(dobStr);
+            
+            LocalDate dob = LocalDate.parse(dobStr, formatter);
             String password = generateRandomPassword(5);
             Role role = roleDAO.selectById(6); // Tenant role
             Resident newTenant = new Resident(fullName, password, phoneNumber, cccd, email, dob, sex, "Active", role);

@@ -118,6 +118,7 @@ public class AddNewInvoices extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
+            //lay parameter
             String apartmentIdStr = request.getParameter("apartmentId");
             String description = request.getParameter("description");
             String dueDateStr = request.getParameter("dueDate");
@@ -135,7 +136,7 @@ public class AddNewInvoices extends HttpServlet {
                 doGet(request, response);
                 return;
             }
-
+// check format
             int apartmentId;
             LocalDate dueDate;
             try {
@@ -221,8 +222,9 @@ public class AddNewInvoices extends HttpServlet {
             }
             Invoices invoice = new Invoices(totalAmount, description, dueDate, resident, apartment, details);
             InvoiceDAO iDAO = new InvoiceDAO();
-            iDAO.insertInvoice(invoice);
+            iDAO.insertInvoice(invoice, apartment.getApartmentId());
             int newInvoiceId = iDAO.getLatestInvoiceID();
+
             for (InvoiceDetail detail : details) {
                 iDAO.insertInvoiceDetail(newInvoiceId, detail);
             }

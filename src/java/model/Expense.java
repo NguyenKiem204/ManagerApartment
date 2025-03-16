@@ -4,8 +4,10 @@
  */
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  *
@@ -14,24 +16,21 @@ import java.time.format.DateTimeFormatter;
 public class Expense {
 
     private int expenseID;
-    private double amount;
-    private LocalDateTime expenseDate;
-    private int typeid;
+    private LocalDate expenseDate;
+    private int staffID;
+    private double totalAmount;
+    private List<ExpenseDetail> expenseDetails; // Danh sách các ExpenseDetail
 
-    private String description;
-    private String status;
-
-    public Expense(int expenseID, double amount, LocalDateTime expenseDate, int typeid, String description, String status) {
+    // Constructor
+    public Expense(int expenseID, LocalDate expenseDate, int staffID, double totalAmount, List<ExpenseDetail> expenseDetails) {
         this.expenseID = expenseID;
-        this.amount = amount;
         this.expenseDate = expenseDate;
-        this.typeid = typeid;
-        this.description = description;
-        this.status = status;
+        this.staffID = staffID;
+        this.totalAmount = totalAmount;
+        this.expenseDetails = expenseDetails;
     }
 
-   
-
+    // Getters và Setters
     public int getExpenseID() {
         return expenseID;
     }
@@ -40,50 +39,35 @@ public class Expense {
         this.expenseID = expenseID;
     }
 
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public LocalDateTime getExpenseDate() {
+    public LocalDate getExpenseDate() {
         return expenseDate;
     }
 
-    public void setExpenseDate(LocalDateTime expenseDate) {
+    public void setExpenseDate(LocalDate expenseDate) {
         this.expenseDate = expenseDate;
     }
 
-    public int getTypeid() {
-        return typeid;
+    public int getStaffID() {
+        return staffID;
     }
 
-    public void setTypeid(int typeid) {
-        this.typeid = typeid;
+    public void setStaffID(int staffID) {
+        this.staffID = staffID;
     }
 
-    public String getDescription() {
-        return description;
+    public double getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
-    public String getStatus() {
-        return status;
+    public List<ExpenseDetail> getExpenseDetails() {
+        return expenseDetails;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    public String getExpenseDateft() {
-        if (expenseDate == null) {
-            return "";
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return expenseDate.format(formatter);
+    public void setExpenseDetails(List<ExpenseDetail> expenseDetails) {
+        this.expenseDetails = expenseDetails;
     }
 }

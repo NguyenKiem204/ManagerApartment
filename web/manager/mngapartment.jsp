@@ -13,23 +13,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Manage Apartment</title>
-
-        <link rel="preconnect" href="<%= request.getContextPath() %>/https://fonts.gstatic.com" />
-        <link href="<%= request.getContextPath() %>/https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
-              rel="stylesheet" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
-
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
-
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> 
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -332,7 +316,7 @@
                             </select>
 
                             <label for="ownerId" class="modal-label">OwnerId:</label>
-                            <input type="text" id="ownerId" name="ownerId" class="modal-input" required pattern="\d{4}">
+                            <input type="text" id="ownerId" name="ownerId" class="modal-input" pattern="\d{4}" required>
 
                             <button type="button" id="submitBtn" class="modal-button">Add</button>
                         </form>
@@ -433,6 +417,20 @@
 
 
                 <ul class="pagination justify-content-center">
+                    <!-- Nút First -->
+                    <c:if test="${currentPage > 1}">
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1
+                               <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
+                               <c:if test="${selectedOwnerId != -1}">&ownerId=${selectedOwnerId}</c:if>
+                               <c:if test="${not empty selectedType}">&type=${selectedType}</c:if>
+                               <c:if test="${not empty selectedStatus}">&status=${selectedStatus}</c:if>
+                               <c:if test="${not empty selectedBlock}">&block=${selectedBlock}</c:if>
+                                   ">First</a>
+                            </li>
+                    </c:if>
+
+                    <!-- Nút Previous -->
                     <c:if test="${currentPage > 1}">
                         <li class="page-item">
                             <a class="page-link" href="?page=${currentPage - 1}
@@ -445,7 +443,26 @@
                             </li>
                     </c:if>
 
-                    <c:forEach begin="1" end="${totalPages}" var="i">
+                    <!-- Xác định phạm vi trang hiển thị -->
+                    <c:set var="startPage" value="${currentPage - 1}" />
+                    <c:set var="endPage" value="${currentPage + 1}" />
+
+                    <c:if test="${startPage < 1}">
+                        <c:set var="startPage" value="1" />
+                        <c:set var="endPage" value="3" />
+                    </c:if>
+
+                    <c:if test="${endPage > totalPages}">
+                        <c:set var="endPage" value="${totalPages}" />
+                        <c:set var="startPage" value="${totalPages - 2}" />
+                    </c:if>
+
+                    <c:if test="${startPage < 1}">
+                        <c:set var="startPage" value="1" />
+                    </c:if>
+
+                    <!-- Hiển thị 3 trang liên tiếp -->
+                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
                         <li class="page-item ${i == currentPage ? 'active' : ''}">
                             <a class="page-link" href="?page=${i}
                                <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
@@ -457,6 +474,7 @@
                         </li>
                     </c:forEach>
 
+                    <!-- Nút Next -->
                     <c:if test="${currentPage < totalPages}">
                         <li class="page-item">
                             <a class="page-link" href="?page=${currentPage + 1}
@@ -468,11 +486,25 @@
                                    ">Next</a>
                             </li>
                     </c:if>
+
+                    <!-- Nút Last -->
+                    <c:if test="${currentPage < totalPages}">
+                        <li class="page-item">
+                            <a class="page-link" href="?page=${totalPages}
+                               <c:if test="${not empty selectedName}">&name=${selectedName}</c:if>
+                               <c:if test="${selectedOwnerId != -1}">&ownerId=${selectedOwnerId}</c:if>
+                               <c:if test="${not empty selectedType}">&type=${selectedType}</c:if>
+                               <c:if test="${not empty selectedStatus}">&status=${selectedStatus}</c:if>
+                               <c:if test="${not empty selectedBlock}">&block=${selectedBlock}</c:if>
+                                   ">Last</a>
+                            </li>
+                    </c:if>
                 </ul>
 
                 <c:if test="${totalPages == 0}">
                     <p class="text-center text-muted">No apartments found.</p>
                 </c:if>
+
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -581,33 +613,7 @@
                 });
             });
         </script>
-
-        <!--==============================END================================-->
-
-        <footer>
-            <div class="footer clearfix mb-0 text-muted">
-                <div class="float-start">
-                    <p>2025 &copy; Kiemm</p>
-                </div>
-                <div class="float-end">
-                    <p>
-                        Crafted with
-                        <span class="text-danger"><i class="bi bi-heart"></i></span> by
-                        <a href="http://ahmadsaugi.com">NguyenKiem</a>
-                    </p>
-                </div>
-            </div>
-        </footer>
-    </div>
-</div>
-<script src="<%= request.getContextPath() %>/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-<script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
-
-<script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
-<script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
-
-<script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
-</body>
+    </body>
 
 </html>
 

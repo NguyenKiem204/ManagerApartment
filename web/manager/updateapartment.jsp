@@ -8,54 +8,54 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <style>
     /* Căn chỉnh form */
-#updateApartmentForm {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-}
+    #updateApartmentForm {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+    }
 
-/* Căn chỉnh nhãn (label) */
-#updateApartmentForm label {
-    font-weight: bold;
-    margin-top: 10px;
-    display: block;
-}
+    /* Căn chỉnh nhãn (label) */
+    #updateApartmentForm label {
+        font-weight: bold;
+        margin-top: 10px;
+        display: block;
+    }
 
-/* Input và Select */
-#updateApartmentForm input,
-#updateApartmentForm select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
+    /* Input và Select */
+    #updateApartmentForm input,
+    #updateApartmentForm select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
 
-/* Focus */
-#updateApartmentForm input:focus,
-#updateApartmentForm select:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
+    /* Focus */
+    #updateApartmentForm input:focus,
+    #updateApartmentForm select:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
 
-/* Nút Update */
-#saveUpdate {
-    margin-top: 15px;
-    width: 100%;
-    background: #28a745;
-    border: none;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    transition: 0.3s;
-    color: white;
-}
+    /* Nút Update */
+    #saveUpdate {
+        margin-top: 15px;
+        width: 100%;
+        background: #28a745;
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: 0.3s;
+        color: white;
+    }
 
-#saveUpdate:hover {
-    background: #218838;
-}
+    #saveUpdate:hover {
+        background: #218838;
+    }
 
 </style>
 <form id="updateApartmentForm">
