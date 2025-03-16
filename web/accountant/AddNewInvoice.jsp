@@ -14,54 +14,78 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Invoice Manager</title>
         <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />   
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="<%= request.getContextPath() %>/https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
-              rel="stylesheet" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
 
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
-
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css"/>
-        <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
-        <link rel="shortcut icon" href="<%= request.getContextPath() %>assets/images/favicon/favicon.png" type="image/x-icon" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer" />
         <style>
-
             .active::-webkit-scrollbar {
                 width: 0px;
                 height: 0px;
             }
-
             .active {
                 -ms-overflow-style: none;
                 scrollbar-width: none;
             }
         </style>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
         <script>
-                            function formatDecimal(input) {
-                                let value = input.value.replace(/[^0-9.]/g, '').trim(); // Chỉ giữ lại số và dấu chấm
-                                let floatValue = parseFloat(value);
+            // Hàm định dạng số thành XX.00
+            function formatDecimal(input) {
+                let value = input.value.replace(/[^0-9.]/g, '').trim(); // Chỉ giữ lại số và dấu chấm
+                let floatValue = parseFloat(value);
 
-                                if (!isNaN(floatValue)) {
-                                    input.value = floatValue.toFixed(2); // Hiển thị dưới dạng xxx.00
-                                } else {
-                                    input.value = "0.00"; // Nếu không hợp lệ, đặt thành 0.00
-                                }
-                            }
+                if (!isNaN(floatValue)) {
+                    input.value = floatValue.toFixed(2); // Hiển thị dạng XX.00
+                } else {
+                    input.value = "0.00"; // Nếu không hợp lệ, đặt thành 0.00
+                }
+            }
 
-                            function handleAmountInput(event, input) {
-                                if (event.key === "Enter" || event.type === "blur") {
-                                    formatDecimal(input);
-                                }
-                            }
+            // Hàm thêm chi tiết hóa đơn
+            function addInvoiceDetail() {
+                const table = document.getElementById("invoiceDetailsTable");
+                const rowCount = table.rows.length;
+                const row = table.insertRow(rowCount);
 
-                           
-</script>
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                const cell3 = row.insertCell(2);
+                const cell4 = row.insertCell(3);
+                const cell5 = row.insertCell(4);
 
+                cell1.innerHTML = rowCount + 1;
+                cell2.innerHTML = '<input type="text" class="form-control" name="descriptionde" required>';
+                cell3.innerHTML = '<input type="text" class="form-control" name="amount" required oninput="this.value = this.value.replace(/[^0-9.]/g, \'\')" onblur="formatDecimal(this)">';
+
+                cell4.innerHTML = `
+                    <select name="typebills" class="form-select" required>
+            <c:forEach items="${listType}" var="o">
+                            <option value="${o.id}">${o.name}</option>
+            </c:forEach>
+                    </select>
+                `;
+                cell5.innerHTML = '<button type="button" class="btn btn-danger" onclick="removeInvoiceDetail(this)">Remove</button>';
+            }
+
+            // Hàm xóa chi tiết hóa đơn
+            function removeInvoiceDetail(button) {
+                const row = button.closest('tr');
+                row.remove();
+                const table = document.getElementById("invoiceDetailsTable");
+                for (let i = 0; i < table.rows.length; i++) {
+                    table.rows[i].cells[0].innerHTML = i + 1;
+                }
+            }
+
+            // Định dạng ngày cho ô Due Date
+            document.addEventListener("DOMContentLoaded", function () {
+                flatpickr("#dueDate", {
+                    dateFormat: "d/m/Y",
+                    allowInput: true
+                });
+            });
+        </script>
     </head>
 
     <body>
@@ -118,18 +142,10 @@
                                     <c:when test="${empty invoice.details}">
                                         <tr>
                                             <td>1</td>
-                                            <td><input type="text" class="form-control" name="descriptionde" required>
-                                                <c:if test="${not empty error}">
-                                                    <div class="alert alert-danger" role="alert">
-                                                        ${error}
-                                                    </div>
-                                                </c:if></td>
-                                            <td><input type="text" class="form-control" name="amount" required>
-                                                <c:if test="${not empty amountError}">
-                                                    <div class="alert alert-danger" role="alert">
-                                                        ${amountError}
-                                                    </div>
-                                                </c:if>
+                                            <td><input type="text" class="form-control" name="descriptionde" required></td>
+                                            <td>
+                                                <input type="text" class="form-control" name="amount" required onblur="formatDecimal(this)" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+                                            </td>
                                             <td>
                                                 <select name="typebills" class="form-select" required>
                                                     <c:forEach items="${listType}" var="o">
@@ -142,28 +158,6 @@
                                             </td>
                                         </tr>
                                     </c:when>
-                                    <c:otherwise>
-                                        <c:forEach items="${invoice.details}" var="de" varStatus="loop">
-                                            <tr>
-                                                <td>${loop.index + 1}</td>
-                                                <td><input type="text" class="form-control" name="descriptionde" value="${de.description}" required></td>
-                                                <td>
-                                                    <input type="text" class="form-control" name="amount" required onblur="formatInputAmount(event, this)" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
-                                                </td>
-
-                                                <td>
-                                                    <select name="typebills" class="form-select" required>
-                                                        <c:forEach items="${listType}" var="o">
-                                                            <option value="${o.id}" ${o.id == de.typeBillId ? 'selected' : ''}>${o.name}</option>
-                                                        </c:forEach>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger" onclick="removeInvoiceDetail(this)">Remove</button>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                    </c:otherwise>
                                 </c:choose>
                             </tbody>
                             <!-- Hiển thị lỗi Detail -->
@@ -186,50 +180,5 @@
                 </div>
             </main>
         </div>
-    </div>
-</div>
-<script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
-<script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
-<script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
-<script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
-<script>
-                           
-
-                            function addInvoiceDetail() {
-                                const table = document.getElementById("invoiceDetailsTable");
-                                const rowCount = table.rows.length;
-                                const row = table.insertRow(rowCount);
-
-                                const cell1 = row.insertCell(0);
-                                const cell2 = row.insertCell(1);
-                                const cell3 = row.insertCell(2);
-                                const cell4 = row.insertCell(3);
-                                const cell5 = row.insertCell(4);
-
-                                cell1.innerHTML = rowCount + 1;
-                                cell2.innerHTML = '<input type="text" class="form-control" name="descriptionde" required>';
-                                cell3.innerHTML = '<input type="text" class="form-control" name="amount" required onblur="formatDecimal(this)" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\')">';
-                                cell4.innerHTML = `
-            <select name="typebills" class="form-select" required>
-    <c:forEach items="${listType}" var="o">
-                    <option value="${o.id}">${o.name}</option>
-    </c:forEach>
-            </select>
-        `;
-                                cell5.innerHTML = '<button type="button" class="btn btn-danger" onclick="removeInvoiceDetail(this)">Remove</button>';
-                            }
-
-                            function removeInvoiceDetail(button) {
-                                const row = button.closest('tr');
-                                row.remove();
-                                // Cập nhật số thứ tự các dòng
-                                const table = document.getElementById("invoiceDetailsTable");
-                                for (let i = 0; i < table.rows.length; i++) {
-                                    table.rows[i].cells[0].innerHTML = i + 1;
-                                }
-                            }
-</script>
-
-</body>
-
+    </body>
 </html>

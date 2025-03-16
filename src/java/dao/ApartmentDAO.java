@@ -83,7 +83,6 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
     return rowUpdated;
 }
 
-
     @Override
     public int delete(Apartment apartment) {
         int row = 0;
@@ -200,7 +199,8 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                             rs.getString("ApartmentName"),
                             rs.getString("Block"),
                             rs.getString("Status"),
-                            rs.getString("Type")
+                            rs.getString("Type"),
+                            rs.getInt("OwnerID")
                             
                     );
                 }
@@ -210,6 +210,26 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return apartment;
     }
+
+    public static void main(String[] args) {
+        ApartmentDAO apartmentDAO = new ApartmentDAO();
+        int testApartmentId = 7; // Thay thế bằng ID thực tế trong DB
+        
+        Apartment apartment = apartmentDAO.selectById(testApartmentId);
+        
+        if (apartment != null) {
+            System.out.println("Apartment Found:");
+         
+            System.out.println("Name: " + apartment.getApartmentName());
+            System.out.println("Block: " + apartment.getBlock());
+            System.out.println("Status: " + apartment.getStatus());
+            System.out.println("Type: " + apartment.getType());
+    
+        } else {
+            System.out.println("No apartment found with ID: " + testApartmentId);
+        }
+    }
+
 
     public Apartment getApartmentByName(String apartmentName) {
         Apartment apartment = null;
@@ -251,7 +271,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
     }
     public Apartment getApartmentById(int apartmentId) {
         Apartment apartment = null;
-        String sql = "SELECT * FROM Apartment WHERE ApartmentID = ?";
+        String sql = "SELECT * FROM Apartment WHERE ApartmentID = ? ";
         System.out.println(sql);
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -285,8 +305,8 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                         rs.getString("ApartmentName"),
                         rs.getString("Block"),
                         rs.getString("Status"),
-                        rs.getString("Type")
-                       
+                        rs.getString("Type"),
+                       rs.getInt("OwnerID")
                 );
                 list.add(apartment);
             }
@@ -507,7 +527,7 @@ public int getTotalApartments(String name, int ownerId, String type, String stat
     return total;
 }
 public int updateOwner(int apartmentId, int residentId) {
-    String sql = "UPDATE Apartment SET OwnerID = ? WHERE ApartmentID = ?";
+    String sql = "UPDATE Apartment SET OwnerID = ?, Status = 'Occupied' WHERE ApartmentID = ?";
     try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
         ps.setInt(1, residentId);
         ps.setInt(2, apartmentId);
@@ -564,7 +584,6 @@ public List<Apartment> getApartmentsByOwner(int ownerId) {
     }
     return apartments;
 }
-
 
     public List<String> getApartmentNames(String searchQuery) {
         List<String> apartments = new ArrayList<>();

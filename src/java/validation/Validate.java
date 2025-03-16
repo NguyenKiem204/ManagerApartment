@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.sql.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +33,8 @@ public class Validate {
 
         return normalized;
     }
-public static String trim(String input) {
+
+    public static String trim(String input) {
         if (input == null || input.isBlank()) {
             return null;
         }
@@ -39,6 +42,7 @@ public static String trim(String input) {
         normalized = normalized.replaceAll("\\s+", " ");
         return normalized;
     }
+
     public static String validateUserID(String userID) {
         if (userID == null || userID.isBlank()) {
             return "User ID cannot be empty.";
@@ -93,57 +97,98 @@ public static String trim(String input) {
     }
 
     public static String validateDob(String dobParam) {
-    if (dobParam == null || dobParam.isBlank()) {
-        return "Date of Birth cannot be empty.";
-    }
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-    try {
-        LocalDate dob = LocalDate.parse(dobParam, formatter);
-        if (dob.isAfter(LocalDate.now())) {
-            return "Date of Birth cannot be in the future.";
+        if (dobParam == null || dobParam.isBlank()) {
+            return "Date of Birth cannot be empty.";
         }
-    } catch (DateTimeParseException e) {
-        return "Invalid Date of Birth format. Please use the format dd/MM/yyyy.";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        try {
+            LocalDate dob = LocalDate.parse(dobParam, formatter);
+            if (dob.isAfter(LocalDate.now())) {
+                return "Date of Birth cannot be in the future.";
+            }
+        } catch (DateTimeParseException e) {
+            return "Invalid Date of Birth format. Please use the format dd/MM/yyyy.";
+        }
+        return null;
     }
-    return null;
-}
+
     public static boolean isValidTitle(String title) {
-        return title != null ;
+        if (title == null || title.trim().isEmpty()) {
+            return false;
+        }
+
+        // Loại bỏ các ký tự đặc biệt không cho phép
+        String forbiddenChars = "<>{}/\\|\"';&";
+        for (char c : forbiddenChars.toCharArray()) {
+            if (title.indexOf(c) != -1) {
+                return false;
+            }
+        }
+
+        return true;
     }
-    
+
     // Kiểm tra input có rỗng hoặc chỉ chứa khoảng trắng không
     public static boolean isEmptyOrWhitespace(String input) {
         return input == null || input.trim().isEmpty();
     }
-    
+
     // Kiểm tra input có chứa ký tự đặc biệt không
     public static boolean containsSpecialCharacters(String input) {
         return input != null && Pattern.compile("[^a-zA-Z0-9\\s]").matcher(input).find();
     }
-    
+
     // Validate deadline: không được chọn ngày trong quá khứ
     public static boolean validateDeadline(String deadline_raw) {
-        LocalDate deadline = null;
-        try {
-            deadline = LocalDate.parse(deadline_raw);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (deadline_raw == null || deadline_raw.trim().isEmpty()) {
+            return true; // Nếu chuỗi null hoặc rỗng, trả về false ngay
         }
-        return deadline == null || !deadline.isBefore(java.time.LocalDate.now());
+
+        deadline_raw = deadline_raw.trim(); // Loại bỏ khoảng trắng đầu/cuối
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+
+        try {
+            LocalDate deadline = LocalDate.parse(deadline_raw, formatter);
+            return !deadline.isBefore(LocalDate.now()); // Trả về true nếu deadline >= hôm nay
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu format sai
+        }
     }
     
+    public static boolean validateBoughtOn(String boughtOn_raw) {
+        if (boughtOn_raw == null || boughtOn_raw.trim().isEmpty()) {
+            return true; // Nếu chuỗi null hoặc rỗng, trả về false ngay
+        }
+
+        boughtOn_raw = boughtOn_raw.trim(); // Loại bỏ khoảng trắng đầu/cuối
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+
+        try {
+            Date boughtOn = Date.valueOf(boughtOn_raw);
+            Date today = new Date(System.currentTimeMillis());
+            return !boughtOn.after(today); // Trả về true nếu deadline >= hôm nay
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu format sai
+        }
+    }
+
     // Kiểm tra xem người dùng đã chọn monthyear chưa
     public static boolean isValidMonthYear(String monthYear) {
         return monthYear != null && !monthYear.trim().isEmpty();
     }
+
     public static String escapeSQL(String input) {
-    return input.replace("'", "''")
-                .replace("\"", "\\\"")
-                .replace("\\", "\\\\")
-                .replace(";", "\\;")
-                .replace("--", "—")
-                .replace("/*", "/ *")
-                .replace("*/", "* /");
-}
+        return input.replace("'", "''")
+                  .replace("\"", "\\\"")
+                  .replace("\\", "\\\\")
+                  .replace(";", "\\;")
+                  .replace("--", "—")
+                  .replace("/*", "/ *")
+                  .replace("*/", "* /");
+    }
 
 }

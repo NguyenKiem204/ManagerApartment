@@ -6,24 +6,8 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Trang chủ</title>
-
-        <link rel="preconnect" href="<%= request.getContextPath() %>/https://fonts.gstatic.com" />
-        <link href="<%= request.getContextPath() %>/https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
-              rel="stylesheet" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
-
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
-
-         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> 
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
+        <title>Tenant and Contract</title>
         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -187,33 +171,33 @@
             input:checked + .slider:before {
                 transform: translateX(14px);
             }
-            
-/* Modal content */
-     /* Modal background */
-        .modal {
-    display: none;
-    
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Làm mờ nền */
-    padding-left: 600px;
-    padding-top: 30px;
-}
 
-.modal-content {
-    width: 40%;  /* Chiếm 40% màn hình */
-    max-width: 400px; /* Giới hạn tối đa */
-    max-height: 700px;
+            /* Modal content */
+            /* Modal background */
+            .modal {
+                display: none;
 
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    position: relative;
-}
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5); /* Làm mờ nền */
+                padding-left: 600px;
+                padding-top: 30px;
+            }
+
+            .modal-content {
+                width: 40%;  /* Chiếm 40% màn hình */
+                max-width: 400px; /* Giới hạn tối đa */
+                max-height: 700px;
+
+                background: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                position: relative;
+            }
 
 
             .modal-title {
@@ -248,7 +232,7 @@
             .modal-button:hover {
                 background-color: #45a049;
             }
-            
+
             .modal-close {
                 position: absolute;
                 top: 10px;
@@ -273,46 +257,46 @@
             .modal-back-button:hover {
                 text-decoration: underline;
             }
-/* Dùng Flexbox để chia 2 cột */
-.modal-grid {
-    display: flex;
-    gap: 15px; /* Khoảng cách giữa 2 cột */
-}
+            /* Dùng Flexbox để chia 2 cột */
+            .modal-grid {
+                display: flex;
+                gap: 15px; /* Khoảng cách giữa 2 cột */
+            }
 
-/* Mỗi cột chiếm 50% */
-.modal-column {
-    flex: 1;
-}
+            /* Mỗi cột chiếm 50% */
+            .modal-column {
+                flex: 1;
+            }
 
-/* Định dạng input */
-.modal-input,
-.modal-select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-}
+            /* Định dạng input */
+            .modal-input,
+            .modal-select {
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 10px;
+            }
 
-.action-btn {
-    background-color: #007bff; 
-    color: white; 
-    border: none; 
-    padding: 2px 8px; 
-    font-size: 10px; 
-    font-weight: bold; 
-    border-radius: 5px; 
-    cursor: pointer; 
-    transition: all 0.3s ease-in-out; 
-}
+            .action-btn {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 2px 8px;
+                font-size: 10px;
+                font-weight: bold;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: all 0.3s ease-in-out;
+            }
 
-.action-btn:hover {
-    background-color: #0056b3; 
-    transform: scale(1.05); 
-}
+            .action-btn:hover {
+                background-color: #0056b3;
+                transform: scale(1.05);
+            }
 
-.action-btn:active {
-    background-color: #004494; 
-    transform: scale(0.98); 
-}
+            .action-btn:active {
+                background-color: #004494;
+                transform: scale(0.98);
+            }
 
 
 
@@ -321,279 +305,294 @@
 
     <body>
         <%@include file="/manager/menumanager.jsp" %>
-                <!--=============================CONTENT HERE=======================-->
-                <div class="w-90" style="display: flex;">
-                    <div class="col-3"></div>
-                    <div  class="col-9">
-                        <h1>Tenant and Contract</h1>
-                        <%-- Hiển thị thông báo nếu có --%>
-                        <c:if test="${not empty mess}">
-                            <div class="message">${mess}</div>
-                        </c:if>
-                        <!-- Nút Thêm Cư Dân -->
-<div style="text-align: center; margin-bottom: 20px;">
-    <button class="add-resident-button btn btn-success" id="openInsertModal">Add new tenant</button>
-</div>
+        <!--=============================CONTENT HERE=======================-->
+        <div class="w-90" style="display: flex;">
+            <div class="col-3"></div>
+            <div  class="col-9">
+                <h1>Tenant and Contract</h1>
+                <%-- Hiển thị thông báo nếu có --%>
+                <c:if test="${not empty mess}">
+                    <div class="message">${mess}</div>
+                </c:if>
+                <!-- Nút Thêm Cư Dân -->
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button class="add-resident-button btn btn-success" id="openInsertModal">Add new tenant</button>
+                </div>
 
-<!-- Modal Form -->
-<div id="insertTenantModal" class="modal">
-    <div class="modal-content">
-        <span class="modal-close">&times;</span>
-        <h2 class="modal-title">Add Tenant</h2>
-    <form id="insertTenantForm">
-        <div class="modal-grid">
-            <div class="modal-column">
-            <label for="fullName" class="modal-label">Full Name:</label>
-            <input type="text" id="fullName" name="fullName" class="modal-input" required>
+                <!-- Modal Form -->
+                <div id="insertTenantModal" class="modal">
+                    <div class="modal-content">
+                        <span class="modal-close">&times;</span>
+                        <h2 class="modal-title">Add Tenant</h2>
+                        <form id="insertTenantForm">
+                            <div class="modal-grid">
+                                <div class="modal-column">
+                                    <label for="fullName" class="modal-label">Full Name:</label>
+                                    <input type="text" id="fullName" name="fullName" class="modal-input" required>
 
-            <label for="phoneNumber" class="modal-label">Phone Number:</label>
-            <input type="text" id="phoneNumber" name="phoneNumber" class="modal-input" required maxlength="10" pattern="\d{10}">
+                                    <label for="phoneNumber" class="modal-label">Phone Number:</label>
+                                    <input type="text" id="phoneNumber" name="phoneNumber" class="modal-input" required maxlength="10" pattern="\d{10}">
 
-            <label for="cccd" class="modal-label">CCCD:</label>
-            <input type="text" id="cccd" name="cccd" class="modal-input" required maxlength="12" pattern="\d{12}">
+                                    <label for="cccd" class="modal-label">CCCD:</label>
+                                    <input type="text" id="cccd" name="cccd" class="modal-input" required maxlength="12" pattern="\d{12}">
 
-            <label for="email" class="modal-label">Email:</label>
-            <input type="email" id="email" name="email" class="modal-input" required>
+                                    <label for="email" class="modal-label">Email:</label>
+                                    <input type="email" id="email" name="email" class="modal-input" required>
 
-            <label for="dob" class="modal-label">Birth Date:</label>
-            <input type="date" id="dob" name="dob" class="modal-input" required>
-            </div>
-            <div class="modal-column">
-            <label for="sex" class="modal-label">Gender:</label>
-            <select id="sex" name="sex" class="modal-select" required>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
-
-            <label for="apartmentId" class="modal-label">Apartment:</label>
-            <select id="apartmentId" name="apartmentId" class="modal-select" required>
-                <option value="">-- Select Apartment --</option>
-                <c:forEach var="apartment" items="${apartmentList}">
-                    <option value="${apartment.apartmentId}">${apartment.apartmentName} - ${apartment.block}</option>
-                </c:forEach>
-            </select>
-
-            <label for="leaseStartDate" class="modal-label">Lease Start Date:</label>
-            <input type="date" id="leaseStartDate" name="leaseStartDate" class="modal-input" required>
-
-            <label for="leaseEndDate" class="modal-label">Lease End Date:</label>
-            <input type="date" id="leaseEndDate" name="leaseEndDate" class="modal-input" required>
-            </div>
-        </div>
-            <button type="button" id="submitTenantBtn" class="modal-button">Add</button>
-            
-        </form>
-        <div id="tenantMessage"></div>
-    </div>
-</div>
-                        <div class="row mb-3">
-                            <!-- Cột bên trái: Bộ lọc (45%) -->
-                            <div class="col-md-5 d-flex gap-2">
-                                <form action="manageContract" method="get" class="d-flex gap-2 flex-grow-1">
-                                    <select name="sex" id="sexFilter" class="form-select" style="width: 100%;">
-                                        <option value="">AllGenders</option>
-                                        <option value="Male" ${sex == 'Male' ? 'selected' : ''}>Male</option>
-                                        <option value="Female" ${sex == 'Female' ? 'selected' : ''}>Female</option>
+                                    <label for="dob" class="modal-label">Birth Date:</label>
+                                    <input type="text" id="dob" name="dob" class="modal-input" id="datePicker" placeholder="dd/MM/yyyy" required>
+                                </div>
+                                <div class="modal-column">
+                                    <label for="sex" class="modal-label">Gender:</label>
+                                    <select id="sex" name="sex" class="modal-select" required>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
                                     </select>
 
-                                    <select name="status" id="statusFilter" class="form-select" style="width: 100%;">
-                                        <option value="">AllStatus</option>
-                                        <option value="Active" ${status == 'Active' ? 'selected' : ''}>Active</option>
-                                        <option value="Deactive" ${status == 'Deactive' ? 'selected' : ''}>Deactive</option>
+                                    <label for="apartmentId" class="modal-label">Apartment:</label>
+                                    <select id="apartmentId" name="apartmentId" class="modal-select" required>
+                                        <option value="">-- Select Apartment --</option>
+                                        <c:forEach var="apartment" items="${apartmentList}">
+                                            <option value="${apartment.apartmentId}">${apartment.apartmentName} - ${apartment.block}</option>
+                                        </c:forEach>
                                     </select>
 
-                                    <button type="submit" class="btn btn-primary" style="width: 20%;">Filter:</button>
-                                </form>
+                                    <label for="leaseStartDate" class="modal-label">Lease Start Date:</label>
+                                    <input type="text" id="leaseStartDate" name="leaseStartDate" class="modal-input" id="datePicker" placeholder="dd/MM/yyyy" required>
+
+                                    <label for="leaseEndDate" class="modal-label">Lease End Date:</label>
+                                    <input type="text" id="leaseEndDate" name="leaseEndDate" class="modal-input" id="datePicker" placeholder="dd/MM/yyyy" required>
+                                </div>
                             </div>
+                            <button type="button" id="submitTenantBtn" class="modal-button">Add</button>
 
-                            <!-- Cột bên phải: Tìm kiếm (45%) -->
-                            <div class="col-md-5">
-                                <form action="manageContract" method="get" class="d-flex">
-                                    <input type="text" name="search" placeholder="Enter name or email..." value="${search}" class="form-control me-2" style="width: 70%;">
-                                    <button type="submit" class="btn btn-primary" style="width: 30%;">Search</button>
-                                </form>
-                            </div>
-                        </div>
-
-
-
-
-
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Resident ID</th>
-                                        <th>FullName</th>
-                                        <th>PhoneNumber</th>
-                                        <th>Email</th>
-                                        <th>CCCD</th>
-                                        <th>DOB</th>
-                                        <th>Gender</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach var="tenant" items="${listTenant}">
-                                        <tr>
-                                            <td>${tenant.residentId}</td>
-                                            <td>${tenant.fullName}</td>
-                                            <td>${tenant.phoneNumber}</td>
-                                            <td>${tenant.email}</td>
-                                            <td>${tenant.cccd}</td>
-                                            <td><fmt:formatDate value="${tenant.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate></td>
-                                            <td>${tenant.sex}</td>
-                                            <td>
-                                                <label class="switch">
-                                                    <input type="checkbox" class="status-toggle" data-id="${tenant.residentId}" ${tenant.status eq 'Active' ? 'checked' : ''}>
-
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </td>
-                                            
-                                             <td>
-                                                <button class="action-btn" onclick="showContract(${tenant.residentId})">View Contract</button>
-                                                <button class="action-btn" onclick="return confirmDelete(${tenant.residentId})">Delete</button>
-                                             </td>
-                                        </tr>
-                                    </c:forEach>
-                                </tbody>
-                            </table>
-                        </div>
-
-                    
-                                    <ul class="pagination">
-    <c:if test="${currentPage > 1}">
-        <li class="page-item">
-            <a class="page-link" href="manageContract?page=${currentPage - 1}&search=${param.search}&sex=${param.sex}&status=${param.status}">Previous</a>
-        </li>
-    </c:if>
-
-    <c:forEach begin="1" end="${totalPages}" var="i">
-        <li class="page-item ${i == currentPage ? 'active' : ''}">
-            <a class="page-link" href="manageContract?page=${i}&search=${param.search}&sex=${param.sex}&status=${param.status}">${i}</a>
-        </li>
-    </c:forEach>
-
-    <c:if test="${currentPage < totalPages}">
-        <li class="page-item">
-            <a class="page-link" href="manageContract?page=${currentPage + 1}&search=${param.search}&sex=${param.sex}&status=${param.status}">Next</a>
-        </li>
-    </c:if>
-</ul>
-
-</div>
-                                    
-</div>
-
-
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                <script>
-                                                        $(document).ready(function () {
-                                                            $(".status-toggle").change(function () {
-                                                                let residentId = $(this).data("id");
-                                                                let newStatus = $(this).is(":checked") ? "Active" : "Deactive";
-
-                                                                $.ajax({
-                                                                    url: "/ManagerApartment/owner/updateStatusTenant",
-                                                                    type: "POST",
-                                                                    data: {residentId: residentId, status: newStatus},
-                                                                    success: function (response) {
-                                                                        alert(response.message);
-                                                                    },
-                                                                    error: function () {
-                                                                        alert("Lỗi khi cập nhật trạng thái.");
-                                                                    }
-                                                                });
-                                                            });
-                                                        });
-                </script>
-                <script>
-                    function showContract(tenantId) {
-                        window.location.href = "viewContract?tenantId="+tenantId;
-                    }
-                </script>
-                <script>
-                    function confirmDelete(residentId) {
-                        if (confirm("Are you sure to delete this tenant?")) {
-                            window.location.href = "deleteTenant?tenantId=" + residentId;
-                        }
-                    }
-                </script>
-    <script>
-    $(document).ready(function () {
-        
-        // Mở Modal
-        $("#openInsertModal").click(function () {
-            $("#insertTenantModal").show();
-        });
-
-        // Đóng Modal khi nhấn dấu X
-        $(".modal-close").click(function () {
-            $("#insertTenantModal").hide();
-        });
-
-        // Đóng Modal khi click ra ngoài
-        $(window).click(function (event) {
-            if (event.target.id === "insertTenantModal") {
-                $("#insertTenantModal").hide();
-            }
-        });
-
-        // Gửi form bằng AJAX
-        $("#submitTenantBtn").click(function () {
-            let formData = $("#insertTenantForm").serialize();
-            $.ajax({
-                type: "POST",
-                url: "manageContract", // Cập nhật URL phù hợp với Servlet thêm Tenant + Contract
-                data: formData,
-                dataType: "json",
-                success: function (response) {
-                    if (response.success) {
-                        $("#tenantMessage").html("<span style='color: green;'>" + response.message + "</span>");
-                        $("#insertTenantForm")[0].reset(); // Reset form sau khi thêm thành công
-                        setTimeout(() => { 
-                            $("#insertTenantModal").hide(); 
-                            location.reload(); // Load lại trang sau khi thêm thành công
-                        }, 1500);
-                    } else {
-                        $("#tenantMessage").html("<span style='color: red;'>" + response.message + "</span>");
-                    }
-                },
-                error: function () {
-                    $("#tenantMessage").html("<span style='color: red;'>Lỗi khi gửi dữ liệu!</span>");
-                }
-            });
-        });
-    });
-</script>
-
-                <!--==============================END================================-->
-
-                <footer>
-                    <div class="footer clearfix mb-0 text-muted">
-                        <div class="float-start">
-                            <p>2025 &copy; Kiemm</p>
-                        </div>
-                        <div class="float-end">
-                            <p>
-                                Crafted with
-                                <span class="text-danger"><i class="bi bi-heart"></i></span> by
-                                <a href="http://ahmadsaugi.com">NguyenKiem</a>
-                            </p>
-                        </div>
+                        </form>
+                        <div id="tenantMessage"></div>
                     </div>
-                </footer>
+                </div>
+                <div class="row mb-3">
+                    <!-- Cột bên trái: Bộ lọc (45%) -->
+                    <div class="col-md-5 d-flex gap-2">
+                        <form action="manageContract" method="get" class="d-flex gap-2 flex-grow-1">
+                            <select name="sex" id="sexFilter" class="form-select" style="width: 100%;">
+                                <option value="">AllGenders</option>
+                                <option value="Male" ${sex == 'Male' ? 'selected' : ''}>Male</option>
+                                <option value="Female" ${sex == 'Female' ? 'selected' : ''}>Female</option>
+                            </select>
+
+                            <select name="status" id="statusFilter" class="form-select" style="width: 100%;">
+                                <option value="">AllStatus</option>
+                                <option value="Active" ${status == 'Active' ? 'selected' : ''}>Active</option>
+                                <option value="Deactive" ${status == 'Deactive' ? 'selected' : ''}>Deactive</option>
+                            </select>
+
+                            <button type="submit" class="btn btn-primary" style="width: 20%;">Filter:</button>
+                        </form>
+                    </div>
+
+                    <!-- Cột bên phải: Tìm kiếm (45%) -->
+                    <div class="col-md-5">
+                        <form action="manageContract" method="get" class="d-flex">
+                            <input type="text" name="search" placeholder="Enter name or email..." value="${search}" class="form-control me-2" style="width: 70%;">
+                            <button type="submit" class="btn btn-primary" style="width: 30%;">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tenant ID</th>
+                                <th>FullName</th>
+                                <th>PhoneNumber</th>
+                                <th>Email</th>
+                                <th>CCCD</th>
+                                <th>DOB</th>
+                                <th>Gender</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="tenant" items="${listTenant}">
+                                <tr>
+                                    <td>${tenant.residentId}</td>
+                                    <td>${tenant.fullName}</td>
+                                    <td>${tenant.phoneNumber}</td>
+                                    <td>${tenant.email}</td>
+                                    <td>${tenant.cccd}</td>
+                                    <td><fmt:formatDate value="${tenant.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate></td>
+                                    <td>${tenant.sex}</td>
+                                    <td>
+                                        <label class="switch">
+                                            <input type="checkbox" class="status-toggle" data-id="${tenant.residentId}" ${tenant.status eq 'Active' ? 'checked' : ''}>
+
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </td>
+
+                                    <td>
+                                        <button class="action-btn" onclick="showContract(${tenant.residentId})">View Contract</button>
+                                        <button class="action-btn" onclick="return confirmDelete(${tenant.residentId})">Delete</button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <ul class="pagination justify-content-center">
+                    <!-- Nút First -->
+                    <c:if test="${currentPage > 1}">
+                        <li class="page-item">
+                            <a class="page-link" href="manageContract?page=1&search=${param.search}&sex=${param.sex}&status=${param.status}">First</a>
+                        </li>
+                    </c:if>
+
+                    <!-- Nút Previous -->
+                    <c:if test="${currentPage > 1}">
+                        <li class="page-item">
+                            <a class="page-link" href="manageContract?page=${currentPage - 1}&search=${param.search}&sex=${param.sex}&status=${param.status}">Previous</a>
+                        </li>
+                    </c:if>
+
+                    <!-- Xác định phạm vi trang hiển thị -->
+                    <c:set var="startPage" value="${currentPage - 1}" />
+                    <c:set var="endPage" value="${currentPage + 1}" />
+
+                    <c:if test="${startPage < 1}">
+                        <c:set var="startPage" value="1" />
+                        <c:set var="endPage" value="3" />
+                    </c:if>
+
+                    <c:if test="${endPage > totalPages}">
+                        <c:set var="endPage" value="${totalPages}" />
+                        <c:set var="startPage" value="${totalPages - 2}" />
+                    </c:if>
+
+                    <c:if test="${startPage < 1}">
+                        <c:set var="startPage" value="1" />
+                    </c:if>
+
+                    <!-- Hiển thị 3 trang liên tiếp -->
+                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                        <li class="page-item ${i == currentPage ? 'active' : ''}">
+                            <a class="page-link" href="manageContract?page=${i}&search=${param.search}&sex=${param.sex}&status=${param.status}">${i}</a>
+                        </li>
+                    </c:forEach>
+
+                    <!-- Nút Next -->
+                    <c:if test="${currentPage < totalPages}">
+                        <li class="page-item">
+                            <a class="page-link" href="manageContract?page=${currentPage + 1}&search=${param.search}&sex=${param.sex}&status=${param.status}">Next</a>
+                        </li>
+                    </c:if>
+
+                    <!-- Nút Last -->
+                    <c:if test="${currentPage < totalPages}">
+                        <li class="page-item">
+                            <a class="page-link" href="manageContract?page=${totalPages}&search=${param.search}&sex=${param.sex}&status=${param.status}">Last</a>
+                        </li>
+                    </c:if>
+                </ul>
+
+                <c:if test="${totalPages == 0}">
+                    <p class="text-center text-muted">No contracts found.</p>
+                </c:if>
+
+
             </div>
+
         </div>
-         <script src="<%= request.getContextPath() %>/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-        <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
 
-        <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
 
-        <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+                                            $(document).ready(function () {
+                                                $(".status-toggle").change(function () {
+                                                    let residentId = $(this).data("id");
+                                                    let newStatus = $(this).is(":checked") ? "Active" : "Deactive";
+
+                                                    $.ajax({
+                                                        url: "/ManagerApartment/owner/updateStatusTenant",
+                                                        type: "POST",
+                                                        data: {residentId: residentId, status: newStatus},
+                                                        success: function (response) {
+                                                            alert(response.message);
+                                                        },
+                                                        error: function () {
+                                                            alert("Lỗi khi cập nhật trạng thái.");
+                                                        }
+                                                    });
+                                                });
+                                            });
+        </script>
+        <script>
+            function showContract(tenantId) {
+                window.location.href = "viewContract?tenantId=" + tenantId;
+            }
+        </script>
+        <script>
+            function confirmDelete(residentId) {
+                if (confirm("Are you sure to delete this tenant?")) {
+                    window.location.href = "deleteTenant?tenantId=" + residentId;
+                }
+            }
+        </script>
+        <script>
+            $(document).ready(function () {
+
+                // Mở Modal
+                $("#openInsertModal").click(function () {
+                    $("#insertTenantModal").show();
+                });
+
+                // Đóng Modal khi nhấn dấu X
+                $(".modal-close").click(function () {
+                    $("#insertTenantModal").hide();
+                });
+
+                // Đóng Modal khi click ra ngoài
+                $(window).click(function (event) {
+                    if (event.target.id === "insertTenantModal") {
+                        $("#insertTenantModal").hide();
+                    }
+                });
+
+                // Gửi form bằng AJAX
+                $("#submitTenantBtn").click(function () {
+                    let formData = $("#insertTenantForm").serialize();
+                    $.ajax({
+                        type: "POST",
+                        url: "manageContract", // Cập nhật URL phù hợp với Servlet thêm Tenant + Contract
+                        data: formData,
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.success) {
+                                $("#tenantMessage").html("<span style='color: green;'>" + response.message + "</span>");
+                                $("#insertTenantForm")[0].reset(); // Reset form sau khi thêm thành công
+                                setTimeout(() => {
+                                    $("#insertTenantModal").hide();
+                                    location.reload(); // Load lại trang sau khi thêm thành công
+                                }, 1500);
+                            } else {
+                                $("#tenantMessage").html("<span style='color: red;'>" + response.message + "</span>");
+                            }
+                        },
+                        error: function () {
+                            $("#tenantMessage").html("<span style='color: red;'>Lỗi khi gửi dữ liệu!</span>");
+                        }
+                    });
+                });
+            });
+        </script>
+
     </body>
 
 </html>

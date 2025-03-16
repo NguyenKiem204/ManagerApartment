@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -117,6 +118,7 @@ public class AddNewInvoices extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
+            //lay parameter
             String apartmentIdStr = request.getParameter("apartmentId");
             String description = request.getParameter("description");
             String dueDateStr = request.getParameter("dueDate");
@@ -134,14 +136,15 @@ public class AddNewInvoices extends HttpServlet {
                 doGet(request, response);
                 return;
             }
-
+// check format
             int apartmentId;
             LocalDate dueDate;
             try {
                 apartmentId = Integer.parseInt(apartmentIdStr);
-                dueDate = LocalDate.parse(dueDateStr);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                dueDate = LocalDate.parse(dueDateStr, formatter);
             } catch (NumberFormatException | DateTimeParseException e) {
-                request.setAttribute("dueDateError", "Invalid date format (MM/DD/YYYY)");
+                request.setAttribute("dueDateError", "Invalid date format (dd/MM/yyyy)");
                 doGet(request, response);
                 return;
             }
@@ -219,8 +222,9 @@ public class AddNewInvoices extends HttpServlet {
             }
             Invoices invoice = new Invoices(totalAmount, description, dueDate, resident, apartment, details);
             InvoiceDAO iDAO = new InvoiceDAO();
-            iDAO.insertInvoice(invoice);
+            iDAO.insertInvoice(invoice, apartment.getApartmentId());
             int newInvoiceId = iDAO.getLatestInvoiceID();
+
             for (InvoiceDetail detail : details) {
                 iDAO.insertInvoiceDetail(newInvoiceId, detail);
             }
@@ -240,6 +244,6 @@ public class AddNewInvoices extends HttpServlet {
     }
 
     public boolean isValidDescription(String input) {
-        return input.matches("^[a-zA-Z0-9\\s.,!?'\"()\\-_/]{1,500}$");
+        return input.matches("^[\\p{L}0-9\\s.,!?'\"()\\-_/]{1,500}$");
     }
 }

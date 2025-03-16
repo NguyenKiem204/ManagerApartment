@@ -115,7 +115,7 @@
 
     <body>
 
-        <%@include file="menuowner.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
 
 
         <div id="main">
@@ -137,12 +137,15 @@
                         <div class="col-md-8">
                             <form action="ViewHistoryInvoice" method="get" class="d-flex gap-2">
                                 <label for="FromDate" class="form-label align-self-center">From:</label>
-                                <input type="date" class="form-control" id="FromDate" name="FromDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="FromDate" 
                                        value="${selectedFromDate}">
                                 <label for="dueDate" class="form-label align-self-center">Due:</label>
-                                <input type="date" class="form-control" id="dueDate" name="dueDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="dueDate" 
                                        value="${selectedDueDate}">
                                 <button type="submit" class="btn btn-primary" style="width: 70px;">Filter</button>
+                                <a href="<%= request.getContextPath() %>/owner/ViewHistoryInvoice" class="btn btn-info btn-sm">
+                                    <i class="fas fa-sync-alt"></i> <!-- Icon reload -->
+                                </a>
                             </form>
                         </div>
 
@@ -251,17 +254,7 @@
 
 
 
-        <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
-        <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
-
-        <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
-
-        <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
+     
 
 
     </body>

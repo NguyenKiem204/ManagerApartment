@@ -16,22 +16,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Invoice Manager</title>
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
-              rel="stylesheet" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
-
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/iconly/bold.css" />
-
-        <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
-        <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
+        <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" /> 
         <style>
 
             body {
@@ -115,7 +100,7 @@
 
     <body>
 
-        <%@include file="menuaccountant.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
 
 
 
@@ -128,7 +113,9 @@
                         <a href="<%= request.getContextPath() %>/accountant/UpdateStatusInvoice" class="btn btn-primary d-flex align-items-center me-2">
                             <i class="bi bi-arrow-repeat me-1"></i> Update Status
                         </a>
-
+                        <a href="<%= request.getContextPath() %>/accountant/ViewExpense" class="btn btn-warning d-flex align-items-center me-2">
+                            <i class="bi bi-cash-stack me-1"></i> Expense
+                        </a>
                         <a href="<%= request.getContextPath() %>/accountant/addnewinvoice" class="btn btn-success d-flex align-items-center">
                             <i class="bi bi-plus-lg me-1"></i> Add New Invoice
                         </a>
@@ -136,7 +123,6 @@
                 </div>
                 <div class="search-sort-container">
                     <div class="row mb-3 align-items-center" >
-
                         <div class="col-md-8">
                             <form action="InvoicesManager" method="get" class="d-flex gap-2">
 
@@ -146,10 +132,10 @@
                                     <option value="Unpaid" ${selectedStatus == 'Unpaid' ? 'selected' : ''}>Unpaid</option>
                                 </select>
                                 <label for="FromDate" class="form-label align-self-center">From:</label>
-                                <input type="date" class="form-control" id="FromDate" name="FromDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="FromDate" 
                                        value="${selectedFromDate}">
                                 <label for="dueDate" class="form-label align-self-center">Due:</label>
-                                <input type="date" class="form-control" id="dueDate" name="dueDate" 
+                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="dueDate" 
                                        value="${selectedDueDate}">
 
 
@@ -325,17 +311,6 @@
         <% } %>
 
 
-
-        <!-- <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
-        <script src="<%= request.getContextPath() %>/assets/js/bootstrap.bundle.min.js"></script>
-
-        <script src="<%= request.getContextPath() %>/assets/vendors/apexcharts/apexcharts.js"></script>
-        <script src="<%= request.getContextPath() %>/assets/js/pages/dashboard.js"></script>
-
-        <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 
 

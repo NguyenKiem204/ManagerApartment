@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import model.EmailUtil;
@@ -23,6 +24,7 @@ import model.Image;
 import model.Role;
 import model.Staff;
 import org.json.JSONObject;
+import validation.Validate;
 
 @WebServlet(name="ManageStaffServlet", urlPatterns={"/manager/manageStaff"})
 public class ManageStaffServlet extends HttpServlet {
@@ -127,7 +129,13 @@ public class ManageStaffServlet extends HttpServlet {
                 out.write(jsonResponse.toString());
                 return;
             }
-
+            String dobError = Validate.validateDob(dobStr);
+            if(dobError != null) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", dobError);
+                out.write(jsonResponse.toString());
+                return;
+            }
             // Kiểm tra định dạng CCCD (12 số)
             if (!cccd.matches("\\d{12}")) {
                 jsonResponse.put("success", false);
@@ -151,7 +159,8 @@ public class ManageStaffServlet extends HttpServlet {
             }
 
             // Chuyển đổi ngày sinh
-            LocalDate dob = LocalDate.parse(dobStr);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+            LocalDate dob = LocalDate.parse(dobStr, formatter);
 
             // Mặc định trạng thái là Active
             String status = "Active";

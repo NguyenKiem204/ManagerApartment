@@ -28,6 +28,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeParseException;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -93,15 +94,9 @@ public class FormFeedbackManagerServlet extends HttpServlet {
         // Lấy tham số từ request
         String position_raw = request.getParameter("position");
         String monthYear_raw = request.getParameter("monthYear");
-//        String pageSize_raw = request.getParameter("pageSize");
-//        String xpage = request.getParameter("page");
 
         LocalDate monthYear = LocalDate.now();
         int position = 0;
-//        int page = 1; // Trang mặc định
-//        int pageSize = 5; // Giá trị mặc định nếu không có tham số pageSize
-//        int totalFeedbacks = 0;
-//        int totalPages = 0;
 
         try {
             if (position_raw != null && !position_raw.isEmpty()) {
@@ -110,34 +105,10 @@ public class FormFeedbackManagerServlet extends HttpServlet {
             if (monthYear_raw != null && !monthYear_raw.isEmpty()) {
                 monthYear = LocalDate.parse(monthYear_raw + "-01");
             }
-//            if (pageSize_raw != null && !pageSize_raw.isEmpty()) {
-//                pageSize = Integer.parseInt(pageSize_raw);
-//                if (pageSize <= 0) {
-//                    pageSize = 5;
-//                }
-//            }
         } catch (NumberFormatException e) {
             System.out.println("Lỗi parse số: " + e.getMessage());
         }
 
-//        totalFeedbacks = feedbackDAO.countFeedbackByRole(position, monthYear);
-//        System.out.println("total feedback: " + totalFeedbacks);
-//        totalPages = (totalFeedbacks == 0) ? 1 : (totalFeedbacks % pageSize == 0 ? totalFeedbacks / pageSize : totalFeedbacks / pageSize + 1);
-//        System.out.println("total pages: "  + totalPages);
-        /*try {
-            if (xpage != null && !xpage.isEmpty()) {
-                page = Integer.parseInt(xpage);
-                if (page < 1) {
-                    page = 1;
-                } else if (page > totalPages) {
-                    page = totalPages;
-                    System.out.println("Page is : " + page);
-                }
-            }
-        } catch (NumberFormatException e) {
-            page = 1;
-        }
-         */
         if (position_raw != null) {  // Xử lý AJAX request
             try {
                 StaffDAO staffDAO = new StaffDAO();
@@ -155,14 +126,6 @@ public class FormFeedbackManagerServlet extends HttpServlet {
                     jsonResponse.putAll(feedbackData);
                 }
 
-//                List<Feedback> paginatedFeedbackList = feedbackDAO.selectFeedbackByPage(position, page, pageSize, monthYear);
-//                jsonResponse.put("feedbackList", paginatedFeedbackList);
-//                jsonResponse.put("currentPage", page);
-//                jsonResponse.put("totalPages", totalPages);
-//                jsonResponse.put("pageSize", pageSize);
-//                System.out.println("Current page map: " + page);
-//                System.out.println("totalPages map: " + totalPages);
-//                System.out.println("pageSize map: " + pageSize);
                 Gson gson = new GsonBuilder()
                           .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (date, type, jsonSerializationContext)
                                     -> new JsonPrimitive(date.toString()))
@@ -176,14 +139,10 @@ public class FormFeedbackManagerServlet extends HttpServlet {
             return;
         }
 
-//        System.out.println("XPage (from request): " + xpage);
 //System.out.println("Current Page (before validation): " + page);
         // Gửi danh sách vai trò và phân trang cho JSP
         List<Role> listrole = rdao.selectAll();
         request.setAttribute("listrole", listrole);
-//        request.setAttribute("currentPage", page);
-//        request.setAttribute("totalPages", totalPages);
-//        request.setAttribute("pageSize", pageSize);
         response.setLocale(new Locale("vi", "VN"));
         request.getRequestDispatcher("formfeedbackmanager.jsp").forward(request, response);
 
@@ -227,6 +186,8 @@ public class FormFeedbackManagerServlet extends HttpServlet {
         String cleanTextstr = Jsoup.parse(strengths).text().trim();
         String cleanTextwea = Jsoup.parse(weaknesses).text().trim();
 
+        System.out.println("Deadline raw: " + deadline_raw);
+        
         LocalDate monthYear = LocalDate.now();
         LocalDate deadline = LocalDate.now().plusDays(3);
         int position = 0;
@@ -370,11 +331,11 @@ public class FormFeedbackManagerServlet extends HttpServlet {
             }
 
             // Kiểm tra độ dài action plan
-            if (actionPlan.length() < 5 || actionPlan.length() > 200) {
+            if (actionPlan.length() > 200) {
                 RoleDAO rdao = new RoleDAO();
                 List<Role> listrole = rdao.selectAll();
                 request.setAttribute("listrole", listrole);
-                request.setAttribute("error", "Please enter Improvement Suggestions from 5 to 200 keyword.");
+                request.setAttribute("error", "Please enter Improvement Suggestions <200 keyword.");
                 request.getRequestDispatcher("formfeedbackmanager.jsp").forward(request, response);
                 return;
             }
@@ -390,7 +351,7 @@ public class FormFeedbackManagerServlet extends HttpServlet {
             }
 
             //Kiểm tra user chọn dl là ngày trong quá khứ
-            if (!validate.validateDeadline(deadline_raw)) {
+            if (!Validate.validateDeadline(deadline_raw)) {
                 RoleDAO rdao = new RoleDAO();
                 List<Role> listrole = rdao.selectAll();
                 request.setAttribute("listrole", listrole);
@@ -407,7 +368,8 @@ public class FormFeedbackManagerServlet extends HttpServlet {
             positivePercentage = parseIntSafe(feedbackData.get("positiveFeedback"));
             negativePercentage = parseIntSafe(feedbackData.get("negativeFeedback"));
             if (deadline_raw != null && !deadline_raw.isEmpty()) {
-                deadline = LocalDate.parse(deadline_raw);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+                deadline = LocalDate.parse(deadline_raw, formatter);
             }
             Staff staff = staffDAO.getStaffByRoleIDAndStatus(position, "Active");
 
