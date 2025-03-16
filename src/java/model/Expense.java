@@ -70,4 +70,11 @@ public class Expense {
     public void setExpenseDetails(List<ExpenseDetail> expenseDetails) {
         this.expenseDetails = expenseDetails;
     }
+     public String getexpenseDateft() {
+        if (expenseDate == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return expenseDate.format(formatter);
+    }
 }

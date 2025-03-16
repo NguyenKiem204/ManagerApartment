@@ -129,8 +129,8 @@ public class FeedbackServlet extends HttpServlet {
         }
 
         // Kiểm tra độ dài title
-        if (title.length() < 5 || title.length() > 100) {
-            request.setAttribute(error, "Title must be between 5 and 100 characters!");
+        if (title.length() > 100) {
+            request.setAttribute(error, "Title must be <100 characters!");
             request.setAttribute("listrole", listrole);
             request.getRequestDispatcher("feedback.jsp").forward(request, response);
             return;
@@ -142,6 +142,13 @@ public class FeedbackServlet extends HttpServlet {
             request.setAttribute("listrole", listrole);
             request.getRequestDispatcher("feedback.jsp").forward(request, response);
             return;
+        }
+        
+        //check chọn nhân viên chưa
+        if (roleID_raw == null || roleID_raw.trim().isEmpty()) {
+            request.setAttribute(error, "Please choose staff to feedback");
+            request.setAttribute("listrole", listrole);
+            request.getRequestDispatcher("feedback.jsp").forward(request, response);
         }
 
         //check number star

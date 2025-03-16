@@ -16,6 +16,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -65,7 +67,6 @@ public class ViewExpense extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -77,13 +78,30 @@ public class ViewExpense extends HttpServlet {
 
         try {
             ExpenseDAO Edao = new ExpenseDAO();
-            LocalDate fromDate = (fromDateStr != null && !fromDateStr.isEmpty())
-                    ? LocalDate.parse(fromDateStr)
-                    : null;
-            LocalDate dueDate = (dueDateStr != null && !dueDateStr.isEmpty())
-                    ? LocalDate.parse(dueDateStr)
-                    : null;
-            int typeId = 0; // Giá trị mặc định
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate fromDate = null;
+            LocalDate dueDate = null;
+
+            if (fromDateStr != null && !fromDateStr.isEmpty()) {
+                try {
+                    fromDate = LocalDate.parse(fromDateStr, formatter);
+                } catch (DateTimeParseException e) {
+                    request.setAttribute("message", "Invalid From Date format. Please use dd/MM/yyyy.");
+                    request.getRequestDispatcher("InvoiceManager.jsp").forward(request, response);
+                    return;
+                }
+            }
+
+            if (dueDateStr != null && !dueDateStr.isEmpty()) {
+                try {
+                    dueDate = LocalDate.parse(dueDateStr, formatter);
+                } catch (DateTimeParseException e) {
+                    request.setAttribute("message", "Invalid Due Date format. Please use dd/MM/yyyy.");
+                    request.getRequestDispatcher("InvoiceManager.jsp").forward(request, response);
+                    return;
+                }
+            }
+            int typeId = 0;
             if (typeexp != null && !typeexp.isEmpty()) {
                 try {
                     typeId = Integer.parseInt(typeexp);
@@ -97,13 +115,6 @@ public class ViewExpense extends HttpServlet {
                 if (!Pattern.matches("^[a-zA-Z0-9 ,.!?'-]+$", search)) {
                     request.setAttribute("message", "Invalid search input");
                 } else {
-//                    List<Expense> searchResults = new ArrayList<>();
-//                    for (Expense exp : list) {
-//                        if (exp.getDescription().contains(search)) {
-//                            searchResults.add(exp);
-//                        }
-//                    }
-//                    list = searchResults;
                 }
             }
             List<TypeExpense> lte = Edao.getAllTypeExpenses();
@@ -122,7 +133,7 @@ public class ViewExpense extends HttpServlet {
                 request.setAttribute("message", "No result");
             }
             request.setAttribute("lte", lte);
-            request.setAttribute("typeid", typeId);
+            request.setAttribute("typeexp", typeId);
             request.setAttribute("search", search);
             request.setAttribute("selectedStatus", status);
             request.setAttribute("selectedFromDate", fromDateStr);

@@ -9,7 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Invoice Manager</title>
         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />   
-      
+
         <style>
 
             .active::-webkit-scrollbar {
@@ -89,10 +89,13 @@
                             </c:forEach>
                         </tbody>
                     </table>
+                    <c:if test="${invoice.getMuon()>0}">
+                        <div class="mb-3">
+                            <strong>late bill penalty: </strong> $<c:out value="${invoice.muon}" />
+                        </div>
+                    </c:if>
 
-                    <div class="mb-3">
-                        <strong>late bill penalty: </strong> $<c:out value="${invoice.muon}" />
-                    </div>
+
 
                     <div class="mb-3">
                         <strong>Total Amount:</strong> $<c:out value="${invoice.totalAmount}" />

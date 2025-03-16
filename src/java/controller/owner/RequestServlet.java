@@ -121,15 +121,18 @@ public class RequestServlet extends HttpServlet {
             request.setAttribute("listtyperq", listrq);
             request.getRequestDispatcher("request.jsp").forward(request, response);
             return;
+        }else{
+            apartmentName = apartmentName.trim().replaceAll("\\s+", " ");
         }
         
         boolean isValidApartment = false;
         for (Apartment apartment : apartments) {
-            if (apartment.getApartmentName().trim().replaceAll("\\s+", " ").equalsIgnoreCase(apartmentName.trim().replaceAll("\\s+", " "))) {
+            if (apartment.getApartmentName().trim().replaceAll("\\s+", " ").equalsIgnoreCase(apartmentName)) {
                 isValidApartment = true;
                 break;
             }
         }
+        
         if (!isValidApartment) {
             request.setAttribute(error, "Apartment name incorrect. Please enter a valid apartment name.");
             request.setAttribute("listtyperq", listrq);
@@ -155,10 +158,18 @@ public class RequestServlet extends HttpServlet {
             request.getRequestDispatcher("request.jsp").forward(request, response);
             return;
         }
-
+        
         // Kiểm tra độ dài title
-        if (title.length() < 5 || title.length() > 100) {
-            request.setAttribute(error, "Title must be between 5 and 100 characters!");
+        if (title.length() > 100) {
+            request.setAttribute(error, "Title must be <100 characters!");
+            request.setAttribute("listtyperq", listrq);
+            request.getRequestDispatcher("request.jsp").forward(request, response);
+            return;
+        }
+        
+        //check loai service
+        if (typerq_raw == null || typerq_raw.trim().isEmpty()) {
+            request.setAttribute(error, "Please choose type request!");
             request.setAttribute("listtyperq", listrq);
             request.getRequestDispatcher("request.jsp").forward(request, response);
             return;
@@ -168,12 +179,6 @@ public class RequestServlet extends HttpServlet {
         if (description != null) {
             description = description.trim().replaceAll("[\\s\\u00A0]+", " "); // Loại bỏ khoảng trắng dư thừa
         }
-//        if (!description.matches("^[a-zA-Z0-9 .,!?()-]+$")) {
-//            request.setAttribute(error, "Description contains invalid characters!");
-//            request.setAttribute("listtyperq", listrq);
-//            request.getRequestDispatcher("request.jsp").forward(request, response);
-//            return;
-//        }
         //check description null or not
         if (cleanText.trim().isEmpty() || cleanText.length() < 10) {
             request.setAttribute(error, "You need to describe this feedback! More 10 characters.");
@@ -206,8 +211,9 @@ public class RequestServlet extends HttpServlet {
                   "Request", staffRole, null);
         notificationDAO.insert(notification);
         
-        request.setAttribute("listtyperq", listrq);
-        request.getRequestDispatcher("request.jsp").forward(request, response);
+//        request.setAttribute("listtyperq", listrq);
+//        request.getRequestDispatcher("request.jsp").forward(request, response);
+        response.sendRedirect("requestsuccessfull");
     }
 
     /**

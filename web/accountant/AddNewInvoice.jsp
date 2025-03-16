@@ -14,14 +14,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Invoice Manager</title>
         <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />   
-       
-        <style>
 
+        <style>
             .active::-webkit-scrollbar {
                 width: 0px;
                 height: 0px;
             }
-
             .active {
                 -ms-overflow-style: none;
                 scrollbar-width: none;
@@ -30,37 +28,74 @@
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
         <script>
+            // Hàm định dạng số thành XX.00
             function formatDecimal(input) {
                 let value = input.value.replace(/[^0-9.]/g, '').trim(); // Chỉ giữ lại số và dấu chấm
                 let floatValue = parseFloat(value);
 
                 if (!isNaN(floatValue)) {
-                    input.value = floatValue.toFixed(2); // Hiển thị dưới dạng xxx.00
+                    input.value = floatValue.toFixed(2); // Hiển thị dạng XX.00
                 } else {
                     input.value = "0.00"; // Nếu không hợp lệ, đặt thành 0.00
                 }
             }
 
-            function handleAmountInput(event, input) {
-                if (event.key === "Enter" || event.type === "blur") {
-                    formatDecimal(input);
+            // Hàm thêm chi tiết hóa đơn
+            function addInvoiceDetail() {
+                const table = document.getElementById("invoiceDetailsTable");
+                const rowCount = table.rows.length;
+                const row = table.insertRow(rowCount);
+
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                const cell3 = row.insertCell(2);
+                const cell4 = row.insertCell(3);
+                const cell5 = row.insertCell(4);
+
+                cell1.innerHTML = rowCount + 1;
+                cell2.innerHTML = '<input type="text" class="form-control" name="descriptionde" required>';
+                cell3.innerHTML = '<input type="text" class="form-control" name="amount" required oninput="this.value = this.value.replace(/[^0-9.]/g, \'\')" onblur="formatDecimal(this)">';
+
+                cell4.innerHTML = `
+                    <select name="typebills" class="form-select" required>
+            <c:forEach items="${listType}" var="o">
+                            <option value="${o.id}">${o.name}</option>
+            </c:forEach>
+                    </select>
+                `;
+                cell5.innerHTML = '<button type="button" class="btn btn-danger" onclick="removeInvoiceDetail(this)">Remove</button>';
+            }
+
+            // Hàm xóa chi tiết hóa đơn
+            function removeInvoiceDetail(button) {
+                const row = button.closest('tr');
+                row.remove();
+                const table = document.getElementById("invoiceDetailsTable");
+                for (let i = 0; i < table.rows.length; i++) {
+                    table.rows[i].cells[0].innerHTML = i + 1;
                 }
             }
 
-
+            // Định dạng ngày cho ô Due Date
+            document.addEventListener("DOMContentLoaded", function () {
+                flatpickr("#dueDate", {
+                    dateFormat: "d/m/Y",
+                    allowInput: true
+                });
+            });
         </script>
-
     </head>
 
     <body>
-         <%@include file="/manager/menumanager.jsp" %>
+        <%@include file="menuaccountant.jsp" %>
         <div id="main">
 
             <main  id="content">
                 <div class="card p-4 shadow-lg rounded-4" style="max-width: 1000px; margin: 0 auto;">
                     <h4 class="text-center mb-4">Add New Invoice</h4>
-                    <form action="addnewinvoice" method="post" >
+                    <form action="addnewinvoice" method="post">
                         <div class="form-group mb-3">
 
                             <label>Apartment</label>
@@ -80,7 +115,7 @@
 
                         <div class="form-group mb-3">
                             <label for="dueDate">Due Date</label>
-                            <input type="text" class="form-control" id="dueDate" name="dueDate" required>
+                            <input type="date" class="form-control" id="dueDate" name="dueDate" required>
 
                         </div>
                         <!-- Hiển thị lỗi Due Date -->
@@ -107,18 +142,10 @@
                                     <c:when test="${empty invoice.details}">
                                         <tr>
                                             <td>1</td>
-                                            <td><input type="text" class="form-control" name="descriptionde" required>
-                                                <c:if test="${not empty error}">
-                                                    <div class="alert alert-danger" role="alert">
-                                                        ${error}
-                                                    </div>
-                                                </c:if></td>
-                                            <td><input type="text" class="form-control" name="amount" required>
-                                                <c:if test="${not empty amountError}">
-                                                    <div class="alert alert-danger" role="alert">
-                                                        ${amountError}
-                                                    </div>
-                                                </c:if>
+                                            <td><input type="text" class="form-control" name="descriptionde" required></td>
+                                            <td>
+                                                <input type="text" class="form-control" name="amount" required onblur="formatDecimal(this)" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+                                            </td>
                                             <td>
                                                 <select name="typebills" class="form-select" required>
                                                     <c:forEach items="${listType}" var="o">
@@ -131,28 +158,6 @@
                                             </td>
                                         </tr>
                                     </c:when>
-                                    <c:otherwise>
-                                        <c:forEach items="${invoice.details}" var="de" varStatus="loop">
-                                            <tr>
-                                                <td>${loop.index + 1}</td>
-                                                <td><input type="text" class="form-control" name="descriptionde" value="${de.description}" required></td>
-                                                <td>
-                                                    <input type="text" class="form-control" name="amount" required onblur="formatInputAmount(event, this)" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
-                                                </td>
-
-                                                <td>
-                                                    <select name="typebills" class="form-select" required>
-                                                        <c:forEach items="${listType}" var="o">
-                                                            <option value="${o.id}" ${o.id == de.typeBillId ? 'selected' : ''}>${o.name}</option>
-                                                        </c:forEach>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger" onclick="removeInvoiceDetail(this)">Remove</button>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                    </c:otherwise>
                                 </c:choose>
                             </tbody>
                             <!-- Hiển thị lỗi Detail -->
@@ -175,70 +180,5 @@
                 </div>
             </main>
         </div>
-
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                flatpickr("#dueDate", {
-                    dateFormat: "d/m/Y", // Hiển thị dd/MM/yyyy
-                    allowInput: true
-                });
-            });
-        </script>
-        <script>
-
-
-
-            function addInvoiceDetail() {
-                const table = document.getElementById("invoiceDetailsTable");
-                const rowCount = table.rows.length;
-                const row = table.insertRow(rowCount);
-
-                const cell1 = row.insertCell(0);
-                const cell2 = row.insertCell(1);
-                const cell3 = row.insertCell(2);
-                const cell4 = row.insertCell(3);
-                const cell5 = row.insertCell(4);
-
-                cell1.innerHTML = rowCount + 1;
-                cell2.innerHTML = '<input type="text" class="form-control" name="descriptionde" required>';
-                cell3.innerHTML = '<input type="text" class="form-control" name="amount" required onblur="formatDecimal(this)" oninput="this.value = this.value.replace(/[^0-9.]/g, \'\')">';
-                cell4.innerHTML = `
-                    <select name="typebills" class="form-select" required>
-            <c:forEach items="${listType}" var="o">
-                            <option value="${o.id}">${o.name}</option>
-            </c:forEach>
-                    </select>
-                `;
-                cell5.innerHTML = '<button type="button" class="btn btn-danger" onclick="removeInvoiceDetail(this)">Remove</button>';
-            }
-
-            function removeInvoiceDetail(button) {
-                const row = button.closest('tr');
-                row.remove();
-                const table = document.getElementById("invoiceDetailsTable");
-                for (let i = 0; i < table.rows.length; i++) {
-                    table.rows[i].cells[0].innerHTML = i + 1;
-                }
-            }
-            document.addEventListener("DOMContentLoaded", function () {
-                const dueDateInput = document.getElementById("dueDate");
-
-                dueDateInput.addEventListener("change", function () {
-                    if (this.value) {
-                        const date = new Date(this.value);
-                        const formattedDate = date.toLocaleDateString("vi-VN"); // Hiển thị theo dd/MM/yyyy
-                        this.setAttribute("data-formatted-date", formattedDate);
-                        console.log("Selected Date:", formattedDate); // Kiểm tra trong console
-                    }
-                });
-            });
-
-        </script>
-
-
-
-
     </body>
-
 </html>
