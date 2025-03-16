@@ -320,10 +320,10 @@
                                 </a>
                                 <ul class="submenu">
                                     <li class="submenu-item">
-                                        <a href="<%= request.getContextPath()%>/manager/managerregulations" class="sidebar-link">View Regulations</a>
+                                        <a href="<%= request.getContextPath()%>/manager/regulations">View Regulations</a>
                                     </li>
                                     <li class="submenu-item">
-                                        <a href="<%= request.getContextPath()%>/manager/rule-management">Regulations Management</a>
+                                        <a href="<%= request.getContextPath()%>/manager/rule">Regulations Management</a>
                                     </li>
                                 </ul>
                             </li>

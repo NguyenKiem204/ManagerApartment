@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@include file="/tenant/menutenant.jsp" %>
+<%@include file="/manager/menumanager.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -28,8 +28,8 @@
             }
             .table-responsive {
                 margin: 30px 0;
+                margin-left: 14%;
                 overflow-x: visible !important;
-                width: 120%;
             }
             .table-wrapper {
                 min-width: 1000px;
@@ -40,7 +40,7 @@
             }
             .table-title {
                 color: #fff;
-                background: #E34724;
+                background: #40b2cd;
                 padding: 16px 25px;
                 margin: -20px -25px 10px;
                 border-radius: 3px 3px 0 0;
@@ -48,7 +48,6 @@
             .table-title h2 {
                 margin: 5px 0 0;
                 font-size: 24px;
-                color: #f4fcfd;
             }
             .search-box {
                 position: relative;
@@ -176,7 +175,7 @@
             <div class="table-responsive">
                 <div class="table-wrapper">
                     <form id="filterAndPagination" 
-                          action="/ManagerApartment/tenant/regulations" 
+                          action="/ManagerApartment/manager/regulations" 
                           method="POST" 
                           class=""
                           >
@@ -186,7 +185,6 @@
                                     <h2><b>Regulations</b></h2>
                                 </div>
                                 <div class="col-sm-6  d-flex justify-content-end">
-
                                     <div class="search-box">
                                         <div class="input-group">								
                                             <input type="text" 
@@ -201,7 +199,6 @@
                                             </button>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>

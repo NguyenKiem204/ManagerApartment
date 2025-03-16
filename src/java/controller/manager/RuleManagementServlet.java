@@ -14,15 +14,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.Rule;
 import validation.Validate;
 
 @WebServlet(name = "RuleManagementServlet", urlPatterns = {"/manager/rule"})
 public class RuleManagementServlet extends HttpServlet {
 
-    @Override
+  @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RuleDAO ruleDAO = new RuleDAO();
@@ -79,7 +77,6 @@ public class RuleManagementServlet extends HttpServlet {
         }
 
     }
-
     private void searchOrPagination(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RuleDAO ruleDAO = new RuleDAO();

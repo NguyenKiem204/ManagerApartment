@@ -8,7 +8,7 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@include file="menumanager.jsp" %>
+<%@include file="/manager/menumanager.jsp" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -26,7 +26,7 @@
                 color: #566787;
                 background: #ffa384;
                 font-family: 'Varela Round', sans-serif;
-                font-size: 13px;
+                font-size: 20px;
             }
             .table-responsive {
                 margin: 30px 0;
@@ -41,7 +41,7 @@
             }
             .table-title {
                 padding-bottom: 15px;
-                background:#6c757d ;
+                background:#F44336 ;
                 color: #fff;
                 padding: 16px 30px;
                 min-width: 100%;
@@ -51,6 +51,7 @@
             .table-title h2 {
                 margin: 5px 0 0;
                 font-size: 24px;
+                color: white;
             }
             .table-title .btn-group {
                 float: right;
@@ -167,8 +168,8 @@
 
             /* Modal styles */
             .modal .modal-dialog {
-                max-width: 1000px; /* Mặc định là 400px, tăng lên 600px */
-                width: 80%;
+                
+                width: 100%;
             }
             .modal .modal-header, .modal .modal-body, .modal .modal-footer {
                 padding: 20px 30px;

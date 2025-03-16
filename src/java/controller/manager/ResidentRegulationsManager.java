@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.tenant;
+package controller.manager;
 
 import dao.RuleDAO;
 import java.io.IOException;
@@ -15,8 +15,8 @@ import java.util.List;
 import model.Rule;
 import validation.Validate;
 
-@WebServlet(name = "ResidentRegulationsTenant", urlPatterns = {"/tenant/regulations"})
-public class ResidentRegulationsTenant extends HttpServlet {
+@WebServlet(name = "ResidentRegulationsManager", urlPatterns = {"/manager/regulations"})
+public class ResidentRegulationsManager extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -31,7 +31,7 @@ public class ResidentRegulationsTenant extends HttpServlet {
         request.setAttribute("rulesList", ruleList);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("pageNumber", pageNumber);
-        request.getRequestDispatcher("/tenant/view_regulations.jsp").forward(request, response);
+        request.getRequestDispatcher("/manager/view_regulations.jsp").forward(request, response);
     }
 
     @Override
@@ -42,9 +42,9 @@ public class ResidentRegulationsTenant extends HttpServlet {
         int pageNumber = Integer.parseInt(request.getParameter("page"));
         String searchName = "";
         if (request.getParameter("search") != null) {
-            searchName = Validate.normalizeSearchString(request.getParameter("search"));// remove trailing spaces
+            searchName = Validate.normalizeSearchString(request.getParameter("search")); // remove trailing spaces
         }
-        
+
         List<Rule> ruleList;
         int totalPages;
         if (searchName.isEmpty()) { // search emtpy -> return full rule list
@@ -61,6 +61,7 @@ public class ResidentRegulationsTenant extends HttpServlet {
         request.setAttribute("pageNumber", pageNumber);
         request.setAttribute("rulesList", ruleList);
         request.setAttribute("searchName", searchName);
-        request.getRequestDispatcher("/tenant/view_regulations.jsp").forward(request, response);
+        request.getRequestDispatcher("/manager/view_regulations.jsp").forward(request, response);
     }
+
 }
