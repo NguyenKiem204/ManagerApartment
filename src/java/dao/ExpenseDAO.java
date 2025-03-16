@@ -87,21 +87,18 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
         sql += " ORDER BY e.ExpenseID, ed.ExpenseDetailID";
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            // Thiết lập các tham số cho truy vấn
             for (int i = 0; i < parameters.size(); i++) {
                 ps.setObject(i + 1, parameters.get(i));
             }
 
-            // Thực thi truy vấn và xử lý kết quả
             ResultSet rs = ps.executeQuery();
             Expense currentExpense = null; // Lưu trữ Expense hiện tại
 
             while (rs.next()) {
                 int expenseID = rs.getInt("ExpenseID");
 
-                // Nếu Expense hiện tại là null hoặc không trùng với ExpenseID hiện tại
                 if (currentExpense == null || currentExpense.getExpenseID() != expenseID) {
-                    // Tạo mới Expense nếu chưa tồn tại
+            
                     currentExpense = new Expense(
                             expenseID,
                             rs.getDate("ExpenseDate").toLocalDate(),
@@ -109,7 +106,7 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
                             rs.getDouble("TotalAmount"),
                             new ArrayList<>() // Khởi tạo danh sách ExpenseDetail rỗng
                     );
-                    expenses.add(currentExpense); // Thêm vào danh sách expenses
+                    expenses.add(currentExpense); 
                 }
 
                 // Tạo TypeExpense từ kết quả truy vấn
@@ -123,11 +120,11 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
                 ExpenseDetail expenseDetail = new ExpenseDetail(
                         rs.getInt("ExpenseDetailID"),
                         expenseID,
-                        rs.getInt("TypeExpenseID"),
+                        typeExpense,
                         rs.getDouble("Amount"),
                         rs.getString("Status"),
-                        rs.getString("Description"),
-                        typeExpense
+                        rs.getString("Description")
+                 
                 );
                 currentExpense.getExpenseDetails().add(expenseDetail);
             }

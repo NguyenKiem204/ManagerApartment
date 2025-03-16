@@ -69,7 +69,7 @@ public class GetNotificationsServlet extends HttpServlet {
         String roleId_raw = request.getParameter("roleId");
         String residentId_raw = request.getParameter("residentId");
         String staffId_raw = request.getParameter("staffId");
-
+    
         int roleId = 1;
         int residentId = 0;
         int staffId = 0;

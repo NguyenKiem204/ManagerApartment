@@ -14,6 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import model.EmailUtil;
+import model.Invoices;
 
 /**
  *
@@ -57,8 +59,10 @@ public class paymentSuccess extends HttpServlet {
                 // Cập nhật trạng thái hóa đơn
                 InvoiceDAO invoiceDAO = new InvoiceDAO();
                 invoiceDAO.updateStatusInvoice(Integer.parseInt(invoiceId));
+                Invoices inv = invoiceDAO.selectById(Integer.parseInt(invoiceId));
+                EmailUtil.sendEmailSuccessPayment(inv.getResident().getEmail(), inv);
             }
-
+            
             // Chuyển hướng sang trang PaymentSuccess.jsp
             request.getRequestDispatcher("PaymentSuccess.jsp").forward(request, response);
         } catch (Exception e) {
