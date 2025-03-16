@@ -19,8 +19,8 @@ import model.Rule;
  *
  * @author admin
  */
-@WebServlet(name = "RuleSeverlet", urlPatterns = {"/rule"})
-public class RuleSeverlet extends HttpServlet {
+@WebServlet(name = "RuleDisSeverlet", urlPatterns = {"/rule"})
+public class RuleDisSeverlet extends HttpServlet {
 
    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
