@@ -119,8 +119,13 @@ public class Test {
 >>>>>>> 6576dff9caea8d91907986387ea7784272a36bea
 //        imageDAO.insert(image);
 
+<<<<<<< Updated upstream
         Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0931654542", "6634983361194", "nkien349@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(3).build());
         staffDAO.insert(staff);
+=======
+        Staff staff = new Staff("Nguyễn Văn a", "123", "0353215889", "001204040218", "a@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(3).build());
+       staffDAO.insert(staff);
+>>>>>>> Stashed changes
 
         // Staff staff = new Staff("Nguyễn Kiểm Admin", "kiem@12345", "0336750744", "044567203453", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(1).build());
         // staffDAO.insert(staff); 

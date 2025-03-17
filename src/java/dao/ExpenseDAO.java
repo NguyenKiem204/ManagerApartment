@@ -98,7 +98,7 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
                 int expenseID = rs.getInt("ExpenseID");
 
                 if (currentExpense == null || currentExpense.getExpenseID() != expenseID) {
-            
+
                     currentExpense = new Expense(
                             expenseID,
                             rs.getDate("ExpenseDate").toLocalDate(),
@@ -106,7 +106,7 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
                             rs.getDouble("TotalAmount"),
                             new ArrayList<>() // Khởi tạo danh sách ExpenseDetail rỗng
                     );
-                    expenses.add(currentExpense); 
+                    expenses.add(currentExpense);
                 }
 
                 // Tạo TypeExpense từ kết quả truy vấn
@@ -124,7 +124,6 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
                         rs.getDouble("Amount"),
                         rs.getString("Status"),
                         rs.getString("Description")
-                 
                 );
                 currentExpense.getExpenseDetails().add(expenseDetail);
             }
@@ -152,6 +151,123 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public void insertExpense(int staffId, double totalAmount) throws SQLException {
+        String sql = "INSERT INTO Expense (StaffID, TotalAmount) VALUES (?, ?)";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setInt(1, staffId);
+            stmt.setBigDecimal(2, new java.math.BigDecimal(totalAmount));
+            stmt.executeUpdate();
+        }
+    }
+
+    public void insertExpenseDetail(int expenseId, int typeExpenseId, double amount, String status, String description) throws SQLException {
+        String sql = "INSERT INTO ExpenseDetail (ExpenseID, TypeExpenseID, Amount, Status, Description) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setInt(1, expenseId);
+            stmt.setInt(2, typeExpenseId);
+            stmt.setBigDecimal(3, new java.math.BigDecimal(amount));
+            stmt.setString(4, status);
+            stmt.setString(5, description);
+            stmt.executeUpdate();
+        }
+    }
+
+    public Expense getExpenseByDate(LocalDate date) {
+        Expense todayExpense = null;
+        String sql = "SELECT "
+                + "    e.ExpenseID, "
+                + "    e.ExpenseDate, "
+                + "    e.StaffID, "
+                + "    e.TotalAmount, "
+                + "    ed.ExpenseDetailID, "
+                + "    ed.TypeExpenseID, "
+                + "    ed.Amount, "
+                + "    ed.Status, "
+                + "    ed.Description, "
+                + "    te.TypeExpenseID AS teTypeExpenseID, "
+                + "    te.TypeName, "
+                + "    te.IsFixed "
+                + "FROM Expense e "
+                + "LEFT JOIN ExpenseDetail ed ON e.ExpenseID = ed.ExpenseID "
+                + "LEFT JOIN TypeExpense te ON ed.TypeExpenseID = te.TypeExpenseID "
+                + "WHERE CONVERT(DATE, e.ExpenseDate) = ? "
+                + "ORDER BY e.ExpenseID, ed.ExpenseDetailID;";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDate(1, java.sql.Date.valueOf(date)); // Truyền tham số ngày vào SQL
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    todayExpense = new Expense(
+                            rs.getInt("ExpenseID"),
+                            rs.getDate("ExpenseDate").toLocalDate(),
+                            rs.getInt("StaffID"),
+                            rs.getDouble("TotalAmount"),
+                            new ArrayList<>()
+                    );
+
+                    do {
+                        if (rs.getInt("ExpenseDetailID") != 0) { // Kiểm tra nếu có ExpenseDetail
+                            TypeExpense typeExpense = new TypeExpense(
+                                    rs.getInt("teTypeExpenseID"),
+                                    rs.getString("TypeName"),
+                                    rs.getBoolean("IsFixed")
+                            );
+                            ExpenseDetail expenseDetail = new ExpenseDetail(
+                                    rs.getInt("ExpenseDetailID"),
+                                    todayExpense.getExpenseID(),
+                                    typeExpense,
+                                    rs.getDouble("Amount"),
+                                    rs.getString("Status"),
+                                    rs.getString("Description")
+                            );
+                            todayExpense.getExpenseDetails().add(expenseDetail);
+                        }
+                    } while (rs.next());
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ExpenseDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return todayExpense;
+    }
+
+    public TypeExpense getTypeExpenseById(int typeExpenseID) {
+        TypeExpense typeExpense = null;
+        String sql = "SELECT TypeExpenseID, TypeName, IsFixed FROM TypeExpense WHERE TypeExpenseID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, typeExpenseID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                typeExpense = new TypeExpense(
+                        rs.getInt("TypeExpenseID"),
+                        rs.getString("TypeName"),
+                        rs.getBoolean("IsFixed")
+                );
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ExpenseDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return typeExpense;
+    }
+
+    public void updateTotalAmount(int expenseID, double additionalAmount) throws SQLException {
+        String sql = "UPDATE Expense SET TotalAmount = TotalAmount + ? WHERE ExpenseID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDouble(1, additionalAmount);
+            ps.setInt(2, expenseID);
+            int rowsUpdated = ps.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                throw new SQLException("Failed to update total amount. Expense ID not found: " + expenseID);
+            }
+        }
     }
 
 }
