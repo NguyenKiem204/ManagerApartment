@@ -3,20 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/E:/ManagerApartment/src/java/controller/manager/ManageApartmentServlet.java</file>
-            <file>file:/E:/ManagerApartment/src/java/controller/manager/UpdateApartmentServlet.java</file>
-            <file>file:/E:/ManagerApartment/src/java/dao/ApartmentDAO.java</file>
-            <file>file:/E:/ManagerApartment/web/manager/mngapartment.jsp</file>
-=======
-            <file>file:/D:/gitSWP391/ManagerApartment/web/manager/managernews.jsp</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/web/WEB-INF/web.xml</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/src/java/controller/manager/RuleManagementServlet.java</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/nbproject/build-impl.xml</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/web/manager/menumanager.jsp</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/src/java/controller/RuleDisSeverlet.java</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/web/META-INF/context.xml</file>
->>>>>>> 72fa15fd70c04f97fc01008957c482398787f27b
+            <file>file:/E:/ManagerApartment/src/java/controller/manager/ManageStaffServlet.java</file>
+            <file>file:/E:/ManagerApartment/src/java/dao/StaffDAO.java</file>
+            <file>file:/E:/ManagerApartment/src/java/controller/manager/ManageResidentServlet.java</file>
+            <file>file:/E:/ManagerApartment/web/accountant/home.jsp</file>
         </group>
     </open-files>
 </project-private>

@@ -90,30 +90,17 @@ public class ManageStaffServlet extends HttpServlet {
         JSONObject jsonResponse = new JSONObject();
 
         StaffDAO staffDAO = new StaffDAO();
-        ImageDAO imageDAO = new ImageDAO();
         RoleDAO roleDAO = new RoleDAO();
 
         try {
-            // Nhận dữ liệu từ request
-            // Nhận dữ liệu từ request
             String fullName = request.getParameter("fullName");
 
-            // Kiểm tra fullName không được null hoặc rỗng
             if (fullName == null || fullName.trim().isEmpty()) {
-            jsonResponse.put("success", false);
-            jsonResponse.put("message", "Full name cannot be empty!");
-            out.write(jsonResponse.toString());
-            return;
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Full name cannot be empty!");
+                out.write(jsonResponse.toString());
+                return;
             }
-
-            // Kiểm tra định dạng fullName (chỉ chứa chữ cái và khoảng trắng)
-            // Nếu tên có thể chứa ký tự đặc biệt hoặc số thì bạn cần điều chỉnh regex cho phù hợp
-//            if (!fullName.matches("^[a-zA-Z\\s]+$")) {
-//                jsonResponse.put("success", false);
-//                jsonResponse.put("message", "Full name must contain only letters and spaces!");
-//                out.write(jsonResponse.toString());
-//                return;
-//            }
 
             String phoneNumber = request.getParameter("phoneNumber");
             String cccd = request.getParameter("cccd");
@@ -121,65 +108,66 @@ public class ManageStaffServlet extends HttpServlet {
             String dobStr = request.getParameter("dob");
             String sex = request.getParameter("sex");
             int roleId = Integer.parseInt(request.getParameter("roleId"));
-            
-            // Kiểm tra định dạng số điện thoại (10 số)
+
             if (!phoneNumber.matches("\\d{10}")) {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "Phone number must has 10 number characters!");
+                jsonResponse.put("message", "Phone number must have 10 number characters!");
                 out.write(jsonResponse.toString());
                 return;
             }
+
             String dobError = Validate.validateDob(dobStr);
-            if(dobError != null) {
+            if (dobError != null) {
                 jsonResponse.put("success", false);
                 jsonResponse.put("message", dobError);
                 out.write(jsonResponse.toString());
                 return;
             }
-            // Kiểm tra định dạng CCCD (12 số)
+
             if (!cccd.matches("\\d{12}")) {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "CCCD must has 12 number characters");
+                jsonResponse.put("message", "CCCD must have 12 number characters");
                 out.write(jsonResponse.toString());
                 return;
             }
+
             if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$")) {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "Định dạng mail sai");
+                jsonResponse.put("message", "Invalid email format");
                 out.write(jsonResponse.toString());
                 return;
             }
 
-            // Kiểm tra xem cư dân đã tồn tại chưa
             if (staffDAO.isStaffExists(phoneNumber, cccd, email)) {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "PhoneNumber, CCCD or Email is exist!");
+                jsonResponse.put("message", "PhoneNumber, CCCD or Email already exists!");
                 out.write(jsonResponse.toString());
                 return;
             }
 
-            // Chuyển đổi ngày sinh
+            // Kiểm tra nếu roleId đã có một nhân viên Active
+            if (staffDAO.isRoleHasActiveStaff(roleId)) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Only one active staff is allowed per role!");
+                out.write(jsonResponse.toString());
+                return;
+            }
+
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
             LocalDate dob = LocalDate.parse(dobStr, formatter);
 
-            // Mặc định trạng thái là Active
-            String status = "Active";
+            String status = "Active"; // Mặc định là Active
             Role role = roleDAO.selectById(roleId);
-
-            // Tạo mật khẩu ngẫu nhiên (3 ký tự)
             String password = generateRandomPassword(5);
 
-            // Tạo đối tượng Resident
             Staff newStaff = new Staff(fullName, password, phoneNumber, cccd, email, dob, sex, status, role);
 
-            // Thêm vào database
             int isAdded = staffDAO.insert(newStaff);
 
             if (isAdded != 0) {
-                // Gửi email chứa mật khẩu
                 EmailUtil.sendEmail(email, password);
                 jsonResponse.put("success", true);
-                jsonResponse.put("message", "Add staff successfully! Password was sent to the mail.");
+                jsonResponse.put("message", "Add staff successfully! Password was sent to the email.");
             } else {
                 jsonResponse.put("success", false);
                 jsonResponse.put("message", "Add staff failed!");
@@ -192,9 +180,9 @@ public class ManageStaffServlet extends HttpServlet {
             jsonResponse.put("message", "Unknown error: " + e.getMessage());
         }
 
-        // Trả về JSON response
         out.write(jsonResponse.toString());
     }
+
     private String generateRandomPassword(int length) {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder password = new StringBuilder();
