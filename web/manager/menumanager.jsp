@@ -515,8 +515,6 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                 </li>
               </c:if>
 
-              <li class="sidebar-title">Others</li>
-
               <li class="sidebar-item has-sub news-active">
                 <a href="#" class="sidebar-link">
                   <i class="fa-solid fa-envelope"></i>
@@ -723,32 +721,32 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
           });
         });
 
-        // Kiểm tra thông báo mới mỗi 0.3 giây
-        setInterval(checkNotifications, 300);
-      });
-      $(function () {
-        // Cấu hình cơ bản cho date picker với định dạng dd/MM/yyyy
-        const datePickerConfig = {
-          dateFormat: "d/m/Y",
-          locale: "en",
-          allowInput: true,
-          maxDate: null,
-          disableMobile: "true",
-        };
-        // Khởi tạo Date Picker đơn giản
-        flatpickr("#datePicker", {
-          ...datePickerConfig,
-          maxDate: null,
-        });
-        flatpickr("#dateRangePicker", {
-          ...datePickerConfig,
-          mode: "range",
-          maxDate: null,
-        });
-        flatpickr("#deadline", {
-          ...datePickerConfig,
-          maxDate: null,
-        });
+                // Kiểm tra thông báo mới mỗi 0.3 giây
+                setInterval(checkNotifications, 300);
+            });
+            $(function () {
+                // Cấu hình cơ bản cho date picker với định dạng dd/MM/yyyy
+                const datePickerConfig = {
+                    dateFormat: "d/m/Y",
+                    locale: "en",
+                    allowInput: true,
+                    maxDate: null,
+                    disableMobile: "true"
+                };
+                // Khởi tạo Date Picker đơn giản
+                flatpickr("#datePicker", {
+                    ...datePickerConfig,
+                    maxDate: null
+                });
+                flatpickr("#dateRangePicker", {
+                    ...datePickerConfig,
+                    mode: "range",
+                    maxDate: null
+                });
+                flatpickr("#deadline", {
+                    ...datePickerConfig,
+                    maxDate: null
+                });
 
         flatpickr("#boughtOn", {
           ...datePickerConfig,

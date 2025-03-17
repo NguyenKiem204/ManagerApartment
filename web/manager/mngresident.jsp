@@ -275,86 +275,6 @@
     <body>
         <%@include file="menumanager.jsp" %>
         <!--=============================CONTENT HERE=======================-->
-<<<<<<< HEAD
-        <div id="main" style="margin-top: -50px">
-            <div>
-                <div  class="col-9">
-                    <h1>Resident List</h1>
-                    <%-- Hiển thị thông báo nếu có --%>
-                    <c:if test="${not empty mess}">
-                        <div class="message">${mess}</div>
-                    </c:if>
-                    <!-- Nút Thêm Cư Dân -->
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <button class="add-resident-button btn btn-success" id="openInsertModal">Add new resident</button>
-                    </div>
-
-                    <!-- Modal Form -->
-                    <div id="insertResidentModal" class="modal">
-                        <div class="modal-content">
-                            <span class="modal-close">&times;</span>
-                            <h2 class="modal-title">Add resident</h2>
-                            <form id="insertResidentForm">
-                                <label for="fullName" class="modal-label">FullName:</label>
-                                <input type="text" id="fullName" name="fullName" class="modal-input" required>
-
-                                <label for="phoneNumber" class="modal-label">Phone Number:</label>
-                                <input type="text" id="phoneNumber" name="phoneNumber" class="modal-input" required maxlength="10" pattern="\d{10}">
-                                <label>Apartment:</label>
-                                <select name="apartmentId" class="form-control">
-                                    <option value="">-- Select Apartment --</option>
-                                    <c:forEach var="apartment" items="${apartmentList}">
-                                        <option value="${apartment.apartmentId}">${apartment.apartmentName} - ${apartment.block}</option>
-                                    </c:forEach>
-                                </select>
-                                <label for="cccd" class="modal-label">CCCD:</label>
-                                <input type="text" id="cccd" name="cccd" class="modal-input" required maxlength="12" pattern="\d{12}">
-
-                                <label for="email" class="modal-label">Email:</label>
-                                <input type="email" id="email" name="email" class="modal-input" required>
-
-                                <label for="dob" class="modal-label">BirthDate:</label>
-                                <input type="date" id="dob" name="dob" class="modal-input" required>
-
-                                <label for="sex" class="modal-label">Gender:</label>
-                                <select id="sex" name="sex" class="modal-select" required>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-
-                                <button type="button" id="submitBtn" class="modal-button">Add</button>
-                            </form>
-                            <div id="message"></div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <!-- Cột bên trái: Bộ lọc (45%) -->
-                        <div class="col-md-5 d-flex gap-2">
-                            <form action="manageResident" method="get" class="d-flex gap-2 flex-grow-1">
-                                <select name="sex" id="sexFilter" class="form-select" style="width: 100%;">
-                                    <option value="">AllGenders</option>
-                                    <option value="Male" ${selectedSex == 'Male' ? 'selected' : ''}>Male</option>
-                                    <option value="Female" ${selectedSex == 'Female' ? 'selected' : ''}>Female</option>
-                                </select>
-
-                                <select name="status" id="statusFilter" class="form-select" style="width: 100%;">
-                                    <option value="">AllStatus</option>
-                                    <option value="Active" ${selectedStatus == 'Active' ? 'selected' : ''}>Active</option>
-                                    <option value="Deactive" ${selectedStatus == 'Deactive' ? 'selected' : ''}>Deactive</option>
-                                </select>
-
-                                <button type="submit" class="btn btn-primary" style="width: 20%;">Filter:</button>
-                            </form>
-                        </div>
-
-                        <!-- Cột bên phải: Tìm kiếm (45%) -->
-                        <div class="col-md-5">
-                            <form action="manageResident" method="get" class="d-flex">
-                                <input type="text" name="searchKeyword" placeholder="Enter name or email..." value="${searchKeyword}" class="form-control me-2" style="width: 70%;">
-                                <button type="submit" class="btn btn-primary" style="width: 30%;">Search</button>
-                            </form>
-                        </div>
-=======
         <div class="w-90" style="display: flex;">
             <div class="col-3"></div>
             <div  class="col-9">
@@ -432,7 +352,6 @@
                             <input type="text" name="searchKeyword" placeholder="Enter name or email..." value="${searchKeyword}" class="form-control me-2" style="width: 70%;">
                             <button type="submit" class="btn btn-primary" style="width: 30%;">Search</button>
                         </form>
->>>>>>> b3a6c9bc898fd363378e002731d00d93fce98862
                     </div>
 
                     <div class="table-container">
@@ -507,31 +426,6 @@
                         </c:if>
                     </ul>
                 </div>
-<<<<<<< HEAD
-            </div>
-        </div>
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-                                                    $(document).ready(function () {
-                                                        $(".status-toggle").change(function () {
-                                                            let residentId = $(this).data("id");
-                                                            let newStatus = $(this).is(":checked") ? "Active" : "Deactive";
-
-                                                            $.ajax({
-                                                                url: "/ManagerApartment/manager/updateResidentStatus",
-                                                                type: "POST",
-                                                                data: {residentId: residentId, status: newStatus},
-                                                                success: function (response) {
-                                                                    alert(response.message);
-                                                                },
-                                                                error: function () {
-                                                                    alert("Lỗi khi cập nhật trạng thái.");
-                                                                }
-                                                            });
-                                                        });
-                                                    });
-=======
 
 
 
@@ -672,7 +566,6 @@
                                                         });
                                                     });
                                                 });
->>>>>>> b3a6c9bc898fd363378e002731d00d93fce98862
         </script>
         <script>
             $(document).ready(function () {

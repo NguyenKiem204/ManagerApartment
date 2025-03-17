@@ -128,6 +128,19 @@ public class Validate {
 
         return true;
     }
+    
+    public static boolean isValidLocation(String title) {
+        
+        // Loại bỏ các ký tự đặc biệt không cho phép
+        String forbiddenChars = "<>{}/\\|\"';&";
+        for (char c : forbiddenChars.toCharArray()) {
+            if (title.indexOf(c) != -1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     // Kiểm tra input có rỗng hoặc chỉ chứa khoảng trắng không
     public static boolean isEmptyOrWhitespace(String input) {
@@ -164,8 +177,6 @@ public class Validate {
         }
 
         boughtOn_raw = boughtOn_raw.trim(); // Loại bỏ khoảng trắng đầu/cuối
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
 
         try {
             Date boughtOn = Date.valueOf(boughtOn_raw);

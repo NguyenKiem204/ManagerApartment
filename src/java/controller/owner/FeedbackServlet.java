@@ -111,7 +111,8 @@ public class FeedbackServlet extends HttpServlet {
         String rating_raw = request.getParameter("rating");
         String description = request.getParameter("description");
         // Loại bỏ HTML & ký tự khoảng trắng
-        String cleanText = (description != null) ? Jsoup.parse(description).text().trim() : "";
+        String cleanText = (description != null) ? Jsoup.parse(description).text().trim() : ""; //vì trong textarea lưu trong DB
+                                                                   //thì dấu space khác so với ô input                                     
         String error = "error";
         RoleDAO rdao = new RoleDAO();
         List<Role> listrole = rdao.getListRoleWithStaffExits();
@@ -129,12 +130,12 @@ public class FeedbackServlet extends HttpServlet {
         }
 
         // Kiểm tra độ dài title
-        if (title.length() > 100) {
+        if (title.length() > 100) { //nên giới hạn độ dài title vì nó chỉ nên có độ dài nhất định
             request.setAttribute(error, "Title must be <100 characters!");
             request.setAttribute("listrole", listrole);
             request.getRequestDispatcher("feedback.jsp").forward(request, response);
             return;
-        }
+        }  
 
 //         Kiểm tra ký tự đặc biệt (chỉ cho phép chữ, số, khoảng trắng, và một số dấu câu)
         if (!Validate.isValidTitle(title)) {
@@ -163,13 +164,12 @@ public class FeedbackServlet extends HttpServlet {
             description = description.replaceAll("[\\s\\u00A0]+", " ").trim(); // Loại bỏ khoảng trắng dư thừa
         }
         //check description null or not
-        if (cleanText.trim().isEmpty() || cleanText.length() < 10) {
+        if (cleanText.trim().isEmpty() || cleanText.length() < 10) { //check nó toàn dấu trắng
             request.setAttribute(error, "You need to describe this feedback! More 10 characters.");
             request.setAttribute("listrole", listrole);
             request.getRequestDispatcher("feedback.jsp").forward(request, response);
             return;
         }
-         
 
         int rating;
         int roleID;

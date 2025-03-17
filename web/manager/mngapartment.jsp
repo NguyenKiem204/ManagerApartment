@@ -296,9 +296,9 @@
 
                             <label for="block" class="modal-label">Block:</label>
                             <select id="block" name="block" class="modal-select" required>
-                                <option value="Male">Block A</option>
-                                <option value="Female">Block B</option>
-                                <option value="Female">Block C</option>
+                                <option value="Block A">Block A</option>
+                                <option value="Block B">Block B</option>
+                                <option value="Block C">Block C</option>
                             </select>
 
                             <label for="status" class="modal-label">Status:</label>

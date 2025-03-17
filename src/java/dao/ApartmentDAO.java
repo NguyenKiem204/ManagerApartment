@@ -17,7 +17,9 @@ import model.Resident;
  * @author nkiem
  */
 public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
+
     ResidentDAO residentDAO = new ResidentDAO();
+
     @Override
     public int insert(Apartment apartment) {
         int row = 0;
@@ -61,27 +63,26 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
 //    }
     @Override
     public int update(Apartment apartment) {
-    int rowUpdated = 0;
-    String sql = "UPDATE Apartment SET ApartmentName = ?, Block = ?, Status = ?, Type = ?, OwnerID = ? WHERE ApartmentID = ?";
+        int rowUpdated = 0;
+        String sql = "UPDATE Apartment SET ApartmentName = ?, Block = ?, Status = ?, Type = ?, OwnerID = ? WHERE ApartmentID = ?";
 
-    try (Connection conn = DBContext.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        ps.setString(1, apartment.getApartmentName());
-        ps.setString(2, apartment.getBlock());
-        ps.setString(3, apartment.getStatus());
-        ps.setString(4, apartment.getType());
-        ps.setInt(5, apartment.getOwnerId());
-        ps.setInt(6, apartment.getApartmentId());
+            ps.setString(1, apartment.getApartmentName());
+            ps.setString(2, apartment.getBlock());
+            ps.setString(3, apartment.getStatus());
+            ps.setString(4, apartment.getType());
+            ps.setInt(5, apartment.getOwnerId());
+            ps.setInt(6, apartment.getApartmentId());
 
-        rowUpdated = ps.executeUpdate();
-        System.out.println("Rows updated: " + rowUpdated);
+            rowUpdated = ps.executeUpdate();
+            System.out.println("Rows updated: " + rowUpdated);
 
-    } catch (SQLException e) {
-        e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rowUpdated;
     }
-    return rowUpdated;
-}
 
     @Override
     public int delete(Apartment apartment) {
@@ -136,9 +137,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         int count = 0;
         String sql = "SELECT COUNT(*) FROM Apartment";
 
-        try (Connection connection = DBContext.getConnection(); 
-             PreparedStatement ps = connection.prepareStatement(sql); 
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
                 count = rs.getInt(1);
@@ -149,13 +148,12 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return count;
     }
+
     public int numberApartmentOccupied() {
         int count = 0;
         String sql = "SELECT COUNT(*) FROM Apartment Where Status = 'Occupied'";
 
-        try (Connection connection = DBContext.getConnection(); 
-             PreparedStatement ps = connection.prepareStatement(sql); 
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
                 count = rs.getInt(1);
@@ -166,13 +164,12 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return count;
     }
-        public int numberApartmentAvailable() {
+
+    public int numberApartmentAvailable() {
         int count = 0;
         String sql = "SELECT COUNT(*) FROM Apartment Where Status = 'Available'";
 
-        try (Connection connection = DBContext.getConnection(); 
-             PreparedStatement ps = connection.prepareStatement(sql); 
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
                 count = rs.getInt(1);
@@ -201,7 +198,6 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                             rs.getString("Status"),
                             rs.getString("Type"),
                             rs.getInt("OwnerID")
-                            
                     );
                 }
             }
@@ -214,22 +210,21 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
     public static void main(String[] args) {
         ApartmentDAO apartmentDAO = new ApartmentDAO();
         int testApartmentId = 7; // Thay thế bằng ID thực tế trong DB
-        
+
         Apartment apartment = apartmentDAO.selectById(testApartmentId);
-        
+
         if (apartment != null) {
             System.out.println("Apartment Found:");
-         
+
             System.out.println("Name: " + apartment.getApartmentName());
             System.out.println("Block: " + apartment.getBlock());
             System.out.println("Status: " + apartment.getStatus());
             System.out.println("Type: " + apartment.getType());
-    
+
         } else {
             System.out.println("No apartment found with ID: " + testApartmentId);
         }
     }
-
 
     public Apartment getApartmentByName(String apartmentName) {
         Apartment apartment = null;
@@ -255,6 +250,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return apartment;
     }
+
     public boolean isApartmentExists(String apartmentName, String block) {
         String sql = "SELECT COUNT(*) FROM Apartment WHERE ApartmentName = ? AND Block = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -269,6 +265,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return false;
     }
+
     public Apartment getApartmentById(int apartmentId) {
         Apartment apartment = null;
         String sql = "SELECT * FROM Apartment WHERE ApartmentID = ? ";
@@ -283,8 +280,8 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                             rs.getString("ApartmentName"),
                             rs.getString("Block"),
                             rs.getString("Status"),
-                            rs.getString("Type")
-                           
+                            rs.getString("Type"),
+                            rs.getInt("OwnerID")
                     );
                 }
             }
@@ -293,6 +290,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return apartment;
     }
+
     public List<Apartment> selectAllOcc() {
         List<Apartment> list = new ArrayList<>();
         String sql = "SELECT * FROM Apartment a where a.Status='Occupied'";
@@ -306,7 +304,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                         rs.getString("Block"),
                         rs.getString("Status"),
                         rs.getString("Type"),
-                       rs.getInt("OwnerID")
+                        rs.getInt("OwnerID")
                 );
                 list.add(apartment);
             }
@@ -316,7 +314,6 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return list;
     }
 
-    
 //    public List<Apartment> searchApartments(String name, int ownerId, String type, String status, String block, int page, int pageSize) {
 //    List<Apartment> apartments = new ArrayList<>();
 //    String sql = "SELECT ApartmentID, ApartmentName, Block, Status, Type, OwnerID FROM Apartment WHERE 1=1";
@@ -378,7 +375,6 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
 //    }
 //    return apartments;
 //}
-
 //public int getTotalApartments(String name, int ownerId, String type, String status, String block) {
 //    int total = 0;
 //    String sql = "SELECT COUNT(*) FROM Apartment a " +
@@ -411,179 +407,177 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
 //    }
 //    return total;
 //}
-public List<Apartment> searchApartments(String name, int ownerId, String type, String status, String block, int page, int pageSize) {
-    List<Apartment> apartments = new ArrayList<>();
-    String sql = "SELECT ApartmentID, ApartmentName, Block, Status, Type, OwnerID FROM Apartment WHERE 1=1";
+    public List<Apartment> searchApartments(String name, int ownerId, String type, String status, String block, int page, int pageSize) {
+        List<Apartment> apartments = new ArrayList<>();
+        String sql = "SELECT ApartmentID, ApartmentName, Block, Status, Type, OwnerID FROM Apartment WHERE 1=1";
 
-    if (name != null && !name.isEmpty()) {
-        sql += " AND ApartmentName LIKE ?";
-    }
-    if (ownerId != -1) {
-        sql += " AND OwnerID = ?";
-    }
-    if (type != null && !type.isEmpty()) {
-        sql += " AND Type = ?";
-    }
-    if (status != null && !status.isEmpty()) {
-        sql += " AND Status = ?";
-    }
-    if (block != null && !block.isEmpty()) {
-        sql += " AND Block = ?";
-    }
-
-    
-    sql += " ORDER BY ApartmentID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-
-    try (Connection connection = DBContext.getConnection();
-         PreparedStatement ps = connection.prepareStatement(sql)) {
-
-        int paramIndex = 1;
         if (name != null && !name.isEmpty()) {
-            ps.setString(paramIndex++, "%" + name + "%");
+            sql += " AND ApartmentName LIKE ?";
         }
         if (ownerId != -1) {
-            ps.setInt(paramIndex++, ownerId);
+            sql += " AND OwnerID = ?";
         }
         if (type != null && !type.isEmpty()) {
-            ps.setString(paramIndex++, type);
+            sql += " AND Type = ?";
         }
         if (status != null && !status.isEmpty()) {
-            ps.setString(paramIndex++, status);
+            sql += " AND Status = ?";
         }
         if (block != null && !block.isEmpty()) {
-            ps.setString(paramIndex++, block);
+            sql += " AND Block = ?";
         }
 
-        // Phân trang
-        int offset = (page - 1) * pageSize;
-        ps.setInt(paramIndex++, offset);
-        ps.setInt(paramIndex++, pageSize);
+        sql += " ORDER BY ApartmentID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Apartment apt = new Apartment(
-                    rs.getInt("ApartmentID"),
-                    rs.getString("ApartmentName"),
-                    rs.getString("Block"),
-                    rs.getString("Status"),
-                    rs.getString("Type"),
-                    rs.getInt("OwnerID")
-                );
-                apartments.add(apt);
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            int paramIndex = 1;
+            if (name != null && !name.isEmpty()) {
+                ps.setString(paramIndex++, "%" + name + "%");
             }
+            if (ownerId != -1) {
+                ps.setInt(paramIndex++, ownerId);
+            }
+            if (type != null && !type.isEmpty()) {
+                ps.setString(paramIndex++, type);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setString(paramIndex++, status);
+            }
+            if (block != null && !block.isEmpty()) {
+                ps.setString(paramIndex++, block);
+            }
+
+            // Phân trang
+            int offset = (page - 1) * pageSize;
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, pageSize);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Apartment apt = new Apartment(
+                            rs.getInt("ApartmentID"),
+                            rs.getString("ApartmentName"),
+                            rs.getString("Block"),
+                            rs.getString("Status"),
+                            rs.getString("Type"),
+                            rs.getInt("OwnerID")
+                    );
+                    apartments.add(apt);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return apartments;
-}
-public int getTotalApartments(String name, int ownerId, String type, String status, String block) {
-    int total = 0;
-    String sql = "SELECT COUNT(*) FROM Apartment WHERE 1=1";
-
-    if (name != null && !name.isEmpty()) {
-        sql += " AND ApartmentName LIKE ?";
-    }
-    if (ownerId != -1) {
-        sql += " AND OwnerID = ?";
-    }
-    if (type != null && !type.isEmpty()) {
-        sql += " AND Type = ?";
-    }
-    if (status != null && !status.isEmpty()) {
-        sql += " AND Status = ?";
-    }
-    if (block != null && !block.isEmpty()) {
-        sql += " AND Block = ?";
+        return apartments;
     }
 
-    try (Connection conn = DBContext.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
+    public int getTotalApartments(String name, int ownerId, String type, String status, String block) {
+        int total = 0;
+        String sql = "SELECT COUNT(*) FROM Apartment WHERE 1=1";
 
-        int paramIndex = 1;
         if (name != null && !name.isEmpty()) {
-            ps.setString(paramIndex++, "%" + name + "%");
+            sql += " AND ApartmentName LIKE ?";
         }
         if (ownerId != -1) {
-            ps.setInt(paramIndex++, ownerId);
+            sql += " AND OwnerID = ?";
         }
         if (type != null && !type.isEmpty()) {
-            ps.setString(paramIndex++, type);
+            sql += " AND Type = ?";
         }
         if (status != null && !status.isEmpty()) {
-            ps.setString(paramIndex++, status);
+            sql += " AND Status = ?";
         }
         if (block != null && !block.isEmpty()) {
-            ps.setString(paramIndex++, block);
+            sql += " AND Block = ?";
         }
 
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            total = rs.getInt(1);
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return total;
-}
-public int updateOwner(int apartmentId, int residentId) {
-    String sql = "UPDATE Apartment SET OwnerID = ?, Status = 'Occupied' WHERE ApartmentID = ?";
-    try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, residentId);
-        ps.setInt(2, apartmentId);
-        return ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return 0;
-    }
-}
-public List<Apartment> getNotNullOwnerApartments() {
-    List<Apartment> apartments = new ArrayList<>();
-    String sql = "SELECT * FROM Apartment WHERE OwnerID IS NULL";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-    try (Connection connection = DBContext.getConnection();
-         PreparedStatement ps = connection.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
+            int paramIndex = 1;
+            if (name != null && !name.isEmpty()) {
+                ps.setString(paramIndex++, "%" + name + "%");
+            }
+            if (ownerId != -1) {
+                ps.setInt(paramIndex++, ownerId);
+            }
+            if (type != null && !type.isEmpty()) {
+                ps.setString(paramIndex++, type);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setString(paramIndex++, status);
+            }
+            if (block != null && !block.isEmpty()) {
+                ps.setString(paramIndex++, block);
+            }
 
-        while (rs.next()) {
-            apartments.add(new Apartment(
-                rs.getInt("ApartmentID"),
-                rs.getString("ApartmentName"),
-                rs.getString("Block"),
-                rs.getString("Status"),
-                rs.getString("Type"),
-                rs.getObject("OwnerID") != null ? rs.getInt("OwnerID") : -1
-            ));
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return total;
     }
-    return apartments;
-}
-public List<Apartment> getApartmentsByOwner(int ownerId) {
-    List<Apartment> apartments = new ArrayList<>();
-    String sql = "SELECT * FROM Apartment WHERE OwnerID = ?";
-    
-    try (Connection conn = DBContext.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, ownerId);
-        ResultSet rs = ps.executeQuery();
-        
-        while (rs.next()) {
-            Apartment apartment = new Apartment();
-            apartment.setApartmentId(rs.getInt("ApartmentID"));
-            apartment.setApartmentName(rs.getString("ApartmentName"));
-            apartment.setBlock(rs.getString("Block"));
-            apartment.setStatus(rs.getString("Status"));
-            apartment.setType(rs.getString("Type"));
-            apartment.setOwnerId(rs.getInt("ownerId"));
-            apartments.add(apartment);
+
+    public int updateOwner(int apartmentId, int residentId) {
+        String sql = "UPDATE Apartment SET OwnerID = ?, Status = 'Occupied' WHERE ApartmentID = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, residentId);
+            ps.setInt(2, apartmentId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
     }
-    return apartments;
-}
+
+    public List<Apartment> getNotNullOwnerApartments() {
+        List<Apartment> apartments = new ArrayList<>();
+        String sql = "SELECT * FROM Apartment WHERE OwnerID IS NULL";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                apartments.add(new Apartment(
+                        rs.getInt("ApartmentID"),
+                        rs.getString("ApartmentName"),
+                        rs.getString("Block"),
+                        rs.getString("Status"),
+                        rs.getString("Type"),
+                        rs.getObject("OwnerID") != null ? rs.getInt("OwnerID") : -1
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return apartments;
+    }
+
+    public List<Apartment> getApartmentsByOwner(int ownerId) {
+        List<Apartment> apartments = new ArrayList<>();
+        String sql = "SELECT * FROM Apartment WHERE OwnerID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, ownerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Apartment apartment = new Apartment();
+                apartment.setApartmentId(rs.getInt("ApartmentID"));
+                apartment.setApartmentName(rs.getString("ApartmentName"));
+                apartment.setBlock(rs.getString("Block"));
+                apartment.setStatus(rs.getString("Status"));
+                apartment.setType(rs.getString("Type"));
+                apartment.setOwnerId(rs.getInt("ownerId"));
+                apartments.add(apartment);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return apartments;
+    }
 
     public List<String> getApartmentNames(String searchQuery) {
         List<String> apartments = new ArrayList<>();
@@ -600,4 +594,21 @@ public List<Apartment> getApartmentsByOwner(int ownerId) {
         }
         return apartments;
     }
+
+    public boolean isDuplicateNameInBlock(String apartmentName, String block, int apartmentId) {
+        String sql = "SELECT COUNT(*) FROM Apartment WHERE ApartmentName = ? AND Block = ? AND ApartmentID != ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, apartmentName);
+            ps.setString(2, block);
+            ps.setInt(3, apartmentId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
