@@ -97,6 +97,22 @@
                 background-color: #ccc;
                 cursor: not-allowed;
             }
+            .tableinvoice th, .tableinvoice td {
+                width: 25%; /* Chia đều 4 cột */
+                text-align: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .table-bordered th, .table-bordered td {
+                width: 25%;
+                text-align: center;
+            }
+            .tableinvoice th:nth-child(4), .tableinvoice td:nth-child(4) {
+                width: 40%; /* Cột Description rộng hơn */
+            }
+
 
         </style>
 
@@ -113,7 +129,7 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                     <h2>Invoices Manager</h2>
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center gap-3">
                         <a href="<%= request.getContextPath() %>/accountant/ImportExpense" class="btn btn-success d-flex align-items-center">
                             <i class="bi bi-plus-lg me-1"></i> Import Expense
                         </a>
