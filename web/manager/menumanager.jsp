@@ -572,7 +572,10 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                 </a>
               </li>
               <li class="sidebar-item">
-                <a href="<%= request.getContextPath() %>/manager/regulations" class="sidebar-link">
+                <a
+                  href="<%= request.getContextPath() %>/manager/regulations"
+                  class="sidebar-link"
+                >
                   <i class="bi bi-puzzle"></i>
                   <span>Regulations</span>
                 </a>
@@ -699,8 +702,8 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
               );
             case "Request":
               return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
-            case "Invoice":
-              return `#`;
+            case "UtilityBill":
+              return baseUrl + `/utility-detail?utilityId=` + notif.referenceId;
             default:
               return "#"; // Nếu không xác định được loại, đặt về #
           }
@@ -721,32 +724,32 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
           });
         });
 
-                // Kiểm tra thông báo mới mỗi 0.3 giây
-                setInterval(checkNotifications, 300);
-            });
-            $(function () {
-                // Cấu hình cơ bản cho date picker với định dạng dd/MM/yyyy
-                const datePickerConfig = {
-                    dateFormat: "d/m/Y",
-                    locale: "en",
-                    allowInput: true,
-                    maxDate: null,
-                    disableMobile: "true"
-                };
-                // Khởi tạo Date Picker đơn giản
-                flatpickr("#datePicker", {
-                    ...datePickerConfig,
-                    maxDate: null
-                });
-                flatpickr("#dateRangePicker", {
-                    ...datePickerConfig,
-                    mode: "range",
-                    maxDate: null
-                });
-                flatpickr("#deadline", {
-                    ...datePickerConfig,
-                    maxDate: null
-                });
+        // Kiểm tra thông báo mới mỗi 0.3 giây
+        setInterval(checkNotifications, 500);
+      });
+      $(function () {
+        // Cấu hình cơ bản cho date picker với định dạng dd/MM/yyyy
+        const datePickerConfig = {
+          dateFormat: "d/m/Y",
+          locale: "en",
+          allowInput: true,
+          maxDate: null,
+          disableMobile: "true",
+        };
+        // Khởi tạo Date Picker đơn giản
+        flatpickr("#datePicker", {
+          ...datePickerConfig,
+          maxDate: null,
+        });
+        flatpickr("#dateRangePicker", {
+          ...datePickerConfig,
+          mode: "range",
+          maxDate: null,
+        });
+        flatpickr("#deadline", {
+          ...datePickerConfig,
+          maxDate: null,
+        });
 
         flatpickr("#boughtOn", {
           ...datePickerConfig,

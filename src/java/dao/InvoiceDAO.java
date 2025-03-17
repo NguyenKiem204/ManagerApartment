@@ -92,7 +92,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                 + "    idt.Amount, "
                 + "    idt.Description AS DetailDescription, "
                 + "    idt.TypeBillID, "
-                +"    tb.TypeName AS BillType, "
+                + "    tb.TypeName AS BillType, "
                 + "    res.ResidentID, "
                 + "    res.FullName AS ResidentName, "
                 + "    res.PhoneNumber AS ResidentPhone, "
@@ -193,26 +193,27 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         }
         return typeBills;
     }
+
     public void insertInvoice(Invoices invoice) {
         String sql = "INSERT INTO Invoice (ResidentID, TotalAmount, [Description], DueDate, [Status], StaffID, islate, ApartmentID) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-                try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
-                    ps.setInt(1, invoice.getResident().getResidentId());
-                    ps.setDouble(2, invoice.getTotalAmount());
-                    ps.setString(3, invoice.getDescription());
-                    ps.setDate(4, java.sql.Date.valueOf(invoice.getDueDate()));
-                    ps.setString(5, "Unpaid");
-                    ps.setInt(6, 2);
-                    ps.setInt(7, 0);
-                    ps.setInt(8, invoice.getApartment().getApartmentId());
-                    ps.executeUpdate();
-                    System.out.println("Invoice inserted successfully!");
-        
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, invoice.getResident().getResidentId());
+            ps.setDouble(2, invoice.getTotalAmount());
+            ps.setString(3, invoice.getDescription());
+            ps.setDate(4, java.sql.Date.valueOf(invoice.getDueDate()));
+            ps.setString(5, "Unpaid");
+            ps.setInt(6, 2);
+            ps.setInt(7, 0);
+            ps.setInt(8, invoice.getApartment().getApartmentId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void insertInvoice(Invoices invoice, int apid) {
         String sql = "INSERT INTO Invoice "
                 + "(ResidentID, TotalAmount, PublicDate, Status, StaffID, Description, DueDate, islate, ApartmentID) "
