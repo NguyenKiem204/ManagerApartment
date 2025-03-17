@@ -212,7 +212,7 @@
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="../rule" class="sidebar-link">
+                                <a href="<%= request.getContextPath() %>/tenant/viewregulations" class="sidebar-link">
                                     <i class="bi bi-puzzle"></i>
                                     <span>Regulations</span>
                                 </a>

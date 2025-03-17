@@ -296,7 +296,7 @@
         <div class="table-responsive">
             <div class="table-wrapper">
                 <form id="filterAndPagination" 
-                      action="/ManagerApartment/manager/rule" 
+                      action="/ManagerApartment/manager/regulations" 
                       method="POST"
                       >
                     <input type="hidden" name="_method" value="SEARCH"/>
@@ -388,7 +388,7 @@
         <div id="deleteRuleModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="/ManagerApartment/manager/rule" method="POST">
+                    <form action="/ManagerApartment/manager/regulations" method="POST">
                         <input type="hidden" name="_method" value="DELETE"/>
                         <input
                             type="hidden"
