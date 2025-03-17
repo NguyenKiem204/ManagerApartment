@@ -111,13 +111,16 @@ public class Test {
 
        //Resident resident = new Resident("Nguyễn Kiểm", "kiem@12345", "0331477047", "3984136534764", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
        //residentDAO.insert(resident);
-      Resident resident = new Resident("Nguyễn MH", "123", "0328674344", "3984136534766", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(6).build());
-       residentDAO.insert(resident);
+//      Resident resident = new Resident("Nguyễn MH", "123", "0328674344", "3984136534766", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(6).build());
+//       residentDAO.insert(resident);
+
+//        Resident resident = new Resident("Nguyễn Kiểm", "kiem@12345", "0331477047", "3984136534764", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
+//        residentDAO.insert(resident);
 
 //        imageDAO.insert(image);
 
-        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0931654542", "6634983361194", "nkien349@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(3).build());
-        staffDAO.insert(staff);
+//        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0931654542", "6634983361194", "nkien349@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(3).build());
+//        staffDAO.insert(staff);
 //        Staff staff = new Staff("Nguyễn Văn a", "123", "0353215889", "001204040218", "a@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(3).build());
 //        staffDAO.insert(staff);
 

@@ -275,6 +275,7 @@
     <body>
         <%@include file="menumanager.jsp" %>
         <!--=============================CONTENT HERE=======================-->
+
         <div class="w-90" style="display: flex;">
             <div class="col-3"></div>
             <div  class="col-9">
@@ -353,6 +354,7 @@
                             <button type="submit" class="btn btn-primary" style="width: 30%;">Search</button>
                         </form>
                     </div>
+                </div>
 
                     <div class="table-container">
                         <table>
@@ -405,84 +407,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <ul class="pagination">
-                        <c:if test="${currentPage > 1}">
-                            <li class="page-item">
-                                <a class="page-link" href="?page=${currentPage - 1}&searchKeyword=${searchKeyword}&sex=${selectedSex}&status=${selectedStatus}&block=${selectedBlock}">Previous</a>
-                            </li>
-                        </c:if>
-
-                        <c:forEach begin="1" end="${totalPages}" var="i">
-                            <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                <a class="page-link" href="?page=${i}&searchKeyword=${searchKeyword}&sex=${selectedSex}&status=${selectedStatus}&block=${selectedBlock}">${i}</a>
-                            </li>
-                        </c:forEach>
-
-                        <c:if test="${currentPage < totalPages}">
-                            <li class="page-item">
-                                <a class="page-link" href="?page=${currentPage + 1}&searchKeyword=${searchKeyword}&sex=${selectedSex}&status=${selectedStatus}&block=${selectedBlock}">Next</a>
-                            </li>
-                        </c:if>
-                    </ul>
-                </div>
-
-
-
-
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Resident ID</th>
-                                <th>FullName</th>
-                                <th>PhoneNumber</th>
-                                <th>CCCD</th>
-                                <th>Email</th>
-                                <th>BirthDate</th>
-                                <th>Gender</th>
-                                <th>Status</th>
-                                <th>Role</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="resident" items="${listResident}">
-                                <tr>
-                                    <td>${resident.residentId}</td>
-                                    <td>${resident.fullName}</td>
-                                    <td>${resident.phoneNumber}</td>
-                                    <td>${resident.cccd}</td>
-                                    <td>${resident.email}</td>
-                                    <td><fmt:formatDate value="${resident.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate></td>
-                                    <td>${resident.sex}</td>
-                                    <td>
-                                        <label class="switch">
-                                            <input type="checkbox" class="status-toggle" data-id="${resident.residentId}" ${resident.status eq 'Active' ? 'checked' : ''}>
-
-                                            <span class="slider round"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${resident.role.getRoleID() == 6}">Tenant</c:when>
-                                            <c:when test="${resident.role.getRoleID() == 7}">Owner</c:when>
-                                            <c:otherwise>Unknown</c:otherwise>
-                                        </c:choose>
-                                    </td>
-
-                                    <td>
-                                        <div class="actions">
-                                            <a href="deleteResident?residentId=${resident.residentId}" onclick="return confirm('Are you sure to delete this resident?');">Delete</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-
                 <ul class="pagination justify-content-center">
                     <!-- Nút First -->
                     <c:if test="${currentPage > 1}">
@@ -569,41 +493,21 @@
         </script>
         <script>
             $(document).ready(function () {
-
-<<<<<<< HEAD
-// Mở Modal
-=======
                 // Mở Modal
->>>>>>> b3a6c9bc898fd363378e002731d00d93fce98862
                 $("#openInsertModal").click(function () {
                     $("#insertResidentModal").show();
                 });
-
-<<<<<<< HEAD
-// Đóng Modal khi nhấn dấu X
-=======
                 // Đóng Modal khi nhấn dấu X
->>>>>>> b3a6c9bc898fd363378e002731d00d93fce98862
                 $(".modal-close").click(function () {
                     $("#insertResidentModal").hide();
                 });
-
-<<<<<<< HEAD
-// Đóng Modal khi click ra ngoài
-=======
                 // Đóng Modal khi click ra ngoài
->>>>>>> b3a6c9bc898fd363378e002731d00d93fce98862
                 $(window).click(function (event) {
                     if (event.target.id === "insertResidentModal") {
                         $("#insertResidentModal").hide();
                     }
                 });
-
-<<<<<<< HEAD
-// Gửi form bằng AJAX
-=======
                 // Gửi form bằng AJAX
->>>>>>> b3a6c9bc898fd363378e002731d00d93fce98862
                 $("#submitBtn").click(function () {
                     let formData = $("#insertResidentForm").serialize();
                     $.ajax({
@@ -629,16 +533,7 @@
                     });
                 });
             });
-<<<<<<< HEAD
-            var accountElement = document.querySelector('#accountId');
-            accountElement.classList.add('active');
-            var residentElement = document.querySelector('.resident-active');
-            residentElement.classList.add('active');
-            document.querySelector('.resident-active a').style.color = '#d5460d';
-        </script>
-=======
-        </script>       
->>>>>>> b3a6c9bc898fd363378e002731d00d93fce98862
-    </body>
 
+        </script>       
+    </body>
 </html>
