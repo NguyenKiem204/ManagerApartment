@@ -690,31 +690,34 @@
                                 $("#notificationCount").text(unreadCount).show();
                             } else {
                                 $("#notificationCount").hide();
-                                $("#notificationList").html(
-                                        "<li class='no-notifications'>There are no notifications yet.</li>"
-                                        );
-                            }
 
-                            // Hàm lấy URL tùy theo referenceTable
-                            function getNotificationUrl(notif) {
-                                let baseUrl = "<%= request.getContextPath() %>";
-                                switch (notif.referenceTable) {
-                                    case "ManagerFeedback":
-                                        return (
-                                                baseUrl +
-                                                `/feedbackreviewdetail?managerFeedbackId=` +
-                                                notif.referenceId
-                                                );
-                                    case "Request":
-                                        return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
-                                    case "Invoice":
-                                        return `#`;
-                                    default:
-                                        return "#"; // Nếu không xác định được loại, đặt về #
-                                }
+                            }
+                        } else {
+                            // Chỉ hiển thị nếu hoàn toàn không có thông báo nào được gửi đến
+                            $("#notificationList").html("<li class='no-notifications'>There are no notifications yet.</li>");
+                            $("#notificationCount").hide();
+                        }
+
+                        // Hàm lấy URL tùy theo referenceTable
+                        function getNotificationUrl(notif) {
+                            let baseUrl = "<%= request.getContextPath() %>";
+                            switch (notif.referenceTable) {
+                                case "ManagerFeedback":
+                                    return (
+                                            baseUrl +
+                                            `/feedbackreviewdetail?managerFeedbackId=` +
+                                            notif.referenceId
+                                            );
+                                case "Request":
+                                    return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
+                                case "Invoice":
+                                    return `#`;
+                                default:
+                                    return "#"; // Nếu không xác định được loại, đặt về #
                             }
                         }
                     }
+                    
 
                     // Khi click vào thông báo, đổi màu và update trạng thái đọc
                     $("#notificationList").on("click", "li", function () {
