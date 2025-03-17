@@ -172,9 +172,8 @@
             /* Custom checkbox */
 
             /* Modal styles */
-            .modal .modal-dialog {
-                max-width: 1000px; /* Mặc định là 400px, tăng lên 600px */
-                width: 80%;
+            .modal .modal-dialog {               
+                width: 100%;
             }
             .modal .modal-header, .modal .modal-body, .modal .modal-footer {
                 padding: 20px 30px;
@@ -258,7 +257,7 @@
             <div id="addRule" class="">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form action="/ManagerApartment/manager/rule" method="POST">
+                        <form action="/ManagerApartment/manager/regulations" method="POST">
                             <input type="hidden" name="_method" value="POST"/>
 
                             <div class="modal-header">                      
@@ -297,7 +296,7 @@
 
                             <div class="modal-footer">
                                 <input type="submit" class="btn btn-success" value="Add">
-                                <a href="/ManagerApartment/manager/rule"
+                                <a href="/ManagerApartment/manager/regulations"
                                    class="btn btn-default"
                                    >Back</a>
                             </div>

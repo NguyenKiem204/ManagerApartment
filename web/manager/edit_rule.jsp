@@ -253,7 +253,7 @@
             <div id="editRule">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form action="/ManagerApartment/manager/rule" method="POST">
+                        <form action="/ManagerApartment/manager/regulations" method="POST">
                             <input type="hidden" name="_method" value="PUT"/>
 
                             <div class="modal-header">						

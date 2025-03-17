@@ -119,7 +119,6 @@ public class AddAssetServlet extends HttpServlet {
             statusId = Integer.parseInt(statusId_raw);
             LocalDate boughtOnDateLocalDate = LocalDate.parse(boughtOn_raw, formatter);
             boughtOn = Date.valueOf(boughtOnDateLocalDate);
-            System.out.println("Bought on not raw:" + boughtOn);
 
             //check asset name
             if (assetName != null) {

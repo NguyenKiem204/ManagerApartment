@@ -689,5 +689,23 @@ public int delete1(Staff staff) {
     public boolean isExistStaffByRoleIDAndStatusID(int position, String status) {
         return getStaffByRoleIDAndStatus(position, status) != null;
     }
+    public boolean isRoleHasActiveStaff(int roleId) {
+        String query = "SELECT COUNT(*) FROM Staff WHERE RoleID = ? AND Status = 'Active'";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, roleId);
+            System.out.println("Checking active staff for roleId: " + roleId); // Debug
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    System.out.println("Active staff count: " + count); // Debug
+                    return count >= 1; // Nếu có ít nhất 1 nhân viên Active, trả về true
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }
