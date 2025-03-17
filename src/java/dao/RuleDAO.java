@@ -21,13 +21,13 @@ public class RuleDAO implements DAOInterface<Rule, Integer> {
     public int insert(Rule rule) {
         // TODO: chua add staffID
         int row = 0;
-        String sqlInsert = "INSERT INTO [Rule] (RuleName, RuleDescription, PublicDate) \n"
-                + "VALUES (?, ?, ?);";
+        String sqlInsert = "INSERT INTO [Rule] (RuleName, RuleDescription, PublicDate, StaffID) \n"
+                + "VALUES (?, ?, ?, ?);";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlInsert)) {
             ps.setString(1, rule.getRuleName());
             ps.setString(2, rule.getRuleDescription());
             ps.setDate(3, Date.valueOf(rule.getPublicDate()));
-//            ps.setInt(4, rule.getStaffID());
+            ps.setInt(4, rule.getStaff().getStaffId());
 
             row = ps.executeUpdate();
         } catch (SQLException ex) {
@@ -35,6 +35,7 @@ public class RuleDAO implements DAOInterface<Rule, Integer> {
         }
         return row;
     }
+
 
     @Override
     public int update(Rule rule) {

@@ -7,7 +7,6 @@ package controller.manager;
 
 import dao.RuleDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -67,7 +66,12 @@ public class RuleManagementServlet extends HttpServlet {
             } catch (Exception ex) {
                 errorMsg += ex.getMessage() + "\n";
             }
-
+            if (ruleName.length() > 100) { //nên giới hạn độ dài title vì nó chỉ nên có độ dài nhất định
+            request.setAttribute(errorMsg, "Title must be <100 characters!");
+            //request.setAttribute("listrole",listrole);
+            request.getRequestDispatcher("/manager/add_rule.jsp").forward(request, response);
+            return;
+            }      
             if (!errorMsg.isEmpty()) { // có lỗi validate ruleName/description
                 request.setAttribute("error", errorMsg);
                 request.getRequestDispatcher("/manager/add_rule.jsp").forward(request, response);

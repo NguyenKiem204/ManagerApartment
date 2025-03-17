@@ -41,13 +41,16 @@ public class Rule {
         this.ruleName = ruleName;
         this.ruleDescription = ruleDescription;
         this.publicDate = publicDate;
-        // them staffID vao day
+        Staff s = new Staff();
+        s.setStaffId(1);
+        this.staff = s;
     }
 
     public Rule(int ruleID) {
         this.ruleID = ruleID;
     }
-     public String getFormattedPublicDate() {
+
+    public String getFormattedPublicDate() {
         if (publicDate == null) {
             return "";
         }
