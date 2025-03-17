@@ -701,8 +701,8 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
               );
             case "Request":
               return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
-            case "Invoice":
-              return `#`;
+            case "UtilityBill":
+              return baseUrl + `/utility-detail?utilityId=` + notif.referenceId;;
             default:
               return "#"; // Nếu không xác định được loại, đặt về #
           }
@@ -724,7 +724,7 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         });
 
         // Kiểm tra thông báo mới mỗi 0.3 giây
-        setInterval(checkNotifications, 300);
+        setInterval(checkNotifications, 500);
       });
       $(function () {
         // Cấu hình cơ bản cho date picker với định dạng dd/MM/yyyy

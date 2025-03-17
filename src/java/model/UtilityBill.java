@@ -24,6 +24,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UtilityBill {
+
     int billId;
     int apartmentId;
     LocalDateTime billingPeriodStart;
@@ -39,8 +40,27 @@ public class UtilityBill {
     Integer invoiceId;
     int billingMonth;
     int billingYear;
-    
+
     String apartmentName;
     String ownerName;
     String buildingName;
+    Apartment apartment;
+    Resident owner;
+
+    public String getFormattedGeneratedDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return generatedDate.format(formatter);
+    }
+    public String getFormattedDueDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dueDate.format(formatter);
+    }
+    public String getFormattedBillingPeriodStart() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return billingPeriodStart.format(formatter);
+    }
+    public String getFormattedBillingPeriodEnd() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return billingPeriodEnd.format(formatter);
+    }
 }
