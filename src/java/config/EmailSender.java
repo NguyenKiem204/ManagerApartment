@@ -67,26 +67,22 @@ public class EmailSender {
 
 public boolean sendUtilityBillEmail(String toEmail, UtilityBill bill, byte[] pdfBytes) {
     try {
-        System.out.println("Bắt đầu gửi email đến " + toEmail);
         
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true"); // Add this line to enable debug output
+        props.put("mail.debug", "false");
 
         Session session = Session.getInstance(props, new jakarta.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication("buildingmanagement77@gmail.com", "hpfyyhbaelpgdeir");
             }
         });
-
-        // Format currency
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedAmount = currencyFormat.format(bill.getTotalAmount());
 
-        System.out.println("Đang tạo nội dung email...");
         
         String htmlContent = "<html>"
                 + "<body style='font-family: Arial, sans-serif;'>"
@@ -102,44 +98,29 @@ public boolean sendUtilityBillEmail(String toEmail, UtilityBill bill, byte[] pdf
                 + "</html>";
 
         MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress("buildingmanagement77@gmail.com", "Ban Quản Lý Tòa Nhà"));
+        message.setFrom(new InternetAddress("buildingmanagement77@gmail.com", "Ban Quản Lý Tòa Nhà", "UTF-8"));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
         message.setSubject("Hóa Đơn Tiện Ích - Tháng " + bill.getBillingMonth() + "/" + bill.getBillingYear(), "UTF-8");
-
-        // Create multipart message
         Multipart multipart = new MimeMultipart();
-
-        // Email body part
+        
         MimeBodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(htmlContent, "text/html; charset=UTF-8");
         multipart.addBodyPart(messageBodyPart);
-        System.out.println("Đã thiết lập nội dung email...");
-
-        // PDF attachment part
+        
         MimeBodyPart attachmentPart = new MimeBodyPart();
         attachmentPart.setContent(pdfBytes, "application/pdf");
         attachmentPart.setFileName("HoaDon_" + bill.getBillingMonth() + "_" + bill.getBillingYear() + "_" + bill.getApartment().getApartmentName() + ".pdf");
         multipart.addBodyPart(attachmentPart);
-        System.out.println("Đã thêm file PDF đính kèm...");
-
-        // Set the complete message
         message.setContent(multipart);
-
-        System.out.println("Đang gửi email...");
-        // Send message
         Transport.send(message);
-        System.out.println("Đã gửi email thành công!");
         return true;
     } catch (MessagingException me) {
-        System.err.println("Lỗi MessagingException: " + me.getMessage());
         me.printStackTrace();
         return false;
     } catch (UnsupportedEncodingException ue) {
-        System.err.println("Lỗi UnsupportedEncodingException: " + ue.getMessage());
         ue.printStackTrace();
         return false;
     } catch (Exception e) {
-        System.err.println("Lỗi không xác định: " + e.getMessage());
         e.printStackTrace();
         return false;
     }

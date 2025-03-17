@@ -5,8 +5,10 @@
 package model;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,16 +53,36 @@ public class UtilityBill {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return generatedDate.format(formatter);
     }
+
     public String getFormattedDueDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return dueDate.format(formatter);
     }
+
     public String getFormattedBillingPeriodStart() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return billingPeriodStart.format(formatter);
     }
+
     public String getFormattedBillingPeriodEnd() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return billingPeriodEnd.format(formatter);
+    }
+
+    private String formatVND(BigDecimal amount) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return currencyFormat.format(amount);
+    }
+
+    public String getFormattedElectricityCost() {
+        return formatVND(electricityCost);
+    }
+
+    public String getFormattedWaterCost() {
+        return formatVND(waterCost);
+    }
+
+    public String getFormattedTotalAmount() {
+        return formatVND(totalAmount);
     }
 }

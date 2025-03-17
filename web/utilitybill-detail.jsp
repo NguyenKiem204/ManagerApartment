@@ -7,8 +7,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Utility Bill Display</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+        <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
         <style>
             :root {
                 --primary-color: #3a86ff;
@@ -466,7 +465,7 @@
                     </div>
                     <div class="cost-breakdown">
                         <div class="cost-label">Total Electricity Cost</div>
-                        <div class="cost-value" id="electricityCost">${utilityBill.electricityCost}</div>
+                        <div class="cost-value" id="electricityCost">${utilityBill.formattedElectricityCost}</div>
                     </div>
 
                     <h6 class="mt-4">Water Usage</h6>
@@ -480,7 +479,7 @@
                     </div>
                     <div class="cost-breakdown">
                         <div class="cost-label">Total Water Cost</div>
-                        <div class="cost-value" id="waterCost">${utilityBill.waterCost}</div>
+                        <div class="cost-value" id="waterCost">${utilityBill.formattedWaterCost}</div>
                     </div>
                 </div>
 
@@ -488,15 +487,15 @@
                     <h5 class="section-title"><i class="fas fa-receipt"></i> Payment Summary</h5>
                     <div class="cost-breakdown">
                         <div class="cost-label">Electricity Cost</div>
-                        <div class="cost-value">${utilityBill.electricityCost}</div>
+                        <div class="cost-value">${utilityBill.formattedElectricityCost}</div>
                     </div>
                     <div class="cost-breakdown">
                         <div class="cost-label">Water Cost</div>
-                        <div class="cost-value">${utilityBill.waterCost}</div>
+                        <div class="cost-value">${utilityBill.formattedWaterCost}</div>
                     </div>
                     <div class="total-amount">
                         <div class="total-amount-label">Total Amount Due</div>
-                        <div class="total-amount-value" id="totalAmount">${utilityBill.totalAmount}</div>
+                        <div class="total-amount-value" id="totalAmount">${utilityBill.formattedTotalAmount}</div>
                     </div>
 
                     <div class="payment-actions">
@@ -510,7 +509,7 @@
                 </div>
 
                 <div class="bill-footer">
-                    <p>For any inquiries, please contact: support@smartliving.com | Hotline: 1-800-123-4567</p>
+                    <p>For any inquiries, please contact: building@gmail.com | Hotline: 1-800-123-4567</p>
                     <p>© 2025 Smart Living - Intelligent Building Management System</p>
                 </div>
             </div>
