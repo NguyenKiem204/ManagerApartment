@@ -5,7 +5,9 @@
 
 package controller;
 
+import com.oracle.wls.shaded.org.apache.xalan.xsltc.compiler.util.Util;
 import dao.UtilityBillDAO;
+import dao.UtilityRateDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,7 +15,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import model.UtilityBill;
+import model.UtilityRate;
 
 /**
  *
@@ -35,6 +40,10 @@ public class UtilityBillDetailServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         UtilityBillDAO utilityBillDAO = new UtilityBillDAO();
+        UtilityRateDAO utilityRateDAO = new UtilityRateDAO();
+        UtilityRate electricity = utilityRateDAO.getCurrentUtilityRate("Electricity", LocalDateTime.now());
+        UtilityRate water = utilityRateDAO.getCurrentUtilityRate("Water", LocalDateTime.now());
+        
         String utilityIdParam = request.getParameter("utilityId");
         Integer uilityId = null;
         if(utilityIdParam!=null){
@@ -42,6 +51,9 @@ public class UtilityBillDetailServlet extends HttpServlet {
             UtilityBill utilityBill = utilityBillDAO.getBillDetails(uilityId);
             request.setAttribute("utilityBill", utilityBill);
         }
+        System.out.println(water);
+        request.setAttribute("electricity", electricity);
+        request.setAttribute("water", water);
        request.getRequestDispatcher("utilitybill-detail.jsp").forward(request, response);
     } 
 

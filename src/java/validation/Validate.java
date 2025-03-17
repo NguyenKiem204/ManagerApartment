@@ -113,6 +113,18 @@ public class Validate {
         return null;
     }
 
+    public static String validateDateFuture(String dobParam) {
+        if (dobParam == null || dobParam.isBlank()) {
+            return "Date of Birth cannot be empty.";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        try {
+            LocalDate dob = LocalDate.parse(dobParam, formatter);
+        } catch (DateTimeParseException e) {
+            return "Invalid Date of Birth format. Please use the format dd/MM/yyyy.";
+        }
+        return null;
+    }
     public static boolean isValidTitle(String title) {
         if (title == null || title.trim().isEmpty()) {
             return false;
