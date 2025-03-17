@@ -62,8 +62,8 @@
                                 <th>Asset Name</th>
                                 <th>Category</th>
                                 <th>Bought on</th>
-                                <th>Quantity</th>
-                                <th>Update At</th>
+                                <!--<th>Quantity</th>-->
+                                <!--<th>Update At</th>-->
                                 <th>Location</th>
                                 <th>Status</th>
                                 <th></th>
@@ -71,19 +71,19 @@
                         </thead>
                         <tbody id="tableBody">
                             <c:forEach var="as" items="${listas}">
-                                <tr data-feedback-id="${as.assetId}">
+                                <tr data-asset-id="${as.assetId}">
                                     <td class="truncate">${as.assetName}</td>
                                     <td class="truncate_min">${as.category.categoryName}</td>
                                     <td style="min-width: 120px"> <fmt:formatDate pattern="dd-MM-yyyy" value="${as.boughtOn}"></fmt:formatDate> </td>
-                                    <td style="width: 70px">${as.quantity}</td>
-                                    <td>${as.formattedUpdatedAt}</td>
+                                    <!--<td style="width: 70px">${as.quantity}</td>-->
+                                    <!--<td>${as.formattedUpdatedAt}</td>-->
                                     <td class="truncate_min">${as.location}</td>
                                     <td style="min-width: 100px">${as.status.statusName}</td>
                                     <td>
                                         <div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
                                             <button style="background: green; color: white; padding: 8px 16px; border: none;
                                                     cursor: pointer; border-radius: 5px; font-weight: bold;"
-                                                    onclick="openModal(${as.assetId}, '${as.assetName}', '${as.category.categoryId}', ${as.quantity}, '${as.location}', '${as.status.statusId}')">
+                                                    onclick="redirectToUpdate(${as.assetId})">
                                                 Update
                                             </button>
 
@@ -217,48 +217,16 @@
         </div>
 
         <script>
-            function openModal(assetId, assetName, categoryId, quantity, location, status) {
-                document.getElementById("assetId").value = assetId;
-                document.getElementById("assetName").value = assetName;
-                document.getElementById("assetCategory").value = categoryId;
-                document.getElementById("assetQuantity").value = quantity;
-                document.getElementById("assetLocation").value = location;
-                document.getElementById("assetStatus").value = status;
-                document.getElementById("updateModal").style.display = "block";
+            function redirectToUpdate(assetId) {
+                window.location.href = `updateasset?assetId=` + assetId;
             }
 
-            function closeModal() {
-                document.getElementById("updateModal").style.display = "none";
-            }
-
-            function closeAddModal() {
-                document.getElementById("addModal").style.display = "none";
-            }
-
-            var contextPath = "${pageContext.request.contextPath}";
-            function submitUpdate() {
-                const assetId = document.getElementById("assetId").value;
-                const assetName = document.getElementById("assetName").value;
-                const categoryId = document.getElementById("assetCategory").value;
-                const quantity = document.getElementById("assetQuantity").value;
-                const location = document.getElementById("assetLocation").value;
-                const status = document.getElementById("assetStatus").value;
-
-                // Tạo query string (mã hóa giá trị để tránh lỗi URL)
-                const queryString = `updateasset?assetId=` + assetId + `&assetName=` + assetName + `
-        &categoryId=` + categoryId + `&quantity=` + quantity + `
-        &location=` + location + `&status=` + status;
-                window.location.href = queryString;
-                closeModal();
-            }
-
-            function confirmDelete(assetId) {
-                const confirmation = confirm(`Do you want to delete this assetName?`);
+            function confirmDelete(assetId, assetName) {
+                const confirmation = confirm(`Do you want to delete the asset: ` + assetName + `?`);
                 if (confirmation) {
                     // Thực hiện hành động xóa ở đây
                     window.location = 'deleteasset?assetId=' + assetId;
-                    // Ví dụ: gửi yêu cầu xóa đến server
-                    console.log(`Sản phẩm với ID ${productId} đã được xóa.`);
+
                     // Bạn có thể gọi một hàm để xóa sản phẩm từ danh sách hoặc từ server
                     // Sau khi xóa, chuyển hướng về trang home
                     setTimeout(() => {
@@ -268,6 +236,20 @@
                     console.log('Hành động xóa đã bị hủy.');
                 }
             }
+            document.querySelectorAll("#tableBody tr").forEach(row => {
+                row.addEventListener("click", function () {
+                    // Kiểm tra nếu click vào button thì không mở trang chi tiết
+                    if (event.target.tagName.toLowerCase() === "button") {
+                        event.stopPropagation();
+                        return;
+                    }
+
+                    const assetId = this.getAttribute("data-asset-id");
+                    if (assetId) {
+                        window.location.href = 'assetdetail?assetId=' + assetId;
+                    }
+                });
+            });
         </script>
 
         <script>

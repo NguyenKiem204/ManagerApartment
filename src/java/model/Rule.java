@@ -5,6 +5,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,4 +47,12 @@ public class Rule {
     public Rule(int ruleID) {
         this.ruleID = ruleID;
     }
+     public String getFormattedPublicDate() {
+        if (publicDate == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return publicDate.format(formatter);
+    }
+
 }

@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jsoup.Jsoup;
 
 /**
  *
@@ -127,6 +128,19 @@ public class Validate {
 
         return true;
     }
+    
+    public static boolean isValidLocation(String title) {
+        
+        // Loại bỏ các ký tự đặc biệt không cho phép
+        String forbiddenChars = "<>{}/\\|\"';&";
+        for (char c : forbiddenChars.toCharArray()) {
+            if (title.indexOf(c) != -1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     // Kiểm tra input có rỗng hoặc chỉ chứa khoảng trắng không
     public static boolean isEmptyOrWhitespace(String input) {
@@ -164,8 +178,6 @@ public class Validate {
 
         boughtOn_raw = boughtOn_raw.trim(); // Loại bỏ khoảng trắng đầu/cuối
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-
         try {
             Date boughtOn = Date.valueOf(boughtOn_raw);
             Date today = new Date(System.currentTimeMillis());
@@ -189,6 +201,66 @@ public class Validate {
                   .replace("--", "—")
                   .replace("/*", "/ *")
                   .replace("*/", "* /");
+    }
+     public static boolean validateReguationsName(String ruleName) {
+        if (ruleName == null || ruleName.trim().isEmpty()) {
+            return false; // Không được để trống
+        }
+        return true;
+    }
+
+    public static String normalizeSearchString(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return ""; // Nếu chuỗi null hoặc rỗng, trả về rỗng
+        }
+
+        // Xóa khoảng trắng thừa và tách các từ
+        String[] words = input.trim().replaceAll("\\s+", " ").split(" ");
+
+        StringBuilder normalized = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                // Viết hoa chữ cái đầu, các chữ sau viết thường
+                normalized.append(Character.toUpperCase(word.charAt(0)))
+                        .append(word.substring(1).toLowerCase())
+                        .append(" ");
+            }
+        }
+
+        return normalized.toString().trim(); // Xóa khoảng trắng cuối cùng
+    }
+
+    public static String validateRuleName(String ruleName) throws Exception {
+        if (ruleName == null || ruleName.isBlank()) {
+            throw new Exception("Rule name cannot be empty.");
+        }
+        String regex = "[a-zA-Z0-9 ]+"; // chỉ chữ cái, số và dấu cách
+        if (!Pattern.matches(regex, ruleName)) {
+            throw new Exception("Rule name cannot contains special characters.");
+        }
+        return ruleName.trim();
+    }
+
+    public static String validateRuleDescription(String ruleDescription) throws Exception {
+        if (ruleDescription == null || ruleDescription.isBlank()) {
+            throw new Exception("Description cannot be empty.");
+        }
+        System.out.println("raw description:");
+        System.out.println(ruleDescription);
+        String description = Jsoup.parse(ruleDescription).text().trim(); // bỏ thẻ html của ckeditor
+        System.out.println("nomarlized description:");
+        System.out.println(description);
+        String regex = "[\\p{L}\\d\\s.,:;?!()\\-_\n]+";
+        /**
+         * \p{L}: các chữ cái của bất kì ngôn ngữ nào 
+         * \d: 0-9 
+         * \s: khoảng trắng
+         * .,:;?!()-_\n các kí tự được cho phép
+         */
+        if (!Pattern.matches(regex, description)) {
+            throw new Exception("Description cannot contains special characters.");
+        }
+        return description;
     }
 
 }

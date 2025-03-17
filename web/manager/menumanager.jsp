@@ -515,8 +515,6 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                 </li>
               </c:if>
 
-              <li class="sidebar-title">Others</li>
-
               <li class="sidebar-item has-sub news-active">
                 <a href="#" class="sidebar-link">
                   <i class="fa-solid fa-envelope"></i>
@@ -574,7 +572,10 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                 </a>
               </li>
               <li class="sidebar-item">
-                <a href="!#" class="sidebar-link">
+                <a
+                  href="<%= request.getContextPath() %>/manager/regulations"
+                  class="sidebar-link"
+                >
                   <i class="bi bi-puzzle"></i>
                   <span>Regulations</span>
                 </a>
@@ -702,7 +703,7 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
             case "Request":
               return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
             case "UtilityBill":
-              return baseUrl + `/utility-detail?utilityId=` + notif.referenceId;;
+              return baseUrl + `/utility-detail?utilityId=` + notif.referenceId;
             default:
               return "#"; // Nếu không xác định được loại, đặt về #
           }
