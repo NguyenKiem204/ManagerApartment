@@ -574,7 +574,7 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                 </a>
               </li>
               <li class="sidebar-item">
-                <a href="!#" class="sidebar-link">
+                <a href="<%= request.getContextPath() %>/manager/regulations" class="sidebar-link">
                   <i class="bi bi-puzzle"></i>
                   <span>Regulations</span>
                 </a>

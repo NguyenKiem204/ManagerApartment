@@ -23,7 +23,7 @@ import validation.Validate;
  *
  * @author Hoang-Tran
  */
-@WebServlet(name="RuleManagementServlet", urlPatterns={"/manager/rules"})
+@WebServlet(name="RuleManagementServlet", urlPatterns={"/manager/regulations"})
 public class RuleManagementServlet extends HttpServlet {
    
     @Override
