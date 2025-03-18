@@ -87,6 +87,11 @@
             .tableinvoice th:nth-child(4), .tableinvoice td:nth-child(4) {
                 width: 40%; /* Cột Description rộng hơn */
             }
+            .error-message {
+                color: red;
+                font-weight: bold;
+                margin-bottom: 15px;
+            }
 
 
         </style>
@@ -114,6 +119,12 @@
             <main id="content">
                 <div class="card p-4 shadow-lg rounded-4" style="max-width: 1100px; margin: 0 auto;">
                     <h4 class="text-center mb-4">Import Expense</h4>
+                    <!-- Hiển thị thông báo lỗi -->
+                    <c:if test="${not empty errorMessage}">
+                        <div class="error-message text-center">
+                            ${errorMessage}
+                        </div>
+                    </c:if>
                     <form action="ImportExpense" method="post">
                         <div class="form-group mb-3">
                             <label for="description">Description</label>
@@ -141,48 +152,48 @@
                 <div class="card p-4 shadow-lg rounded-4" style="max-width: 1100px; margin: 10px auto;">
                     <h4 class="text-center ">Expense Detail on </h4>
                     <table class="tableinvoice mt-4">
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <c:set var="totalAmount" value="0" />
-                        
-                        <c:choose>
-                            <c:when test="${not empty exptoday.expenseDetails}">
-                                <c:forEach items="${exptoday.expenseDetails}" var="detail">
-                                    <tr>
-                                        <td>${detail.description}</td>
-                                        <td>${detail.typeExpense.typeName}</td>
-                                        <td>${detail.status}</td>
-                                        <td>
-                                            <fmt:formatNumber value="${detail.amount}" pattern="#0.00" />
-                                        </td>
-                                    </tr>
-                                    <c:set var="totalAmount" value="${totalAmount + (detail.amount ne null ? detail.amount : 0)}" />
-                                </c:forEach>
-                            </c:when>
-                            <c:otherwise>
-                                <tr>
-                                    <td colspan="4" class="empty-message">No expenses recorded for today.</td>
-                                </tr>
-                            </c:otherwise>
-                        </c:choose>
-                    </tbody>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <c:set var="totalAmount" value="0" />
 
-                    <tfoot>
-                        <tr>
-                            <td colspan="3" style="text-align: right; font-weight: bold;">Total Amount:</td>
-                            <td style="font-weight: bold;">
-                                <fmt:formatNumber value="${totalAmount}" pattern="#0.00" />
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                            <c:choose>
+                                <c:when test="${not empty exptoday.expenseDetails}">
+                                    <c:forEach items="${exptoday.expenseDetails}" var="detail">
+                                        <tr>
+                                            <td>${detail.description}</td>
+                                            <td>${detail.typeExpense.typeName}</td>
+                                            <td>${detail.status}</td>
+                                            <td>
+                                                <fmt:formatNumber value="${detail.amount}" pattern="#0.00" />
+                                            </td>
+                                        </tr>
+                                        <c:set var="totalAmount" value="${totalAmount + (detail.amount ne null ? detail.amount : 0)}" />
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <tr>
+                                        <td colspan="4" class="empty-message">No expenses recorded for today.</td>
+                                    </tr>
+                                </c:otherwise>
+                            </c:choose>
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" style="text-align: right; font-weight: bold;">Total Amount:</td>
+                                <td style="font-weight: bold;">
+                                    <fmt:formatNumber value="${totalAmount}" pattern="#0.00" />
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </main>
         </div>
