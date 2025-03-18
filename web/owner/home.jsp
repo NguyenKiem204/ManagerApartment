@@ -31,7 +31,7 @@
     </head>
 
     <body>
-        <%@include file="/manager/menumanager.jsp" %>
+         <%@include file="/manager/menumanager.jsp" %> 
     </body>
 
 </html>

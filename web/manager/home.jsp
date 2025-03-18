@@ -329,5 +329,4 @@
             chartRequests.render();
         </script>
     </body>
-
 </html>

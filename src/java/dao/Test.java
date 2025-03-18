@@ -50,12 +50,11 @@ public class Test {
         NotificationDAO notificationDAO = new NotificationDAO();
         InvoiceDAO invoiceDAO = new InvoiceDAO();
         CommentDAO commentDAO = new CommentDAO();
-        
+
 //        Map<String, Integer> requestCounts = requestDAO.getRequestCountLast7Days();
 //
 //for (Map.Entry<String, Integer> entry : requestCounts.entrySet()) {
 //    System.out.println(entry.getKey() + " : " + entry.getValue());
-
         ApartmentAssetsDAO apartmentAssetsDAO = new ApartmentAssetsDAO();
         AssetCategoryDAO assetCategoryDAO = new AssetCategoryDAO();
 
@@ -108,24 +107,21 @@ public class Test {
 //        roleDAO.insert(role);
 //Apartment apartment = new Apartment("606", "6", "ACTIVE", "RENT");
 //apartmentDAO.insert(apartment);
-<<<<<<< HEAD
-       //Resident resident = new Resident("Nguyễn Kiểm", "kiem@12345", "0331477047", "3984136534764", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
-       //residentDAO.insert(resident);
-      Resident resident = new Resident("Nguyễn MH", "123", "0328674344", "3984136534766", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(6).build());
-       residentDAO.insert(resident);
-=======
-//        Resident resident = new Resident("Nguyễn Kiểm", "kiem@12345", "0331477047", "3984136534764", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
+        //Resident resident = new Resident("Nguyễn Kiểm", "kiem@12345", "0331477047", "3984136534764", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
+        //residentDAO.insert(resident);
+//        Resident resident = new Resident("Nguyễn Van B", "123", "0328674333", "3984136534677", "b@gmail.com", LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(6).build());
 //        residentDAO.insert(resident);
->>>>>>> 6576dff9caea8d91907986387ea7784272a36bea
+
+        Resident resident = new Resident("Nguyễn Kiểm", "kiem@12345", "0331477047", "3984136534764", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
+        residentDAO.insert(resident);
 //        imageDAO.insert(image);
+//        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0931654542", "6634983361194", "nkien349@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(3).build());
+//        staffDAO.insert(staff);
+//        Staff staff = new Staff("Nguyễn Thị Mèo", "123", "0984249518", "6134983361194", "meo@gmail.com", LocalDate.of(2003, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(2).build());
+//        staffDAO.insert(staff);
 
-        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0931654542", "6634983361194", "nkien349@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(3).build());
-        staffDAO.insert(staff);
-
-        // Staff staff = new Staff("Nguyễn Kiểm Admin", "kiem@12345", "0336750744", "044567203453", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(1).build());
-        // staffDAO.insert(staff); 
-
-
+        Staff staff = new Staff("Nguyễn Kiểm Admin", "kiem@12345", "0336750744", "044567203453", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(1).build());
+        staffDAO.insert(staff); 
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);
 //        feedbackDAO.insert(fb);
 //         List list = feedbackDAO.getAllFeedbacksSortedByStaff();
