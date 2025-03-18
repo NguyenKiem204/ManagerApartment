@@ -75,12 +75,15 @@ public class InvoicesManager extends HttpServlet {
         String fromDateStr = request.getParameter("FromDate");
         String dueDateStr = request.getParameter("dueDate");
         String search = request.getParameter("search");
+        String rowsPerPageStr = request.getParameter("rowsPerPage");
+        int rowsPerPage = 5; 
+        if (rowsPerPageStr != null && !rowsPerPageStr.isEmpty()) {
+            rowsPerPage = Integer.parseInt(rowsPerPageStr);
+        }
 
         try {
             InvoiceDAO Idao = new InvoiceDAO();
             ApartmentDAO adao = new ApartmentDAO();
-
-            // Kiểm tra định dạng ngày tháng (dd/MM/yyyy)
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate fromDate = null;
             LocalDate dueDate = null;
@@ -128,10 +131,10 @@ public class InvoicesManager extends HttpServlet {
                 page = "1";
             }
             InvoiceDAO u = new InvoiceDAO();
-            int totalPage = u.getTotalPage(list, 8);
+            int totalPage = u.getTotalPage(list, rowsPerPage);
 
             if (list.size() != 0) {
-                list = u.getListPerPage(list, 8, page);
+                list = u.getListPerPage(list, rowsPerPage, page);
                 request.setAttribute("totalPage", totalPage);
                 request.setAttribute("currentPage", Integer.parseInt(page));
             } else {
@@ -142,6 +145,7 @@ public class InvoicesManager extends HttpServlet {
             request.setAttribute("selectedStatus", status);
             request.setAttribute("selectedFromDate", fromDateStr);
             request.setAttribute("selectedDueDate", dueDateStr);
+            request.setAttribute("rowsPerPage", rowsPerPage);
             session.setAttribute("ListInvoices", list);
             request.getRequestDispatcher("InvoiceManager.jsp").forward(request, response);
 

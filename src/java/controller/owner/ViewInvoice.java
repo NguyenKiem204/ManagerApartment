@@ -68,15 +68,30 @@ public class ViewInvoice extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Resident rs = (Resident) session.getAttribute("resident");
+        Resident resident = (Resident) session.getAttribute("resident");
+
+        // Kiểm tra nếu không có cư dân đăng nhập
+        if (resident == null) {
+            request.setAttribute("errorCode", "403");
+            request.setAttribute("errorMessage", "You need to log in to access this page!");
+            request.getRequestDispatcher("error-authorization.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra nếu cư dân không có quyền xem hóa đơn (ví dụ: role không phải là cư dân)
+        if (resident.getRole().getRoleID() != 7) { // Giả sử roleID của cư dân là 7
+            request.setAttribute("errorCode", "403");
+            request.setAttribute("errorMessage", "You do not have permission to access this page!");
+            request.getRequestDispatcher("error-authorization.jsp").forward(request, response);
+            return;
+        }
+
         InvoiceDAO iDAO = new InvoiceDAO();
         String fromDateStr = request.getParameter("FromDate");
         String dueDateStr = request.getParameter("dueDate");
         String search = request.getParameter("search");
+
         try {
-            InvoiceDAO Idao = new InvoiceDAO();
-            ApartmentDAO adao = new ApartmentDAO();
-             // Kiểm tra định dạng ngày tháng (dd/MM/yyyy)
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate fromDate = null;
             LocalDate dueDate = null;
@@ -86,7 +101,7 @@ public class ViewInvoice extends HttpServlet {
                     fromDate = LocalDate.parse(fromDateStr, formatter);
                 } catch (DateTimeParseException e) {
                     request.setAttribute("message", "Invalid From Date format. Please use dd/MM/yyyy.");
-                    request.getRequestDispatcher("InvoiceManager.jsp").forward(request, response);
+                    request.getRequestDispatcher("ViewInvoice.jsp").forward(request, response);
                     return;
                 }
             }
@@ -96,18 +111,23 @@ public class ViewInvoice extends HttpServlet {
                     dueDate = LocalDate.parse(dueDateStr, formatter);
                 } catch (DateTimeParseException e) {
                     request.setAttribute("message", "Invalid Due Date format. Please use dd/MM/yyyy.");
-                    request.getRequestDispatcher("InvoiceManager.jsp").forward(request, response);
+                    request.getRequestDispatcher("ViewInvoice.jsp").forward(request, response);
                     return;
                 }
             }
 
-            List<Invoices> list1 = iDAO.getInvoicesByres(rs.getResidentId(), fromDate, dueDate,false);
-            List<Invoices> list= new ArrayList<>();
-            for(Invoices i: list1){
-                if(i.getStatus().equals("Unpaid")){
+            // Lấy danh sách hóa đơn của cư dân đang đăng nhập
+            List<Invoices> list1 = iDAO.getInvoicesByres(resident.getResidentId(), fromDate, dueDate, false);
+            List<Invoices> list = new ArrayList<>();
+
+            // Chỉ lấy các hóa đơn chưa thanh toán
+            for (Invoices i : list1) {
+                if (i.getStatus().equals("Unpaid")) {
                     list.add(i);
                 }
             }
+
+            // Xử lý tìm kiếm
             if (search != null && !search.isEmpty()) {
                 search = search.trim().replaceAll("\\s+", " ");
                 List<Invoices> searchResults = new ArrayList<>();
@@ -118,6 +138,8 @@ public class ViewInvoice extends HttpServlet {
                 }
                 list = searchResults;
             }
+
+            // Phân trang
             String page = request.getParameter("page");
             if (page == null) {
                 page = "1";
@@ -132,6 +154,8 @@ public class ViewInvoice extends HttpServlet {
             } else {
                 request.setAttribute("message", "No result");
             }
+
+            // Đặt các thuộc tính vào request để hiển thị trên JSP
             request.setAttribute("search", search);
             request.setAttribute("selectedFromDate", fromDateStr);
             request.setAttribute("selectedDueDate", dueDateStr);

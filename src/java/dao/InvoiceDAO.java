@@ -372,7 +372,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
             parameters.add(java.sql.Date.valueOf(dueDate));
         }
 
-        sql += " ORDER BY inv.InvoiceID";
+        sql += " ORDER BY inv.InvoiceID Desc";
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             for (int i = 0; i < parameters.size(); i++) {

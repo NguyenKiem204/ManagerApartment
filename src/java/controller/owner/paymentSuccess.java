@@ -91,16 +91,13 @@ public class paymentSuccess extends HttpServlet {
                     throw new SQLException("Không tìm thấy FundID tương ứng với TypeFundID: " + detail.getTypeFundID());
                 }
 
-                // Cộng dồn số tiền vào quỹ tương ứng
                 fundUpdates.put(fundID, fundUpdates.getOrDefault(fundID, 0.0) + amount);
             }
 
-            // Cập nhật số dư quỹ bằng updateFundBalance
             for (Map.Entry<Integer, Double> entry : fundUpdates.entrySet()) {
                 int fundID = entry.getKey();
                 double totalAmount = entry.getValue();
 
-                // Gọi updateFundBalance nhưng KHÔNG gọi insertTransaction nữa
                 boolean fundUpdated = fundDAO.updateFundBalance(fundID, totalAmount, "Income");
                 if (!fundUpdated) {
                     throw new SQLException("Không thể cập nhật số dư quỹ cho FundID: " + fundID);
@@ -109,9 +106,8 @@ public class paymentSuccess extends HttpServlet {
                 System.out.println("Updated FundID: " + fundID + " with amount: " + totalAmount);
             }
 
-            EmailUtil.sendEmailSuccessPayment("cuongnmhe182472@fpt.edu.vn", invoice);
+            EmailUtil.sendEmailSuccessPayment(invoice.getResident().getEmail(), invoice);
             request.getRequestDispatcher("PaymentSuccess.jsp").forward(request, response);
-
         } catch (NumberFormatException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Invalid invoice ID: " + e.getMessage());

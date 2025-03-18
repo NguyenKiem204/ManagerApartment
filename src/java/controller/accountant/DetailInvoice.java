@@ -12,11 +12,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import model.Invoices;
+import model.Resident;
+import model.Staff;
 import model.TypeBill;
 
 /**
@@ -64,17 +67,57 @@ public class DetailInvoice extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Resident resident = (Resident) session.getAttribute("resident");
+        Staff staff = (Staff) session.getAttribute("staff");
+
         String idinv = request.getParameter("invoiceID");
+        if (idinv == null || idinv.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu invoiceID");
+            return;
+        }
+
         try {
             int id = Integer.parseInt(idinv);
             InvoiceDAO idao = new InvoiceDAO();
             Invoices inv = idao.selectById(id);
+
+            // Kiểm tra nếu hóa đơn không tồn tại
+            if (inv == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy hóa đơn");
+                return;
+            }
+
+            // Phân quyền:
+            // 1. Nếu là staff → Cho phép xem tất cả hóa đơn
+            // 2. Nếu là resident → Chỉ được xem hóa đơn của chính mình
+            if (staff != null) {
+                // Staff có thể xem tất cả hóa đơn
+            } else if (resident != null) {
+                // Resident chỉ được xem hóa đơn của chính mình
+                if (inv.getResident().getResidentId() != resident.getResidentId()) {
+                    request.setAttribute("errorCode", "403");
+                    request.setAttribute("errorMessage", "Bạn không có quyền xem hóa đơn này!");
+                    request.getRequestDispatcher("/error-authorization.jsp").forward(request, response);
+                    return;
+                }
+            } else {
+                // Nếu không phải staff hoặc resident → Chuyển hướng đến trang đăng nhập
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
+
+            // Lấy danh sách loại hóa đơn
             List<TypeBill> lt = idao.getAllTypeBills();
 
+            // Đặt thông tin vào request để hiển thị trên JSP
             request.setAttribute("invoice", inv);
+            request.setAttribute("typeBills", lt);
             request.getRequestDispatcher("DetailInvoice.jsp").forward(request, response);
+
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi xử lý dữ liệu");
         }
     }
 
