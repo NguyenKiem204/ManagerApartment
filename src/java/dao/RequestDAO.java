@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import model.Request;
@@ -885,5 +886,20 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         }
         return false;
     }
+    public static Map<Integer, Integer> getRequestCountsByMonth() {
+        Map<Integer, Integer> requestCounts = new HashMap<>();
+        String sql = "SELECT MONTH([Date]) AS Month, COUNT(*) AS Total FROM Request GROUP BY MONTH([Date])";
 
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                requestCounts.put(rs.getInt("Month"), rs.getInt("Total"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return requestCounts;
+    }
 }

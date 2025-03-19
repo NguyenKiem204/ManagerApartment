@@ -35,7 +35,9 @@
                 overflow: hidden;
                 width: 100%;
             }
-
+            .ct{
+                margin-left: 350px;
+            }
             table {
                 border-collapse: collapse;
                 width: 100%;
@@ -307,8 +309,7 @@
         <%@include file="/manager/menumanager.jsp" %>
         <!--=============================CONTENT HERE=======================-->
         <div class="w-90" style="display: flex;">
-            <div class="col-3"></div>
-            <div  class="col-9">
+            <div  class="col-9 ct">
                 <h1>Tenant and Contract</h1>
                 <%-- Hiển thị thông báo nếu có --%>
                 <c:if test="${not empty mess}">
