@@ -162,12 +162,12 @@
                     </div>
                 </section>
                 <div class="card-body">
-                    <div class="container my-5">
+                    <div class="container my-5" style="background: #fff;">
                         <div class="row">
                             <c:forEach var="news" items="${newsList}">
                                 <div class="col-md-4 news-card">
                                     <div class="card news-item">
-                                        <img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="card-img-top img-fluid" alt="News Image">
+                                        <img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="card-img-top img-fluid" style="height: 300px" alt="News Image">
                                         <div class="card-body">
                                             <h5 class="card-title truncated-text" style="height: 65px"><c:out value="${news.title}"></c:out></h5>
                                             <p class="text-muted">Create date: <c:out value="${news.formattedDate}"></c:out></p>

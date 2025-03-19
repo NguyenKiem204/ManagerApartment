@@ -68,7 +68,7 @@ public class HomeTenantServlet extends HttpServlet {
 //        Resident resident = HttpSession.
         NewsDAO newsDAO = new NewsDAO();
         RequestDAO requestDAO = new RequestDAO();
-        List<News> newsList = newsDAO.selectAll(1, 5);
+        List<News> newsList = newsDAO.selectAll(1, 3);
         List<Request> listRequest = requestDAO.selectFirstPageOfResident(ownerId);
 
         request.setAttribute("listrequest", listRequest);
