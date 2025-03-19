@@ -3,20 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/E:/ManagerApartment/src/java/controller/technical/HomeTechnicalServlet.java</file>
-            <file>file:/E:/ManagerApartment/src/java/dao/FeedbackDAO.java</file>
-            <file>file:/E:/ManagerApartment/src/java/dao/RequestDAO.java</file>
-            <file>file:/E:/ManagerApartment/src/java/controller/FeedbackChartServlet.java</file>
-            <file>file:/E:/ManagerApartment/web/service/home.jsp</file>
-            <file>file:/E:/ManagerApartment/src/java/controller/RequestChartServlet.java</file>
-            <file>file:/E:/ManagerApartment/web/technical/home.jsp</file>
-=======
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/owner/home.jsp</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/dao/RequestDAO.java</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/src/java/controller/owner/HomeOwnerServlet.java</file>
-            <file>file:/D:/Nguyen_Dang_Nguyen/Term5_SPRING2025/SWP391/MergeCode/ManagerApartment/web/news.jsp</file>
->>>>>>> 293e956a6c51e04df39eec33d2d55b1681aa19fc
+            <file>file:/E:/ManagerApartment/src/java/controller/manager/ManageStaffServlet.java</file>
         </group>
     </open-files>
 </project-private>

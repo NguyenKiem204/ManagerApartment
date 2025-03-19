@@ -88,9 +88,9 @@ public class ManageApartmentServlet extends HttpServlet {
             String apartmentName = request.getParameter("apartmentName");
 
             // Kiểm tra apartmentName không được null hoặc rỗng
-            if (apartmentName == null || apartmentName.trim().isEmpty()) {
+            if (apartmentName == null || apartmentName.trim().isEmpty() || !apartmentName.matches("^[A-Za-zÀ-ỹ0-9\\s]+$")) {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "Apartment name cannot be empty!");
+                jsonResponse.put("message", "Apartment name cannot be empty or contains special characters!");
                 out.write(jsonResponse.toString());
                 return;
             }
