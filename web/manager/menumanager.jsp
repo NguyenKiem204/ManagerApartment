@@ -468,12 +468,17 @@
                                             </li>
                                             <li class="submenu-item">
                                                 <a href="<%= request.getContextPath() %>/owner/feedback"
-                                                   >Feedback</a
+                                                   >Send Feedback</a
                                                 >
                                             </li>
                                             <li class="submenu-item">
                                                 <a href="<%= request.getContextPath() %>/owner/request"
-                                                   >Request</a
+                                                   >Send Request</a
+                                                >
+                                            </li>
+                                            <li class="submenu-item">
+                                                <a href="<%= request.getContextPath() %>/owner/listrequest"
+                                                   >List Requests</a
                                                 >
                                             </li>
                                         </c:if>

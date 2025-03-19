@@ -51,13 +51,18 @@ public class Test {
         InvoiceDAO invoiceDAO = new InvoiceDAO();
         CommentDAO commentDAO = new CommentDAO();
         
+//        List<ManagerFeedback> list = managerFeedbackDAO.selectFirstPage(roleId);
+//        for (ManagerFeedback managerFeedback : list) {
+//            System.out.println(managerFeedback.toString());
+//        }
+        
 //        Map<String, Integer> requestCounts = requestDAO.getRequestCountLast7Days();
 //
 //for (Map.Entry<String, Integer> entry : requestCounts.entrySet()) {
 //    System.out.println(entry.getKey() + " : " + entry.getValue());
 
-        ApartmentAssetsDAO apartmentAssetsDAO = new ApartmentAssetsDAO();
-        AssetCategoryDAO assetCategoryDAO = new AssetCategoryDAO();
+//        ApartmentAssetsDAO apartmentAssetsDAO = new ApartmentAssetsDAO();
+//        AssetCategoryDAO assetCategoryDAO = new AssetCategoryDAO();
 
 //        List<ApartmentAssets> list = apartmentAssetsDAO.selectFirstPage();
 //        for (ApartmentAssets apartmentAssets : list) {
