@@ -40,6 +40,7 @@ import dao.NotificationDAO;
 import dao.ResidentDAO;
 import model.Notification;
 import model.Staff;
+import validation.Validate;
 
 @WebServlet(name = "GenerateUtilityBillsServlet", urlPatterns = {"/accountant/generate-utility-bills"})
 public class GenerateUtilityBillsServlet extends HttpServlet {
@@ -63,14 +64,25 @@ public class GenerateUtilityBillsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String previousURL = request.getHeader("Referer");
+        if (previousURL != null) {
+            request.setAttribute("previousPage", previousURL);
+        }
         try {
             int month = Integer.parseInt(request.getParameter("month"));
             int year = Integer.parseInt(request.getParameter("year"));
             String paymentDueDateStr = request.getParameter("paymentDueDate");
+            String errorDate = Validate.validateDateFuture(paymentDueDateStr);
+            if (errorDate != null) {
+                response.sendRedirect(previousURL + "?error="
+                        + java.net.URLEncoder.encode(errorDate, "UTF-8"));
+                return;
+            }
             String billScope = request.getParameter("billScope");
             String selectedApartmentId = request.getParameter("apartment");
             Staff staff = (Staff) request.getSession().getAttribute("staff");
-            LocalDate paymentDueDate = LocalDate.parse(paymentDueDateStr);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+            LocalDate paymentDueDate = LocalDate.parse(paymentDueDateStr, formatter);
             LocalDateTime dueDateTime = paymentDueDate.atTime(23, 59, 59);
 
             List<MeterReading> readings;

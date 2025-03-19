@@ -326,47 +326,7 @@ public class ManagerMeterReadingServlet extends HttpServlet {
         return stats;
     }
     
-    /**
-     * Convert meter readings to utility bills
-     */
-    private List<UtilityBill> convertToUtilityBills(List<MeterReading> readings) {
-        Map<Integer, UtilityBill> billMap = new HashMap<>();
-
-        for (MeterReading reading : readings) {
-            int apartmentId = reading.getApartmentId();
-
-            UtilityBill bill = billMap.get(apartmentId);
-            if (bill == null) {
-                bill = new UtilityBill();
-                bill.setApartmentId(apartmentId);
-                bill.setApartmentName(reading.getApartmentName());
-                bill.setOwnerName(reading.getOwnerName());
-                bill.setElectricityConsumption(BigDecimal.ZERO);
-                bill.setWaterConsumption(BigDecimal.ZERO);
-                bill.setElectricityCost(BigDecimal.ZERO);
-                bill.setWaterCost(BigDecimal.ZERO);
-                bill.setTotalAmount(BigDecimal.ZERO);
-                billMap.put(apartmentId, bill);
-            }
-
-            if ("Electricity".equals(reading.getMeterType())) {
-                bill.setElectricityConsumption(reading.getConsumption());
-                BigDecimal cost = reading.getConsumption().multiply(new BigDecimal("3500"));
-                bill.setElectricityCost(cost);
-            } else if ("Water".equals(reading.getMeterType())) {
-                bill.setWaterConsumption(reading.getConsumption());
-                BigDecimal cost = reading.getConsumption().multiply(new BigDecimal("15000"));
-                bill.setWaterCost(cost);
-            }
-            bill.setTotalAmount(bill.getElectricityCost().add(bill.getWaterCost()));
-        }
-
-        return new ArrayList<>(billMap.values());
-    }
     
-    /**
-     * Get user ID from session
-     */
     private Integer getUserIdFromSession(HttpServletRequest request) {
         // In a real application, this would come from the user's session
         // For now, using a default value

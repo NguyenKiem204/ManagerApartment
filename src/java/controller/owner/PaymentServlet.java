@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ import model.TypeBill;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import model.Resident;
 
 /**
  *
@@ -58,7 +60,17 @@ public class PaymentServlet extends HttpServlet {
         }
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Resident resident = (Resident) session.getAttribute("resident");
+
+        // Kiểm tra nếu không có cư dân đăng nhập
+        if (resident == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
         String invoiceID = request.getParameter("invoiceID");
         if (invoiceID == null || invoiceID.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu invoiceID");
@@ -75,9 +87,16 @@ public class PaymentServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy thông tin giao dịch
+            // Kiểm tra quyền truy cập: Chỉ cư dân sở hữu hóa đơn mới được thanh toán
+            if (invoice.getResident().getResidentId() != resident.getResidentId()) {
+                request.setAttribute("errorCode", "403");
+                request.setAttribute("errorMessage", "Bạn không có quyền thanh toán hóa đơn này!");
+                request.getRequestDispatcher("error-authorization.jsp").forward(request, response);
+                return;
+            }
+
             double totalAmount = invoice.getTotalAmount() + invoice.getMuon();
-            String transactionId = RandomStringGenerator.generateRandomString(); // Sử dụng chuỗi ngẫu nhiên 32 ký tự
+            String transactionId = RandomStringGenerator.generateRandomString(); 
             String encodedTransactionId = URLEncoder.encode(transactionId, StandardCharsets.UTF_8.toString());
 
             // URL thanh toán SePay (transactionId là mô tả giao dịch)
@@ -87,8 +106,9 @@ public class PaymentServlet extends HttpServlet {
             );
 
             // Lưu transaction vào database
-            transactionDAO.createTransaction(invoiceID, transactionId, totalAmount,"Card");
+            transactionDAO.createTransaction(invoiceID, transactionId, totalAmount, "Card");
             transactionDAO.deleteExpiredTransactions();
+
             // Chuyển hướng đến trang thanh toán
             request.setAttribute("paymentUrl", paymentUrl);
             request.setAttribute("transactionId", encodedTransactionId);

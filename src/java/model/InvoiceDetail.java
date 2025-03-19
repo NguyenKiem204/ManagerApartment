@@ -14,6 +14,7 @@ public class InvoiceDetail {
     private String description;
     private int TypeBillId;
     private String billType;
+    private int typeFundID;
 
     public InvoiceDetail(double amount, String description, int TypeBillId) {
         this.amount = amount;
@@ -41,6 +42,23 @@ public class InvoiceDetail {
         this.amount = amount;
         this.description = description;
         this.TypeBillId = TypeBillId;
+    }
+
+    public InvoiceDetail(int detailID, double amount, String description, int TypeBillId, String billType, int typeFundID) {
+        this.detailID = detailID;
+        this.amount = amount;
+        this.description = description;
+        this.TypeBillId = TypeBillId;
+        this.billType = billType;
+        this.typeFundID = typeFundID;
+    }
+
+    public int getTypeFundID() {
+        return typeFundID;
+    }
+
+    public void setTypeFundID(int typeFundID) {
+        this.typeFundID = typeFundID;
     }
 
     public int getDetailID() {

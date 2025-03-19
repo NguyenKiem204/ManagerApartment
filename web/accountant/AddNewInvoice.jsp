@@ -110,7 +110,6 @@
                             <label for="description">Description</label>
                             <input type="text" class="form-control" id="description" name="description" required>
                         </div>
-                        <!-- Hiển thị lỗi chung -->
 
 
                         <div class="form-group mb-3">

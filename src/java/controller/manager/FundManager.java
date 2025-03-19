@@ -3,11 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller;
+package controller.manager;
 
-import com.oracle.wls.shaded.org.apache.xalan.xsltc.compiler.util.Util;
-import dao.UtilityBillDAO;
-import dao.UtilityRateDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,19 +12,38 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import model.UtilityBill;
-import model.UtilityRate;
 
 /**
  *
- * @author nkiem
+ * @author nguye
  */
-@WebServlet(name="UtilityBillDetailServlet", urlPatterns={"/utility-detail"})
-public class UtilityBillDetailServlet extends HttpServlet {
-  
+@WebServlet(name="FundManager", urlPatterns={"/FundManager"})
+public class FundManager extends HttpServlet {
    
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet FundManager</title>");  
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet FundManager at " + request.getContextPath () + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    } 
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
      * Handles the HTTP <code>GET</code> method.
@@ -39,22 +55,7 @@ public class UtilityBillDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        UtilityBillDAO utilityBillDAO = new UtilityBillDAO();
-        UtilityRateDAO utilityRateDAO = new UtilityRateDAO();
-        UtilityRate electricity = utilityRateDAO.getCurrentUtilityRate("Electricity", LocalDateTime.now());
-        UtilityRate water = utilityRateDAO.getCurrentUtilityRate("Water", LocalDateTime.now());
-        
-        String utilityIdParam = request.getParameter("utilityId");
-        Integer uilityId = null;
-        if(utilityIdParam!=null){
-            uilityId = Integer.parseInt(utilityIdParam);
-            UtilityBill utilityBill = utilityBillDAO.getBillDetails(uilityId);
-            request.setAttribute("utilityBill", utilityBill);
-        }
-        System.out.println(water);
-        request.setAttribute("electricity", electricity);
-        request.setAttribute("water", water);
-       request.getRequestDispatcher("utilitybill-detail.jsp").forward(request, response);
+        processRequest(request, response);
     } 
 
     /** 
@@ -67,7 +68,7 @@ public class UtilityBillDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-       
+        processRequest(request, response);
     }
 
     /** 

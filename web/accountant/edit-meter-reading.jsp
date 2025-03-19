@@ -93,28 +93,18 @@
                             <div class="card-body">
                                 <form method="post" action="edit-meter-reading" id="editMeterReadingForm">
                                     <!-- Hidden fields -->
-                                    <c:if test="${isEdit}">
-                                        <input type="hidden" name="readingId" value="${reading.readingId}">
-                                    </c:if>
+                                    <input type="hidden" name="readingId" value="${reading.readingId}">
 
                                     <div class="row g-3">
                                         <!-- Meter selection -->
                                         <div class="col-md-6">
                                             <label for="meterId" class="form-label required-field">Meter</label>
-                                            <select class="form-select" id="meterId" name="meterId" required ${isEdit ? 'disabled' : ''}>
-                                                <option value="">-- Select Meter --</option>
-                                                <c:forEach var="meter" items="${meters}">
-                                                    <option value="${meter.meterId}" 
-                                                            data-meter-type="${meter.meterType}"
-                                                            data-apartment-name="${meter.apartmentName}"
-                                                            data-meter-number="${meter.meterNumber}"
-                                                            data-previous-reading="${meter.lastReading}"
-                                                            ${reading.meterId == meter.meterId ? 'selected' : ''}>
-                                                        ${meter.meterNumber} - ${meter.meterType} - ${meter.apartmentName}
-                                                    </option>
-                                                </c:forEach>
+                                            <select class="form-select" id="meterId" disabled>
+                                                <option value="${reading.meterId}" selected>
+                                                    ${meterNumber} - ${meterType} - ${apartmentName}
+                                                </option>
                                             </select>
-                                            <input type="hidden" name="meterId" value="${reading.meterId}" ${!isEdit ? 'disabled' : ''}>
+                                            <input type="hidden" name="meterId" value="${reading.meterId}">
                                             <input type="hidden" name="previousPage" value="${previousPage}">
                                         </div>
 
@@ -124,7 +114,7 @@
                                             <select class="form-select" id="readingMonth" name="readingMonth" required>
                                                 <c:forEach var="month" begin="1" end="12">
                                                     <option value="${month}" ${reading.readingMonth == month ? 'selected' : ''}>
-                                                        Tháng ${month}
+                                                        ${month}
                                                     </option>
                                                 </c:forEach>
                                             </select>
@@ -146,7 +136,7 @@
                                         <div class="col-md-6">
                                             <label for="readingDate" class="form-label required-field">Meter Reading Date</label>
                                             <input type="datetime" class="form-control" id="readingDate" name="readingDate" 
-                                                   value="${isEdit ? reading.formattedDate : currentDateTime}" required>
+                                                   value="${isEdit ? reading.formattedDate : currentDateTime}" disabled required>
                                         </div>
 
                                         <!-- Meter Info Display -->
@@ -177,7 +167,7 @@
                                         <div class="col-md-4">
                                             <label for="currentReading" class="form-label required-field">Current reading</label>
                                             <input type="number" step="0.01" class="form-control" id="currentReading" name="currentReading"
-                                                   value="${isEdit ? reading.currentReading : ''}" required>
+                                                   value="${isEdit ? reading.currentReading : ''}" >
                                         </div>
 
                                         <!-- Consumption (calculated) -->

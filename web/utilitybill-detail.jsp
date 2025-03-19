@@ -461,7 +461,7 @@
                     </div>
                     <div class="cost-breakdown">
                         <div class="cost-label">Rate</div>
-                        <div class="cost-value">$0.15/kWh</div>
+                        <div class="cost-value">${electricity.formattedUnitPrice}/kWh</div>
                     </div>
                     <div class="cost-breakdown">
                         <div class="cost-label">Total Electricity Cost</div>
@@ -475,7 +475,7 @@
                     </div>
                     <div class="cost-breakdown">
                         <div class="cost-label">Rate</div>
-                        <div class="cost-value">$2.50/m³</div>
+                        <div class="cost-value">${water.formattedUnitPrice}/m³</div>
                     </div>
                     <div class="cost-breakdown">
                         <div class="cost-label">Total Water Cost</div>
@@ -499,9 +499,12 @@
                     </div>
 
                     <div class="payment-actions">
-                        <button class="btn-action btn-primary">
+                        <button class="btn-action btn-primary" 
+                                data-id="${utilityBill.invoiceId}" 
+                                onclick="location.href = '<%= request.getContextPath() %>/owner/PaymentServlet?invoiceID=${utilityBill.invoiceId}'">
                             <i class="fas fa-credit-card"></i> Pay Now
                         </button>
+
                         <button class="btn-action btn-outline">
                             <i class="fas fa-history"></i> Payment History
                         </button>

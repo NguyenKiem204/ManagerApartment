@@ -220,20 +220,23 @@
                                     <table class="table table-bordered mt-2">
                                         <thead>
                                             <tr>
+                                                <th>Description</th>
                                                 <th>Type</th>
                                                 <th>Amount</th>
                                                 <th>Status</th>
-                                                <th>Description</th>
+
+
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <c:forEach items="${expense.expenseDetails}" var="detail">
                                                 <tr>
-                                                    <td>${detail.typeExpense.typeName}</td>
-
-                                                    <td><fmt:formatNumber value="${detail.amount}" pattern="#0.00"/></td>
-                                                    <td>${detail.status}</td>
                                                     <td>${detail.description}</td>
+                                                    <td>${detail.typeExpense.typeName}</td>
+                                                    <td><fmt:formatNumber value="${detail.amount}" pattern="#0.00"/></td>
+
+                                                    <td>${detail.status}</td>
+
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
