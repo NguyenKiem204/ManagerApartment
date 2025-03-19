@@ -12,11 +12,19 @@ public class TypeBill {
 
     private int id;
     private String name;
+    private int typeFundID;
 
     public TypeBill(int id, String name) {
         this.id = id;
         this.name = name;
     }
+
+    public TypeBill(int id, String name, int typeFundID) {
+        this.id = id;
+        this.name = name;
+        this.typeFundID = typeFundID;
+    }
+    
 
     public int getId() {
         return id;

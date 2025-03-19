@@ -4,11 +4,12 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.UtilityRate;
 
 public class UtilityRateDAO {
 
-    // Thêm biểu giá mới
     public int addUtilityRate(UtilityRate rate) throws SQLException {
         String sql = "INSERT INTO UtilityRate (UtilityType, RateDescription, UnitPrice, "
                 + "EffectiveFrom, EffectiveTo, Status) "
@@ -37,8 +38,6 @@ public class UtilityRateDAO {
         }
         return 0;
     }
-
-    // Cập nhật biểu giá
     public boolean updateUtilityRate(UtilityRate rate) throws SQLException {
         String sql = "UPDATE UtilityRate SET UtilityType = ?, RateDescription = ?, UnitPrice = ?, "
                 + "EffectiveFrom = ?, EffectiveTo = ?, Status = ? "
@@ -62,7 +61,6 @@ public class UtilityRateDAO {
         }
     }
 
-    // Xóa biểu giá
     public boolean deleteUtilityRate(int rateId) throws SQLException {
         String sql = "UPDATE UtilityRate SET Status = 'Inactive' WHERE RateID = ?";
 
@@ -72,7 +70,6 @@ public class UtilityRateDAO {
         }
     }
 
-    // Lấy biểu giá theo ID
     public UtilityRate getUtilityRateById(int rateId) throws SQLException {
         String sql = "SELECT * FROM UtilityRate WHERE RateID = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -86,8 +83,7 @@ public class UtilityRateDAO {
         return null;
     }
 
-    // Lấy biểu giá hiện hành theo loại tiện ích
-    public UtilityRate getCurrentUtilityRate(String utilityType, LocalDateTime dateTime) throws SQLException {
+    public UtilityRate getCurrentUtilityRate(String utilityType, LocalDateTime dateTime) {
         String sql = "SELECT TOP 1 * FROM UtilityRate "
                 + "WHERE UtilityType = ? AND Status = 'Active' "
                 + "AND EffectiveFrom <= ? AND (EffectiveTo IS NULL OR EffectiveTo >= ?) "
@@ -103,11 +99,12 @@ public class UtilityRateDAO {
                     return mapUtilityRate(rs);
                 }
             }
+        }catch(SQLException ex){
+            Logger.getLogger(UtilityRateDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
 
-    // Lấy tất cả biểu giá
     public List<UtilityRate> getAllUtilityRates() throws SQLException {
         String sql = "SELECT * FROM UtilityRate ORDER BY UtilityType, EffectiveFrom DESC";
         List<UtilityRate> rates = new ArrayList<>();
@@ -120,7 +117,6 @@ public class UtilityRateDAO {
         return rates;
     }
 
-    // Lấy biểu giá theo loại tiện ích
     public List<UtilityRate> getUtilityRatesByType(String utilityType) throws SQLException {
         String sql = "SELECT * FROM UtilityRate WHERE UtilityType = ? ORDER BY EffectiveFrom DESC";
         List<UtilityRate> rates = new ArrayList<>();

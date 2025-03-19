@@ -141,30 +141,28 @@
                             <div class="col-12 col-xl-8">
                                 <div class="card border-cam">
                                     <div class="card-header">
-                                        <h4>Latest Comments</h4>
+                                        <h4>Latest Feedback</h4>
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table class="table table-hover table-lg">
                                                 <thead>
                                                     <tr>
-                                                        <th>Name</th>
-                                                        <th>Comment</th>
+                                                        <th>Title</th>
+                                                        <th>Description</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <c:forEach var="comment" items="${requestScope.comments}">
-                                                        <tr class="comment-cursor" newsId='${comment.newsId}' commentId='${comment.commentId}'>
+                                                    <c:forEach var="feedback" items="${requestScope.latestFeedback}">
+                                                        <tr class="feedback-cursor">
                                                             <td class="col-3">
                                                                 <div class="d-flex align-items-center">
-                                                                    <div class="avatar avatar-md">
-                                                                        <img src="<%= request.getContextPath() %>/${comment.userAvatar}">
-                                                                    </div>
-                                                                    <p class="font-bold ms-3 mb-0">${comment.lastName}</p>
+                                                                    ${feedback.title}
                                                                 </div>
                                                             </td>
                                                             <td class="col-auto">
-                                                                <p class=" mb-0"><c:out value="${comment.content}"/>
+                                                                <p class=" mb-0">
+                                                                    ${feedback.description}
                                                                 </p>
                                                             </td>
                                                         </tr>
@@ -178,24 +176,11 @@
                         </div>
                     </div>
                     <style>
-                        .comment-cursor{
+                        .feedback-cursor{
                             cursor: pointer;
                         }
 
                     </style>
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            var commentElements = document.querySelectorAll(".comment-cursor");
-
-                            commentElements.forEach(function (commentElement) {
-                                commentElement.addEventListener("click", function () {
-                                    var newsId = this.getAttribute("newsId");
-                                    var commentId = this.getAttribute("commentId");
-                                    window.location.href = "<%= request.getContextPath() %>/news-detail?newsId=" + newsId + "&commentId=" + commentId;
-                                });
-                            });
-                        });
-                    </script>
 
                     <div class="col-12 col-lg-3">
                         <div class="card">
@@ -216,22 +201,22 @@
                                     <h4>Recent News</h4>
                                 </div>
                                 <div class="card-content pb-4">
-                                <c:forEach var="user" items="${list}">
+                                <c:forEach var="news" items="${requestScope.latestNews}">
                                     <div class="recent-message d-flex px-4 py-3">
                                         <div class="avatar avatar-lg">
-                                            <img src="<%= request.getContextPath() %>/${user.image.imageURL}">
+                                            <img src="${news.image.imageURL ne null ? news.image.imageURL : 'https://via.placeholder.com/50'}" alt="News Image">
                                         </div>
-                                        <div class="name ms-4">
-                                            <h5 class="mb-1 text-truncation"><c:out value="${user.title}"></c:out></h5>
-                                            <h6 class="text-muted mb-0 text-truncation"> <c:out value="${user.description}"></c:out></h6>
-                                            </div>
-                                        </div>
-                                </c:forEach>
+                                        <div class="name ms-4"> 
+                                            <a href="<%= request.getContextPath() %>/news-detail?newsId=${news.newsID}"><h5 class="mb-1 text-truncation">${news.title}</h5></a>
 
+                                            <h6 class="text-muted mb-0 text-truncation">By ${news.staff.fullName} - ${news.formattedDate}</h6>
+                                        </div>
+                                    </div>
+                                </c:forEach>
                                 <div class="px-4">
                                     <button onclick="window.location.href = '<%= request.getContextPath() %>/news'" 
                                             class='btn btn-block btn-xl btn-light-primary font-bold mt-3'>
-                                        Read News
+                                        Read More News
                                     </button>
                                 </div>
                             </div>

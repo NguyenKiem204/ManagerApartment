@@ -6,6 +6,7 @@ package controller.administrative;
 
 import dao.ApartmentDAO;
 import dao.CommentDAO;
+import dao.FeedbackDAO;
 import dao.InvoiceDAO;
 import dao.MessageDAO;
 import dao.NewsDAO;
@@ -26,6 +27,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import model.Comment;
+import model.Feedback;
 import model.News;
 import model.Resident;
 import model.Staff;
@@ -94,29 +96,34 @@ public class HomeAdministrativeServlet extends HttpServlet {
         request.setAttribute("numberUnpaidInvoice", numberUnpaidInvoice);
         Staff staff = (Staff) request.getSession().getAttribute("staff");
         String currentUserEmail = staff.getEmail();
-//        StaffDAO staffDAO = new StaffDAO();
-//        MessageDAO messageDAO = new MessageDAO();
-//
-//        List<Staff> listStaff = staffDAO.selectAllSortedByLastMessage(currentUserEmail);
-//        List<Resident> listResident = residentDAO.selectAllSortedByLastMessage(currentUserEmail);
-//
-//        listStaff.removeIf(s -> s.getEmail().equals(currentUserEmail));
-//        listResident.removeIf(r -> r.getEmail().equals(currentUserEmail));
-//
-//        List<Object> combinedList = new ArrayList<>();
-//        combinedList.addAll(listStaff);
-//        combinedList.addAll(listResident);
-//
-//        Map<String, java.sql.Timestamp> lastMessageMap = messageDAO.getLastMessageTimestamps(currentUserEmail);
-//        combinedList.sort(Comparator.comparing(o -> {
-//            String email = (o instanceof Staff) ? ((Staff) o).getEmail() : ((Resident) o).getEmail();
-//            return lastMessageMap.getOrDefault(email, Timestamp.valueOf("1970-01-01 00:00:00"));
-//        }, Comparator.reverseOrder()));
-//        List<Object> list = combinedList.subList(0, 3);
-//        request.setAttribute("list", list);
+        StaffDAO staffDAO = new StaffDAO();
+        MessageDAO messageDAO = new MessageDAO();
+
+        List<Staff> listStaff = staffDAO.selectAllSortedByLastMessage(currentUserEmail);
+        List<Resident> listResident = residentDAO.selectAllSortedByLastMessage(currentUserEmail);
+
+        listStaff.removeIf(s -> s.getEmail().equals(currentUserEmail));
+        listResident.removeIf(r -> r.getEmail().equals(currentUserEmail));
+
+        List<Object> combinedList = new ArrayList<>();
+        combinedList.addAll(listStaff);
+        combinedList.addAll(listResident);
+
+        Map<String, java.sql.Timestamp> lastMessageMap = messageDAO.getLastMessageTimestamps(currentUserEmail);
+        combinedList.sort(Comparator.comparing(o -> {
+            String email = (o instanceof Staff) ? ((Staff) o).getEmail() : ((Resident) o).getEmail();
+            return lastMessageMap.getOrDefault(email, Timestamp.valueOf("1970-01-01 00:00:00"));
+        }, Comparator.reverseOrder()));
+        List<Object> list = combinedList.subList(0, 3);
+        request.setAttribute("list", list);
+
+        FeedbackDAO feedbackDAO = new FeedbackDAO();
+        List<Feedback> listFeedbacks = feedbackDAO.getLastestFeedback(2);
+        request.setAttribute("latestFeedback", listFeedbacks);  // Truyền dữ liệu tin tức v
+
         NewsDAO newsDAO = new NewsDAO();
-        News last = newsDAO.getLastNews(2);
-        request.setAttribute("latestNews", last);  // Truyền dữ liệu tin tức v
+        List<News> listNews = newsDAO.getLastestNews(2);
+        request.setAttribute("latestNews", listNews);  // Truyền dữ liệu tin tức v
         request.getRequestDispatcher("home.jsp").forward(request, response);
     }
 

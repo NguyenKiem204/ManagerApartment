@@ -148,7 +148,7 @@
                             <div class="col-12 col-xl-8">
                                 <div class="card border-cam">
                                     <div class="card-header">
-                                        <h4>Latest Comments</h4>
+                                        <h4>Latest Commentsss</h4>
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">

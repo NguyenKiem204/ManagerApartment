@@ -1,7 +1,7 @@
 <%-- Document : home1 Created on : Feb 11, 2025, 2:12:16 AM Author : nkiem --%>
 <%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem
---%> <%@page contentType="text/html" pageEncoding="UTF-8" %> <%@taglib
-    prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+--%> <%@page contentType="text/html" pageEncoding="UTF-8" %> 
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <!DOCTYPE html>
     <html>
         <head>
@@ -305,7 +305,7 @@
                                                 <a href="manageApartment">Apartment</a>
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="component-button.html">Utilities</a>
+                                                <a href="manageassets">Assets</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -408,13 +408,13 @@
                                         <c:if test="${sessionScope.staff.role.roleID == 2}">
                                             <li class="submenu-item">
                                                 <a
-                                                    href="<%= request.getContextPath() %>/administative/feedback"
+                                                    href="<%= request.getContextPath() %>/feedbackreview"
                                                     >Feedback</a
                                                 >
                                             </li>
                                             <li class="submenu-item">
                                                 <a
-                                                    href="<%= request.getContextPath() %>/administative/request"
+                                                    href="<%= request.getContextPath() %>/requeststaff"
                                                     >Request</a
                                                 >
                                             </li>
@@ -422,13 +422,13 @@
                                         <c:if test="${sessionScope.staff.role.roleID == 3}">
                                             <li class="submenu-item">
                                                 <a
-                                                    href="<%= request.getContextPath() %>/technical/feedback"
+                                                    href="<%= request.getContextPath() %>/feedbackreview"
                                                     >Feedback</a
                                                 >
                                             </li>
                                             <li class="submenu-item">
                                                 <a
-                                                    href="<%= request.getContextPath() %>/technical/request"
+                                                    href="<%= request.getContextPath() %>/requeststaff"
                                                     >Request</a
                                                 >
                                             </li>
@@ -436,25 +436,25 @@
                                         <c:if test="${sessionScope.staff.role.roleID == 4}">
                                             <li class="submenu-item">
                                                 <a
-                                                    href="<%= request.getContextPath() %>/technical/feedbackreview"
+                                                    href="<%= request.getContextPath() %>/feedbackreview"
                                                     >Feedback</a
                                                 >
                                             </li>
                                             <li class="submenu-item">
                                                 <a
-                                                    href="<%= request.getContextPath() %>/technical/request"
+                                                    href="<%= request.getContextPath() %>/requeststaff"
                                                     >Request</a
                                                 >
                                             </li>
                                         </c:if>
                                         <c:if test="${sessionScope.staff.role.roleID == 5}">
                                             <li class="submenu-item">
-                                                <a href="<%= request.getContextPath() %>/service/feedback"
+                                                <a href="<%= request.getContextPath() %>/feedbackreview"
                                                    >Feedback</a
                                                 >
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="<%= request.getContextPath() %>/service/request"
+                                                <a href="<%= request.getContextPath() %>/requeststaff"
                                                    >Request</a
                                                 >
                                             </li>
@@ -571,8 +571,7 @@
                                         <span>Service Fee Information</span>
                                     </a>
                                 </li>
-
-                               <li class="sidebar-item has-sub news-active">
+                                <li class="sidebar-item has-sub news-active">
                                     <a href="#" class="sidebar-link">
                                         <i class="fa-solid fa-envelope"></i>
                                         <span>Regulations</span>
@@ -591,7 +590,6 @@
                                         </li>
                                     </ul>
                                 </li>
-
                                 <!-- =================================Login, Logout..==================== -->
                                 <li class="sidebar-item has-sub">
                                     <a href="#" class="sidebar-link">
@@ -629,103 +627,115 @@
 
             <script>
                 $(document).ready(function () {
+                    let lastETag = "";
                     $("#notificationBell").click(function (event) {
                         event.stopPropagation();
                         $("#notificationList").toggle();
-                        $("#notificationCount").hide();
                     });
-
                     $(document).click(function (event) {
                         if (!$(event.target).closest("#notificationContainer").length) {
                             $("#notificationList").hide();
                         }
                     });
-
                     function checkNotifications() {
                         let roleId = "<c:out value='${sessionScope.roleId}' />";
-                        let residentId =
-                                "<c:out value='${sessionScope.resident.residentId}' />";
+                        let residentId = "<c:out value='${sessionScope.resident.residentId}' />";
                         let staffId = "<c:out value='${sessionScope.staff.staffId}' />";
                         $.ajax({
                             url: "<%= request.getContextPath() %>/GetNotifications",
                             type: "GET",
                             data: {roleId: roleId, residentId: residentId, staffId: staffId},
-                            success: function (response) {
-                                console.log("Dữ liệu từ server:", response);
-
-                                if (response.length > 0) {
-                                    $("#notificationBell").addClass("active");
-                                    $("#notificationList").html("");
-
-                                    response.forEach(function (notif) {
-                                        let liClass = notif.isRead ? "read" : "unread";
-                                        let dateObj = new Date(notif.createdAt);
-                                        let formattedDate =
-                                                dateObj.getDate().toString().padStart(2, "0") +
-                                                "/" +
-                                                (dateObj.getMonth() + 1).toString().padStart(2, "0");
-                                        // Xác định URL dựa trên referenceTable
-                                        let notificationUrl = getNotificationUrl(notif);
-
-                                        $("#notificationList").append(
-                                                `<li class="notification-item ` +
-                                                liClass +
-                                                `" data-id="` +
-                                                notif.notificationId +
-                                                `"><a href="` +
-                                                notificationUrl +
-                                                `">
-                    <div class="notification-message">` +
-                                                notif.message +
-                                                `</div>
-                    <div class="notification-date">` +
-                                                formattedDate +
-                                                `</div>
-                        </a></li>`
-                                                );
-                                    });
-
-                                    // Hiển thị số lượng thông báo chưa đọc
-                                    let unreadCount = response.filter((n) => !n.isRead).length;
-                                    if (unreadCount > 0) {
-                                        $("#notificationCount").text(unreadCount).show();
-                                    } else {
-                                        $("#notificationCount").hide();
-                                    }
-                                } else {
-                                    $("#notificationList").html(
-                                            "<li class='no-notifications'>There are no notifications yet.</li>"
-                                            );
-                                    $("#notificationCount").hide();
+                            headers: {
+                                "If-None-Match": lastETag // Gửi ETag hiện tại để kiểm tra có thay đổi không
+                            },
+                            success: function (response, textStatus, xhr) {
+                                let newETag = xhr.getResponseHeader("ETag");
+                                if (newETag && newETag !== lastETag) {
+                                    lastETag = newETag;
+                                    renderNotifications(response);
                                 }
                             },
+                            statusCode: {
+                                304: function () {
+                                    console.log("Không có thông báo mới.");
+                                }
+                            }
                         });
                     }
 
-                    // Hàm lấy URL tùy theo referenceTable
-                    function getNotificationUrl(notif) {
-                        let baseUrl = "<%= request.getContextPath() %>";
-                        switch (notif.referenceTable) {
-                            case "ManagerFeedback":
-                                return (
-                                        baseUrl +
-                                        `/feedbackreviewdetail?managerFeedbackId=` +
-                                        notif.referenceId
+                    function renderNotifications(response) {
+                        console.log("Dữ liệu từ server:", response);
+                        $("#notificationList").html("");
+                        let unreadCount = 0; // Đếm số thông báo chưa đọc
+
+                        if (response.length > 0) {
+                            $("#notificationBell").addClass("active");
+                            response.forEach(function (notif) {
+                                let liClass = notif.isRead ? "read" : "unread";
+                                if (!notif.isRead)
+                                    unreadCount++; // Đếm thông báo chưa đọc
+
+                                let dateObj = new Date(notif.createdAt);
+                                let formattedDate =
+                                        dateObj.getDate().toString().padStart(2, "0") +
+                                        "/" +
+                                        (dateObj.getMonth() + 1).toString().padStart(2, "0");
+                                let notificationUrl = getNotificationUrl(notif);
+                                $("#notificationList").append(
+                                        `<li class="notification-item ` +
+                                        liClass +
+                                        `" data-id="` +
+                                        notif.notificationId +
+                                        `"><a href="` +
+                                        notificationUrl +
+                                        `">
+            <div class="notification-message">` +
+                                        notif.message +
+                                        `</div>
+            <div class="notification-date">` +
+                                        formattedDate +
+                                        `</div>
+        </a></li>`
                                         );
-                            case "Request":
-                                return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
-                            case "UtilityBill":
-                                return baseUrl + `/utility-detail?utilityId=` + notif.referenceId;
-                            default:
-                                return "#"; // Nếu không xác định được loại, đặt về #
+                            });
+                            // Cập nhật số lượng thông báo chưa đọc
+                            if (unreadCount > 0) {
+                                $("#notificationCount").text(unreadCount).show();
+                            } else {
+                                $("#notificationCount").hide();
+
+                            }
+                        } else {
+                            // Chỉ hiển thị nếu hoàn toàn không có thông báo nào được gửi đến
+                            $("#notificationList").html("<li class='no-notifications'>There are no notifications yet.</li>");
+                            $("#notificationCount").hide();
+                        }
+
+                        // Hàm lấy URL tùy theo referenceTable
+                        function getNotificationUrl(notif) {
+                            let baseUrl = "<%= request.getContextPath() %>";
+                            switch (notif.referenceTable) {
+                                case "ManagerFeedback":
+                                    return (
+                                            baseUrl +
+                                            `/feedbackreviewdetail?managerFeedbackId=` +
+                                            notif.referenceId
+                                            );
+                                case "Request":
+                                    return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
+                                case "Invoice":
+                                    return `#`;
+                                default:
+                                    return "#"; // Nếu không xác định được loại, đặt về #
+                            }
                         }
                     }
+                    
 
                     // Khi click vào thông báo, đổi màu và update trạng thái đọc
                     $("#notificationList").on("click", "li", function () {
                         let notificationId = $(this).data("id");
                         $(this).removeClass("unread").addClass("read");
-
                         $.ajax({
                             url: "<%= request.getContextPath() %>/MarkAsRead",
                             type: "POST",
@@ -735,9 +745,8 @@
                             },
                         });
                     });
-
                     // Kiểm tra thông báo mới mỗi 0.3 giây
-                    setInterval(checkNotifications, 500);
+                    setInterval(checkNotifications, 1000);
                 });
                 $(function () {
                     // Cấu hình cơ bản cho date picker với định dạng dd/MM/yyyy
@@ -746,23 +755,22 @@
                         locale: "en",
                         allowInput: true,
                         maxDate: null,
-                        disableMobile: "true",
+                        disableMobile: "true"
                     };
                     // Khởi tạo Date Picker đơn giản
                     flatpickr("#datePicker", {
                         ...datePickerConfig,
-                        maxDate: null,
+                        maxDate: null
                     });
                     flatpickr("#dateRangePicker", {
                         ...datePickerConfig,
                         mode: "range",
-                        maxDate: null,
+                        maxDate: null
                     });
                     flatpickr("#deadline", {
                         ...datePickerConfig,
-                        maxDate: null,
+                        maxDate: null
                     });
-
                     flatpickr("#boughtOn", {
                         ...datePickerConfig,
                         maxDate: "today",
@@ -801,3 +809,4 @@
             <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
         </body>
     </html>
+

@@ -1,89 +1,147 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package controller.accountant;
 
 import dao.ExpenseDAO;
+import dao.FundDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
+import model.Expense;
 import model.TypeExpense;
 
-/**
- *
- * @author nguye
- */
-@WebServlet(name="ImportExpense", urlPatterns={"/accountant/ImportExpense"})
+@WebServlet(name = "ImportExpense", urlPatterns = {"/accountant/ImportExpense"})
 public class ImportExpense extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ImportExpense</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ImportExpense at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    private static final Logger LOGGER = Logger.getLogger(ImportExpense.class.getName());
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        ExpenseDAO Edao= new ExpenseDAO();
-        List<TypeExpense> lte= Edao.getAllTypeExpenses();
-        request.setAttribute("lte", lte);
-        request.getRequestDispatcher("ImportExpense.jsp").forward(request, response);
-    } 
+            throws ServletException, IOException {
+        ExpenseDAO expenseDAO = new ExpenseDAO();
+        LocalDate today = LocalDate.now();
+        Expense todayExpense = expenseDAO.getExpenseByDate(today);
+        List<TypeExpense> typeExpenses = expenseDAO.getAllTypeExpenses();
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
+        request.setAttribute("lte", typeExpenses);
+        request.setAttribute("exptoday", todayExpense);
+        request.getRequestDispatcher("ImportExpense.jsp").forward(request, response);
     }
 
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String description = request.getParameter("description");
+        String amountStr = request.getParameter("amount");
+        String typeExpenseIDStr = request.getParameter("typeid");
+
+        // Validate input
+        String errorMessage = validateInput(description, amountStr, typeExpenseIDStr);
+        if (errorMessage != null) {
+            request.setAttribute("errorMessage", errorMessage);
+            doGet(request, response);
+            return;
+        }
+
+        double amount = Double.parseDouble(amountStr);
+        int typeExpenseID = Integer.parseInt(typeExpenseIDStr);
+
+        ExpenseDAO expenseDAO = new ExpenseDAO();
+        FundDAO fundDAO = new FundDAO();
+
+        LocalDate today = LocalDate.now();
+        Expense todayExpense = expenseDAO.getExpenseByDate(today);
+
+        try {
+            if (todayExpense == null) {
+                expenseDAO.insertExpense(3, 0);
+                todayExpense = expenseDAO.getExpenseByDate(today);
+                if (todayExpense == null) {
+                    throw new SQLException("Failed to insert and retrieve expense.");
+                }
+            }
+
+            TypeExpense typeExpense = expenseDAO.getTypeExpenseById(typeExpenseID);
+            if (typeExpense == null) {
+                throw new IllegalArgumentException("Invalid TypeExpense ID.");
+            }
+
+            String status = typeExpense.isFixed() ? "Pending" : "Approved";
+
+            if ("Approved".equals(status)) {
+                int fundID = fundDAO.getFundIDByTypeFund(typeExpense.getTypeFundID());
+                if (fundID == -1) {
+                    throw new SQLException("Không tìm thấy FundID tương ứng với TypeFundID.");
+                }
+
+                double currentBalance = fundDAO.getCurrentBalance(fundID);
+                if (currentBalance < amount) {
+                    request.setAttribute("errorMessage", "Không đủ số dư trong quỹ để thực hiện giao dịch.");
+                    doGet(request, response);
+                    return;
+                }
+
+                boolean transactionInserted = fundDAO.insertTransaction(fundID, amount, "Expense", description, 3);
+                if (!transactionInserted) {
+                    throw new SQLException("Không thể thêm giao dịch vào bảng TransactionFund.");
+                }
+            }
+
+            expenseDAO.insertExpenseDetail(todayExpense.getExpenseID(), typeExpenseID, amount, status, description);
+
+            if ("Approved".equals(status)) {
+                expenseDAO.updateTotalAmount(todayExpense.getExpenseID(), amount);
+            }
+
+            request.setAttribute("successMessage", "Giao dịch đã được thêm thành công!");
+            doGet(request, response);
+
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Database error: ", e);
+            request.setAttribute("errorMessage", "Database error occurred. Please try again.");
+            doGet(request, response);
+        } catch (IllegalArgumentException e) {
+            LOGGER.log(Level.WARNING, "Invalid input: ", e);
+            request.setAttribute("errorMessage", e.getMessage());
+            doGet(request, response);
+        }
+    }
+
+    private String validateInput(String description, String amountStr, String typeExpenseIDStr) {
+        if (description == null || description.trim().isEmpty()) {
+            return "Description cannot be empty.";
+        }
+        if (!isValidDescription(description)) {
+            return "Description contains invalid characters or exceeds the limit.";
+        }
+        try {
+            double amount = Double.parseDouble(amountStr);
+            if (amount <= 0) {
+                return "Amount must be greater than 0.";
+            }
+        } catch (NumberFormatException e) {
+            return "Invalid amount format.";
+        }
+        try {
+            Integer.parseInt(typeExpenseIDStr);
+        } catch (NumberFormatException e) {
+            return "Invalid TypeExpense ID.";
+        }
+        return null;
+    }
+
+    public boolean isValidDescription(String input) {
+        return input.matches("^[\\p{L}0-9\\s.,!?'\"()\\-_/]{1,500}$");
+    }
+
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Import Expense Servlet";
+    }
 }

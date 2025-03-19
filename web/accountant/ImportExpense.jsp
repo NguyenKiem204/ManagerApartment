@@ -16,21 +16,90 @@
         <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />   
 
         <style>
-            .active::-webkit-scrollbar {
-                width: 0px;
-                height: 0px;
+
+            input, select {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: 16px;
             }
-            .active {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
+            input {
+                width: 70%;
             }
+            select {
+                width: 28%;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 15px;
+            }
+            table, th, td {
+                border: 1px solid #ddd;
+            }
+            th, td {
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: #ff9800;
+                color: white;
+                cursor: pointer;
+                position: relative;
+            }
+            th .sort-icon {
+                margin-left: 5px;
+                font-size: 12px;
+            }
+            .rating {
+                color: #FFD700;
+                font-size: 20px;
+            }
+            .pagination {
+                text-align: center;
+                margin-top: 10px;
+            }
+            .pagination button {
+                background-color: #ff9800;
+                color: white;
+                border: none;
+                padding: 8px 15px;
+                margin: 5px;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+            .pagination button:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+            .tableinvoice th, .tableinvoice td {
+                width: 25%; /* Chia đều 4 cột */
+                text-align: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .table-bordered th, .table-bordered td {
+                width: 25%;
+                text-align: center;
+            }
+            .tableinvoice th:nth-child(4), .tableinvoice td:nth-child(4) {
+                width: 40%; /* Cột Description rộng hơn */
+            }
+            .error-message {
+                color: red;
+                font-weight: bold;
+                margin-bottom: 15px;
+            }
+
+
         </style>
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
         <script>
-            // Hàm định dạng số thành XX.00
             function formatDecimal(input) {
                 let value = input.value.replace(/[^0-9.]/g, '').trim(); // Chỉ giữ lại số và dấu chấm
                 let floatValue = parseFloat(value);
@@ -41,50 +110,6 @@
                     input.value = "0.00"; // Nếu không hợp lệ, đặt thành 0.00
                 }
             }
-
-            // Hàm thêm chi tiết hóa đơn
-            function addInvoiceDetail() {
-                const table = document.getElementById("invoiceDetailsTable");
-                const rowCount = table.rows.length;
-                const row = table.insertRow(rowCount);
-
-                const cell1 = row.insertCell(0);
-                const cell2 = row.insertCell(1);
-                const cell3 = row.insertCell(2);
-                const cell4 = row.insertCell(3);
-                const cell5 = row.insertCell(4);
-
-                cell1.innerHTML = rowCount + 1;
-                cell2.innerHTML = '<input type="text" class="form-control" name="descriptionde" required>';
-                cell3.innerHTML = '<input type="text" class="form-control" name="amount" required oninput="this.value = this.value.replace(/[^0-9.]/g, \'\')" onblur="formatDecimal(this)">';
-
-                cell4.innerHTML = `
-                    <select name="typebills" class="form-select" required>
-            <c:forEach items="${listType}" var="o">
-                            <option value="${o.id}">${o.name}</option>
-            </c:forEach>
-                    </select>
-                `;
-                cell5.innerHTML = '<button type="button" class="btn btn-danger" onclick="removeInvoiceDetail(this)">Remove</button>';
-            }
-
-            // Hàm xóa chi tiết hóa đơn
-            function removeInvoiceDetail(button) {
-                const row = button.closest('tr');
-                row.remove();
-                const table = document.getElementById("invoiceDetailsTable");
-                for (let i = 0; i < table.rows.length; i++) {
-                    table.rows[i].cells[0].innerHTML = i + 1;
-                }
-            }
-
-            // Định dạng ngày cho ô Due Date
-            document.addEventListener("DOMContentLoaded", function () {
-                flatpickr("#dueDate", {
-                    dateFormat: "d/m/Y",
-                    allowInput: true
-                });
-            });
         </script>
     </head>
 
@@ -92,17 +117,22 @@
         <%@include file="/manager/menumanager.jsp" %>
         <div id="main">
             <main id="content">
-                <div class="card p-4 shadow-lg rounded-4" style="max-width: 1000px; margin: 0 auto;">
+                <div class="card p-4 shadow-lg rounded-4" style="max-width: 1100px; margin: 0 auto;">
                     <h4 class="text-center mb-4">Import Expense</h4>
-                    <form action="addnewinvoice" method="post">
-
+                    <!-- Hiển thị thông báo lỗi -->
+                    <c:if test="${not empty errorMessage}">
+                        <div class="error-message text-center">
+                            ${errorMessage}
+                        </div>
+                    </c:if>
+                    <form action="ImportExpense" method="post">
                         <div class="form-group mb-3">
                             <label for="description">Description</label>
                             <input type="text" class="form-control" id="description" name="description" required>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="description">Amount</label>
-                            <input type="text" class="form-control" id="description" name="description" required>
+                            <label for="amount">Amount</label>
+                            <input type="text" class="form-control" id="amount" name="amount" required>
                         </div>
                         <div class="form-group mb-3">
                             <label>Type</label>
@@ -118,6 +148,52 @@
                             <button type="submit" class="btn btn-success">Save <i class="bi bi-plus-lg"></i></button>
                         </div>
                     </form>
+                </div>
+                <div class="card p-4 shadow-lg rounded-4" style="max-width: 1100px; margin: 10px auto;">
+                    <h4 class="text-center ">Expense Detail on </h4>
+                    <table class="tableinvoice mt-4">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <c:set var="totalAmount" value="0" />
+
+                            <c:choose>
+                                <c:when test="${not empty exptoday.expenseDetails}">
+                                    <c:forEach items="${exptoday.expenseDetails}" var="detail">
+                                        <tr>
+                                            <td>${detail.description}</td>
+                                            <td>${detail.typeExpense.typeName}</td>
+                                            <td>${detail.status}</td>
+                                            <td>
+                                                <fmt:formatNumber value="${detail.amount}" pattern="#0.00" />
+                                            </td>
+                                        </tr>
+                                        <c:set var="totalAmount" value="${totalAmount + (detail.amount ne null ? detail.amount : 0)}" />
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <tr>
+                                        <td colspan="4" class="empty-message">No expenses recorded for today.</td>
+                                    </tr>
+                                </c:otherwise>
+                            </c:choose>
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" style="text-align: right; font-weight: bold;">Total Amount:</td>
+                                <td style="font-weight: bold;">
+                                    <fmt:formatNumber value="${totalAmount}" pattern="#0.00" />
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </main>
         </div>

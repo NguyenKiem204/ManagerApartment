@@ -419,13 +419,20 @@ public class NewsDAO implements DAOInterface<News, Integer> {
         return list;
     }
 
-    public News getLastNews(int limit) {
-        String query = "select top 2 * from News\n"
-                + "order by NewsID desc";
+    public List<News> getLastestNews(int limit) {
+        List<News> listNews = new ArrayList<>();
+        String query = "SELECT TOP "+ limit + " [NewsID]\n"
+                + "      ,[Title]\n"
+                + "      ,[Description]\n"
+                + "      ,[SentDate]\n"
+                + "      ,[StaffID]\n"
+                + "      ,[ImageID]\n"
+                + "  FROM [News]\n"
+                + "  ORDER BY [NewsID] DESC";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
-           while(rs.next()){
-              News news = new News(
+            while (rs.next()) {
+                News news = new News(
                         rs.getInt("NewsID"),
                         rs.getString("Title"),
                         rs.getString("Description"),
@@ -433,11 +440,13 @@ public class NewsDAO implements DAOInterface<News, Integer> {
                         staffdao.selectById(rs.getInt("StaffID")),
                         imagedao.selectById(rs.getInt("ImageID"))
                 );
-           }
+                listNews.add(news);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        System.out.println(listNews);
+        return listNews;
     }
 
 }

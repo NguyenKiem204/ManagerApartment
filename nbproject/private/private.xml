@@ -3,13 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/gitSWP391/ManagerApartment/src/java/dao/Test.java</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/src/java/controller/manager/RuleManagementServlet.java</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/src/java/controller/ViewRegulations.java</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/web/view-regulations.jsp</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/web/manager/menumanager.jsp</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/web/owner/home.jsp</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/web/owner/menuowner.jsp</file>
+            <file>file:/D:/gitSWP391/ManagerApartment/src/java/dao/NewsDAO.java</file>
+            <file>file:/D:/gitSWP391/ManagerApartment/src/java/model/Feedback.java</file>
+            <file>file:/D:/gitSWP391/ManagerApartment/src/java/controller/administrative/HomeAdministrativeServlet.java</file>
+            <file>file:/D:/gitSWP391/ManagerApartment/src/java/dao/FeedbackDAO.java</file>
+            <file>file:/D:/gitSWP391/ManagerApartment/web/administrative/home.jsp</file>
         </group>
     </open-files>
 </project-private>

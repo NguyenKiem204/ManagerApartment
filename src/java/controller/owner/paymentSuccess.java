@@ -4,6 +4,7 @@
  */
 package controller.owner;
 
+import dao.FundDAO;
 import dao.InvoiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +16,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import model.EmailUtil;
+import model.InvoiceDetail;
 import model.Invoices;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -53,18 +58,66 @@ public class paymentSuccess extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            // Lấy invoiceId từ request parameter
             String invoiceId = request.getParameter("invoiceID");
-            if (invoiceId != null) {
-                // Cập nhật trạng thái hóa đơn
-                InvoiceDAO invoiceDAO = new InvoiceDAO();
-                invoiceDAO.updateStatusInvoice(Integer.parseInt(invoiceId));
-                Invoices inv = invoiceDAO.selectById(Integer.parseInt(invoiceId));
-                EmailUtil.sendEmailSuccessPayment(inv.getResident().getEmail(), inv);
+            if (invoiceId == null) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println("Invoice ID is missing.");
+                return;
             }
-            
-            // Chuyển hướng sang trang PaymentSuccess.jsp
+
+            int id = Integer.parseInt(invoiceId);
+            System.out.println("Received request for invoice ID: " + id);
+
+            InvoiceDAO invoiceDAO = new InvoiceDAO();
+            FundDAO fundDAO = new FundDAO();
+            invoiceDAO.updateStatusInvoice(id);
+
+            Invoices invoice = invoiceDAO.selectById(id);
+            if (invoice == null) {
+                throw new IOException("Invoice not found for ID: " + id);
+            }
+
+            if (invoice.getDetails() == null || invoice.getDetails().isEmpty()) {
+                throw new SQLException("Invoice ID: " + id + " does not have any details.");
+            }
+
+            Map<Integer, Double> fundUpdates = new HashMap<>();
+
+            for (InvoiceDetail detail : invoice.getDetails()) {
+                double amount = detail.getAmount();
+                int fundID = fundDAO.getFundIDByTypeFund(detail.getTypeFundID());
+
+                if (fundID == -1) {
+                    throw new SQLException("Không tìm thấy FundID tương ứng với TypeFundID: " + detail.getTypeFundID());
+                }
+
+                // Cộng dồn số tiền vào quỹ tương ứng
+                fundUpdates.put(fundID, fundUpdates.getOrDefault(fundID, 0.0) + amount);
+            }
+
+            // Cập nhật số dư quỹ bằng updateFundBalance
+            for (Map.Entry<Integer, Double> entry : fundUpdates.entrySet()) {
+                int fundID = entry.getKey();
+                double totalAmount = entry.getValue();
+
+                // Gọi updateFundBalance nhưng KHÔNG gọi insertTransaction nữa
+                boolean fundUpdated = fundDAO.updateFundBalance(fundID, totalAmount, "Income");
+                if (!fundUpdated) {
+                    throw new SQLException("Không thể cập nhật số dư quỹ cho FundID: " + fundID);
+                }
+
+                System.out.println("Updated FundID: " + fundID + " with amount: " + totalAmount);
+            }
+
+            EmailUtil.sendEmailSuccessPayment("cuongnmhe182472@fpt.edu.vn", invoice);
             request.getRequestDispatcher("PaymentSuccess.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Invalid invoice ID: " + e.getMessage());
+        } catch (SQLException e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().println("Database error: " + e.getMessage());
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().println("Internal server error: " + e.getMessage());

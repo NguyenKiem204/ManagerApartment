@@ -44,8 +44,8 @@
                     <div style="padding-left: 10px">
                         <select id="sortBox" style="width: 100%">
                             <option value="0" ${param.sort == '0' ? 'selected' : ''}>Sort by</option>
-                            <option value="1" ${param.sort == '1' ? 'selected' : ''}>Sort by Name of Asset tang </option>
-                            <option value="2" ${param.sort == '2' ? 'selected' : ''}>Sort by Name of Asset giam</option>
+                            <option value="1" ${param.sort == '1' ? 'selected' : ''}>Sort by Name of Asset up </option>
+                            <option value="2" ${param.sort == '2' ? 'selected' : ''}>Sort by Name of Asset down</option>
                         </select>
                     </div>
                     <label for="itemsPerPage">Show:</label>
@@ -89,7 +89,7 @@
 
                                             <button style="background: red; color: white; padding: 8px 16px; border: none;
                                                     cursor: pointer; border-radius: 5px; font-weight: bold;"
-                                                    onclick="confirmDelete('${as.assetId}')">
+                                                    onclick="confirmDelete('${as.assetId}', '${as.assetName}')">
                                                 Delete
                                             </button>
                                         </div>
@@ -168,51 +168,6 @@
                         </c:if>
                     </ul>
                 </div>
-                <div id="updateModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);">
-                    <div class="modal-content" style="background: white; padding: 20px; width: 50%;margin: 1% auto auto auto; border-radius: 10px;">
-                        <h2>Update Asset</h2>
-                        <form id="updateForm">
-                            <input type="hidden" id="assetId" name="assetId">
-                            <label>Asset Name:</label>
-                            <input type="text" id="assetName" name="assetName" required><br><br>
-
-                            <label>Category:</label>
-                            <select id="assetCategory" name="categoryId">
-                                <c:forEach var="cat" items="${listcategory}">
-                                    <option value="${cat.categoryId}">${cat.categoryName}</option>
-                                </c:forEach>
-                            </select><br><br>
-
-                            <div class="form-group">
-                                <div class="flex-container">
-                                    <div class="flex-item">
-                                        <label style="font-weight: bold; color: #333;">Quantity:</label>
-                                        <input type="number" id="assetQuantity" name="quantity" required>
-                                    </div>
-
-                                    <div class="flex-item">
-                                        <label style="font-weight: bold; color: #333;">Location:</label>
-                                        <input type="text" id="assetLocation" name="location" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <label>Status:</label>
-                            <select id="assetStatus" name="status">
-                                <c:forEach var="st" items="${liststatus}">
-                                    <option value="${st.statusId}">${st.statusName}</option>
-                                </c:forEach>
-                            </select><br><br>
-
-                            <button type="button" onclick="submitUpdate()">Save Changes</button>
-                            <button type="button" onclick="closeModal()">Cancel</button>
-                        </form>
-                    </div>
-                </div>
-
-
-
-
             </div>
         </div>
 

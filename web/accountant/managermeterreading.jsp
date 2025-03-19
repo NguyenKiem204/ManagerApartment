@@ -90,9 +90,7 @@
                                 <h2 class="card-title mb-0">
                                     <i class="bi bi-clipboard-data text-primary me-2"></i>Electricity and Water Meter Management
                                 </h2>
-                                <a href="${pageContext.request.contextPath}/meter-reading/edit" class="btn btn-primary">
-                                    <i class="bi bi-plus-circle me-1"></i>Add New Meter Reading
-                                </a>
+                                
                             </div>
                         </div>
                     </div>
@@ -473,7 +471,7 @@
 
                             <div class="mb-3">
                                 <label for="paymentDueDate" class="form-label">Payment Due Date</label>
-                                <input type="date" class="form-control" id="paymentDueDate" name="paymentDueDate" required>
+                                <input type="date" class="form-control" id="datePicker" name="paymentDueDate" placeholder="dd/MM/yyyy" required>
                                 <div class="form-text">Customers must make payment before this date</div>
                             </div>
 
@@ -598,9 +596,9 @@
                             });
 
                             // Set default payment due date to end of next month
-                            const today = new Date();
-                            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
-                            document.getElementById('paymentDueDate').valueAsDate = nextMonth;
+//                            const today = new Date();
+//                            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+//                            document.getElementById('paymentDueDate').valueAsDate = nextMonth;
 
                             // Handle delete button clicks
                             const deleteButtons = document.querySelectorAll('.delete-reading');

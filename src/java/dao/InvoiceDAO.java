@@ -93,6 +93,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                 + "    idt.Description AS DetailDescription, "
                 + "    idt.TypeBillID, "
                 + "    tb.TypeName AS BillType, "
+                + "    tb.TypeFundID AS FundID, " // Thêm TypeFundID
                 + "    res.ResidentID, "
                 + "    res.FullName AS ResidentName, "
                 + "    res.PhoneNumber AS ResidentPhone, "
@@ -162,7 +163,8 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                                 rs.getDouble("Amount"),
                                 rs.getString("DetailDescription"),
                                 rs.getInt("TypeBillID"),
-                                rs.getString("BillType")
+                                rs.getString("BillType"),
+                                rs.getInt("FundID") // Thêm FundID
                         );
                         invoice.addDetail(detail);
                     }
@@ -178,7 +180,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
 
     public List<TypeBill> getAllTypeBills() {
         List<TypeBill> typeBills = new ArrayList<>();
-        String sql = "SELECT * FROM TypeBill";
+        String sql = "SELECT TypeBillID, TypeName, TypeFundID FROM TypeBill";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -186,7 +188,8 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
             while (rs.next()) {
                 int id = rs.getInt("TypeBillID");
                 String name = rs.getString("TypeName");
-                typeBills.add(new TypeBill(id, name));
+                int fundID = rs.getInt("TypeFundID");
+                typeBills.add(new TypeBill(id, name, fundID));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -622,4 +625,16 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return num;
     }
 
+    public int getTypeFundIDByTypeBillID(int typeBillID) throws SQLException {
+        String sql = "SELECT TypeFundID FROM TypeBill WHERE TypeBillID = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, typeBillID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("TypeFundID");
+                }
+            }
+        }
+        return -1; // Trả về -1 nếu không tìm thấy
+    }
 }

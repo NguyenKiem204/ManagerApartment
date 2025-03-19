@@ -33,7 +33,7 @@ public class EditMeterReadingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String idParam = request.getParameter("id");
         String previousURL = request.getHeader("Referer");
         if (previousURL != null) {
@@ -61,6 +61,10 @@ public class EditMeterReadingServlet extends HttpServlet {
                 request.setAttribute("isEdit", false);
                 request.setAttribute("pageTitle", "Add new meter reading");
             }
+            // Add error message from redirect if present
+            if (request.getParameter("error") != null) {
+                request.setAttribute("errorMessage", request.getParameter("error"));
+            }
             request.setAttribute("meters", meterDAO.getAllActiveMeters());
             request.getRequestDispatcher("edit-meter-reading.jsp").forward(request, response);
 
@@ -81,48 +85,56 @@ public class EditMeterReadingServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-
         request.setCharacterEncoding("UTF-8");
 
         try {
-            String previousPage = request.getParameter("previousPage");
             String readingIdParam = request.getParameter("readingId");
+
+            if (readingIdParam == null || readingIdParam.isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/accountant/manager-meter-reading?error="
+                        + java.net.URLEncoder.encode("Invalid request: Reading ID required for updates.", "UTF-8"));
+                return;
+            }
+
             String meterIdParam = request.getParameter("meterId");
             String previousReadingParam = request.getParameter("previousReading");
             String currentReadingParam = request.getParameter("currentReading");
-            String readingDateParam = request.getParameter("readingDate");
             String readingMonthParam = request.getParameter("readingMonth");
             String readingYearParam = request.getParameter("readingYear");
             String statusParam = request.getParameter("status");
-            System.out.println("readingId: " + readingDateParam + "-meterId: " + meterIdParam + "-previousReading: " + previousReadingParam + "-currentReading: " + currentReadingParam + "-readingDate" + readingDateParam
-                    + "-readingMonth: " + readingMonthParam + "-readingYear: " + readingYearParam + "-status: " + statusParam);
             if (meterIdParam == null || previousReadingParam == null || currentReadingParam == null
-                    || readingDateParam == null || readingMonthParam == null || readingYearParam == null) {
-
-                request.setAttribute("errorMessage", "Please fill in all required information.");
-                doGet(request, response);
+                    || readingMonthParam == null || readingYearParam == null) {
+                // Redirect back to the edit page with error
+                String redirectUrl = request.getContextPath() + "/accountant/edit-meter-reading?id=" + readingIdParam + 
+                                    "&error=" + java.net.URLEncoder.encode("Please fill in all required information.", "UTF-8");
+                response.sendRedirect(redirectUrl);
                 return;
             }
+
+            int readingId = Integer.parseInt(readingIdParam);
             int meterId = Integer.parseInt(meterIdParam);
             BigDecimal previousReading = new BigDecimal(previousReadingParam);
             BigDecimal currentReading = new BigDecimal(currentReadingParam);
             int readingMonth = Integer.parseInt(readingMonthParam);
             int readingYear = Integer.parseInt(readingYearParam);
             String status = statusParam != null ? statusParam : "Active";
+
             if (currentReading.compareTo(previousReading) < 0) {
-                response.sendRedirect(request.getContextPath() + "/accountant/edit-meter-reading?id="
-                        + readingIdParam + "&errorMessage="
-                        + java.net.URLEncoder.encode("The current reading cannot be less than the previous reading.", "UTF-8"));
+                String redirectUrl = request.getContextPath() + "/accountant/edit-meter-reading?id=" + readingId + 
+                                    "&error=" + java.net.URLEncoder.encode("The current reading cannot be less than the previous reading.", "UTF-8");
+                response.sendRedirect(redirectUrl);
+                return;
+            }
+
+            MeterReading readingOld = meterReadingDAO.getMeterReadingById(readingId);
+            if (readingOld == null) {
+                response.sendRedirect(request.getContextPath() + "/accountant/manager-meter-reading?error="
+                        + java.net.URLEncoder.encode("Meter reading not found.", "UTF-8"));
                 return;
             }
 
             MeterReading reading = new MeterReading();
-            Integer readingId = null;
-            if (readingIdParam != null && !readingIdParam.isEmpty()) {
-                readingId = Integer.parseInt(readingIdParam);
-                reading.setReadingId(readingId);
-            }
-            MeterReading readingOld = meterReadingDAO.getMeterReadingById(readingId);
+            reading.setReadingId(readingId);
             reading.setMeterId(meterId);
             reading.setPreviousReading(previousReading);
             reading.setCurrentReading(currentReading);
@@ -134,40 +146,33 @@ public class EditMeterReadingServlet extends HttpServlet {
             BigDecimal consumption = currentReading.subtract(previousReading);
             reading.setConsumption(consumption);
 
-            boolean isUpdate = readingIdParam != null && !readingIdParam.isEmpty();
-            int result;
+            int result = meterReadingDAO.updateMeterReading(reading);
+            if (result > 0) {
+                String successMessage = "The meter reading has been successfully updated";
+                String encodedMessage = java.net.URLEncoder.encode(successMessage, "UTF-8");
+                
+                String redirectUrl = request.getContextPath() + "/accountant/manager-meter-reading";
+                String additionalParams = "success=" + encodedMessage + "&highlight=" + reading.getReadingId();
 
-            if (isUpdate) {
-                result = meterReadingDAO.updateMeterReading(reading);
-                if (result > 0) {
-                    response.sendRedirect(previousPage+"&success="
-                            + java.net.URLEncoder.encode("The meter reading has been successfully updated.", "UTF-8")
-                            + "&highlight=" + reading.getReadingId());
-                } else {
-                    response.sendRedirect(previousPage+"&error="
-                            + java.net.URLEncoder.encode("Unable to update the meter reading.", "UTF-8"));
-                }
+                redirectUrl = redirectUrl + "?" + additionalParams;
+                response.sendRedirect(redirectUrl);
             } else {
-                result = meterReadingDAO.addMeterReading(reading);
-                if (result > 0) {
-                    response.sendRedirect(previousPage+"&success="
-                            + java.net.URLEncoder.encode("New meter reading added successfully.", "UTF-8")
-                            + "&highlight=" + result);
-                } else {
-                    response.sendRedirect(previousPage+"&error="
-                            + java.net.URLEncoder.encode("Unable to add new meter reading.", "UTF-8"));
-                }
+                String redirectUrl = request.getContextPath() + "/accountant/edit-meter-reading?id=" + readingId + 
+                                    "&error=" + java.net.URLEncoder.encode("Unable to update the meter reading.", "UTF-8");
+                response.sendRedirect(redirectUrl);
             }
-
         } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "Invalid numeric value: " + e.getMessage());
-            doGet(request, response);
+            String redirectUrl = request.getContextPath() + "/accountant/edit-meter-reading?id=" + request.getParameter("readingId") + 
+                                "&error=" + java.net.URLEncoder.encode("Invalid numeric value: " + e.getMessage(), "UTF-8");
+            response.sendRedirect(redirectUrl);
         } catch (SQLException e) {
-            request.setAttribute("errorMessage", "Database error: " + e.getMessage());
-            doGet(request, response);
+            String redirectUrl = request.getContextPath() + "/accountant/edit-meter-reading?id=" + request.getParameter("readingId") + 
+                                "&error=" + java.net.URLEncoder.encode("Database error: " + e.getMessage(), "UTF-8");
+            response.sendRedirect(redirectUrl);
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Error: " + e.getMessage());
-            doGet(request, response);
+            String redirectUrl = request.getContextPath() + "/accountant/edit-meter-reading?id=" + request.getParameter("readingId") + 
+                                "&error=" + java.net.URLEncoder.encode("Error: " + e.getMessage(), "UTF-8");
+            response.sendRedirect(redirectUrl);
         }
     }
 }
