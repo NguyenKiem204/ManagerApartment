@@ -77,9 +77,9 @@ public class UpdateApartmentServlet extends HttpServlet {
             String status = request.getParameter("status");
             String type = request.getParameter("type");
 
-            if (apartmentName == null || apartmentName.trim().isEmpty()) {
+            if (apartmentName == null || apartmentName.trim().isEmpty() || !apartmentName.matches("^[A-Za-zÀ-ỹ0-9\\s]+$")) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().write("Apartment name cannot be empty");
+                response.getWriter().write("Apartment name cannot be empty or contains special characters!");
                 return;
             }
 

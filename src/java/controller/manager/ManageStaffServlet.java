@@ -95,9 +95,9 @@ public class ManageStaffServlet extends HttpServlet {
         try {
             String fullName = request.getParameter("fullName");
 
-            if (fullName == null || fullName.trim().isEmpty()) {
+            if (fullName == null || fullName.trim().isEmpty() || !fullName.matches("^[A-Za-zÀ-ỹ\\s]+$")) {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "Full name cannot be empty!");
+                jsonResponse.put("message", "Full name cannot be empty or contains special characters!");
                 out.write(jsonResponse.toString());
                 return;
             }
