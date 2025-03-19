@@ -95,14 +95,6 @@ public class ManageApartmentServlet extends HttpServlet {
                 return;
             }
 
-            // Kiểm tra định dạng apartmentName (chỉ chứa chữ cái, số và khoảng trắng)
-            // Nếu bạn cho phép ký tự đặc biệt khác, hãy điều chỉnh regex cho phù hợp
-            if (!apartmentName.matches("^[a-zA-Z0-9\\s]+$")) {
-                jsonResponse.put("success", false);
-                jsonResponse.put("message", "Apartment name must contain only letters, numbers, and spaces!");
-                out.write(jsonResponse.toString());
-                return;
-            }
 
             String block = request.getParameter("block");
             String status = request.getParameter("status");

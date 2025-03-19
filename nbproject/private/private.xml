@@ -4,6 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/E:/ManagerApartment/src/java/controller/manager/ManageStaffServlet.java</file>
+            <file>file:/E:/ManagerApartment/src/java/controller/manager/ManageApartmentServlet.java</file>
+            <file>file:/E:/ManagerApartment/src/java/controller/manager/UpdateApartmentServlet.java</file>
         </group>
     </open-files>
 </project-private>
