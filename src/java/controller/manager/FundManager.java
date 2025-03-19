@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller.owner;
+package controller.manager;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,16 +12,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Resident;
-import model.Staff;
 
 /**
  *
- * @author admin
+ * @author nguye
  */
-@WebServlet(name="FeedbackSuccessfullServlet", urlPatterns={"/owner/feedbacksuccessfull"})
-public class FeedbackSuccessfullServlet extends HttpServlet {
+@WebServlet(name="FundManager", urlPatterns={"/FundManager"})
+public class FundManager extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +35,10 @@ public class FeedbackSuccessfullServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FeedbackSuccessfullServlet</title>");  
+            out.println("<title>Servlet FundManager</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet FeedbackSuccessfullServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet FundManager at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,18 +55,7 @@ public class FeedbackSuccessfullServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Resident resident = (Resident) session.getAttribute("resident");
-        Staff staff = (Staff) session.getAttribute("staff");
-
-        // Kiểm tra quyền truy cập (chỉ cho phép Staff ngoại trừ Manager)
-        if (resident == null || staff != null) {
-            request.setAttribute("errorCode", "403");
-            request.setAttribute("errorMessage", "You do not have permission to access!");
-            request.getRequestDispatcher("error-authorization.jsp").forward(request, response);
-            return;
-        }
-        request.getRequestDispatcher("feedbacksuccess.jsp").forward(request, response);
+        processRequest(request, response);
     } 
 
     /** 

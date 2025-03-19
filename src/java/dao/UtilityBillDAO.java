@@ -4,7 +4,6 @@
  */
 package dao;
 
-import controller.UtilityBillDetailServlet;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,15 +29,13 @@ public class UtilityBillDAO {
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             
             if (rs.next()) {
-                return rs.getInt(1); // Lấy giá trị MAX(NotificationID)
+                return rs.getInt(1);
             }
         } catch (SQLException ex) {
             Logger.getLogger(UtilityBillDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0; // Trả về 0 nếu không có dữ liệu
+        return 0;
     }
-
-    // Thêm hóa đơn mới
     public int addUtilityBill(UtilityBill bill) throws SQLException {
         String sql = "INSERT INTO UtilityBill (ApartmentID, BillingPeriodStart, BillingPeriodEnd, "
                 + "ElectricityConsumption, ElectricityCost, WaterConsumption, WaterCost, "
@@ -80,8 +77,6 @@ public class UtilityBillDAO {
         
         return 0;
     }
-
-    // Cập nhật hóa đơn
     public boolean updateUtilityBill(UtilityBill bill) throws SQLException {
         String sql = "UPDATE UtilityBill SET ApartmentID = ?, BillingPeriodStart = ?, "
                 + "BillingPeriodEnd = ?, ElectricityConsumption = ?, ElectricityCost = ?, "
@@ -117,8 +112,6 @@ public class UtilityBillDAO {
             return stmt.executeUpdate() > 0;
         }
     }
-
-    // Cập nhật trạng thái hóa đơn
     public boolean updateUtilityBillStatus(int billId, String status) throws SQLException {
         String sql = "UPDATE UtilityBill SET Status = ? WHERE BillID = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -129,7 +122,6 @@ public class UtilityBillDAO {
         }
     }
 
-    // Xóa hóa đơn
     public boolean deleteUtilityBill(int billId) throws SQLException {
         String sql = "DELETE FROM UtilityBill WHERE BillID = ? AND Status = 'Unpaid'";
         try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -138,7 +130,6 @@ public class UtilityBillDAO {
         }
     }
 
-    // Lấy hóa đơn theo ID
     public UtilityBill getUtilityBillById(int billId) {
         String sql = "SELECT ub.*, a.ApartmentName, r.FullName AS OwnerName, b.BuildingName "
                 + "FROM UtilityBill ub "
@@ -168,7 +159,7 @@ public class UtilityBillDAO {
             ub.ElectricityConsumption, ub.ElectricityCost, 
             ub.WaterConsumption, ub.WaterCost, ub.TotalAmount, 
             ub.GeneratedDate, ub.DueDate, ub.Status AS BillStatus, 
-            ub.BillingMonth, ub.BillingYear, 
+            ub.BillingMonth, ub.BillingYear, ub.InvoiceID,
             a.ApartmentID, a.ApartmentName, a.[Block], 
             a.[Status] AS ApartmentStatus, a.[Type] AS ApartmentType, 
             r.ResidentID, r.FullName, r.PhoneNumber, r.CCCD, 
@@ -200,6 +191,7 @@ public class UtilityBillDAO {
                 bill.setStatus(rs.getString("BillStatus"));
                 bill.setBillingMonth(rs.getInt("BillingMonth"));
                 bill.setBillingYear(rs.getInt("BillingYear"));
+                bill.setInvoiceId(rs.getInt("InvoiceID"));
 
                 // Thông tin Apartment
                 Apartment apt = new Apartment();

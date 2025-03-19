@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,10 +28,10 @@ public class AssetMaintenance {
     Date maintenanceDate;
     Staff staff;
     String description;
-    double cost;
+    BigDecimal cost;
     Date nextMaintenanceDate;
 
-    public AssetMaintenance(ApartmentAssets asset, Date maintenanceDate, Staff staff, String description, double cost, Date nextMaintenanceDate) {
+    public AssetMaintenance(ApartmentAssets asset, Date maintenanceDate, Staff staff, String description, BigDecimal cost, Date nextMaintenanceDate) {
         this.asset = asset;
         this.maintenanceDate = maintenanceDate;
         this.staff = staff;
@@ -38,5 +39,7 @@ public class AssetMaintenance {
         this.cost = cost;
         this.nextMaintenanceDate = nextMaintenanceDate;
     }
+
+    
     
 }

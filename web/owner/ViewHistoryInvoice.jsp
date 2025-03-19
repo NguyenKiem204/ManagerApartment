@@ -220,20 +220,20 @@
                             </c:if>
                         </c:if>
                         <c:if test="${requestScope.currentPage > 1}">
-                            <a href="/ownerViewHistoryInvoice?page=${requestScope.currentPage - 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="ViewHistoryInvoice?page=${requestScope.currentPage - 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
                                 &lt;
                             </a>
                         </c:if>
                         <c:forEach begin="${startPage}" end="${endPage}" var="page">
-                            <a href="/ownerViewHistoryInvoice?page=${page}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="ViewHistoryInvoice?page=${page}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;
                                <c:if test='${page == requestScope.currentPage}'> background-color: #007bff; color: white; </c:if>">
                                 ${page}
                             </a>
                         </c:forEach>
                         <c:if test="${requestScope.currentPage < requestScope.totalPage}">
-                            <a href="/ownerViewHistoryInvoice?page=${requestScope.currentPage + 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="ViewHistoryInvoice?page=${requestScope.currentPage + 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
                                 &gt;
                             </a>

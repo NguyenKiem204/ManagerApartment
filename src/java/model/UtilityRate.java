@@ -5,10 +5,12 @@
 package model;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Date;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,4 +35,11 @@ public class UtilityRate {
     private LocalDateTime effectiveFrom;
     private LocalDateTime effectiveTo;
     private String status;
+     private String formatVND(BigDecimal amount) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return currencyFormat.format(amount);
+    }
+     public String getFormattedUnitPrice() {
+        return formatVND(unitPrice);
+    }
 }

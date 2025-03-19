@@ -61,7 +61,7 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
 
         String sql = "SELECT e.ExpenseID, e.ExpenseDate, e.StaffID, e.TotalAmount, "
                 + "ed.ExpenseDetailID, ed.TypeExpenseID, ed.Amount, ed.Status, ed.Description, "
-                + "te.TypeExpenseID AS teTypeExpenseID, te.TypeName, te.IsFixed "
+                + "te.TypeExpenseID AS teTypeExpenseID, te.TypeName, te.IsFixed, te.TypeFundID " // Thêm TypeFundID
                 + "FROM Expense e "
                 + "INNER JOIN ExpenseDetail ed ON e.ExpenseID = ed.ExpenseID "
                 + "INNER JOIN TypeExpense te ON ed.TypeExpenseID = te.TypeExpenseID "
@@ -113,7 +113,8 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
                 TypeExpense typeExpense = new TypeExpense(
                         rs.getInt("teTypeExpenseID"),
                         rs.getString("TypeName"),
-                        rs.getBoolean("IsFixed")
+                        rs.getBoolean("IsFixed"),
+                        rs.getInt("TypeFundID") // Thêm TypeFundID
                 );
 
                 // Tạo ExpenseDetail và thêm vào danh sách của Expense hiện tại
@@ -135,7 +136,7 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
 
     public List<TypeExpense> getAllTypeExpenses() {
         List<TypeExpense> list = new ArrayList<>();
-        String query = "SELECT TypeExpenseID, TypeName, IsFixed FROM TypeExpense";
+        String query = "SELECT TypeExpenseID, TypeName, IsFixed, TypeFundID FROM TypeExpense"; // Thêm TypeFundID
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
 
@@ -143,7 +144,8 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
                 TypeExpense typeExpense = new TypeExpense(
                         rs.getInt("TypeExpenseID"),
                         rs.getString("TypeName"),
-                        rs.getBoolean("IsFixed")
+                        rs.getBoolean("IsFixed"),
+                        rs.getInt("TypeFundID") // Thêm TypeFundID
                 );
                 list.add(typeExpense);
             }
@@ -188,7 +190,8 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
                 + "    ed.Description, "
                 + "    te.TypeExpenseID AS teTypeExpenseID, "
                 + "    te.TypeName, "
-                + "    te.IsFixed "
+                + "    te.IsFixed, "
+                + "    te.TypeFundID " // Thêm TypeFundID
                 + "FROM Expense e "
                 + "LEFT JOIN ExpenseDetail ed ON e.ExpenseID = ed.ExpenseID "
                 + "LEFT JOIN TypeExpense te ON ed.TypeExpenseID = te.TypeExpenseID "
@@ -213,7 +216,8 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
                             TypeExpense typeExpense = new TypeExpense(
                                     rs.getInt("teTypeExpenseID"),
                                     rs.getString("TypeName"),
-                                    rs.getBoolean("IsFixed")
+                                    rs.getBoolean("IsFixed"),
+                                    rs.getInt("TypeFundID") // Thêm TypeFundID
                             );
                             ExpenseDetail expenseDetail = new ExpenseDetail(
                                     rs.getInt("ExpenseDetailID"),
@@ -236,7 +240,7 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
 
     public TypeExpense getTypeExpenseById(int typeExpenseID) {
         TypeExpense typeExpense = null;
-        String sql = "SELECT TypeExpenseID, TypeName, IsFixed FROM TypeExpense WHERE TypeExpenseID = ?";
+        String sql = "SELECT TypeExpenseID, TypeName, IsFixed, TypeFundID FROM TypeExpense WHERE TypeExpenseID = ?"; // Thêm TypeFundID
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, typeExpenseID);
@@ -246,7 +250,8 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
                 typeExpense = new TypeExpense(
                         rs.getInt("TypeExpenseID"),
                         rs.getString("TypeName"),
-                        rs.getBoolean("IsFixed")
+                        rs.getBoolean("IsFixed"),
+                        rs.getInt("TypeFundID") // Thêm TypeFundID
                 );
             }
         } catch (SQLException ex) {
