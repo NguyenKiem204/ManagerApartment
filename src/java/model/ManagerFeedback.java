@@ -56,5 +56,8 @@ public class ManagerFeedback {
     public Date getFormattedDate() {
         return Date.valueOf(deadline); // Chuyển LocalDate -> SQL Date
     }
+    public Date getFormattedMonthYear() {
+        return Date.valueOf(monthYear); // Chuyển LocalDate -> SQL Date
+    }
     
 }

@@ -468,6 +468,23 @@
                                             </li>
                                             <li class="submenu-item">
                                                 <a href="<%= request.getContextPath() %>/owner/feedback"
+                                                   >Send Feedback</a
+                                                >
+                                            </li>
+                                            <li class="submenu-item">
+                                                <a href="<%= request.getContextPath() %>/owner/request"
+                                                   >Send Request</a
+                                                >
+                                            </li>
+                                            <li class="submenu-item">
+                                                <a href="<%= request.getContextPath() %>/owner/listrequest"
+                                                   >List Requests</a
+                                                >
+                                            </li>
+                                        </c:if>
+                                        <c:if test="${sessionScope.resident.role.roleID == 6}">
+                                            <li class="submenu-item">
+                                                <a href="<%= request.getContextPath() %>/owner/feedback"
                                                    >Feedback</a
                                                 >
                                             </li>
@@ -476,18 +493,12 @@
                                                    >Request</a
                                                 >
                                             </li>
-                                        </c:if>
-                                        <c:if test="${sessionScope.resident.role.roleID == 6}">
                                             <li class="submenu-item">
-                                                <a href="<%= request.getContextPath() %>/tenant/feedback"
-                                                   >Feedback</a
+                                                <a href="<%= request.getContextPath() %>/owner/listrequest"
+                                                   >List Requests</a
                                                 >
                                             </li>
-                                            <li class="submenu-item">
-                                                <a href="<%= request.getContextPath() %>/tenant/request"
-                                                   >Request</a
-                                                >
-                                            </li>
+
                                         </c:if>
                                     </ul>
                                 </li>

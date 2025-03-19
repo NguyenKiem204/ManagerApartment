@@ -283,4 +283,18 @@ public class ApartmentAssetsDAO implements DAOInterface<ApartmentAssets, Integer
         return num;
     }
 
+    public boolean isAssetNameExists(String assetName) {
+        String sql = "SELECT COUNT(*) FROM ApartmentAssets WHERE AssetName = ?";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, assetName);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
 }

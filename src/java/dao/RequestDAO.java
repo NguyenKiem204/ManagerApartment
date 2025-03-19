@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import model.Request;
@@ -125,6 +126,21 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         int num = 0;
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                num = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return num;
+    }
+    public int selectAllToCountOfResident(int residentId) {
+        String sql = "SELECT count(*) FROM Request WHERE ResidentID = ?";
+        int num = 0;
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, residentId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 num = rs.getInt(1);
@@ -614,6 +630,119 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         return list;
     }
 
+    public List<Request> getAllRequestsBySearchOrFilterOrSortOfResident(String keySearch,
+              int typeRequestID, LocalDate date, int statusID, int keySort,
+              int page, int pageSize, int residentId) {
+        List<Request> list = new ArrayList<>();
+        String sql = """
+                     SELECT [RequestID]
+                                                ,r.Description
+                                                ,[Title]
+                                                ,[Date]
+                                                ,r.ResidentID, CompletedAt, ViewedAt
+                                                ,res.FullName
+                                                ,r.TypeRqID
+                                                ,r.StatusID
+                                                ,a.ApartmentID
+                                                ,a.ApartmentName
+                                            FROM [ApartmentManagement].[dbo].[Request] r 
+                                                JOIN Apartment a ON r.ApartmentID = a.ApartmentID
+                                                JOIN Resident res ON r.ResidentID = res.ResidentID
+                        						Join TypeRequest tr on r.TypeRqID = tr.TypeRqID 
+                        						join role ro on tr.RoleID = ro.RoleID 
+                        						join Staff st on st.RoleID = ro.RoleID
+                                                WHERE 1 = 1""";
+
+        List<Object> params = new ArrayList<>();
+        try {
+//Xu ly search
+            if (keySearch != null && !keySearch.trim().isEmpty()) {
+                sql += " AND (res.FullName LIKE ? OR a.ApartmentName LIKE ?)";
+                params.add("%" + keySearch + "%");
+                params.add("%" + keySearch + "%");
+            }
+
+//Xu ly filter
+            //check roleName is null or not
+            if (typeRequestID != 0) {
+                sql += " AND r.TypeRqID = ?";
+                params.add(typeRequestID);
+            }
+
+            //check status is null or not
+            if (statusID != 0) {
+                sql += " AND r.StatusID = ? AND res.ResidentID = ?";
+                params.add(statusID);
+                params.add(residentId);
+            } else {
+                sql += " AND res.ResidentID = ?";
+                params.add(residentId);
+            }
+
+            //check date is null or not
+            if (date != null) {
+                sql += " AND CAST([Date] AS DATE) = ?";
+                params.add(Date.valueOf(date));
+            }
+//------------------------------------------
+
+            //Xu ly sort
+            if (keySort != 0) {
+                switch (keySort) {
+                    case 1 ->
+                        sql += " ORDER BY a.ApartmentName";
+                    case 2 ->
+                        sql += " ORDER BY Date";
+                    default ->
+                        throw new AssertionError();
+                }
+            } else {
+                sql += " ORDER BY RequestID DESC";
+            }
+//xu ly phan trang
+            sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            int offset = (page - 1) * pageSize;
+            params.add(offset);
+            params.add(pageSize);
+        } catch (Exception e) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                // Kiểm tra nếu CompletedAt không NULL thì chuyển thành LocalDate, nếu NULL thì gán null
+                java.sql.Date completedAtSql = rs.getDate("CompletedAt");
+                LocalDate completedAt = (completedAtSql != null) ? completedAtSql.toLocalDate() : null;
+
+                // Kiểm tra nếu ViewedAt không NULL thì chuyển thành LocalDate, nếu NULL thì gán null
+                java.sql.Date viewedAtSql = rs.getDate("ViewedAt");
+                LocalDate viewedAt = (viewedAtSql != null) ? viewedAtSql.toLocalDate() : null;
+
+                Request rq = new Request(rs.getInt("RequestID"),
+                          rs.getString("Description"),
+                          rs.getString("Title"),
+                          rs.getDate("Date").toLocalDate(),
+                          statusrequestdao.selectById(rs.getInt("StatusID")),
+                          residentdao.selectById(rs.getInt("ResidentID")),
+                          typerequestdao.selectById(rs.getInt("TypeRqID")),
+                          apartmentdao.selectById(rs.getInt("ApartmentID")),
+                          completedAt,
+                          viewedAt
+                );
+                list.add(rq);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
     public int getNumberOfRequestsBySearchOrFilterOrSort(String keySearch,
               int typeRequestID, LocalDate date, int statusID, int keySort) {
         int num = 0;
@@ -766,6 +895,81 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         }
         return 0;
     }
+    
+    public int getNumberOfRequestsBySearchOrFilterOrSortOfResident(String keySearch,
+              int typeRequestID, LocalDate date, int statusID, int keySort, int residentId) {
+        String sql = """
+                     SELECT COUNT(*)
+                        FROM [ApartmentManagement].[dbo].[Request] r 
+                            JOIN Apartment a ON r.ApartmentID = a.ApartmentID
+                            JOIN Resident res ON r.ResidentID = res.ResidentID
+                            Join TypeRequest tr on r.TypeRqID = tr.TypeRqID 
+                            join role ro on tr.RoleID = ro.RoleID 
+                            join Staff st on st.RoleID = ro.RoleID
+                        WHERE 1 = 1""";
+
+        List<Object> params = new ArrayList<>();
+        try {
+//Xu ly search
+            if (keySearch != null && !keySearch.trim().isEmpty()) {
+                sql += " AND (res.FullName LIKE ? OR a.ApartmentName LIKE ?)";
+                params.add("%" + keySearch + "%");
+                params.add("%" + keySearch + "%");
+            }
+
+//Xu ly filter
+            //check roleName is null or not
+            if (typeRequestID != 0) {
+                sql += " AND r.TypeRqID = ?";
+                params.add(typeRequestID);
+            }
+
+            //check rating is null or not
+            if (statusID != 0) {
+                sql += " AND r.StatusID = ? AND res.ResidentID = ?";
+                params.add(statusID);
+                params.add(residentId);
+            } else {
+                sql += " AND res.ResidentID = ?";
+                params.add(residentId);
+            }
+
+            //check date is null or not
+            if (date != null) {
+                sql += " AND CAST([Date] AS DATE) = ?";
+                params.add(Date.valueOf(date));
+            }
+//------------------------------------------
+
+            //Xu ly sort
+            if (keySort != 0) {
+                switch (keySort) {
+                    case 1 ->
+                        sql += " ORDER BY a.ApartmentName";
+                    case 2 ->
+                        sql += " ORDER BY RequestID";
+                    default ->
+                        throw new AssertionError();
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1); // Trả về số lượng request
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 
     public List<Request> getListByPage(List<Request> list, int start, int end) {
         List<Request> arr = new ArrayList<>();
@@ -851,6 +1055,45 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         }
         return list;
     }
+    
+    public List<Request> selectFirstPageOfResident(int ownerId) {
+        List<Request> list = new ArrayList<>();
+        String sql = """
+                     SELECT * FROM Request 
+                             where ResidentID = ?
+                             ORDER BY [RequestID] DESC OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY""";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, ownerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                // Kiểm tra nếu CompletedAt không NULL thì chuyển thành LocalDate, nếu NULL thì gán null
+                java.sql.Date completedAtSql = rs.getDate("CompletedAt");
+                LocalDate completedAt = (completedAtSql != null) ? completedAtSql.toLocalDate() : null;
+
+                // Kiểm tra nếu ViewedAt không NULL thì chuyển thành LocalDate, nếu NULL thì gán null
+                java.sql.Date viewedAtSql = rs.getDate("ViewedAt");
+                LocalDate viewedAt = (viewedAtSql != null) ? viewedAtSql.toLocalDate() : null;
+
+                Request rq = new Request(rs.getInt("RequestID"),
+                          rs.getString("Description"),
+                          rs.getString("Title"),
+                          rs.getDate("Date").toLocalDate(),
+                          statusrequestdao.selectById(rs.getInt("StatusID")),
+                          residentdao.selectById(rs.getInt("ResidentID")),
+                          typerequestdao.selectById(rs.getInt("TypeRqID")),
+                          apartmentdao.selectById(rs.getInt("ApartmentID")),
+                          completedAt,
+                          viewedAt
+                );
+                list.add(rq);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 
     public int numberfLineOStaff(int roleID) {
         String sql = """
@@ -885,5 +1128,20 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
         }
         return false;
     }
+    public static Map<Integer, Integer> getRequestCountsByMonth() {
+        Map<Integer, Integer> requestCounts = new HashMap<>();
+        String sql = "SELECT MONTH([Date]) AS Month, COUNT(*) AS Total FROM Request GROUP BY MONTH([Date])";
 
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                requestCounts.put(rs.getInt("Month"), rs.getInt("Total"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return requestCounts;
+    }
 }

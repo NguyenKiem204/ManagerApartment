@@ -242,7 +242,7 @@
                     <a href="<%= request.getContextPath() %>/requeststaff" class="btn-back">Back to List</a>
                 </c:if>
                 <c:if test="${sessionScope.resident.role.roleID == 7}">
-                    <a href="<%= request.getContextPath() %>/redirect/home" class="btn-back">Back to List</a>
+                    <a href="<%= request.getContextPath() %>/owner/listrequest" class="btn-back">Back to List</a>
                 </c:if> 
             </div>
     </body>

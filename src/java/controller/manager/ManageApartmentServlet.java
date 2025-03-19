@@ -88,21 +88,13 @@ public class ManageApartmentServlet extends HttpServlet {
             String apartmentName = request.getParameter("apartmentName");
 
             // Kiểm tra apartmentName không được null hoặc rỗng
-            if (apartmentName == null || apartmentName.trim().isEmpty()) {
+            if (apartmentName == null || apartmentName.trim().isEmpty() || !apartmentName.matches("^[A-Za-zÀ-ỹ0-9\\s]+$")) {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "Apartment name cannot be empty!");
+                jsonResponse.put("message", "Apartment name cannot be empty or contains special characters!");
                 out.write(jsonResponse.toString());
                 return;
             }
 
-            // Kiểm tra định dạng apartmentName (chỉ chứa chữ cái, số và khoảng trắng)
-            // Nếu bạn cho phép ký tự đặc biệt khác, hãy điều chỉnh regex cho phù hợp
-            if (!apartmentName.matches("^[a-zA-Z0-9\\s]+$")) {
-                jsonResponse.put("success", false);
-                jsonResponse.put("message", "Apartment name must contain only letters, numbers, and spaces!");
-                out.write(jsonResponse.toString());
-                return;
-            }
 
             String block = request.getParameter("block");
             String status = request.getParameter("status");
