@@ -67,8 +67,19 @@ public class ListRequestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         RequestDAO requestDAO = new RequestDAO();
+        
         HttpSession session = request.getSession();
         Resident resident = (Resident) session.getAttribute("resident");
+        Staff staff = (Staff) session.getAttribute("staff");
+
+        // Kiểm tra quyền truy cập (chỉ cho phép Staff ngoại trừ Manager)
+        if (resident == null || staff != null) {
+            request.setAttribute("errorCode", "403");
+            request.setAttribute("errorMessage", "You do not have permission to access!");
+            request.getRequestDispatcher("error-authorization.jsp").forward(request, response);
+            return;
+        }
+        
         int ownerId = resident.getResidentId();
         
         List<Request> listFirstPage = requestDAO.selectFirstPageOfResident(ownerId);

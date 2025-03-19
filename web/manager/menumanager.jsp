@@ -484,15 +484,21 @@
                                         </c:if>
                                         <c:if test="${sessionScope.resident.role.roleID == 6}">
                                             <li class="submenu-item">
-                                                <a href="<%= request.getContextPath() %>/tenant/feedback"
+                                                <a href="<%= request.getContextPath() %>/owner/feedback"
                                                    >Feedback</a
                                                 >
                                             </li>
                                             <li class="submenu-item">
-                                                <a href="<%= request.getContextPath() %>/tenant/request"
+                                                <a href="<%= request.getContextPath() %>/owner/request"
                                                    >Request</a
                                                 >
                                             </li>
+                                            <li class="submenu-item">
+                                                <a href="<%= request.getContextPath() %>/owner/listrequest"
+                                                   >List Requests</a
+                                                >
+                                            </li>
+
                                         </c:if>
                                     </ul>
                                 </li>
