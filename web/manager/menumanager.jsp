@@ -324,6 +324,22 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    <li class="sidebar-item has-sub">
+                                        <a href="#" class="sidebar-link">
+                                            <i class="fa-solid fa-money-bill"></i>
+                                            <span>Revenue</span>
+                                        </a>
+                                        <ul class="submenu resident-active">
+                                            <li class="submenu-item">
+                                                <a href="FundManager">Fund</a>
+                                            </li>
+                                            <li class="submenu-item">
+                                                <a href="Revenue">Revenue statistics</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+
                                 </c:if>
                                 <c:if test="${sessionScope.staff.role.roleID == 3}">
                                     <li class="sidebar-item">
@@ -332,7 +348,7 @@
                                             class="sidebar-link"
                                             >
                                             <i class="bi bi-receipt-cutoff"></i>
-                                            <span>Invoice Management</span>
+                                            <span>Financial Management</span>
                                         </a>
                                     </li>
                                 </c:if>
@@ -741,7 +757,7 @@
                             }
                         }
                     }
-                    
+
 
                     // Khi click vào thông báo, đổi màu và update trạng thái đọc
                     $("#notificationList").on("click", "li", function () {

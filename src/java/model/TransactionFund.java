@@ -5,6 +5,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class TransactionFund {
 
@@ -59,6 +60,14 @@ public class TransactionFund {
 
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
+    }
+
+    public String getTransactionDateft() {
+        if (transactionDate == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return transactionDate.format(formatter);
     }
 
     public String getDescription() {

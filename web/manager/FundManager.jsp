@@ -98,222 +98,140 @@
 
     </head>
 
-    <body>
 
+
+
+    <body>
         <%@include file="/manager/menumanager.jsp" %>
 
-
-
         <div id="main">
-            <div class="container ">
+            <main id="content">
 
-                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                    <h2>Invoices Manager</h2>
-                    <div class="d-flex align-items-center">
-                        <a href="<%= request.getContextPath() %>/accountant/UpdateStatusInvoice" class="btn btn-primary d-flex align-items-center me-2">
-                            <i class="bi bi-arrow-repeat me-1"></i> Update Status
-                        </a>
-                        <a href="<%= request.getContextPath() %>/accountant/ViewExpense" class="btn btn-warning d-flex align-items-center me-2">
-                            <i class="bi bi-cash-stack me-1"></i> Expense
-                        </a>
-                        <a href="<%= request.getContextPath() %>/accountant/addnewinvoice" class="btn btn-success d-flex align-items-center">
-                            <i class="bi bi-plus-lg me-1"></i> Add New Invoice
-                        </a>
-                    </div>
-                </div>
-                <div class="search-sort-container">
-                    <div class="row mb-3 align-items-center" >
-                        <div class="col-md-8">
-                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
-
-                                <select class="form-select" name="status">
-                                    <option value="">All Status</option>
-                                    <option value="Paid" ${selectedStatus == 'Paid' ? 'selected' : ''}>Paid</option>
-                                    <option value="Unpaid" ${selectedStatus == 'Unpaid' ? 'selected' : ''}>Unpaid</option>
-                                </select>
-                                <label for="FromDate" class="form-label align-self-center">From:</label>
-                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="FromDate" 
-                                       value="${selectedFromDate}">
-                                <label for="dueDate" class="form-label align-self-center">Due:</label>
-                                <input type="text" class="form-control" id="datePicker" placeholder="dd/MM/yyyy" name="dueDate" 
-                                       value="${selectedDueDate}">
-
-
-                                <button type="submit" class="btn btn-primary" style="width: 70px;">Filter</button>
-
-                                <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-info btn-sm">
-                                    <i class="fas fa-sync-alt"></i> <!-- Icon reload -->
-                                </a>
-
-                            </form>
-                        </div>
-
-
-                        <div class="col-md-4">
-                            <form action="InvoicesManager" method="get" class="d-flex gap-2">
-                                <input type="text" name="search" placeholder="Search by title.." value="${search}" class="form-control me-2">
-
-                                <input type="hidden" name="status" value="${selectedStatus}">  
-                                <input type="hidden" name="FromDate" value="${selectedFromDate}">  
-                                <input type="hidden" name="dueDate" value="${selectedDueDate}"> 
-                                <button type="submit" class="btn btn-primary">Search</button>
-                            </form>
+                <div class="card p-4 shadow-lg rounded-4" style="max-width: 1100px; margin: 10px auto;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-left">Fund Management List</h3>
+                        <div>
+                            <a href="<%= request.getContextPath() %>/manager/ViewAllTrans" class="btn btn-secondary">
+                                <i class="fas fa-list"></i> View All Transactions
+                            </a>
                         </div>
                     </div>
 
+                    <c:choose>
+                        <c:when test="${not empty funds}">
+                            <table class="table mt-3">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Fund Name</th>
+                                        <th>Type Fund</th>
+                                        <th>Current Balance</th>
+                                        <th>Status</th>
+                                        <th>Created At</th>
 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach items="${funds}" var="fund">
+                                        <tr>
+                                            <td>${fund.fundName}</td>
+                                            <td>
+                                                ${fund.typeFund.typeName}
+
+                                            </td>
+                                            <td>
+                                                <fmt:formatNumber value="${fund.currentBalance}" pattern="0.00" />
+                                            </td>
+                                            <td>${fund.status}</td>
+                                            <td>${fund.createdAtft}</td>
+
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="text-center text-muted">No funds available.</p>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
 
 
-                <table class="tableinvoice ">
-                    <thead class="table">
-                        <tr>
-                            <th>Invoice Code</th>
-                            <th>Title</th>
-                            <th>Apartment</th>
-                            <th>Status</th>
-                            <th>Payment Term</th>
-                            <th>Payment Date</th>
-                            <th>Public Date</th>
-                            <th>Amount</th>
-                            <th>Late(0,1%/d)</th>
-                            <th  style="width:30px">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody style="background:white" id="tableBody">
-                        <c:forEach items="${sessionScope.ListInvoices}" var="l">
+
+                <div class="card p-4 shadow-lg rounded-4" style="max-width: 1100px; margin: 10px auto;">
+                    <h4 class="text-center">Expense Detail on </h4>
+                    <table class="tableinvoice mt-4">
+                        <thead>
                             <tr>
-                                <td>${l.invoiceID}</td>
-                                <td>${l.description}</td>
-
-                                <td>${l.apartment.apartmentName}</td>
-                                <td>
-
-                                    <c:if test="${'Unpaid' eq l.status}">
-                                        <p style="background-color: orange; color: white; border-radius: 8px; padding: 5px; display: inline-block; text-align: center;">
-                                            ${l.status}
-                                        </p>
-                                    </c:if>
-                                    <c:if test="${'Paid' eq l.status}">
-                                        <p style="background-color: green; color: white; border-radius: 8px; padding: 5px; display: inline-block; text-align: center;">
-                                            ${l.status}
-                                        </p>
-                                    </c:if>
-                                </td>
-                                <td>${l.dueDateft}</td>
-                                <td>${l.paydateft}</td>
-                                <td>${l.publicDateft}</td>
-                                <td><fmt:formatNumber value="${l.totalAmount + l.muon}" pattern="#0.00"/></td>
-                                <td>
-                                    <c:if test="${l.muon != 0}">
-                                        <p style="color:red">Islate</p>
-                                    </c:if>
-                                </td>
-                                <td style="width:30px">
-                                    <a href="<%= request.getContextPath() %>/accountant/DetailInvoice?invoiceID=${l.invoiceID}" class="btn btn-info btn-sm">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                </td>
-
+                                <th>Description</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Amount</th>
+                                <th>Action</th>
                             </tr>
-                        </c:forEach>
-                    </tbody>
+                        </thead>
+                        <tbody>
+                            <c:set var="totalAmount" value="0" />
+                            <c:choose>
+                                <c:when test="${not empty expenseDetails}">
+                                    <c:forEach items="${expenseDetails}" var="detail">
+                                        <tr>
+                                            <td>${detail.description}</td>
+                                            <td>${detail.typeExpense.typeName}</td>
+                                            <td>${detail.status}</td>
+                                            <td>
+                                                <fmt:formatNumber value="${detail.amount}" pattern="0.00" />
+                                            </td>
+                                            <td>
+                                                <a href="<%= request.getContextPath() %>/manager/updateExpenseStatus?expenseDetailID=${detail.expenseDetailID}&status=Approved&typeid=${detail.typeExpense.typeExpenseID}&amount=${detail.amount}&des=${detail.description}" class="btn btn-success">
 
-                </table>
-                <c:set var="totalAmount" value="0"/>
-                <c:forEach items="${sessionScope.ListInvoices}" var="l">
-                    <c:set var="totalAmount" value="${totalAmount + l.totalAmount + l.muon}"/>
-                </c:forEach>
+                                                    <a href="<%= request.getContextPath() %>/manager/updateExpenseStatus?expenseDetailID=${detail.expenseDetailID}&status=Rejected&typeid=${detail.typeExpense.typeExpenseID}&amount=${detail.amount}&des=${detail.description}" class="btn btn-danger">
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                    <div></div> <!-- Chừa khoảng trống để không ảnh hưởng đến layout -->
-                    <div style="text-align: right; font-size: 18px; font-weight: bold;">
-                        Total Invoice Amount: 
-                        <span style="color: red;">
-                            <fmt:formatNumber value="${totalAmount}" type="number" pattern="#,##0.00"/>
+                                                        </td>
+                                                        </tr>
+                                                        <c:set var="totalAmount" value="${totalAmount + (detail.amount ne null ? detail.amount : 0)}" />
+                                                    </c:forEach>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <tr>
+                                                        <td colspan="4" class="empty-message">No expenses recorded for today.</td>
+                                                    </tr>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            </tbody>
 
-                        </span>
-                    </div>
-                </div>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="3" style="text-align: right; font-weight: bold;">Total Amount:</td>
+                                                    <td style="font-weight: bold;">
+                                                        <fmt:formatNumber value="${totalAmount}" pattern="0.00" />
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                            </table>
+                                            </div>
+                                            </main>
+                                            </div>
+                                            <script>
 
-                <c:if test="${not empty sessionScope.ListInvoices && requestScope.totalPage > 1}">
-
-                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                        <c:set var="startPage" value="${requestScope.currentPage - 1}" />
-                        <c:set var="endPage" value="${requestScope.currentPage + 1}" />
-                        <c:if test="${startPage < 1}">
-                            <c:set var="startPage" value="1"/>
-                            <c:set var="endPage" value="3"/>
-                        </c:if>
-                        <c:if test="${endPage > requestScope.totalPage}">
-                            <c:set var="endPage" value="${requestScope.totalPage}"/>
-                            <c:set var="startPage" value="${endPage - 2}" />
-                            <c:if test="${startPage < 1}">
-                                <c:set var="startPage" value="1"/>
-                            </c:if>
-                        </c:if>
-                        <c:if test="${requestScope.currentPage > 1}">
-                            <a href="InvoicesManager?page=${requestScope.currentPage - 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
-                               style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
-                                &lt;
-                            </a>
-                        </c:if>
-                        <c:forEach begin="${startPage}" end="${endPage}" var="page">
-                            <a href="InvoicesManager?page=${page}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
-                               style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;
-                               <c:if test='${page == requestScope.currentPage}'> background-color: #007bff; color: white; </c:if>">
-                                ${page}
-                            </a>
-                        </c:forEach>
-                        <c:if test="${requestScope.currentPage < requestScope.totalPage}">
-                            <a href="InvoicesManager?page=${requestScope.currentPage + 1}&search=${search}&status=${selectedStatus}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
-                               style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
-                                &gt;
-                            </a>
-                        </c:if>
-                    </div>
-
-                </c:if>
-                <c:if test="${empty sessionScope.ListInvoices}">
-                    <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
-                        <p style="font-size: 20px;">${message}</p>
-                    </div>
-                </c:if>
-
-            </div>
-        </div>
-        <% if (request.getAttribute("message") != null) { %>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                let errorMessage = "<%= request.getAttribute("message") %>";
-                let notification = document.createElement("div");
-                notification.innerText = errorMessage;
-                notification.style.position = "fixed";
-                notification.style.top = "20px";
-                notification.style.right = "20px";
-                notification.style.backgroundColor = "red";
-                notification.style.color = "white";
-                notification.style.padding = "15px";
-                notification.style.borderRadius = "5px";
-                notification.style.boxShadow = "0px 0px 10px rgba(0,0,0,0.5)";
-                notification.style.zIndex = "1000";
-                notification.style.fontSize = "16px";
-                notification.style.fontWeight = "bold";
-                document.body.appendChild(notification);
-
-                // Hiển thị thông báo từ 5 đến 10 giây (ngẫu nhiên)
-                let displayTime = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
-                setTimeout(() => {
-                    notification.remove();
-                }, displayTime);
-            });
-        </script>
-        <% } %>
+                                                <script>
+                                                function updateExpenseStatus(expenseDetailID, status) {
+                                                        if (confirm(`Are you sure you want to ${status.toLowerCase()} this expense?`)) {
+                                                fetch(`UpdateExpenseStatusServlet?expenseDetailID=${expenseDetailID}&status=${status}`, {
+                                                method: "POST"
+                                                })
+                                                        .then(response => response.text())
+                                                        .then(data => {
+                                                        alert(data);
+                                                                location.reload();
+                                                        })
+                                                        .catch(error => console.error("Error:", error));
+                                                }
+            }
+                                                </script>
+                                            </body>
 
 
 
 
 
-    </body>
-
-</html>
+                                            </html>

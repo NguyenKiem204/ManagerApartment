@@ -3,11 +3,32 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< Updated upstream
             <file>file:/D:/gitSWP391/ManagerApartment/src/java/dao/NewsDAO.java</file>
             <file>file:/D:/gitSWP391/ManagerApartment/src/java/model/Feedback.java</file>
             <file>file:/D:/gitSWP391/ManagerApartment/src/java/controller/administrative/HomeAdministrativeServlet.java</file>
             <file>file:/D:/gitSWP391/ManagerApartment/src/java/dao/FeedbackDAO.java</file>
             <file>file:/D:/gitSWP391/ManagerApartment/web/administrative/home.jsp</file>
+=======
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/InvoicesManager.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/owner/paymentSuccess.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/FundDAO.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/owner/DetailInvoiceOwner.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/TransactionFund.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/owner/DetailInvoiceOnwer.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/FundManagement.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/ImportExpense.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/ViewExpense.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/InvoiceDAO.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/accountant/AddNewInvoice.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/manager/FundManager.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/dao/Test.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/model/TypeFund.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/web/manager/menumanager.jsp</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/manager/FundManager.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/controller/accountant/AddNewInvoices.java</file>
+            <file>file:/D:/kì%205%20sp25/duanmonP/src/java/config/EmailSender.java</file>
+>>>>>>> Stashed changes
         </group>
     </open-files>
 </project-private>

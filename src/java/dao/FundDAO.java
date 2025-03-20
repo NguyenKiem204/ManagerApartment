@@ -4,17 +4,22 @@
  */
 package dao;
 
+import java.time.LocalDate;
 import java.security.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import model.Expense;
 import model.FundManagement;
 import model.TransactionFund;
+import model.TypeFund;
 
 /**
  *
@@ -115,29 +120,332 @@ public class FundDAO implements DAOInterface<FundManagement, Integer> {
 
     public List<FundManagement> getAllFunds() {
         List<FundManagement> funds = new ArrayList<>();
-        String sql = "SELECT FundID, FundName, TotalAmount, CurrentBalance, CreatedAt, Status, TypeFundID, CreatedBy FROM FundManagement";
+        String sql = "SELECT fm.FundID, fm.FundName, fm.TotalAmount, fm.CurrentBalance, fm.CreatedAt, fm.Status, "
+                + "fm.TypeFundID, fm.CreatedBy, tf.TypeFundID, tf.TypeName, tf.DefaultAmount "
+                + "FROM FundManagement fm "
+                + "INNER JOIN TypeFund tf ON fm.TypeFundID = tf.TypeFundID";
 
-        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                FundManagement fund = new FundManagement();
-                fund.setFundID(rs.getInt("FundID"));
-                fund.setFundName(rs.getString("FundName"));
-                fund.setTotalAmount(rs.getDouble("TotalAmount"));
-                fund.setCurrentBalance(rs.getDouble("CurrentBalance"));
-                java.sql.Timestamp createdTimestamp = rs.getTimestamp("CreatedAt");
-                fund.setCreatedAt((createdTimestamp != null) ? createdTimestamp.toLocalDateTime().toLocalDate() : null);
-                fund.setStatus(rs.getString("Status"));
-                fund.setTypeFundID(rs.getInt("TypeFundID"));
-                fund.setCreatedBy(rs.getInt("CreatedBy"));
+                int fundID = rs.getInt("FundID");
+                String fundName = rs.getString("FundName");
+                double totalAmount = rs.getDouble("TotalAmount");
+                double currentBalance = rs.getDouble("CurrentBalance");
+                LocalDate createdAt = rs.getDate("CreatedAt").toLocalDate();
+                String status = rs.getString("Status");
+                int createdBy = rs.getInt("CreatedBy");
+
+                // Lấy thông tin TypeFund
+                int typeFundID = rs.getInt("TypeFundID");
+                String typeName = rs.getString("TypeName");
+                double defaultAmount = rs.getDouble("DefaultAmount");
+                TypeFund typeFund = new TypeFund(typeFundID, typeName, defaultAmount);
+
+                // Lấy danh sách các giao dịch liên quan đến quỹ này
+                List<TransactionFund> transactions = getTransactionsByFundID(fundID);
+
+                // Tạo đối tượng FundManagement
+                FundManagement fund = new FundManagement(fundID, fundName, totalAmount, currentBalance, createdAt, status, typeFund, createdBy, transactions);
                 funds.add(fund);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return funds;
+    }
+
+    private List<TransactionFund> getTransactionsByFundID(int fundID) {
+        List<TransactionFund> transactions = new ArrayList<>();
+        String sql = "SELECT TransactionID, FundID, Amount, TransactionType, Description, TransactionDate, StaffID "
+                + "FROM TransactionFund WHERE FundID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, fundID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int transactionID = rs.getInt("TransactionID");
+                    double amount = rs.getDouble("Amount");
+                    String transactionType = rs.getString("TransactionType");
+                    String description = rs.getString("Description");
+                    LocalDate transactionDate = rs.getDate("TransactionDate").toLocalDate();
+                    int staffID = rs.getInt("StaffID");
+
+                    TransactionFund transaction = new TransactionFund(transactionID, fundID, amount, transactionType, description, transactionDate, staffID);
+                    transactions.add(transaction);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return transactions;
+    }
+
+    public List<FundManagement> getAllFunds(LocalDate filterDate, Integer filterMonth, Integer filterYear) {
+        List<FundManagement> funds = new ArrayList<>();
+        String sql = "SELECT fm.FundID, fm.FundName, fm.TotalAmount, fm.CurrentBalance, fm.CreatedAt, fm.Status, "
+                + "fm.TypeFundID, fm.CreatedBy, tf.TypeFundID, tf.TypeName, tf.DefaultAmount "
+                + "FROM FundManagement fm "
+                + "INNER JOIN TypeFund tf ON fm.TypeFundID = tf.TypeFundID";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int fundID = rs.getInt("FundID");
+                String fundName = rs.getString("FundName");
+                double totalAmount = rs.getDouble("TotalAmount");
+                double currentBalance = rs.getDouble("CurrentBalance");
+                LocalDate createdAt = rs.getDate("CreatedAt").toLocalDate();
+                String status = rs.getString("Status");
+                int createdBy = rs.getInt("CreatedBy");
+
+                // Lấy thông tin TypeFund
+                int typeFundID = rs.getInt("TypeFundID");
+                String typeName = rs.getString("TypeName");
+                double defaultAmount = rs.getDouble("DefaultAmount");
+                TypeFund typeFund = new TypeFund(typeFundID, typeName, defaultAmount);
+
+                // Lấy danh sách các giao dịch liên quan đến quỹ này với bộ lọc
+                List<TransactionFund> transactions = getTransactionsByFundID(fundID, filterDate, filterMonth, filterYear);
+
+                // Tạo đối tượng FundManagement
+                FundManagement fund = new FundManagement(fundID, fundName, totalAmount, currentBalance, createdAt, status, typeFund, createdBy, transactions);
+                funds.add(fund);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return funds;
+    }
+
+    public List<TransactionFund> getTransactionsByFundID(int fundID, LocalDate filterDate, Integer filterMonth, Integer filterYear) {
+        List<TransactionFund> transactions = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT TransactionID, FundID, Amount, TransactionType, Description, TransactionDate, StaffID "
+                + "FROM TransactionFund WHERE FundID = ?"
+        );
+
+        // Thêm điều kiện lọc theo ngày, tháng, năm nếu có
+        if (filterDate != null) {
+            sql.append(" AND CAST(TransactionDate AS DATE) = ?");
+        } else if (filterMonth != null && filterYear != null) {
+            sql.append(" AND MONTH(TransactionDate) = ? AND YEAR(TransactionDate) = ?");
+        } else if (filterYear != null) {
+            sql.append(" AND YEAR(TransactionDate) = ?");
+        }
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            ps.setInt(1, fundID);
+
+            // Thiết lập các tham số lọc
+            int paramIndex = 2;
+            if (filterDate != null) {
+                ps.setDate(paramIndex++, Date.valueOf(filterDate));
+            } else if (filterMonth != null && filterYear != null) {
+                ps.setInt(paramIndex++, filterMonth);
+                ps.setInt(paramIndex++, filterYear);
+            } else if (filterYear != null) {
+                ps.setInt(paramIndex++, filterYear);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int transactionID = rs.getInt("TransactionID");
+                    double amount = rs.getDouble("Amount");
+                    String transactionType = rs.getString("TransactionType");
+                    String description = rs.getString("Description");
+                    LocalDate transactionDate = rs.getDate("TransactionDate").toLocalDate();
+                    int staffID = rs.getInt("StaffID");
+
+                    TransactionFund transaction = new TransactionFund(transactionID, fundID, amount, transactionType, description, transactionDate, staffID);
+                    transactions.add(transaction);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return transactions;
+    }
+
+    public double income(List<TransactionFund> transactions, String type) {
+        return transactions.stream()
+                .filter(t -> t.getTransactionType().equals(type))
+                .mapToDouble(TransactionFund::getAmount)
+                .sum();
+    }
+
+    public List<TransactionFund> getAllTransactions() {
+        List<TransactionFund> transactions = new ArrayList<>();
+        String sql = "SELECT TransactionID, FundID, Amount, TransactionType, Description, TransactionDate, StaffID FROM TransactionFund order by TransactionID desc ";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                int transactionID = rs.getInt("TransactionID");
+                int fundID = rs.getInt("FundID");
+                double amount = rs.getDouble("Amount");
+                String transactionType = rs.getString("TransactionType");
+                String description = rs.getString("Description");
+                LocalDate transactionDate = rs.getDate("TransactionDate").toLocalDate();
+                int staffID = rs.getInt("StaffID");
+
+                TransactionFund transaction = new TransactionFund(transactionID, fundID, amount, transactionType, description, transactionDate, staffID);
+                transactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactions;
+    }
+
+    public Map<String, double[]> getMonthlyIncomeAndSpending(int year) throws SQLException {
+        Map<String, double[]> monthlyData = new HashMap<>();
+        String sql = "SELECT MONTH(TransactionDate) AS month, "
+                + "SUM(CASE WHEN TransactionType = 'Income' THEN Amount ELSE 0 END) AS income, "
+                + "SUM(CASE WHEN TransactionType = 'Expense' THEN Amount ELSE 0 END) AS spending "
+                + "FROM TransactionFund "
+                + "WHERE YEAR(TransactionDate) = ? "
+                + "GROUP BY MONTH(TransactionDate)";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int month = rs.getInt("month");
+                    double income = rs.getDouble("income");
+                    double spending = rs.getDouble("spending");
+                    double balance = income - spending;
+                    // Lưu dữ liệu vào map
+                    monthlyData.put(String.valueOf(month), new double[]{income, spending, balance});
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        return monthlyData;
+    }
+
+    public List<TransactionFund> getTransactions(LocalDate filterDate, Integer filterMonth, Integer filterYear) {
+        List<TransactionFund> transactions = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT TransactionID, FundID, Amount, TransactionType, Description, TransactionDate, StaffID "
+                + "FROM TransactionFund"
+        );
+
+        // Thêm điều kiện lọc nếu có
+        boolean hasFilter = false;
+        if (filterDate != null) {
+            sql.append(" WHERE CAST(TransactionDate AS DATE) = ?");
+            hasFilter = true;
+        } else if (filterMonth != null && filterYear != null) {
+            sql.append(" WHERE MONTH(TransactionDate) = ? AND YEAR(TransactionDate) = ?");
+            hasFilter = true;
+        } else if (filterYear != null) {
+            sql.append(" WHERE YEAR(TransactionDate) = ?");
+            hasFilter = true;
+        }
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            // Thiết lập các tham số lọc
+            int paramIndex = 1;
+            if (filterDate != null) {
+                ps.setDate(paramIndex++, Date.valueOf(filterDate));
+            } else if (filterMonth != null && filterYear != null) {
+                ps.setInt(paramIndex++, filterMonth);
+                ps.setInt(paramIndex++, filterYear);
+            } else if (filterYear != null) {
+                ps.setInt(paramIndex++, filterYear);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int transactionID = rs.getInt("TransactionID");
+                    int fundID = rs.getInt("FundID");
+                    double amount = rs.getDouble("Amount");
+                    String transactionType = rs.getString("TransactionType");
+                    String description = rs.getString("Description");
+                    LocalDate transactionDate = rs.getDate("TransactionDate").toLocalDate();
+                    int staffID = rs.getInt("StaffID");
+
+                    TransactionFund transaction = new TransactionFund(transactionID, fundID, amount, transactionType, description, transactionDate, staffID);
+                    transactions.add(transaction);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return transactions;
+    }
+
+    public List<TransactionFund> getAllTransactions(LocalDate fromDate, LocalDate toDate, String transactionType, Double minAmount, Double maxAmount) {
+        List<TransactionFund> transactions = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT TransactionID, FundID, Amount, TransactionType, Description, TransactionDate, StaffID FROM TransactionFund WHERE 1=1");
+
+        // Thêm điều kiện lọc nếu có
+        if (fromDate != null) {
+            sql.append(" AND TransactionDate >= ?");
+        }
+        if (toDate != null) {
+            sql.append(" AND TransactionDate <= ?");
+        }
+        if (transactionType != null && !transactionType.isEmpty()) {
+            sql.append(" AND TransactionType = ?");
+        }
+        if (minAmount != null) {
+            sql.append(" AND Amount >= ?");
+        }
+        if (maxAmount != null) {
+            sql.append(" AND Amount <= ?");
+        }
+
+        sql.append(" ORDER BY TransactionID DESC");
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (fromDate != null) {
+                ps.setDate(paramIndex++, java.sql.Date.valueOf(fromDate));
+            }
+            if (toDate != null) {
+                ps.setDate(paramIndex++, java.sql.Date.valueOf(toDate));
+            }
+            if (transactionType != null && !transactionType.isEmpty()) {
+                ps.setString(paramIndex++, transactionType);
+            }
+            if (minAmount != null) {
+                ps.setDouble(paramIndex++, minAmount);
+            }
+            if (maxAmount != null) {
+                ps.setDouble(paramIndex++, maxAmount);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int transactionID = rs.getInt("TransactionID");
+                    int fundID = rs.getInt("FundID");
+                    double amount = rs.getDouble("Amount");
+                    String transType = rs.getString("TransactionType");
+                    String description = rs.getString("Description");
+                    LocalDate transactionDate = rs.getDate("TransactionDate").toLocalDate();
+                    int staffID = rs.getInt("StaffID");
+
+                    TransactionFund transaction = new TransactionFund(transactionID, fundID, amount, transType, description, transactionDate, staffID);
+                    transactions.add(transaction);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactions;
     }
 
     @Override
