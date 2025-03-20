@@ -89,7 +89,7 @@
     </head>
 
     <body>
-        <%@include file="menuaccountant.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
         <div id="main">
 
             <main  id="content">
