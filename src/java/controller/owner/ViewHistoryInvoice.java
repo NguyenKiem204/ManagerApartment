@@ -73,6 +73,8 @@ public class ViewHistoryInvoice extends HttpServlet {
         String fromDateStr = request.getParameter("FromDate");
         String dueDateStr = request.getParameter("dueDate");
         String search = request.getParameter("search");
+        String page1 = request.getParameter("page1");
+        request.setAttribute("page1", page1);
         try {
             InvoiceDAO Idao = new InvoiceDAO();
             ApartmentDAO adao = new ApartmentDAO();

@@ -5,7 +5,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Home</title>
+        <title>Revenue</title>
         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png" type="image/x-icon" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -86,12 +86,12 @@
         </style>
     </head>
     <body>
-        <%@include file="/manager/menumanager.jsp" %>
+        <%@include file="menumanager.jsp" %>
         <div id="main" style="margin-top: -60px">
             <div class="page-heading d-flex justify-content-between align-items-center">
                 <h3>Statistics</h3>
                 <div class="d-flex align-items-center">
-                    <form action="home" method="get">
+                    <form action="Revenue" method="get">
                         <label for="filter" class="mb-0">View:</label>
                         <select name="filter" id="time" class="form-control form-select" onchange="this.form.submit()">
                             <option value="Day" ${filter == 'Day' ? 'selected' : ''}>Day</option>
@@ -115,7 +115,7 @@
 
                                         <div class="icon-container">
                                             <div class="icon-box">
-                                                <i class="fa-solid fa-money-bill"></i>
+                                                <i class="fa-solid fa-arrow-right"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -129,7 +129,7 @@
 
                                         <div class="icon-container">
                                             <div class="icon-box">
-                                                <i class="fa-solid fa-inbox-full"></i>
+                                                <i class="fa-solid fa-arrow-right"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -142,7 +142,7 @@
 
                                         <div class="icon-container">
                                             <div class="icon-box">
-                                                <i class="fa-regular fa-right-from-bracket"></i>
+                                                <i class="fa-solid fa-arrow-right"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -155,7 +155,7 @@
 
                                         <div class="icon-container">
                                             <div class="icon-box">
-                                                <i class="fa-solid fa-scale-balanced"></i>
+                                                <i class="fa-solid fa-arrow-right"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -190,9 +190,10 @@
                                                         <div>${transaction.description}</div>
                                                     </div>
                                                     <div class="transaction-amount ${transaction.transactionType == 'Income' ? 'positive' : 'negative'}">
-                                                        ${transaction.transactionType == 'Income' ? '+' : '-'} ${transaction.amount}d
+                                                        ${transaction.transactionType == 'Income' ? '+' : '-'} <fmt:formatNumber value="${transaction.amount}" pattern="#,##0.00" type="number"/>
+                                                                                                                               
                                                     </div>
-                                                    <div class="time">${transaction.transactionDate}</div>
+                                                   
                                                 </li>
                                             </c:forEach>
 
@@ -216,25 +217,20 @@
                         </div>
                         <div class="card-body text-center">
                             <h2 class="font-extrabold">${income}d</h2>
-                            <span class="badge bg-primary">Average: 126,281 VND/transaction</span>
+                            <span class="badge bg-primary">Average:${avg}d/income</span>
                             <div class="row mt-4">
-                                <div class="col-md-4 stat-box">
-                                    <h6 class="text-muted">Number Transactions</h6>
-                                    <h5 class="font-extrabold">371</h5>
-                                    <span class="text-muted">Successful Transactions</span>
-                                    <h6 class="font-bold">0</h6>
-                                </div>
-                                <div class="col-md-4 stat-box">
+
+                                <div class="col-md-6 stat-box">
                                     <h6 class="text-muted">Income Transactions</h6>
-                                    <h5 class="font-extrabold">371</h5>
+                                    <h5 class="font-extrabold">${tcome}</h5>
                                     <span class="text-muted">Successful Income Transactions</span>
-                                    <h6 class="font-bold">0</h6>
+                                    <h6 class="font-bold">${pcome}</h6>
                                 </div>
-                                <div class="col-md-4 stat-box">
+                                <div class="col-md-6 stat-box">
                                     <h6 class="text-muted">Expense Transactions</h6>
-                                    <h5 class="font-extrabold">53</h5>
+                                    <h5 class="font-extrabold">${tout}</h5>
                                     <span class="text-muted">Successful Expense Transactions</span>
-                                    <h6 class="font-bold">0</h6>
+                                    <h6 class="font-bold">${aout}</h6>
                                 </div>
 
                             </div>
@@ -267,7 +263,7 @@
                                                         <td>${fund.fundName}</td>
 
                                                         <td>
-                                                            <fmt:formatNumber value="${fund.currentBalance}" pattern="0.00" />
+                                                            <fmt:formatNumber value="${fund.currentBalance}" pattern="#,##0.00" />
                                                         </td>
                                                         <td>${fund.status}</td>
                                                         <td>${fund.createdAtft}</td>

@@ -362,7 +362,8 @@
                     </div>
                     <div class="col-md-5">
                         <form action="manageApartment" method="get" class="d-flex">
-                            <input type="text" name="ownerId" placeholder="Enter an ownerId..." value="${selectedOwnerId}" class="form-control me-2" style="width: 70%;">
+                            <input type="text" name="ownerId" value="${selectedOwnerId == 0 ? '' : selectedOwnerId}" 
+                                    placeholder="Enter an ownerId..." class="form-control me-2" style="width: 70%;">
                             <button type="submit" class="btn btn-primary" style="width: 30%;">Search</button>
                         </form>
                     </div>
@@ -381,7 +382,7 @@
                                 <th>Block</th>
                                 <th>Status</th>
                                 <th>Type</th>
-                                <th>Owner ID</th>
+                                <th>Owner</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -393,7 +394,7 @@
                                     <td>${apartment.block}</td>
                                     <td>${apartment.status}</td>
                                     <td>${apartment.type}</td>
-                                    <td>${apartment.ownerId}</td>
+                                    <td>${apartment.owner.fullName}</td>
                                     <td>
                                         <button class="btn btn-primary btn-edit" data-id="${apartment.apartmentId}">Edit</button>
                                     </td>

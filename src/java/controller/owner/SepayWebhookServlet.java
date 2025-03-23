@@ -50,7 +50,7 @@ public class SepayWebhookServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Read JSON from request
+           
             String jsonBuffer = "";
             try (BufferedReader reader = request.getReader()) {
                 jsonBuffer = reader.lines().collect(Collectors.joining());
@@ -60,25 +60,20 @@ public class SepayWebhookServlet extends HttpServlet {
                 response.getWriter().println("Error reading data from request");
                 return;
             }
-
-            // Parse JSON
             JSONObject jsonData = new JSONObject(jsonBuffer);
 
-            // Get data from webhook
             String gateway = jsonData.optString("gateway", "");
             String accountNumber = jsonData.optString("accountNumber", "");
             String content = jsonData.optString("content", "");
             String transferType = jsonData.optString("transferType", "");
             double transferAmount = jsonData.optDouble("transferAmount", 0.0);
 
-            // Check bank account
             if (!"MBBank".equals(gateway) || !"686868922004".equals(accountNumber)) {
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().println("Webhook ignored");
                 return;
             }
 
-            // Process only "in" transfers
             if (!"in".equals(transferType)) {
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().println("Webhook ignored");
@@ -88,7 +83,6 @@ public class SepayWebhookServlet extends HttpServlet {
             PaymentTransactionDAO transactionDAO = new PaymentTransactionDAO();
             InvoiceDAO invoiceDAO = new InvoiceDAO();
 
-            // Extract transactionId from content
             String transactionId = extractTransactionId(content);
             if (transactionId == null || transactionId.isEmpty()) {
                 LOGGER.log(Level.WARNING, "Could not extract transaction ID from webhook");

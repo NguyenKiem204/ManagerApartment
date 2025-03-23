@@ -36,7 +36,6 @@ public class makepaid extends HttpServlet {
             FundDAO fundDAO = new FundDAO();
             invoiceDAO.updateStatusInvoice(id);
 
- 
             Invoices invoice = invoiceDAO.selectById(id);
             if (invoice == null) {
                 throw new IOException("Invoice not found for ID: " + id);
@@ -49,26 +48,37 @@ public class makepaid extends HttpServlet {
             Map<Integer, Double> fundUpdates = new HashMap<>();
 
             for (InvoiceDetail detail : invoice.getDetails()) {
-                double amount = detail.getAmount();
+                double amount = detail.getAmount()/2;
                 int fundID = fundDAO.getFundIDByTypeFund(detail.getTypeFundID());
 
                 if (fundID == -1) {
                     throw new SQLException("Không tìm thấy FundID tương ứng với TypeFundID: " + detail.getTypeFundID());
                 }
 
-                // Cộng dồn số tiền vào quỹ tương ứng
                 fundUpdates.put(fundID, fundUpdates.getOrDefault(fundID, 0.0) + amount);
             }
 
-            // Cập nhật số dư quỹ bằng updateFundBalance
+            // Cập nhật số dư quỹ và thêm giao dịch vào TransactionFund
             for (Map.Entry<Integer, Double> entry : fundUpdates.entrySet()) {
                 int fundID = entry.getKey();
                 double totalAmount = entry.getValue();
 
-                // Gọi updateFundBalance nhưng KHÔNG gọi insertTransaction nữa
+                // Cập nhật số dư quỹ
                 boolean fundUpdated = fundDAO.updateFundBalance(fundID, totalAmount, "Income");
                 if (!fundUpdated) {
                     throw new SQLException("Không thể cập nhật số dư quỹ cho FundID: " + fundID);
+                }
+
+                // Thêm giao dịch vào TransactionFund
+                boolean transactionInserted = fundDAO.insertTransaction(
+                        fundID,
+                        totalAmount,
+                        "Income",
+                        "Payment for invoice #" + id,
+                        3 // StaffID của kế toán
+                );
+                if (!transactionInserted) {
+                    throw new SQLException("Không thể thêm giao dịch vào bảng TransactionFund cho FundID: " + fundID);
                 }
 
                 System.out.println("Updated FundID: " + fundID + " with amount: " + totalAmount);

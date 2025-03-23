@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller.owner;
 
 import config.SepayConfig;
@@ -87,7 +83,6 @@ public class PaymentServlet extends HttpServlet {
                 return;
             }
 
-            // Kiểm tra quyền truy cập: Chỉ cư dân sở hữu hóa đơn mới được thanh toán
             if (invoice.getResident().getResidentId() != resident.getResidentId()) {
                 request.setAttribute("errorCode", "403");
                 request.setAttribute("errorMessage", "Bạn không có quyền thanh toán hóa đơn này!");
@@ -96,10 +91,8 @@ public class PaymentServlet extends HttpServlet {
             }
 
             double totalAmount = invoice.getTotalAmount() + invoice.getMuon();
-            String transactionId = RandomStringGenerator.generateRandomString(); 
+            String transactionId = RandomStringGenerator.generateRandomString();
             String encodedTransactionId = URLEncoder.encode(transactionId, StandardCharsets.UTF_8.toString());
-
-            // URL thanh toán SePay (transactionId là mô tả giao dịch)
             String paymentUrl = String.format(
                     "https://qr.sepay.vn/img?bank=MBBank&acc=686868922004&template=compact&amount=%.2f&des=%s",
                     totalAmount, encodedTransactionId

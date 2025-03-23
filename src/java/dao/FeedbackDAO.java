@@ -559,6 +559,7 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         }
         System.out.println(listFeedback);
         return listFeedback;
+    }
 
     /**
      *

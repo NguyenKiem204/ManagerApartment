@@ -10,107 +10,186 @@
         <title>Invoice Manager</title>
         <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />
         <style>
+
             body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f4;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f8f9fa;
                 margin: 0;
+                padding: 0;
             }
+
             .container {
                 max-width: 1200px;
                 background-color: #fff;
                 padding: 20px;
-                margin: auto;
+                margin: 20px auto;
                 border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
+
             h2 {
                 text-align: center;
-                color: #ff9800;
+                color: #343a40;
+                margin-bottom: 20px;
             }
-            input, select {
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                font-size: 16px;
+
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                padding: 8px 16px;
+                border-radius: 5px;
+                font-size: 14px;
+                font-weight: 500;
+                transition: background-color 0.3s ease;
             }
-            input {
-                width: 70%;
+
+            .btn-primary {
+                background-color: #007bff;
+                border: none;
             }
-            select {
-                width: 28%;
+
+            .btn-primary:hover {
+                background-color: #0056b3;
             }
-            table {
+
+            .btn-warning {
+                background-color: #ffc107;
+                border: none;
+            }
+
+            .btn-warning:hover {
+                background-color: #e0a800;
+            }
+
+            .btn-success {
+                background-color: #28a745;
+                border: none;
+            }
+
+            .btn-success:hover {
+                background-color: #218838;
+            }
+
+            .btn-info {
+                background-color: #17a2b8;
+                border: none;
+            }
+
+            .btn-info:hover {
+                background-color: #138496;
+            }
+
+            .search-sort-container {
+                margin-bottom: 20px;
+            }
+
+            .search-sort-container .form-control {
+                border-radius: 5px;
+                border: 1px solid #ced4da;
+            }
+
+            .search-sort-container .btn {
+                border-radius: 5px;
+            }
+
+            .tableinvoice {
                 width: 100%;
-                border-collapse: collapse;
-                margin-top: 15px;
+                border-collapse: separate;
+                border-spacing: 0;
+                margin-top: 20px;
             }
-            table, th, td {
-                border: 1px solid #ddd;
-            }
-            th, td {
+
+            .tableinvoice th,
+            .tableinvoice td {
                 padding: 12px;
                 text-align: left;
+                border-bottom: 1px solid #dee2e6;
             }
-            th {
-                background-color: #ff9800;
+
+            .tableinvoice th {
+                background-color: #FFA500; /* Màu cam */
                 color: white;
-                cursor: pointer;
-                position: relative;
+                font-weight: 600;
             }
-            th .sort-icon {
-                margin-left: 5px;
-                font-size: 12px;
+
+            .tableinvoice tbody tr:hover {
+                background-color: #f8f9fa;
             }
-            .rating {
-                color: #FFD700;
-                font-size: 20px;
+
+            .tableinvoice tbody tr td {
+                vertical-align: middle;
             }
-            .pagination {
+
+            .status-paid {
+                background-color: #28a745;
+                color: white;
+                border-radius: 8px;
+                padding: 5px 10px;
+                display: inline-block;
                 text-align: center;
-                margin-top: 10px;
             }
-            .pagination button {
-                background-color: #ff9800;
+
+            .status-unpaid {
+                background-color: #dc3545;
                 color: white;
-                border: none;
-                padding: 8px 15px;
-                margin: 5px;
-                cursor: pointer;
-                border-radius: 4px;
+                border-radius: 8px;
+                padding: 5px 10px;
+                display: inline-block;
+                text-align: center;
             }
-            .pagination button:disabled {
-                background-color: #ccc;
-                cursor: not-allowed;
+
+            
+            .pagination-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 20px;
             }
-            .pagination form {
+
+            .rows-per-page {
                 display: flex;
                 align-items: center;
-                gap: 5px; /* Giảm khoảng cách giữa các phần tử */
+                gap: 10px;
             }
 
-            .pagination label {
-                font-size: 14px; /* Giảm kích thước chữ */
-                margin: 0; /* Loại bỏ margin mặc định */
+            .pagination {
+                display: flex;
+                align-items: center;
+                gap: 10px;
             }
 
-            .pagination select {
-                padding: 4px 8px; /* Giảm padding để làm cho dropdown nhỏ hơn */
-                font-size: 14px; /* Giảm kích thước chữ */
-                border: 1px solid #ccc; /* Thêm viền */
-                border-radius: 4px; /* Bo góc */
-                background-color: #fff; /* Màu nền */
-                cursor: pointer; /* Hiển thị con trỏ khi hover */
-                width: auto; /* Để dropdown tự động co giãn theo nội dung */
+            .pagination a {
+                padding: 8px 16px;
+                text-decoration: none;
+                border: 1px solid #dee2e6;
+                color: #007bff;
+                margin: 0 4px;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
             }
 
-            .pagination select:hover {
-                border-color: #888; /* Đổi màu viền khi hover */
+            .pagination a.active {
+                background-color: #007bff;
+                color: white;
+                border: 1px solid #007bff;
             }
 
-            .pagination select:focus {
-                outline: none; /* Loại bỏ outline khi focus */
-                border-color: #007bff; /* Đổi màu viền khi focus */
+            .pagination a:hover:not(.active) {
+                background-color: #f8f9fa;
             }
+
+            .total-amount {
+                text-align: right;
+                font-size: 18px;
+                font-weight: bold;
+                margin-top: 20px;
+            }
+
+            .total-amount span {
+                color: #dc3545;
+            }
+           
         </style>
     </head>
     <body>
@@ -162,21 +241,23 @@
                     </div>
                 </div>
                 <div class="pagination">
-                    <form action="InvoicesManager" method="get" class="d-flex align-items-center gap-2">
-                        <label for="rowsPerPage">Rows per page:</label>
-                        <select name="rowsPerPage" id="rowsPerPage" onchange="this.form.submit()">
-                            <option value="5" ${rowsPerPage == 5 ? 'selected' : ''}>5</option>
-                            <option value="10" ${rowsPerPage == 10 ? 'selected' : ''}>10</option>
-                            <option value="20" ${rowsPerPage == 20 ? 'selected' : ''}>20</option>
-                            <option value="50" ${rowsPerPage == 50 ? 'selected' : ''}>50</option>
-                            <option value="100" ${rowsPerPage == 100 ? 'selected' : ''}>100</option>
-                        </select>
-                        <input type="hidden" name="page" value="1">
-                        <input type="hidden" name="search" value="${search}">
-                        <input type="hidden" name="status" value="${selectedStatus}">
-                        <input type="hidden" name="FromDate" value="${selectedFromDate}">
-                        <input type="hidden" name="dueDate" value="${selectedDueDate}">
-                    </form>
+                    <div class="rows-per-page">
+                        <form action="InvoicesManager" method="get" class="d-flex align-items-center gap-2">
+                            <label for="rowsPerPage">Rows per page:</label>
+                            <select name="rowsPerPage" id="rowsPerPage" onchange="this.form.submit()">
+                                <option value="5" ${rowsPerPage == 5 ? 'selected' : ''}>5</option>
+                                <option value="10" ${rowsPerPage == 10 ? 'selected' : ''}>10</option>
+                                <option value="20" ${rowsPerPage == 20 ? 'selected' : ''}>20</option>
+                                <option value="50" ${rowsPerPage == 50 ? 'selected' : ''}>50</option>
+                                <option value="100" ${rowsPerPage == 100 ? 'selected' : ''}>100</option>
+                            </select>
+                            <input type="hidden" name="page" value="1">
+                            <input type="hidden" name="search" value="${search}">
+                            <input type="hidden" name="status" value="${selectedStatus}">
+                            <input type="hidden" name="FromDate" value="${selectedFromDate}">
+                            <input type="hidden" name="dueDate" value="${selectedDueDate}">
+                        </form>
+                    </div>
                 </div>
                 <table class="tableinvoice">
                     <thead class="table">
@@ -214,7 +295,7 @@
                                 <td>${l.dueDateft}</td>
                                 <td>${l.paydateft}</td>
                                 <td>${l.publicDateft}</td>
-                                <td><fmt:formatNumber value="${l.totalAmount + l.muon}" pattern="#0.00"/></td>
+                                <td><fmt:formatNumber value="${l.totalAmount + l.muon}" pattern="#,##0.00"/></td>
                                 <td>
                                     <c:if test="${l.muon != 0}">
                                         <p style="color:red">Islate</p>

@@ -185,7 +185,7 @@
                             <tr>
                                 <td>${l.invoiceID}</td>
                                 <td>${l.description}</td>
-                                <td>${l.totalAmount + l.muon}</td>
+                                <td><fmt:formatNumber value="${l.totalAmount + l.muon}" pattern="#0.00"/></td>
                                 <td>${l.apartment.apartmentName}</td>
                                 <td>${l.publicDateft}</td>
                                 <td>${l.publicDateft}</td>
@@ -195,7 +195,7 @@
                                     </c:if>
                                 </td>
                                 <td style="width:50px">
-                                    <a href="<%= request.getContextPath() %>/owner/DetailInvoiceOwner?invoiceID=${l.invoiceID}&page=viewhistory" class="btn btn-info btn-sm">
+                                    <a href="<%= request.getContextPath() %>/owner/DetailInvoiceOwner?invoiceID=${l.invoiceID}&page1=viewhistory" class="btn btn-info btn-sm">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                 </td>
@@ -254,7 +254,7 @@
 
 
 
-     
+
 
 
     </body>

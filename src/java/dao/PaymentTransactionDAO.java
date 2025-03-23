@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 import model.Invoices;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**
@@ -63,18 +64,7 @@ public class PaymentTransactionDAO implements DAOInterface<Invoices, Integer> {
         }
     }
 
-    public static void main(String[] args) {
-        PaymentTransactionDAO dao = new PaymentTransactionDAO();
-
-        // Dữ liệu kiểm thử
-        String invoiceID = "5"; // Thay thế bằng một invoice ID hợp lệ từ database
-        String transactionId = "TX123456";
-        double amount = 500.75;
-        String method = "Online";
-
-        // Thực hiện kiểm thử phương thức createTransaction
-        dao.createTransaction(invoiceID, transactionId, amount, method);
-    }
+    
 
     // Lấy invoice_id từ transaction_id (mã giao dịch)
     public int getInvoiceIdByTransactionId(String transactionId) {
@@ -101,8 +91,6 @@ public class PaymentTransactionDAO implements DAOInterface<Invoices, Integer> {
         }
         return 0;
     }
-
- 
 
     public void updateTransactionStatus(String transactionId, String status) {
         String sql = "UPDATE PaymentTransaction SET status = ? WHERE transaction_id = ?";
@@ -147,4 +135,29 @@ public class PaymentTransactionDAO implements DAOInterface<Invoices, Integer> {
         return false;
     }
 
+    public List<String> getPendingTransaction(int invoiceID) throws SQLException {
+        List<String> pendingTransactions = new ArrayList<>();
+        String sql = "SELECT transaction_id FROM PaymentTransaction WHERE invoice_id = ? AND status = 'Pending'";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, invoiceID);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                pendingTransactions.add(rs.getString("transaction_id"));
+            }
+        }
+        return pendingTransactions;
+    }
+
+    public int deleteTransactionsByInvoiceID(int invoiceID) {
+        String sql = "DELETE FROM PaymentTransaction WHERE invoiceID = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, invoiceID);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

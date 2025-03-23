@@ -1,10 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-package controller.accountant;
+package controller.manager;
 
+import dao.ExpenseDAO;
 import dao.FundDAO;
+import dao.InvoiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,57 +10,35 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.sql.SQLException;
+import model.ExpenseDetail;
 import model.FundManagement;
 import model.TransactionFund;
 
-/**
- *
- * @author nkiem
- */
-@WebServlet(name = "HomeAccountantServlet", urlPatterns = {"/accountant/home"})
-public class HomeAccountantServlet extends HttpServlet {
+@WebServlet(name = "Revenue", urlPatterns = {"/manager/Revenue"})
+public class Revenue extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeAccountantServlet</title>");
+            out.println("<title>Servlet Revenue</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeAccountantServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Revenue at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -106,13 +82,21 @@ public class HomeAccountantServlet extends HttpServlet {
         for (FundManagement t : funds) {
             total += t.getCurrentBalance();
         }
+        double income = 0;
+        double spending = 0;
+//        for (TransactionFund f : transactions) {
+//            if (f.getTransactionType().equals("Income")) {
+//                income += f.getAmount();
+//            } else {
+//                spending += f.getAmount();
+//            }
+//        }
+        double balance =income-spending;
         DecimalFormat df = new DecimalFormat("#,###.00");
 
-//        double income = fdao.income(transactions, "Income");
-//        double spending = fdao.income(transactions, "Expense");
+//        double income = fdao.getTotalAmountByTransactionType("Income", filterDate, filterMonth, filterYear);
+//        double spending = fdao.getTotalAmountByTransactionType("Expense", filterDate, filterMonth, filterYear);
 //        double balance = income - spending;
-
-        // Lấy dữ liệu thu nhập và chi tiêu hàng tháng
         Map<String, double[]> monthlyData = new HashMap<>();
         try {
             monthlyData = fdao.getMonthlyIncomeAndSpending(currentYear);
@@ -134,13 +118,23 @@ public class HomeAccountantServlet extends HttpServlet {
             monthlyBalance[i - 1] = data[0] - data[1];
         }
         List<TransactionFund> rencent = fdao.getAllTransactions();
-        request.setAttribute("rencent", rencent);
+        InvoiceDAO idao = new InvoiceDAO();
+        int tcome = idao.countTotalInvoices(filterYear, filterMonth, filterYear);
+        int pcome = idao.countPaidInvoices(filterYear, filterMonth, filterYear);
+        request.setAttribute("tcome", tcome);
+        request.setAttribute("pcome", pcome);
+        ExpenseDAO edao = new ExpenseDAO();
+        int tout = edao.countTotalExpenses(filterYear, filterMonth, filterYear);
+        int aout = edao.countPaidExpenses(filterYear, filterMonth, filterYear);
 
-        // Chuyển mảng thành chuỗi để gửi sang JSP
+        request.setAttribute("tout", tout);
+        request.setAttribute("aout", aout);
+
+        request.setAttribute("rencent", rencent);
         request.setAttribute("total", df.format(total));
-//        request.setAttribute("income", df.format(income));
-//        request.setAttribute("spending", df.format(spending));
-//        request.setAttribute("balance", df.format(balance));
+        request.setAttribute("income", df.format(income));
+        request.setAttribute("spending", df.format(spending));
+        request.setAttribute("balance", df.format(balance));
         request.setAttribute("funds", funds);
         request.setAttribute("time", time);
         request.setAttribute("filter", filter);
@@ -148,8 +142,18 @@ public class HomeAccountantServlet extends HttpServlet {
         request.setAttribute("monthlyIncome", arrayToString(monthlyIncome));
         request.setAttribute("monthlySpending", arrayToString(monthlySpending));
         request.setAttribute("monthlyBalance", arrayToString(monthlyBalance));
+        request.getRequestDispatcher("Revenue.jsp").forward(request, response);
+    }
 
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
+    public String getServletInfo() {
+        return "Short description";
     }
 
     private String arrayToString(double[] array) {
@@ -162,29 +166,4 @@ public class HomeAccountantServlet extends HttpServlet {
         }
         return sb.toString();
     }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

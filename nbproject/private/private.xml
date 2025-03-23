@@ -3,15 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/gitSWP391/ManagerApartment/web/accountant/viewmeter.jsp</file>
             <file>file:/D:/gitSWP391/ManagerApartment/src/java/dao/MeterDAO.java</file>
             <file>file:/D:/gitSWP391/ManagerApartment/web/manager/add_rule.jsp</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/src/java/controller/manager/RuleManagementServlet.java</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/src/java/controller/accountant/UpdateMeter.java</file>
             <file>file:/D:/gitSWP391/ManagerApartment/src/java/controller/accountant/ManagerMeter.java</file>
+            <file>file:/D:/gitSWP391/ManagerApartment/src/java/controller/manager/RuleManagementServlet.java</file>
+            <file>file:/D:/gitSWP391/ManagerApartment/web/accountant/viewmeter.jsp</file>
+            <file>file:/D:/gitSWP391/ManagerApartment/src/java/model/Meter.java</file>
             <file>file:/D:/gitSWP391/ManagerApartment/web/manager/edit_rule.jsp</file>
             <file>file:/D:/gitSWP391/ManagerApartment/src/java/controller/accountant/AddMeterServlet.java</file>
-            <file>file:/D:/gitSWP391/ManagerApartment/src/java/model/Meter.java</file>
         </group>
     </open-files>
 </project-private>

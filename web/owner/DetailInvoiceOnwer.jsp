@@ -111,14 +111,21 @@
                     </div>
 
 
-                    <c:if test="${page eq 'viewhistory'}">
+                    <c:if test="${page1 eq 'viewhistory'}">
                         <div class="d-flex justify-content-end mt-4">
                             <a href="<%= request.getContextPath() %>/owner/ViewHistoryInvoice" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left"></i> Back
                             </a>
                         </div>
                     </c:if>
-                     <c:if test="${page eq 'viewinvoice'}">
+                    <c:if test="${page1 eq 'viewinvoice'}">
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="<%= request.getContextPath() %>/owner/ViewInvoice" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </a>
+                        </div>
+                    </c:if>
+                    <c:if test="${empty page1}">
                         <div class="d-flex justify-content-end mt-4">
                             <a href="<%= request.getContextPath() %>/owner/ViewInvoice" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left"></i> Back
