@@ -304,7 +304,7 @@
                     <div class="table-title">
                         <div class="row">
                             <div class="col-sm-6">
-                                <h2>Manage Rule</h2>
+                                <h2>Manage Regulations</h2>
                             </div>
                             <div class="col-sm-6 d-flex justify-content-end">
                                 <a href="/ManagerApartment/manager/rule/add"
@@ -397,7 +397,7 @@
                             value=""
                             />
                         <div class="modal-header">                      
-                            <h4 class="modal-title">Delete Rule</h4>
+                            <h4 class="modal-title">Delete Regulations</h4>
                             <button type="button"
                                     class="close"
                                     data-dismiss="modal"
@@ -406,7 +406,7 @@
                                     >&times;</button>
                         </div>
                         <div class="modal-body">                    
-                            <p>Are you sure you want to delete these Rules?</p>
+                            <p>Are you sure you want to delete these Regulations?</p>
                             <p class="text-warning"><small>This action cannot be undone.</small></p>
                         </div>
                         <div class="modal-footer">

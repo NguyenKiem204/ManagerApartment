@@ -69,6 +69,21 @@ public class CheckPaymentStatusServlet extends HttpServlet {
 
         String status = transactionDAO.getTransactionStatus(transactionId);
 
+        // Kiểm tra nếu mã giao dịch không tồn tại
+        if (status == null) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"status\":\"not_found\"}");
+            return;
+        }
+
+        // Nếu giao dịch thành công, xóa các giao dịch có cùng mã hóa đơn
+        if ("completed".equals(status)) {
+            int invoiceID = Integer.parseInt(request.getParameter("invoiceID"));
+            int deletedRows = transactionDAO.deleteTransactionsByInvoiceID(invoiceID);
+            System.out.println("Đã xóa " + deletedRows + " giao dịch có cùng mã hóa đơn: " + invoiceID);
+        }
+
         // Trả về JSON
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

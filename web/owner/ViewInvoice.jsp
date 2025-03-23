@@ -163,7 +163,8 @@
                             <tr>
                                 <td>${l.invoiceID}</td>
                                 <td>${l.description}</td>
-                                <td>${l.totalAmount + l.muon}</td>
+
+                                <td><fmt:formatNumber value="${l.totalAmount + l.muon}" pattern="#0.00"/></td>
                                 <td>${l.apartment.apartmentName}</td>
                                 <td>${l.publicDateft}</td>
                                 <td>${l.dueDateft}</td>
@@ -175,7 +176,7 @@
                                 <td style="width:100px"><a href="<%= request.getContextPath() %>/owner/PaymentServlet?invoiceID=${l.invoiceID}" class="btn btn-success btn-sm">
                                         <i class="fas fa-credit-card"></i> 
                                     </a>
-                                    <a href="<%= request.getContextPath() %>/owner/DetailInvoiceOwner?invoiceID=${l.invoiceID}&page=viewinvoice" class="btn btn-info btn-sm">
+                                    <a href="<%= request.getContextPath() %>/owner/DetailInvoiceOwner?invoiceID=${l.invoiceID}&page1=viewinvoice" class="btn btn-info btn-sm">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                 </td>
@@ -235,7 +236,7 @@
 
 
 
-     
+
 
         <script>
             $(document).ready(function () {

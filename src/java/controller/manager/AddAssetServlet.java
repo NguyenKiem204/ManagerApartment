@@ -120,6 +120,9 @@ public class AddAssetServlet extends HttpServlet {
             LocalDate boughtOnDateLocalDate = LocalDate.parse(boughtOn_raw, formatter);
             boughtOn = Date.valueOf(boughtOnDateLocalDate);
 
+            
+            
+            
             //check asset name
             if (assetName != null) {
                 assetName = assetName.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng dư thừa
@@ -151,6 +154,18 @@ public class AddAssetServlet extends HttpServlet {
 //         Kiểm tra ký tự đặc biệt (chỉ cho phép chữ, số, khoảng trắng, và một số dấu câu)
             if (!Validate.isValidTitle(assetName)) {
                 request.setAttribute("error", "Asset name contains invalid characters!");
+                List<AssetCategory> listcategory = assetCategoryDAO.selectAll();
+                List<StatusApartmentAssets> liststatus = statusApartmentAssetsDAO.selectAll();
+
+                request.setAttribute("listcategory", listcategory);
+                request.setAttribute("liststatus", liststatus);
+                request.getRequestDispatcher("addasset.jsp").forward(request, response);
+                return;
+            }
+            
+            //check asset duplicate 
+            if(apartmentAssetsDAO.isAssetNameExists(assetName)){
+                request.setAttribute("error", "Asset name already exists!");
                 List<AssetCategory> listcategory = assetCategoryDAO.selectAll();
                 List<StatusApartmentAssets> liststatus = statusApartmentAssetsDAO.selectAll();
 

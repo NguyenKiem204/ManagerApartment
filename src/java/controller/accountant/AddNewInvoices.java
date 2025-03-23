@@ -123,6 +123,9 @@ public class AddNewInvoices extends HttpServlet {
             String description = request.getParameter("description");
             String dueDateStr = request.getParameter("dueDate");
             description = description.trim().replaceAll("\\s+", " ");
+
+            description = capitalizeFirstLetter(description);
+
             if (!isValidDescription(description)) {
                 request.setAttribute("errorde", "Description contains invalid characters.");
                 doGet(request, response);
@@ -188,11 +191,14 @@ public class AddNewInvoices extends HttpServlet {
                     double amount = Double.parseDouble(amounts[i]);
 
                     String desc = descriptions[i].trim().replaceAll("\\s+", " ");
-                    if (desc.trim().isEmpty()) {
-                        request.setAttribute("detailError", "Description detail mustn't empty or only space");
+                    desc = capitalizeFirstLetter(desc);
+
+                    if (!isValidDescription(desc)) {
+                        request.setAttribute("errorde", "Description contains invalid characters.");
                         doGet(request, response);
                         return;
                     }
+
                     if (!isValidDescription(desc)) {
                         request.setAttribute("errorde", "Description contains invalid characters.");
                         doGet(request, response);
@@ -246,4 +252,12 @@ public class AddNewInvoices extends HttpServlet {
     public boolean isValidDescription(String input) {
         return input.matches("^[\\p{L}0-9\\s.,!?'\"()\\-_/]{1,500}$");
     }
+
+    private String capitalizeFirstLetter(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        return Character.toUpperCase(str.charAt(0)) + str.substring(1);
+    }
+
 }

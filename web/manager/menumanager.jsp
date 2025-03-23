@@ -1,7 +1,7 @@
 <%-- Document : home1 Created on : Feb 11, 2025, 2:12:16 AM Author : nkiem --%>
 <%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem
---%> <%@page contentType="text/html" pageEncoding="UTF-8" %> <%@taglib
-    prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+--%> <%@page contentType="text/html" pageEncoding="UTF-8" %> 
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <!DOCTYPE html>
     <html>
         <head>
@@ -324,6 +324,22 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    <li class="sidebar-item has-sub">
+                                        <a href="#" class="sidebar-link">
+                                            <i class="fa-solid fa-money-bill"></i>
+                                            <span>Revenue</span>
+                                        </a>
+                                        <ul class="submenu resident-active">
+                                            <li class="submenu-item">
+                                                <a href="FundManager">Fund</a>
+                                            </li>
+                                            <li class="submenu-item">
+                                                <a href="Revenue">Revenue statistics</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+
                                 </c:if>
                                 <c:if test="${sessionScope.staff.role.roleID == 3}">
                                     <li class="sidebar-item">
@@ -332,7 +348,7 @@
                                             class="sidebar-link"
                                             >
                                             <i class="bi bi-receipt-cutoff"></i>
-                                            <span>Invoice Management</span>
+                                            <span>Financial Management</span>
                                         </a>
                                     </li>
                                 </c:if>
@@ -582,11 +598,24 @@
                                         <span>Service Fee Information</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-item">
-                                    <a href="!#" class="sidebar-link">
-                                        <i class="bi bi-puzzle"></i>
+                                <li class="sidebar-item has-sub news-active">
+                                    <a href="#" class="sidebar-link">
+                                        <i class="fa-solid fa-envelope"></i>
                                         <span>Regulations</span>
                                     </a>
+                                    <ul id="news" class="submenu">
+                                        <c:if test="${sessionScope.staff.role.roleID == 1}">
+                                            <li class="submenu-item managernews">
+                                                <a
+                                                    href="<%= request.getContextPath() %>/manager/regulations"
+                                                    >Manager Regulations</a
+                                                >
+                                            </li>
+                                        </c:if>
+                                        <li class="submenu-item news-itemm">
+                                            <a href="<%= request.getContextPath() %>/regulations">Regulations</a>
+                                        </li>
+                                    </ul>
                                 </li>
                                 <!-- =================================Login, Logout..==================== -->
                                 <li class="sidebar-item has-sub">
@@ -728,7 +757,7 @@
                             }
                         }
                     }
-                    
+
 
                     // Khi click vào thông báo, đổi màu và update trạng thái đọc
                     $("#notificationList").on("click", "li", function () {
@@ -807,5 +836,4 @@
             <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
         </body>
     </html>
-
 

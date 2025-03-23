@@ -160,6 +160,15 @@ public class UpdateAssetServlet extends HttpServlet {
                 request.getRequestDispatcher("updateasset.jsp").forward(request, response);
                 return;
             }
+            //check asset duplicate 
+            if(apartmentAssetsDAO.isAssetNameExists(assetName)){
+                request.setAttribute("error", "Asset name already exists!");
+                request.setAttribute("asset", apartmentAssets);
+                request.setAttribute("listcategory", listcategory);
+                request.setAttribute("liststatus", liststatus);
+                request.getRequestDispatcher("updateasset.jsp").forward(request, response);
+                return;
+            }
             //check quantity
             if (quantity <= 0) {
                 request.setAttribute("error", "Quantity of Asset must be >0!");

@@ -58,20 +58,31 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
+            .text-start {
+                text-align: left ; /* Căn trái văn bản */
+            }
         </style>
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
         <script>
-            function formatDecimal(input) {
-                let value = input.value.replace(/[^0-9.]/g, '').trim(); // Chỉ giữ lại số và dấu chấm
-                let floatValue = parseFloat(value);
+            function formatInput(input) {
+                // Chỉ giữ lại số và dấu '.'
+                input.value = input.value.replace(/[^0-9.]/, '');
+            }
 
-                if (!isNaN(floatValue)) {
-                    input.value = floatValue.toFixed(2); // Hiển thị dạng XX.00
+            function formatNumber(input) {
+                let rawValue = input.value.replace(/,/g, ''); // Xóa dấu `,`
+                let numericValue = parseFloat(rawValue);
+
+                if (!isNaN(numericValue)) {
+                    // Format số theo dạng #,##0.00
+                    input.value = numericValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    document.getElementById('rawAmount').value = numericValue; // Lưu giá trị thực vào input ẩn
                 } else {
-                    input.value = "0.00"; // Nếu không hợp lệ, đặt thành 0.00
+                    input.value = '';
+                    document.getElementById('rawAmount').value = '';
                 }
             }
         </script>
@@ -97,8 +108,11 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="amount">Amount</label>
-                            <input type="text" class="form-control" id="amount" name="amount" required onblur="formatDecimal(this)">
+                            <label>Amount </label>
+                            <input type="text" class="form-control text-start" name="amountFormatted" required 
+                                   id="formattedNumber" oninput="formatInput(this)" onblur="formatNumber(this)">
+                            <input type="hidden" name="amount" id="rawAmount"> <!-- Input ẩn để gửi dữ liệu thực -->
+
                         </div>
 
                         <div class="form-group mb-3">
@@ -144,7 +158,10 @@
                                             <td>${detail.typeExpense.typeName}</td>
                                             <td>${detail.status}</td>
                                             <td>
-                                                <fmt:formatNumber value="${detail.amount}" pattern="0.00" />
+
+
+                                                <fmt:formatNumber value="${detail.amount}" pattern="#,##0.00" />
+
                                             </td>
                                         </tr>
                                         <c:set var="totalAmount" value="${totalAmount + (detail.amount ne null ? detail.amount : 0)}" />
@@ -162,7 +179,7 @@
                             <tr>
                                 <td colspan="3" style="text-align: right; font-weight: bold;">Total Amount:</td>
                                 <td style="font-weight: bold;">
-                                    <fmt:formatNumber value="${totalAmount}" pattern="0.00" />
+                                    <fmt:formatNumber value="${totalAmount}" pattern="#,##0.00" />
                                 </td>
                             </tr>
                         </tfoot>

@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.accountant;
+package controller.manager;
 
-import dao.InvoiceDAO;
+import dao.ExpenseDAO;
+import dao.FundDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,22 +13,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import model.Invoices;
-import model.Resident;
-import model.Staff;
-import model.TypeBill;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.ExpenseDetail;
+import model.TypeExpense;
 
 /**
  *
  * @author nguye
  */
-@WebServlet(name = "DetailInvoice", urlPatterns = {"/accountant/DetailInvoice"})
-public class DetailInvoice extends HttpServlet {
+@WebServlet(name = "updateExpenseStatus", urlPatterns = {"/manager/updateExpenseStatus"})
+public class updateExpenseStatus extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +43,10 @@ public class DetailInvoice extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DetailInvoice</title>");
+            out.println("<title>Servlet updateExpenseStatus</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DetailInvoice at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet updateExpenseStatus at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,32 +64,47 @@ public class DetailInvoice extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Resident resident = (Resident) session.getAttribute("resident");
-        Staff staff = (Staff) session.getAttribute("staff");
-
-        String idinv = request.getParameter("invoiceID");
-        if (idinv == null || idinv.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu invoiceID");
-            return;
-        }
-
+        String expenseDetailID = request.getParameter("expenseDetailID");
+        String status = request.getParameter("status");
+        String typeid = request.getParameter("typeid");
+        String amo = request.getParameter("amount");
+        String description = request.getParameter("des");
+        ExpenseDAO edao = new ExpenseDAO();
+        FundDAO fdao = new FundDAO();
         try {
-            int id = Integer.parseInt(idinv);
-            InvoiceDAO idao = new InvoiceDAO();
-            Invoices inv = idao.selectById(id);
+            int id = Integer.parseInt(expenseDetailID);
+            int typeexp = Integer.parseInt(typeid);
+            double amount = Double.parseDouble(amo);
+            if (status.equals("Approved")) {
+                edao.updateStatusExpense(id, status);
+                TypeExpense typeExpense = edao.getTypeExpenseById(typeexp);
+                int fundID = fdao.getFundIDByTypeFund(typeExpense.getTypeFundID());
+                double currentBalance = fdao.getCurrentBalance(fundID);
+                if (currentBalance < amount) {
+                    request.setAttribute("errorMessage", "Không đủ số dư trong quỹ để thực hiện giao dịch.");
+                    request.getRequestDispatcher("FundManager").forward(request, response);
+                    return;
+                }
 
-            // Lấy danh sách loại hóa đơn
-            List<TypeBill> lt = idao.getAllTypeBills();
+                boolean transactionInserted = fdao.insertTransaction(fundID, amount, "Expense", description, 3);
+                if (!transactionInserted) {
+                    throw new SQLException("Không thể thêm giao dịch vào bảng TransactionFund.");
+                }
 
-            // Đặt thông tin vào request để hiển thị trên JSP
-            request.setAttribute("invoice", inv);
-            request.setAttribute("typeBills", lt);
-            request.getRequestDispatcher("DetailInvoice.jsp").forward(request, response);
-
+                edao.updateTotalAmount(id);
+                request.getRequestDispatcher("FundManager").forward(request, response);
+            } else {
+                try {
+                    edao.updateStatusExpense(id, status);
+                    request.getRequestDispatcher("FundManager").forward(request, response);
+                } catch (SQLException ex) {
+                    Logger.getLogger(updateExpenseStatus.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi xử lý dữ liệu");
+        } catch (SQLException ex) {
+            Logger.getLogger(updateExpenseStatus.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
