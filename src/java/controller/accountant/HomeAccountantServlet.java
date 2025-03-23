@@ -99,7 +99,7 @@ public class HomeAccountantServlet extends HttpServlet {
 
         // Lấy danh sách quỹ và giao dịch
         List<FundManagement> funds = fdao.getAllFunds(filterDate, filterMonth, filterYear);
-        List<TransactionFund> transactions = fdao.getTransactions(filterDate, filterMonth, filterYear);
+//        List<TransactionFund> transactions = fdao.getTransactions(filterDate, filterMonth, filterYear);
 
         // Tính toán tổng số tiền
         double total = 0;
@@ -108,9 +108,9 @@ public class HomeAccountantServlet extends HttpServlet {
         }
         DecimalFormat df = new DecimalFormat("#,###.00");
 
-        double income = fdao.income(transactions, "Income");
-        double spending = fdao.income(transactions, "Expense");
-        double balance = income - spending;
+//        double income = fdao.income(transactions, "Income");
+//        double spending = fdao.income(transactions, "Expense");
+//        double balance = income - spending;
 
         // Lấy dữ liệu thu nhập và chi tiêu hàng tháng
         Map<String, double[]> monthlyData = new HashMap<>();
@@ -138,9 +138,9 @@ public class HomeAccountantServlet extends HttpServlet {
 
         // Chuyển mảng thành chuỗi để gửi sang JSP
         request.setAttribute("total", df.format(total));
-        request.setAttribute("income", df.format(income));
-        request.setAttribute("spending", df.format(spending));
-        request.setAttribute("balance", df.format(balance));
+//        request.setAttribute("income", df.format(income));
+//        request.setAttribute("spending", df.format(spending));
+//        request.setAttribute("balance", df.format(balance));
         request.setAttribute("funds", funds);
         request.setAttribute("time", time);
         request.setAttribute("filter", filter);

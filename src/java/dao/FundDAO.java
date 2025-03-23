@@ -16,10 +16,13 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Expense;
 import model.FundManagement;
 import model.TransactionFund;
 import model.TypeFund;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 
 /**
  *
@@ -273,13 +276,6 @@ public class FundDAO implements DAOInterface<FundManagement, Integer> {
         return transactions;
     }
 
-    public double income(List<TransactionFund> transactions, String type) {
-        return transactions.stream()
-                .filter(t -> t.getTransactionType().equals(type))
-                .mapToDouble(TransactionFund::getAmount)
-                .sum();
-    }
-
     public List<TransactionFund> getAllTransactions() {
         List<TransactionFund> transactions = new ArrayList<>();
         String sql = "SELECT TransactionID, FundID, Amount, TransactionType, Description, TransactionDate, StaffID FROM TransactionFund order by TransactionID desc ";
@@ -332,59 +328,40 @@ public class FundDAO implements DAOInterface<FundManagement, Integer> {
         return monthlyData;
     }
 
-    public List<TransactionFund> getTransactions(LocalDate filterDate, Integer filterMonth, Integer filterYear) {
-        List<TransactionFund> transactions = new ArrayList<>();
-        StringBuilder sql = new StringBuilder(
-                "SELECT TransactionID, FundID, Amount, TransactionType, Description, TransactionDate, StaffID "
-                + "FROM TransactionFund"
-        );
-
-        // Thêm điều kiện lọc nếu có
-        boolean hasFilter = false;
-        if (filterDate != null) {
-            sql.append(" WHERE CAST(TransactionDate AS DATE) = ?");
-            hasFilter = true;
-        } else if (filterMonth != null && filterYear != null) {
-            sql.append(" WHERE MONTH(TransactionDate) = ? AND YEAR(TransactionDate) = ?");
-            hasFilter = true;
-        } else if (filterYear != null) {
-            sql.append(" WHERE YEAR(TransactionDate) = ?");
-            hasFilter = true;
+    public List<TransactionFund> getAllTran(LocalDate day, int month, int year) {
+        List<TransactionFund> list = new ArrayList<>();
+        List<Object> pra = new ArrayList<>();
+        String sql = " select * from TransactionFund";
+        if (day != null ) {
+            sql += "Where TransactionDate= ?";
+            pra.add(java.sql.Date.valueOf(day));
         }
-
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-
-            // Thiết lập các tham số lọc
-            int paramIndex = 1;
-            if (filterDate != null) {
-                ps.setDate(paramIndex++, Date.valueOf(filterDate));
-            } else if (filterMonth != null && filterYear != null) {
-                ps.setInt(paramIndex++, filterMonth);
-                ps.setInt(paramIndex++, filterYear);
-            } else if (filterYear != null) {
-                ps.setInt(paramIndex++, filterYear);
+        if (month >0) {
+            sql += " Where Month(TransactionDate) =?";
+            pra.add(month);
+        }
+        if (year > 0) {
+            sql += " Where Month(year) =?";
+            pra.add(year);
+        }
+        sql += " ORDER BY inv.InvoiceID Desc";
+         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (int i = 0; i < pra.size(); i++) {
+                ps.setObject(i + 1, pra.get(i));
             }
 
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    int transactionID = rs.getInt("TransactionID");
-                    int fundID = rs.getInt("FundID");
-                    double amount = rs.getDouble("Amount");
-                    String transactionType = rs.getString("TransactionType");
-                    String description = rs.getString("Description");
-                    LocalDate transactionDate = rs.getDate("TransactionDate").toLocalDate();
-                    int staffID = rs.getInt("StaffID");
-
-                    TransactionFund transaction = new TransactionFund(transactionID, fundID, amount, transactionType, description, transactionDate, staffID);
-                    transactions.add(transaction);
-                }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+//                TransactionFund
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            
+        }catch (SQLException ex) {
+            Logger.getLogger(InvoiceDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return transactions;
+         return list;
     }
+        
+    
 
     public List<TransactionFund> getAllTransactions(LocalDate fromDate, LocalDate toDate, String transactionType, Double minAmount, Double maxAmount) {
         List<TransactionFund> transactions = new ArrayList<>();

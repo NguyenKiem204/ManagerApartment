@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -83,7 +84,9 @@
                                 <tr>
                                     <td><c:out value="${loop.index + 1}" /></td>
                                     <td><c:out value="${detail.description}" /></td>
-                                    <td><c:out value="${detail.amount}" /></td>
+                                    <td>
+                                        <fmt:formatNumber value="${detail.amount}" pattern="#,##0.00" />
+                                    </td>
                                     <td><c:out value="${detail.billType}" /></td>
                                 </tr>
                             </c:forEach>
@@ -91,14 +94,15 @@
                     </table>
                     <c:if test="${invoice.getMuon()>0}">
                         <div class="mb-3">
-                            <strong>late bill penalty: </strong> $<c:out value="${invoice.muon}" />
+                            <strong>late bill penalty:  <fmt:formatNumber value="${invoice.detail.amount}" pattern="#,##0.00" />d</strong>
                         </div>
                     </c:if>
 
 
 
-                    <div class="mb-3">
-                        <strong>Total Amount:</strong> $<c:out value="${invoice.totalAmount}" />
+                    <div class="mb-3 text-end">
+                        <strong>Total Amount:</strong> 
+                        <fmt:formatNumber value="${invoice.totalAmount}" pattern="#,##0.00" />d
                     </div>
 
                     <div class="d-flex justify-content-end mt-4">

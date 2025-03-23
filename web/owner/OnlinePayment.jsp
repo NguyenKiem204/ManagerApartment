@@ -54,7 +54,7 @@
         </style>
     </head>
     <body>
-         <%@include file="/manager/menumanager.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
         <div class="main-content">
             <h2 class="text-center mt-4">Online Payment</h2>
             <div class="payment-container">
@@ -118,7 +118,22 @@
         </div>
 
 
-
+        <div class="modal fade" id="transactionNotFoundModal" tabindex="-1" aria-labelledby="transactionNotFoundModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="transactionNotFoundModalLabel">Thông báo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Mã giao dịch không tồn tại hoặc đã bị xóa. Bạn sẽ được chuyển hướng về trang danh sách hóa đơn.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script>
 
@@ -126,14 +141,22 @@
                 const transactionId = "${transactionId}";
                 const invoiceID = "${invoice.invoiceID}";
 
-                fetch('<%= request.getContextPath() %>/owner/CheckPaymentStatusServlet?transactionId=' + transactionId)
+                fetch('<%= request.getContextPath() %>/owner/CheckPaymentStatusServlet?transactionId=' + transactionId + '&invoiceID=' + invoiceID)
                         .then(response => response.json())
                         .then(data => {
                             if (data.status === "completed") {
                                 window.location.href = "<%= request.getContextPath() %>/owner/paymentSuccess?invoiceID=" + invoiceID;
-                            } else {
+                            } else if (data.status === "not_found") {
+                                // Hiển thị modal thông báo
+                                const modal = new bootstrap.Modal(document.getElementById('transactionNotFoundModal'));
+                                modal.show();
 
-                                setTimeout(checkPaymentStatus, 1000);
+                                // Chuyển hướng về trang ViewInvoice sau khi đóng modal
+                                document.getElementById('transactionNotFoundModal').addEventListener('hidden.bs.modal', function () {
+                                    window.location.href = "<%= request.getContextPath() %>/owner/ViewInvoice";
+                                });
+                            } else {
+                                setTimeout(checkPaymentStatus, 1000); // Tiếp tục kiểm tra trạng thái
                             }
                         })
                         .catch(error => console.error('Lỗi kiểm tra trạng thái thanh toán:', error));

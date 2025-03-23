@@ -156,8 +156,8 @@ public class Test {
 
 //        Staff staff1 = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0931654542", "6634983361194", "b@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(3).build());
 //        staffDAO.insert(staff1);
-        Staff staff = new Staff("Nguyễn Văn a", "123", "0353515799", "001215040318", "c@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(1).build());
-        staffDAO.insert(staff);
+//        Staff staff = new Staff("Nguyễn Văn a", "123", "0353515799", "001215040318", "c@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(1).build());
+//        staffDAO.insert(staff);
 //         Staff staff = new Staff("Nguyễn Kiểm Admin", "kiem@12345", "0336750744", "044567203453", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(1).build());
 //         staffDAO.insert(staff); 
 

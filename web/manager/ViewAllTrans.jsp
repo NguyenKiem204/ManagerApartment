@@ -190,7 +190,7 @@
                             <tr>
                                 <td>${t.transactionID}</td>
 
-                                <td><fmt:formatNumber value="${t.amount}" pattern="#0.00"/></td>
+                                <td><fmt:formatNumber value="${t.amount}" pattern="#,##0.00"/></td>
                                 <td>${t.transactionType}</td>
                                 <td>${t.description}</td>
                                 <td>${t.transactionDateft}</td>

@@ -2,6 +2,7 @@ package controller.manager;
 
 import dao.ExpenseDAO;
 import dao.FundDAO;
+import dao.InvoiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -74,20 +75,28 @@ public class Revenue extends HttpServlet {
 
         // Lấy danh sách quỹ và giao dịch
         List<FundManagement> funds = fdao.getAllFunds(filterDate, filterMonth, filterYear);
-        List<TransactionFund> transactions = fdao.getTransactions(filterDate, filterMonth, filterYear);
+//        List<TransactionFund> transactions = fdao.getTransactions(filterDate, filterMonth, filterYear);
 
         // Tính toán tổng số tiền
         double total = 0;
         for (FundManagement t : funds) {
             total += t.getCurrentBalance();
         }
+        double income = 0;
+        double spending = 0;
+//        for (TransactionFund f : transactions) {
+//            if (f.getTransactionType().equals("Income")) {
+//                income += f.getAmount();
+//            } else {
+//                spending += f.getAmount();
+//            }
+//        }
+        double balance =income-spending;
         DecimalFormat df = new DecimalFormat("#,###.00");
 
-        double income = fdao.income(transactions, "Income");
-        double spending = fdao.income(transactions, "Expense");
-        double balance = income - spending;
-
-        // Lấy dữ liệu thu nhập và chi tiêu hàng tháng
+//        double income = fdao.getTotalAmountByTransactionType("Income", filterDate, filterMonth, filterYear);
+//        double spending = fdao.getTotalAmountByTransactionType("Expense", filterDate, filterMonth, filterYear);
+//        double balance = income - spending;
         Map<String, double[]> monthlyData = new HashMap<>();
         try {
             monthlyData = fdao.getMonthlyIncomeAndSpending(currentYear);
@@ -109,9 +118,19 @@ public class Revenue extends HttpServlet {
             monthlyBalance[i - 1] = data[0] - data[1];
         }
         List<TransactionFund> rencent = fdao.getAllTransactions();
-        request.setAttribute("rencent", rencent);
+        InvoiceDAO idao = new InvoiceDAO();
+        int tcome = idao.countTotalInvoices(filterYear, filterMonth, filterYear);
+        int pcome = idao.countPaidInvoices(filterYear, filterMonth, filterYear);
+        request.setAttribute("tcome", tcome);
+        request.setAttribute("pcome", pcome);
+        ExpenseDAO edao = new ExpenseDAO();
+        int tout = edao.countTotalExpenses(filterYear, filterMonth, filterYear);
+        int aout = edao.countPaidExpenses(filterYear, filterMonth, filterYear);
 
-        // Chuyển mảng thành chuỗi để gửi sang JSP
+        request.setAttribute("tout", tout);
+        request.setAttribute("aout", aout);
+
+        request.setAttribute("rencent", rencent);
         request.setAttribute("total", df.format(total));
         request.setAttribute("income", df.format(income));
         request.setAttribute("spending", df.format(spending));
@@ -123,7 +142,6 @@ public class Revenue extends HttpServlet {
         request.setAttribute("monthlyIncome", arrayToString(monthlyIncome));
         request.setAttribute("monthlySpending", arrayToString(monthlySpending));
         request.setAttribute("monthlyBalance", arrayToString(monthlyBalance));
-
         request.getRequestDispatcher("Revenue.jsp").forward(request, response);
     }
 

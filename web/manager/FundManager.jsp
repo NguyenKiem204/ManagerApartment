@@ -138,8 +138,9 @@
                                                 ${fund.typeFund.typeName}
 
                                             </td>
+                                            
                                             <td>
-                                                <fmt:formatNumber value="${fund.currentBalance}" pattern="0.00" />
+                                                <fmt:formatNumber value="${fund.currentBalance}" pattern="#,##0" />
                                             </td>
                                             <td>${fund.status}</td>
                                             <td>${fund.createdAtft}</td>
@@ -179,12 +180,12 @@
                                             <td>${detail.typeExpense.typeName}</td>
                                             <td>${detail.status}</td>
                                             <td>
-                                                <fmt:formatNumber value="${detail.amount}" pattern="0.00" />
+                                                <fmt:formatNumber value="${detail.amount}" pattern="#,##0.00" />
                                             </td>
                                             <td>
-                                                <a href="<%= request.getContextPath() %>/manager/updateExpenseStatus?expenseDetailID=${detail.expenseDetailID}&status=Approved&typeid=${detail.typeExpense.typeExpenseID}&amount=${detail.amount}&des=${detail.description}" class="btn btn-success">
+                                                <a href="<%= request.getContextPath() %>/manager/updateExpenseStatus?expenseDetailID=${detail.expenseDetailID}&status=Approved&typeid=${detail.typeExpense.typeExpenseID}&amount=${detail.amount}&des=${detail.description}" class="btn btn-success"><i class="fa-solid fa-thumbs-up"></i>
 
-                                                    <a href="<%= request.getContextPath() %>/manager/updateExpenseStatus?expenseDetailID=${detail.expenseDetailID}&status=Rejected&typeid=${detail.typeExpense.typeExpenseID}&amount=${detail.amount}&des=${detail.description}" class="btn btn-danger">
+                                                    <a href="<%= request.getContextPath() %>/manager/updateExpenseStatus?expenseDetailID=${detail.expenseDetailID}&status=Rejected&typeid=${detail.typeExpense.typeExpenseID}&amount=${detail.amount}&des=${detail.description}" class="btn btn-danger"><i class="fa-solid fa-ban"></i>
 
                                                         </td>
                                                         </tr>
@@ -203,7 +204,7 @@
                                                 <tr>
                                                     <td colspan="3" style="text-align: right; font-weight: bold;">Total Amount:</td>
                                                     <td style="font-weight: bold;">
-                                                        <fmt:formatNumber value="${totalAmount}" pattern="0.00" />
+                                                        <fmt:formatNumber value="${totalAmount}" pattern="#,##0.00" />
                                                     </td>
                                                 </tr>
                                             </tfoot>
@@ -227,7 +228,7 @@
                                                         .catch(error => console.error("Error:", error));
                                                 }
             }
-                                                </script>
+                                            </script>
                                             </body>
 
 

@@ -206,7 +206,7 @@
                             <tr>
                                 <td>${expense.expenseID}</td>
                                 <td>${expense.expenseDateft}</td>
-                                <td><fmt:formatNumber value="${expense.totalAmount}" pattern="#0.00"/></td>
+                                <td><fmt:formatNumber value="${expense.totalAmount}" pattern="#,##0.00"/>d</td>
                                 <td style="width:30px">
 
                                     <button class="btn btn-secondary btn-sm" type="button" onclick="toggleDetails(${expense.expenseID})">
@@ -233,7 +233,7 @@
                                                 <tr>
                                                     <td>${detail.description}</td>
                                                     <td>${detail.typeExpense.typeName}</td>
-                                                    <td><fmt:formatNumber value="${detail.amount}" pattern="#0.00"/></td>
+                                                    <td><fmt:formatNumber value="${detail.amount}" pattern="#,##0.00"/></td>
 
                                                     <td>${detail.status}</td>
 

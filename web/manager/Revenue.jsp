@@ -190,9 +190,10 @@
                                                         <div>${transaction.description}</div>
                                                     </div>
                                                     <div class="transaction-amount ${transaction.transactionType == 'Income' ? 'positive' : 'negative'}">
-                                                        ${transaction.transactionType == 'Income' ? '+' : '-'} ${transaction.amount}d
+                                                        ${transaction.transactionType == 'Income' ? '+' : '-'} <fmt:formatNumber value="${transaction.amount}" pattern="#,##0.00" type="number"/>
+                                                                                                                               
                                                     </div>
-                                                    <div class="time">${transaction.transactionDate}</div>
+                                                   
                                                 </li>
                                             </c:forEach>
 
@@ -216,25 +217,20 @@
                         </div>
                         <div class="card-body text-center">
                             <h2 class="font-extrabold">${income}d</h2>
-                            <span class="badge bg-primary">Average: 126,281 VND/transaction</span>
+                            <span class="badge bg-primary">Average:${avg}d/income</span>
                             <div class="row mt-4">
-                                <div class="col-md-4 stat-box">
-                                    <h6 class="text-muted">Number Transactions</h6>
-                                    <h5 class="font-extrabold">371</h5>
-                                    <span class="text-muted">Successful Transactions</span>
-                                    <h6 class="font-bold">0</h6>
-                                </div>
-                                <div class="col-md-4 stat-box">
+
+                                <div class="col-md-6 stat-box">
                                     <h6 class="text-muted">Income Transactions</h6>
-                                    <h5 class="font-extrabold">371</h5>
+                                    <h5 class="font-extrabold">${tcome}</h5>
                                     <span class="text-muted">Successful Income Transactions</span>
-                                    <h6 class="font-bold">0</h6>
+                                    <h6 class="font-bold">${pcome}</h6>
                                 </div>
-                                <div class="col-md-4 stat-box">
+                                <div class="col-md-6 stat-box">
                                     <h6 class="text-muted">Expense Transactions</h6>
-                                    <h5 class="font-extrabold">53</h5>
+                                    <h5 class="font-extrabold">${tout}</h5>
                                     <span class="text-muted">Successful Expense Transactions</span>
-                                    <h6 class="font-bold">0</h6>
+                                    <h6 class="font-bold">${aout}</h6>
                                 </div>
 
                             </div>
@@ -267,7 +263,7 @@
                                                         <td>${fund.fundName}</td>
 
                                                         <td>
-                                                            <fmt:formatNumber value="${fund.currentBalance}" pattern="0.00" />
+                                                            <fmt:formatNumber value="${fund.currentBalance}" pattern="#,##0.00" />
                                                         </td>
                                                         <td>${fund.status}</td>
                                                         <td>${fund.createdAtft}</td>
