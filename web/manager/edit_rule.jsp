@@ -295,7 +295,7 @@
                                         type="text" 
                                         class="form-control" 
                                         name="publicDate"
-                                        id="publicDate" 
+                                        id="boughtOn" 
                                         placeholder="dd/MM/yyyy"
                                         value="${rule.formattedPublicDate}"
                                         required
@@ -336,15 +336,15 @@
                 placeholder: "Nhập nội dung bài viết..."
             });
         });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            flatpickr("#publicDate", {
-                dateFormat: "d/m/Y", // Định dạng hiển thị là DD/MM/YYYY
-                altInput: true,
-                altFormat: "d/m/Y", // Định dạng gửi đi là YYYY/MM/DD
-                allowInput: true
-            });
-        });
+//
+//        document.addEventListener("DOMContentLoaded", function () {
+//            flatpickr("#publicDate", {
+//                dateFormat: "d/m/Y", // Định dạng hiển thị là DD/MM/YYYY
+//                altInput: true,
+//                altFormat: "d/m/Y", // Định dạng gửi đi là YYYY/MM/DD
+//                allowInput: true
+//            });
+//        });
          document.addEventListener("DOMContentLoaded", function () {
     var modal = document.querySelector(".modal-dialog");
     if (modal) {
@@ -352,7 +352,7 @@
         modal.style.width = "100%";
        modal.style.margin = "auto";
         modal.style.top = "50%";
-        modal.style.transform = "translate(15%)";
+       // modal.style.transform = "translate(15%)";
     }
 });
         

@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller.manager;
 
 import dao.RuleDAO;
@@ -22,9 +21,9 @@ import validation.Validate;
  *
  * @author Hoang-Tran
  */
-@WebServlet(name="RuleManagementServlet", urlPatterns={"/manager/regulations"})
+@WebServlet(name = "RuleManagementServlet", urlPatterns = {"/manager/regulations"})
 public class RuleManagementServlet extends HttpServlet {
-   
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -34,7 +33,6 @@ public class RuleManagementServlet extends HttpServlet {
 
         List<Rule> ruleList = ruleDAO.selectAllPaging(pageNumber, pageSize);
         int totalPages = (int) Math.ceil((double) ruleDAO.selectAll().size() / pageSize);
-
         request.setAttribute("rulesList", ruleList);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("pageNumber", pageNumber);
@@ -56,7 +54,10 @@ public class RuleManagementServlet extends HttpServlet {
             String ruleName = "";
             String errorMsg = "";
             try {
-                ruleName = Validate.validateRuleName(request.getParameter("ruleName"));
+                ruleName = Validate.validateRuleDescription(request.getParameter("ruleName"));
+//                if (!Validate.isValidTitle(ruleName)) {
+//                    throw new Exception("Rule name contains invalid characters.");
+//                }
             } catch (Exception ex) {
                 errorMsg += ex.getMessage() + "\n";
             }
@@ -67,11 +68,11 @@ public class RuleManagementServlet extends HttpServlet {
                 errorMsg += ex.getMessage() + "\n";
             }
             if (ruleName.length() > 100) { //nên giới hạn độ dài title vì nó chỉ nên có độ dài nhất định
-            request.setAttribute(errorMsg, "Title must be <100 characters!");
-            //request.setAttribute("listrole",listrole);
-            request.getRequestDispatcher("/manager/add_rule.jsp").forward(request, response);
-            return;
-            }      
+                request.setAttribute(errorMsg, "Title must be <100 characters!");
+                //request.setAttribute("listrole",listrole);
+                request.getRequestDispatcher("/manager/add_rule.jsp").forward(request, response);
+                return;
+            }
             if (!errorMsg.isEmpty()) { // có lỗi validate ruleName/description
                 request.setAttribute("error", errorMsg);
                 request.getRequestDispatcher("/manager/add_rule.jsp").forward(request, response);
@@ -87,6 +88,7 @@ public class RuleManagementServlet extends HttpServlet {
         }
 
     }
+
     private void searchOrPagination(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RuleDAO ruleDAO = new RuleDAO();

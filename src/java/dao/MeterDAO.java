@@ -4,9 +4,12 @@
  */
 package dao;
 
+import com.itextpdf.text.log.Logger;
+import java.lang.System.Logger.Level;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 import model.Meter;
 
 /**
@@ -119,14 +122,11 @@ public class MeterDAO {
                 + "ORDER BY a.ApartmentName, m.MeterType";
 
         List<Meter> meters = new ArrayList<>();
-
         try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-
             while (rs.next()) {
                 meters.add(mapMeter(rs));
             }
         }
-
         return meters;
     }
 
@@ -150,34 +150,32 @@ public class MeterDAO {
         return meters;
     }
 // Get all active meters with their last reading
-public List<Meter> getAllActiveMeters() throws SQLException {
-    List<Meter> meters = new ArrayList<>();
-    
-    String sql = "SELECT m.MeterID, m.MeterNumber, m.MeterType, a.ApartmentName, " +
-                "COALESCE((SELECT TOP 1 CurrentReading FROM MeterReading WHERE MeterID = m.MeterID " +
-                "ORDER BY ReadingDate DESC), 0) AS LastReading " +
-                "FROM Meter m " +
-                "JOIN Apartment a ON m.ApartmentID = a.ApartmentID " +
-                "WHERE m.Status = 'Active'";
-    
-    try (Connection conn = DBContext.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
-        
-        while (rs.next()) {
-            Meter meter = new Meter();
-            meter.setMeterId(rs.getInt("MeterID"));
-            meter.setMeterNumber(rs.getString("MeterNumber"));
-            meter.setMeterType(rs.getString("MeterType"));
-            meter.setApartmentName(rs.getString("ApartmentName"));
-            meter.setLastReading(rs.getBigDecimal("LastReading"));
-            meters.add(meter);
-        }
-    }
-    
-    return meters;
-}
 
+    public List<Meter> getAllActiveMeters() throws SQLException {
+        List<Meter> meters = new ArrayList<>();
+
+        String sql = "SELECT m.MeterID, m.MeterNumber, m.MeterType, a.ApartmentName, "
+                + "COALESCE((SELECT TOP 1 CurrentReading FROM MeterReading WHERE MeterID = m.MeterID "
+                + "ORDER BY ReadingDate DESC), 0) AS LastReading "
+                + "FROM Meter m "
+                + "JOIN Apartment a ON m.ApartmentID = a.ApartmentID "
+                + "WHERE m.Status = 'Active'";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Meter meter = new Meter();
+                meter.setMeterId(rs.getInt("MeterID"));
+                meter.setMeterNumber(rs.getString("MeterNumber"));
+                meter.setMeterType(rs.getString("MeterType"));
+                meter.setApartmentName(rs.getString("ApartmentName"));
+                meter.setLastReading(rs.getBigDecimal("LastReading"));
+                meters.add(meter);
+            }
+        }
+
+        return meters;
+    }
 
     public boolean isMeterNumberExists(String meterNumber, Integer excludeMeterId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM Meter WHERE MeterNumber = ? AND Status = 'Active'";
@@ -211,5 +209,46 @@ public List<Meter> getAllActiveMeters() throws SQLException {
         meter.setApartmentName(rs.getString("ApartmentName"));
         meter.setOwnerName(rs.getString("OwnerName"));
         return meter;
+    }
+
+    public List<Meter> paegingMeter(int index) {
+        String sql = "SELECT m.*, a.ApartmentName, r.FullName AS OwnerName "
+                + "FROM Meter m "
+                + "JOIN Apartment a ON m.ApartmentID = a.ApartmentID "
+                + "LEFT JOIN Resident r ON a.OwnerId = r.ResidentID "
+                + "WHERE m.Status = 'Active' "
+                + "ORDER BY a.ApartmentName, m.MeterType "
+                + "OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY;";
+        List<Meter> meters = new ArrayList<>();
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, (index - 1) * 3);  // Đặt giá trị trước khi executeQuery()
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                 meters.add(mapMeter(rs));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MeterDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return meters;
+    }
+
+      public int getTotalRecords() {
+        String sql = "SELECT COUNT(*) AS total FROM [Meter]";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MeterDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    public static void main(String[] args) {
+        MeterDAO dao = new MeterDAO();
+       List<Meter> list = dao.paegingMeter(2);
+       for(Meter o : list){
+           System.out.println(o);
+       }
     }
 }

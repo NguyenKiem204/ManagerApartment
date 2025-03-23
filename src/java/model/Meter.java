@@ -34,4 +34,20 @@ public class Meter {
     String apartmentName;
     String ownerName;
     BigDecimal lastReading;
+
+    public Meter() {
+    }
+
+    public Meter(int meterId, int apartmentId, String meterType, String meterNumber, LocalDateTime installationDate, String status, String apartmentName, String ownerName, BigDecimal lastReading) {
+        this.meterId = meterId;
+        this.apartmentId = apartmentId;
+        this.meterType = meterType;
+        this.meterNumber = meterNumber;
+        this.installationDate = installationDate;
+        this.status = status;
+        this.apartmentName = apartmentName;
+        this.ownerName = ownerName;
+        this.lastReading = lastReading;
+    }   
 }
+

@@ -12,14 +12,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Menu of Owner</title>
-
-
     </head>
 
     <body>
-<<<<<<< HEAD
-         <%@include file="/manager/menumanager.jsp" %> 
-=======
         <%@include file="/manager/menumanager.jsp" %>
         <div id="main" style="margin-top: -60px">
             <div class="page-heading">
@@ -255,7 +250,6 @@
                 var chartRequests = new ApexCharts(document.querySelector("#chart-requests"), optionsRequests);
                 chartRequests.render();
             </script>
->>>>>>> 08ca02a959d42670d3da370fa29f8b9accbbeee5
     </body>
 </body>
 

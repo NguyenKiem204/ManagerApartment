@@ -97,25 +97,25 @@ public class HomeAdministrativeServlet extends HttpServlet {
         Staff staff = (Staff) request.getSession().getAttribute("staff");
         String currentUserEmail = staff.getEmail();
         StaffDAO staffDAO = new StaffDAO();
-        MessageDAO messageDAO = new MessageDAO();
-
-        List<Staff> listStaff = staffDAO.selectAllSortedByLastMessage(currentUserEmail);
-        List<Resident> listResident = residentDAO.selectAllSortedByLastMessage(currentUserEmail);
-
-        listStaff.removeIf(s -> s.getEmail().equals(currentUserEmail));
-        listResident.removeIf(r -> r.getEmail().equals(currentUserEmail));
-
-        List<Object> combinedList = new ArrayList<>();
-        combinedList.addAll(listStaff);
-        combinedList.addAll(listResident);
-
-        Map<String, java.sql.Timestamp> lastMessageMap = messageDAO.getLastMessageTimestamps(currentUserEmail);
-        combinedList.sort(Comparator.comparing(o -> {
-            String email = (o instanceof Staff) ? ((Staff) o).getEmail() : ((Resident) o).getEmail();
-            return lastMessageMap.getOrDefault(email, Timestamp.valueOf("1970-01-01 00:00:00"));
-        }, Comparator.reverseOrder()));
-        List<Object> list = combinedList.subList(0, 3);
-        request.setAttribute("list", list);
+//        MessageDAO messageDAO = new MessageDAO();
+//
+//        List<Staff> listStaff = staffDAO.selectAllSortedByLastMessage(currentUserEmail);
+//        List<Resident> listResident = residentDAO.selectAllSortedByLastMessage(currentUserEmail);
+//
+//        listStaff.removeIf(s -> s.getEmail().equals(currentUserEmail));
+//        listResident.removeIf(r -> r.getEmail().equals(currentUserEmail));
+//
+//        List<Object> combinedList = new ArrayList<>();
+//        combinedList.addAll(listStaff);
+//        combinedList.addAll(listResident);
+//
+//        Map<String, java.sql.Timestamp> lastMessageMap = messageDAO.getLastMessageTimestamps(currentUserEmail);
+//        combinedList.sort(Comparator.comparing(o -> {
+//            String email = (o instanceof Staff) ? ((Staff) o).getEmail() : ((Resident) o).getEmail();
+//            return lastMessageMap.getOrDefault(email, Timestamp.valueOf("1970-01-01 00:00:00"));
+//        }, Comparator.reverseOrder()));
+//        List<Object> list = combinedList.subList(0, 3);
+//        request.setAttribute("list", list);
 
         FeedbackDAO feedbackDAO = new FeedbackDAO();
         List<Feedback> listFeedbacks = feedbackDAO.getLastestFeedback(2);
