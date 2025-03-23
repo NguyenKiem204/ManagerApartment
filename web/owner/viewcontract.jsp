@@ -99,6 +99,14 @@
                         <p><strong>Lease End Date:</strong> 
                         <fmt:formatDate value="${contract.formattedDate2}" pattern="dd/MM/yyyy"></fmt:formatDate>
                         </p>
+                    <c:if test="${not empty contract.filePath}">
+                        <p><strong>Contract File:</strong>
+                        <a href="${pageContext.request.contextPath}${contract.filePath}" 
+                           target="_blank" 
+                           style="color: blue; text-decoration: underline;">
+                            View contract
+                        </a></p>
+                    </c:if>
                     </div>
             </c:if>
 

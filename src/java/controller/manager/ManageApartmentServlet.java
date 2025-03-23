@@ -29,12 +29,12 @@ public class ManageApartmentServlet extends HttpServlet {
         String name = (nameRaw != null) ? normalizeString(nameRaw) : "";
 
         String ownerIdraw = request.getParameter("ownerId");
-        int ownerId = -1; // Mặc định là -1 nếu không có giá trị hợp lệ
+        int ownerId = 0; // Mặc định là -1 nếu không có giá trị hợp lệ
         if (ownerIdraw != null && !ownerIdraw.trim().isEmpty()) {
             try {
                 ownerId = Integer.parseInt(ownerIdraw.trim());
             } catch (NumberFormatException e) {
-                ownerId = -1; // Nếu lỗi, đặt về -1 để không ảnh hưởng SQL
+                ownerId = 0; // Nếu lỗi, đặt về -1 để không ảnh hưởng SQL
             }
         }
 
