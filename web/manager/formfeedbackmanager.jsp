@@ -193,7 +193,7 @@
 
                     <h3>📅 Next Actions</h3>
                     <p><b>Improvement Suggestions:</b> <input type="text" id="action-plan" name="actionPlan" placeholder="E.g., skill training, process improvement..."></p>
-                    <p><b>Response Deadline:</b> <input type="text" id="deadline" name="deadline" placeholder="dd-MM-yyyy"></p>
+                    <p><b>Response Deadline:</b> <input type="text" id="deadline" name="deadline" placeholder="dd/MM/yyyy"></p>
 
                     <c:if test="${not empty error}">
                         <p style="color: red;">${error}</p>

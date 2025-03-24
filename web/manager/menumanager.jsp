@@ -461,12 +461,6 @@
                                         </c:if>
                                         <c:if test="${sessionScope.resident.role.roleID == 7}">
                                             <li class="submenu-item">
-                                                <a
-                                                    href="<%= request.getContextPath() %>/owner/ViewInvoice"
-                                                    >Invoices</a
-                                                >
-                                            </li>
-                                            <li class="submenu-item">
                                                 <a href="<%= request.getContextPath() %>/owner/feedback"
                                                    >Send Feedback</a
                                                 >
