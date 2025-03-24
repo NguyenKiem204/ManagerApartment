@@ -96,7 +96,7 @@
                     <p><b>Position:</b> 
                         <select id="position" name="position" onchange="loadNamesAndRatings()">
                             <option value="0" selected="">Select Position</option>
-                            <c:forEach var="role" items="${listrole}" begin="1" end="4">
+                            <c:forEach var="role" items="${listrole}" begin="1" end="3">
                                 <option value="${role.roleID}" ${param.position == role.roleID ? 'selected' : ''}>${role.roleName}</option>
                             </c:forEach>
                         </select>
