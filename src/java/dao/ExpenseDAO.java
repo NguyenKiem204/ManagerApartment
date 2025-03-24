@@ -155,6 +155,37 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
         return list;
     }
 
+    public List<ExpenseDetail> getAllExpenseDetails() {
+        List<ExpenseDetail> expenseDetails = new ArrayList<>();
+        String query = "SELECT ed.ExpenseDetailID, ed.ExpenseID, ed.TypeExpenseID, te.TypeName, ed.Amount, ed.Status, ed.Description "
+                + "FROM ExpenseDetail ed "
+                + "JOIN TypeExpense te ON ed.TypeExpenseID = te.TypeExpenseID where ed.Status='Pending'";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+
+                int expenseDetailID = rs.getInt("ExpenseDetailID");
+                int expenseID = rs.getInt("ExpenseID");
+                int typeExpenseID = rs.getInt("TypeExpenseID");
+                String typeName = rs.getString("TypeName");
+                double amount = rs.getDouble("Amount");
+                String status = rs.getString("Status");
+                String description = rs.getString("Description");
+
+                TypeExpense typeExpense = new TypeExpense(typeExpenseID, typeName, false, 0);
+
+                ExpenseDetail expenseDetail = new ExpenseDetail(expenseDetailID, expenseID, typeExpense, amount, status, description);
+
+                // Thêm vào danh sách
+                expenseDetails.add(expenseDetail);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return expenseDetails;
+    }
+
     public void insertExpense(int staffId, double totalAmount) throws SQLException {
         String sql = "INSERT INTO Expense (StaffID, TotalAmount) VALUES (?, ?)";
         try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
@@ -273,6 +304,138 @@ public class ExpenseDAO implements DAOInterface<Expense, Integer> {
                 throw new SQLException("Failed to update total amount. Expense ID not found: " + expenseID);
             }
         }
+    }
+
+    public void updateStatusExpense(int ID, String status) throws SQLException {
+        String sql = "UPDATE ExpenseDetail SET Status = ? WHERE ExpenseDetailID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, ID);
+            int rowsUpdated = ps.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                throw new SQLException("Failed to update total amount. Expense ID not found: " + ID);
+            }
+        }
+    }
+
+    public void updateTotalAmount(int expenseDetailID) {
+        String getExpenseIDQuery = "SELECT ExpenseID FROM ExpenseDetail WHERE ExpenseDetailID = ?";
+        String sumQuery = "SELECT SUM(Amount) FROM ExpenseDetail WHERE ExpenseID = ?";
+        String updateQuery = "UPDATE Expense SET TotalAmount = ? WHERE ExpenseID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement getExpenseStmt = conn.prepareStatement(getExpenseIDQuery); PreparedStatement sumStmt = conn.prepareStatement(sumQuery); PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
+
+            // Lấy ExpenseID từ ExpenseDetailID
+            getExpenseStmt.setInt(1, expenseDetailID);
+            try (ResultSet rs1 = getExpenseStmt.executeQuery()) {
+                if (!rs1.next()) {
+                    System.out.println("Không tìm thấy ExpenseID cho ExpenseDetailID = " + expenseDetailID);
+                    return;
+                }
+                int expenseID = rs1.getInt("ExpenseID");
+
+                // Tính tổng số tiền của ExpenseDetail theo ExpenseID
+                sumStmt.setInt(1, expenseID);
+                try (ResultSet rs2 = sumStmt.executeQuery()) {
+                    double totalAmount = 0;
+                    if (rs2.next()) {
+                        totalAmount = rs2.getDouble(1);
+                    }
+
+                    // Cập nhật totalAmount trong bảng Expense
+                    updateStmt.setDouble(1, totalAmount);
+                    updateStmt.setInt(2, expenseID);
+                    updateStmt.executeUpdate();
+                    System.out.println("Cập nhật TotalAmount thành công cho ExpenseID = " + expenseID);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int countTotalExpenses(Integer day, Integer month, Integer year) {
+        int count = 0;
+        StringBuilder query = new StringBuilder(
+                "SELECT COUNT(DISTINCT e.ExpenseID) FROM Expense e WHERE 1=1"
+        );
+
+        if (day != null) {
+            query.append(" AND DAY(e.ExpenseDate) = ?");
+        }
+        if (month != null) {
+            query.append(" AND MONTH(e.ExpenseDate) = ?");
+        }
+        if (year != null) {
+            query.append(" AND YEAR(e.ExpenseDate) = ?");
+        }
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+            int paramIndex = 1;
+
+            if (day != null) {
+                stmt.setInt(paramIndex++, day);
+            }
+            if (month != null) {
+                stmt.setInt(paramIndex++, month);
+            }
+            if (year != null) {
+                stmt.setInt(paramIndex++, year);
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ExpenseDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
+
+    public int countPaidExpenses(Integer day, Integer month, Integer year) {
+        int count = 0;
+        StringBuilder query = new StringBuilder(
+                "SELECT COUNT(DISTINCT e.ExpenseID) FROM Expense e "
+                + "JOIN ExpenseDetail ed ON e.ExpenseID = ed.ExpenseID "
+                + "WHERE ed.Status = 'Approved'"
+        );
+
+        if (day != null) {
+            query.append(" AND DAY(e.ExpenseDate) = ?");
+        }
+        if (month != null) {
+            query.append(" AND MONTH(e.ExpenseDate) = ?");
+        }
+        if (year != null) {
+            query.append(" AND YEAR(e.ExpenseDate) = ?");
+        }
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+            int paramIndex = 1;
+
+            if (day != null) {
+                stmt.setInt(paramIndex++, day);
+            }
+            if (month != null) {
+                stmt.setInt(paramIndex++, month);
+            }
+            if (year != null) {
+                stmt.setInt(paramIndex++, year);
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ExpenseDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
     }
 
 }

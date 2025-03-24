@@ -46,6 +46,9 @@
                 border-collapse: collapse;
                 width: 100%;
             }
+            .ct{
+                margin-left: 400px;
+            }
 
             th, td {
                 padding: 12px;
@@ -206,8 +209,8 @@
         <%@include file="/manager/menumanager.jsp" %>
         <!--=============================CONTENT HERE=======================-->
         <div class="w-100" style="display: flex;">
-            <div class="col-3"></div>
-            <div  class="col-9">
+            
+            <div  class="col-9 ct">
                 <h1>My Apartments</h1>
                 <%-- Hiển thị thông báo nếu có --%>
                 <c:if test="${not empty mess}">
@@ -217,7 +220,7 @@
                     <!-- Cột bên trái: Bộ lọc (45%) -->
                     <div class="d-flex gap-2">
                         <form action="manageOwnerApartment" method="get" class="d-flex gap-2 flex-grow-1">
-                            <select name="type" id="typeFilter" class="form-select" style="width: 100%;">
+                            <select name="type" id="typeFilter" class="form-select" style="width: 100%;" >
                                 <option value="">AllTypes</option>
                                 <option value="1 Bedroom" ${selectedType == '1 Bedroom' ? 'selected' : ''}>1 Bedroom</option>
                                 <option value="2 Bedrooms" ${selectedType == '2 Bedrooms' ? 'selected' : ''}>2 Bedrooms</option>

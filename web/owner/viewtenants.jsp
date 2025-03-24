@@ -99,6 +99,7 @@ tbody td {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    
     <h2>Tenants of Apartment ${apartmentId}</h2>
 
     <div class="table-container">

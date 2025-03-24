@@ -35,32 +35,6 @@ public class DetailInvoiceOwner extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet DetailInvoiceOwner</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet DetailInvoiceOwner at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -91,12 +65,10 @@ public class DetailInvoiceOwner extends HttpServlet {
                 return;
             }
 
-            // Phân quyền:
-            // 1. Nếu là staff và có vai trò là accountant (ví dụ: roleID = 2) → Cho phép xem tất cả hóa đơn
-            // 2. Nếu là resident → Chỉ được xem hóa đơn của chính mình
+            // Kiểm tra quyền truy cập
             if (staff != null && staff.getRole().getRoleID() == 3) {
-                String redirectURL = request.getContextPath() + "/accountant/DetailInvoice?invoiceID=" + id;
-                response.sendRedirect(redirectURL);
+                response.sendRedirect(request.getContextPath() + "/accountant/DetailInvoice?invoiceID=" + id);
+                return;
             } else if (resident != null) {
                 if (inv.getResident().getResidentId() != resident.getResidentId()) {
                     request.setAttribute("errorCode", "403");
@@ -105,7 +77,6 @@ public class DetailInvoiceOwner extends HttpServlet {
                     return;
                 }
             } else {
-                // Nếu không phải accountant hoặc resident → Chuyển hướng đến trang đăng nhập
                 response.sendRedirect(request.getContextPath() + "/login.jsp");
                 return;
             }
@@ -113,10 +84,14 @@ public class DetailInvoiceOwner extends HttpServlet {
             // Lấy danh sách loại hóa đơn
             List<TypeBill> lt = idao.getAllTypeBills();
 
-            // Đặt thông tin vào request để hiển thị trên JSP
+            // Đặt thông tin vào request
             request.setAttribute("invoice", inv);
             request.setAttribute("typeBills", lt);
-            request.getRequestDispatcher("DetailInvoiceOnwer.jsp").forward(request, response);
+
+            // Kiểm tra phản hồi đã commit chưa trước khi forward
+            if (!response.isCommitted()) {
+                request.getRequestDispatcher("DetailInvoiceOnwer.jsp").forward(request, response);
+            }
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -135,7 +110,7 @@ public class DetailInvoiceOwner extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
     }
 
     /**

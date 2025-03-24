@@ -27,6 +27,15 @@ public class Contract {
     Apartment apartment;
     LocalDate leaseStartDate;
     LocalDate leaseEndDate;
+    String filePath;
+
+    public Contract(Resident resident, Apartment apartment, LocalDate leaseStartDate, LocalDate leaseEndDate) {
+        this.resident = resident;
+        this.apartment = apartment;
+        this.leaseStartDate = leaseStartDate;
+        this.leaseEndDate = leaseEndDate;
+    }
+    
     public Date getFormattedDate1() {
         return Date.valueOf(leaseStartDate); // Chuyển LocalDate -> SQL Date
     }

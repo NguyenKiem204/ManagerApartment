@@ -5,36 +5,36 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  *
  * @author nguye
  */
 public class FundManagement {
+
     private int fundID;
     private String fundName;
     private double totalAmount;
     private double currentBalance;
     private LocalDate createdAt;
     private String status;
-    private int typeFundID;
+    private TypeFund typeFund;
     private int createdBy;
+    private List<TransactionFund> transaction;
 
-    public FundManagement() {
-    }
-
-    public FundManagement(int fundID, String fundName, double totalAmount, double currentBalance, LocalDate createdAt, String status, int typeFundID, int createdBy) {
+    public FundManagement(int fundID, String fundName, double totalAmount, double currentBalance, LocalDate createdAt, String status, TypeFund typeFund, int createdBy, List<TransactionFund> transaction) {
         this.fundID = fundID;
         this.fundName = fundName;
         this.totalAmount = totalAmount;
         this.currentBalance = currentBalance;
         this.createdAt = createdAt;
         this.status = status;
-        this.typeFundID = typeFundID;
+        this.typeFund = typeFund;
         this.createdBy = createdBy;
+        this.transaction = transaction;
     }
-
-    
 
     public int getFundID() {
         return fundID;
@@ -72,11 +72,17 @@ public class FundManagement {
         return createdAt;
     }
 
+    public String getCreatedAtft() {
+        if (createdAt == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return createdAt.format(formatter);
+    }
+
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
-
-    
 
     public String getStatus() {
         return status;
@@ -86,12 +92,20 @@ public class FundManagement {
         this.status = status;
     }
 
-    public int getTypeFundID() {
-        return typeFundID;
+    public TypeFund getTypeFund() {
+        return typeFund;
     }
 
-    public void setTypeFundID(int typeFundID) {
-        this.typeFundID = typeFundID;
+    public void setTypeFund(TypeFund typeFund) {
+        this.typeFund = typeFund;
+    }
+
+    public List<TransactionFund> getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(List<TransactionFund> transaction) {
+        this.transaction = transaction;
     }
 
     public int getCreatedBy() {
@@ -100,5 +114,5 @@ public class FundManagement {
 
     public void setCreatedBy(int createdBy) {
         this.createdBy = createdBy;
-    } 
+    }
 }

@@ -139,7 +139,7 @@
                                     <span>Home</span>
                                 </a>
                             </li>
-                            
+
                             <li class="sidebar-item">
                                 <a href="manageTenant" class="sidebar-link">
                                     <i class="bi bi-envelope-fill"></i>
@@ -169,7 +169,7 @@
                                 </ul>
                             </li>
 
-                           
+
 
                             <li class="sidebar-item">
                                 <a href="#" class="sidebar-link">

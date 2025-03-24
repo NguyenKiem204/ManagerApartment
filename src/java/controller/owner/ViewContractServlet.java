@@ -76,7 +76,7 @@ public class ViewContractServlet extends HttpServlet {
                 LocalDate oldEndDate = contract.getLeaseEndDate();
 
                 // Kiểm tra ngày mới phải lớn hơn ngày cũ
-                if (newEndDate.isBefore(oldEndDate)) {
+                if (!newEndDate.isAfter(oldEndDate)) {
                     jsonResponse.put("success", false);
                     jsonResponse.put("message", "New end date must be after the current end date!");
                     out.write(jsonResponse.toString());

@@ -24,7 +24,6 @@ import model.Resident;
 @WebServlet(name="ViewTenantByApartmentServlet", urlPatterns={"/owner/viewTenants"})
 public class ViewTenantByApartmentServlet extends HttpServlet {
  private ResidentDAO residentDAO = new ResidentDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -34,10 +33,8 @@ public class ViewTenantByApartmentServlet extends HttpServlet {
             response.sendRedirect("/login.jsp");
             return;
         }
-
         int apartmentId = Integer.parseInt(apartmentIdRaw);
         List<Resident> tenants = residentDAO.getTenantsByApartment(apartmentId);
-
         request.setAttribute("tenants", tenants);
         request.setAttribute("apartmentId", apartmentId);
         request.getRequestDispatcher("viewtenants.jsp").forward(request, response);

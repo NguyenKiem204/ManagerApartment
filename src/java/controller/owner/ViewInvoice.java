@@ -69,7 +69,8 @@ public class ViewInvoice extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Resident resident = (Resident) session.getAttribute("resident");
-
+        String page1= request.getParameter("page1");
+        request.setAttribute("page1", page1);
         // Kiểm tra nếu không có cư dân đăng nhập
         if (resident == null) {
             request.setAttribute("errorCode", "403");
