@@ -24,10 +24,11 @@
                 color: #566787;
                 background: #ffa384;
                 font-family: 'Varela Round', sans-serif;
-                font-size: 13px;
+                font-size: 15px;
             }
             .table-responsive {
                 margin: 30px 0;
+                margin-left: 10%;
             }
             .table-wrapper {
                 background: #fff;
@@ -38,8 +39,8 @@
             }
             .table-title {
                 padding-bottom: 15px;
-                background: #435d7d;
-                color: #fff;
+                background: #F44336;
+                color: #F44336;
                 padding: 16px 30px;
                 min-width: 100%;
                 margin: -20px -25px 10px;
@@ -48,6 +49,7 @@
             .table-title h2 {
                 margin: 5px 0 0;
                 font-size: 24px;
+                color: #ecf0f1;
             }
             .table-title .btn-group {
                 float: right;
@@ -78,7 +80,7 @@
                 vertical-align: middle;
             }
             table.table tr th:first-child {
-                width: 60px;
+                width: 200px;
             }
             table.table tr th:last-child {
                 width: 100px;
@@ -308,13 +310,7 @@
                                     <td>${meter.installationDate}</td>
                                     <td>${meter.status}</td>
                                     <td>
-                                       <a href="update-meter" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-<!--                                        <a href="#deleteRuleModal"
-                                           onclick="showDeleteRule('${rule.ruleID}')"
-                                           class="delete"
-                                           data-toggle="modal">
-                                            <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
-                                        </a>-->
+                                       <a href="loadMeter=?${o.meterId}" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -338,43 +334,41 @@
         <div id="addEmployeeModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="add-meter" method="POST">
-                        <div class="modal-header">						
+                    <form action="/ManagerApartment/accountant/add-meter" method="POST">
+                        <div class="modal-header">
                             <h4 class="modal-title">Add Meter</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">					
                             <div class="form-group">
                                 <label>Apartment ID</label>
-                                <input type="text" class="form-control" required>
+                                <input name="apartmentId" type="number" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label>Meter Type</label>
-                                <input type="email" class="form-control" required>
+                                <input name="meterType" type="text" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label>Meter Number</label>
-                                <textarea class="form-control" required></textarea>
+                                <input name="meterNumber" type="text" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label>Installation Date</label>
-                               <input 
-                                        type="text" 
-                                        class="form-control" 
-                                        name="publicDate"
-                                        id="boughtOn" 
-                                        placeholder="dd/MM/yyyy"
-                                        required
-                                        >
-                                </div>
-                            
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    name="installationDate"
+                                    id="boughtOn" 
+                                    placeholder="dd/MM/yyyy"
+                                    required
+                                    >
+                            </div>                           
                             <div class="form-group">
                                 <label>Status</label>
-                                <select class="form-control" required>
-                                    <option value="active">Active</option>
-                                    <option value="deactive">Deactive</option>
+                                <select class="form-control" name="status" required>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
                                 </select>
-                            </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -386,7 +380,7 @@
             </div>
         </div>
         <!-- Edit Modal HTML -->
-<!--        <div id="editEmployeeModal" class="modal fade">
+        <div id="editEmployeeModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form>
@@ -397,33 +391,25 @@
                         <div class="modal-body">					
                             <div class="form-group">
                                 <label>Apartment ID</label>
-                                <input value="${meter.apartmentId}"type="text" class="form-control" required>
+                                <input type="number" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label>Meter Type</label>
-                                <input value="${meter.meterType}" type="email" class="form-control" required>
+                                <input type="email" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label>Meter Number</label>
-                                <textarea class="form-control" required>${meter.meterNumber}</textarea>
+                                <textarea class="form-control" required></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Installation Date</label>
-                                <input value ="${meter.installationDate}" 
-                                    type="text" 
-                                    class="form-control" 
-                                    name="publicDate"
-                                    id="boughtOn" 
-                                    placeholder="dd/MM/yyyy"
-                                    value=""
-                                    required
-                                    >
+                                <input type="text" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label>Status</label>
-                                <select  class="form-control" required>
-                                    <option value="active">Active</option>
-                                    <option value="deactive">Deactive</option>
+                                <select class="form-control" name="status" required>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
                                 </select>
                             </div>
                         </div>
@@ -431,30 +417,11 @@
                             <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
                             <input type="submit" class="btn btn-info" value="Save">
                         </div>
-                    </form>-->
-                </div>
-            </div>
-        </div>
-        <!-- Delete Modal HTML -->
-        <div id="deleteEmployeeModal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form>
-                        <div class="modal-header">						
-                            <h4 class="modal-title">Delete Employee</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body">					
-                            <p>Are you sure you want to delete these Records?</p>
-                            <p class="text-warning"><small>This action cannot be undone.</small></p>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" class="btn btn-danger" value="Delete">
-                        </div>
                     </form>
                 </div>
             </div>
         </div>
-    </body>
+<!-- Delete Modal HTML -->
+
+</body>
 </html>

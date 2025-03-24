@@ -12,11 +12,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Meter;
@@ -25,34 +25,60 @@ import model.Meter;
  *
  * @author Hoang-Tran
  */
-@WebServlet(name = "AddMeterServlet", urlPatterns = {"accountant/add-meter"})
+@WebServlet(name = "AddMeterServlet", urlPatterns = {"/accountant/add-meter"})
 public class AddMeterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // lay gia tri trong form
         MeterDAO meterDAO = new MeterDAO();
-            // Lấy dữ liệu từ form
+        try {
             int apartmentId = Integer.parseInt(request.getParameter("apartmentId"));
             String meterType = request.getParameter("meterType");
             String meterNumber = request.getParameter("meterNumber");
             String installationDate = request.getParameter("installationDate");
-            String status = request.getParameter("status");        
-            // Tạo đối tượng Meter
-            LocalDateTime installationDateTime = LocalDateTime.parse(installationDate);
-           Meter meter = new Meter();
-            meter.setApartmentId(apartmentId);
-            meter.setMeterType(meterType);
-            meter.setMeterNumber(meterNumber);
-            meter.setInstallationDate(LocalDateTime.parse(installationDate));
-            meter.setStatus(status);
+            String status = request.getParameter("status");
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy"); // Định dạng ngày
+                LocalDate parsedDate = LocalDate.parse(installationDate, formatter);
+                LocalDateTime installDateTime = parsedDate.atStartOfDay();
+                Meter meter = new Meter(apartmentId, meterType, meterNumber, installDateTime, status);
+                System.out.println("Parsed DateTime: " + installDateTime);
+                int newMeter = meterDAO.addMeter(meter);
 
-        try {
-            // Thêm vào database
-            int newMeterId = meterDAO.addMeter(meter);
-        } catch (SQLException ex) {
-            Logger.getLogger(AddMeterServlet.class.getName()).log(Level.SEVERE, null, ex);
+            if (newMeter > 0) {
+                request.setAttribute("message", "Meter added successfully!");
+            } else {
+                request.setAttribute("error", "Failed to add Meter!");
+            }
+
+            } catch (DateTimeParseException e) {
+                System.err.println("Error parsing date: " + e.getMessage());
+            }
+//            Meter meter = new Meter(apartmentId, meterType, meterNumber, installDateTime, status);
+
+//            // Gọi DAO để thêm vào database
+//            int newMeter = meterDAO.addMeter(meter);
+//
+//            if (newMeter > 0) {
+//                request.setAttribute("message", "Meter added successfully!");
+//            } else {
+//                request.setAttribute("error", "Failed to add Meter!");
+//            }
+
+            // Chuyển hướng về danh sách
+            response.sendRedirect("viewmeter.jsp");
+
+        } catch (SQLException | NumberFormatException e) {
+            request.setAttribute("error", "Invalid input data!");
+            //request.getRequestDispatcher("addmeter.jsp").forward(request, response);
         }
-           response.sendRedirect("viewmeter.jsp"  );
     }
+
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
 }

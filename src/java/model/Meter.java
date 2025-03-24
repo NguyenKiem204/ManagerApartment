@@ -5,6 +5,7 @@
 package model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,26 +29,19 @@ public class Meter {
     int apartmentId;
     String meterType;
     String meterNumber;
-    LocalDateTime installationDate;
+    LocalDate installationDate;
     String status;
 
     String apartmentName;
     String ownerName;
     BigDecimal lastReading;
 
-    public Meter() {
-    }
-
-    public Meter(int meterId, int apartmentId, String meterType, String meterNumber, LocalDateTime installationDate, String status, String apartmentName, String ownerName, BigDecimal lastReading) {
-        this.meterId = meterId;
+    public Meter(int apartmentId, String meterType, String meterNumber, LocalDate installDateTime, String status) {
         this.apartmentId = apartmentId;
         this.meterType = meterType;
         this.meterNumber = meterNumber;
         this.installationDate = installationDate;
         this.status = status;
-        this.apartmentName = apartmentName;
-        this.ownerName = ownerName;
-        this.lastReading = lastReading;
-    }   
+    }
 }
 
