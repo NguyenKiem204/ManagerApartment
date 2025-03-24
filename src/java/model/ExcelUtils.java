@@ -176,68 +176,68 @@ public class ExcelUtils {
 //    }
 
 // Tạo nội dung cho một sheet đồng hồ (điện hoặc nước)
-private static void createMeterSheet(Sheet sheet, String meterType, List<Meter> meters,
-        CellStyle headerStyle, CellStyle dataStyle, CellStyle inputStyle) {
-    // Tạo tiêu đề
-    Row titleRow = sheet.createRow(0);
-    Cell titleCell = titleRow.createCell(0);
-    titleCell.setCellValue("METER READING TABLE " + (meterType.equals("Electricity") ? "ELECTRICITY" : "Water"));
-    titleCell.setCellStyle(headerStyle);
-    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
-
-    // Tạo hàng tiêu đề cột
-    Row headerRow = sheet.createRow(1);
-    String[] headers = {"Apartment ID", "Apartment Name", "Owner", "Meter ID", "Previous Reading", "Current Reading", "Reading Date"};
-    for (int i = 0; i < headers.length; i++) {
-        Cell cell = headerRow.createCell(i);
-        cell.setCellValue(headers[i]);
-        cell.setCellStyle(headerStyle);
-    }
-
-    // Tạo một định dạng ngày giờ tùy chỉnh
-    CreationHelper createHelper = sheet.getWorkbook().getCreationHelper();
-    CellStyle dateStyle = sheet.getWorkbook().createCellStyle();
-    dateStyle.cloneStyleFrom(inputStyle);
-    dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy HH:mm:ss"));
-
-    // Lọc đồng hồ theo loại và điền dữ liệu
-    int rowNum = 2;
-    for (Meter meter : meters) {
-        if (meter.getMeterType().equals(meterType)) {
-            Row row = sheet.createRow(rowNum++);
-
-            // Điền thông tin cố định
-            row.createCell(0).setCellValue(meter.getApartmentId());
-            row.getCell(0).setCellStyle(dataStyle);
-
-            row.createCell(1).setCellValue(meter.getApartmentName());
-            row.getCell(1).setCellStyle(dataStyle);
-
-            row.createCell(2).setCellValue(meter.getOwnerName());
-            row.getCell(2).setCellStyle(dataStyle);
-
-            row.createCell(3).setCellValue(meter.getMeterNumber());
-            row.getCell(3).setCellStyle(dataStyle);
-
-            // Các ô cần nhập liệu
-            Cell previousReadingCell = row.createCell(4);
-            previousReadingCell.setCellStyle(dataStyle);
-
-            Cell currentReadingCell = row.createCell(5);
-            currentReadingCell.setCellStyle(inputStyle);
-
-            // Tạo ô ngày giờ tự động
-            Cell readingDateCell = row.createCell(6);
-            // Tạo công thức để theo dõi thay đổi ở ô chỉ số mới
-            // Khi ô chỉ số mới (cột F) thay đổi, ô ngày (cột G) sẽ tự động cập nhật thành thời gian hiện tại
-            readingDateCell.setCellFormula("IF(F" + (row.getRowNum() + 1) + "<>\"\",NOW(),\"\")");
-            readingDateCell.setCellStyle(dateStyle);
-        }
-    }
-
-    // Thiết lập tính toán công thức tự động cho workbook
-    sheet.getWorkbook().setForceFormulaRecalculation(true);
-}
+//private static void createMeterSheet(Sheet sheet, String meterType, List<Meter> meters,
+//        CellStyle headerStyle, CellStyle dataStyle, CellStyle inputStyle) {
+//    // Tạo tiêu đề
+//    Row titleRow = sheet.createRow(0);
+//    Cell titleCell = titleRow.createCell(0);
+//    titleCell.setCellValue("METER READING TABLE " + (meterType.equals("Electricity") ? "ELECTRICITY" : "Water"));
+//    titleCell.setCellStyle(headerStyle);
+//    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+//
+//    // Tạo hàng tiêu đề cột
+//    Row headerRow = sheet.createRow(1);
+//    String[] headers = {"Apartment ID", "Apartment Name", "Owner", "Meter ID", "Previous Reading", "Current Reading", "Reading Date"};
+//    for (int i = 0; i < headers.length; i++) {
+//        Cell cell = headerRow.createCell(i);
+//        cell.setCellValue(headers[i]);
+//        cell.setCellStyle(headerStyle);
+//    }
+//
+//    // Tạo một định dạng ngày giờ tùy chỉnh
+//    CreationHelper createHelper = sheet.getWorkbook().getCreationHelper();
+//    CellStyle dateStyle = sheet.getWorkbook().createCellStyle();
+//    dateStyle.cloneStyleFrom(inputStyle);
+//    dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy HH:mm:ss"));
+//
+//    // Lọc đồng hồ theo loại và điền dữ liệu
+//    int rowNum = 2;
+//    for (Meter meter : meters) {
+//        if (meter.getMeterType().equals(meterType)) {
+//            Row row = sheet.createRow(rowNum++);
+//
+//            // Điền thông tin cố định
+//            row.createCell(0).setCellValue(meter.getApartmentId());
+//            row.getCell(0).setCellStyle(dataStyle);
+//
+//            row.createCell(1).setCellValue(meter.getApartmentName());
+//            row.getCell(1).setCellStyle(dataStyle);
+//
+//            row.createCell(2).setCellValue(meter.getOwnerName());
+//            row.getCell(2).setCellStyle(dataStyle);
+//
+//            row.createCell(3).setCellValue(meter.getMeterNumber());
+//            row.getCell(3).setCellStyle(dataStyle);
+//
+//            // Các ô cần nhập liệu
+//            Cell previousReadingCell = row.createCell(4);
+//            previousReadingCell.setCellStyle(dataStyle);
+//
+//            Cell currentReadingCell = row.createCell(5);
+//            currentReadingCell.setCellStyle(inputStyle);
+//
+//            // Tạo ô ngày giờ tự động
+//            Cell readingDateCell = row.createCell(6);
+//            // Tạo công thức để theo dõi thay đổi ở ô chỉ số mới
+//            // Khi ô chỉ số mới (cột F) thay đổi, ô ngày (cột G) sẽ tự động cập nhật thành thời gian hiện tại
+//            readingDateCell.setCellFormula("IF(F" + (row.getRowNum() + 1) + "<>\"\",NOW(),\"\")");
+//            readingDateCell.setCellStyle(dateStyle);
+//        }
+//    }
+//
+//    // Thiết lập tính toán công thức tự động cho workbook
+//    sheet.getWorkbook().setForceFormulaRecalculation(true);
+//}
     // Tạo sheet hướng dẫn
     private static void createInstructionSheet(Sheet sheet, CellStyle headerStyle, CellStyle dataStyle) {
         // Tạo tiêu đề
@@ -274,152 +274,152 @@ private static void createMeterSheet(Sheet sheet, String meterType, List<Meter> 
     }
 
 // Tạo template Excel để nhập chỉ số đồng hồ điện nước
-public static ByteArrayOutputStream createMeterReadingTemplate(List<Meter> meters) throws IOException {
-    try (Workbook workbook = new XSSFWorkbook()) {
-        // Tạo style cho tiêu đề
-        CellStyle headerStyle = workbook.createCellStyle();
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 12);
-        headerStyle.setFont(headerFont);
-        headerStyle.setAlignment(HorizontalAlignment.CENTER);
-        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        headerStyle.setBorderTop(BorderStyle.THIN);
-        headerStyle.setBorderBottom(BorderStyle.THIN);
-        headerStyle.setBorderLeft(BorderStyle.THIN);
-        headerStyle.setBorderRight(BorderStyle.THIN);
-
-        // Tạo style cho dữ liệu
-        CellStyle dataStyle = workbook.createCellStyle();
-        dataStyle.setBorderTop(BorderStyle.THIN);
-        dataStyle.setBorderBottom(BorderStyle.THIN);
-        dataStyle.setBorderLeft(BorderStyle.THIN);
-        dataStyle.setBorderRight(BorderStyle.THIN);
-
-        // Tạo style cho các ô cần nhập liệu
-        CellStyle inputStyle = workbook.createCellStyle();
-        inputStyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
-        inputStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        inputStyle.setBorderTop(BorderStyle.THIN);
-        inputStyle.setBorderBottom(BorderStyle.THIN);
-        inputStyle.setBorderLeft(BorderStyle.THIN);
-        inputStyle.setBorderRight(BorderStyle.THIN);
-
-        // Tạo style cho ngày tháng
-        CellStyle dateStyle = workbook.createCellStyle();
-        dateStyle.cloneStyleFrom(inputStyle);
-        CreationHelper createHelper = workbook.getCreationHelper();
-        dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy HH:mm:ss"));
-
-        // Tạo các sheet cho điện và nước
-        Sheet electricitySheet = workbook.createSheet("Electricity");
-        Sheet waterSheet = workbook.createSheet("Water");
-
-        // Tạo sheet hướng dẫn
-        Sheet instructionSheet = workbook.createSheet("Instructions");
-        createInstructionSheet(instructionSheet, headerStyle, dataStyle);
-
-        // Tạo tiêu đề và dữ liệu cho sheet điện
-        createMeterSheet(electricitySheet, "Electricity", meters, headerStyle, dataStyle, inputStyle, dateStyle);
-
-        // Tạo tiêu đề và dữ liệu cho sheet nước
-        createMeterSheet(waterSheet, "Water", meters, headerStyle, dataStyle, inputStyle, dateStyle);
-
-        // Điều chỉnh chiều rộng cột
-        for (int i = 0; i < 7; i++) {
-            electricitySheet.autoSizeColumn(i);
-            waterSheet.autoSizeColumn(i);
-        }
-
-        // Xuất workbook thành ByteArrayOutputStream
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        workbook.write(outputStream);
-        return outputStream;
-    }
-}
+//public static ByteArrayOutputStream createMeterReadingTemplate(List<Meter> meters) throws IOException {
+//    try (Workbook workbook = new XSSFWorkbook()) {
+//        // Tạo style cho tiêu đề
+//        CellStyle headerStyle = workbook.createCellStyle();
+//        Font headerFont = workbook.createFont();
+//        headerFont.setBold(true);
+//        headerFont.setFontHeightInPoints((short) 12);
+//        headerStyle.setFont(headerFont);
+//        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+//        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+//        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+//        headerStyle.setBorderTop(BorderStyle.THIN);
+//        headerStyle.setBorderBottom(BorderStyle.THIN);
+//        headerStyle.setBorderLeft(BorderStyle.THIN);
+//        headerStyle.setBorderRight(BorderStyle.THIN);
+//
+//        // Tạo style cho dữ liệu
+//        CellStyle dataStyle = workbook.createCellStyle();
+//        dataStyle.setBorderTop(BorderStyle.THIN);
+//        dataStyle.setBorderBottom(BorderStyle.THIN);
+//        dataStyle.setBorderLeft(BorderStyle.THIN);
+//        dataStyle.setBorderRight(BorderStyle.THIN);
+//
+//        // Tạo style cho các ô cần nhập liệu
+//        CellStyle inputStyle = workbook.createCellStyle();
+//        inputStyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+//        inputStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+//        inputStyle.setBorderTop(BorderStyle.THIN);
+//        inputStyle.setBorderBottom(BorderStyle.THIN);
+//        inputStyle.setBorderLeft(BorderStyle.THIN);
+//        inputStyle.setBorderRight(BorderStyle.THIN);
+//
+//        // Tạo style cho ngày tháng
+//        CellStyle dateStyle = workbook.createCellStyle();
+//        dateStyle.cloneStyleFrom(inputStyle);
+//        CreationHelper createHelper = workbook.getCreationHelper();
+//        dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy HH:mm:ss"));
+//
+//        // Tạo các sheet cho điện và nước
+//        Sheet electricitySheet = workbook.createSheet("Electricity");
+//        Sheet waterSheet = workbook.createSheet("Water");
+//
+//        // Tạo sheet hướng dẫn
+//        Sheet instructionSheet = workbook.createSheet("Instructions");
+//        createInstructionSheet(instructionSheet, headerStyle, dataStyle);
+//
+//        // Tạo tiêu đề và dữ liệu cho sheet điện
+//        createMeterSheet(electricitySheet, "Electricity", meters, headerStyle, dataStyle, inputStyle, dateStyle);
+//
+//        // Tạo tiêu đề và dữ liệu cho sheet nước
+//        createMeterSheet(waterSheet, "Water", meters, headerStyle, dataStyle, inputStyle, dateStyle);
+//
+//        // Điều chỉnh chiều rộng cột
+//        for (int i = 0; i < 7; i++) {
+//            electricitySheet.autoSizeColumn(i);
+//            waterSheet.autoSizeColumn(i);
+//        }
+//
+//        // Xuất workbook thành ByteArrayOutputStream
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        workbook.write(outputStream);
+//        return outputStream;
+//    }
+//}
 
 // Tạo nội dung cho một sheet đồng hồ (điện hoặc nước)
-private static void createMeterSheet(Sheet sheet, String meterType, List<Meter> meters,
-        CellStyle headerStyle, CellStyle dataStyle, CellStyle inputStyle, CellStyle dateStyle) {
-    // Tạo tiêu đề
-    Row titleRow = sheet.createRow(0);
-    Cell titleCell = titleRow.createCell(0);
-    titleCell.setCellValue("BẢNG GHI CHỈ SỐ " + (meterType.equals("Electricity") ? "Electricity" : "Water"));
-    titleCell.setCellStyle(headerStyle);
-    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
-    
-    // Tạo hàng tiêu đề cột
-    Row headerRow = sheet.createRow(1);
-    String[] headers = {"Apartment ID", "Apartment Name", "Owner", "Meter ID", "Previous Reading", "Current Reading", "Reading Date"};
-    for (int i = 0; i < headers.length; i++) {
-        Cell cell = headerRow.createCell(i);
-        cell.setCellValue(headers[i]);
-        cell.setCellStyle(headerStyle);
-    }
-    
-    // Lọc đồng hồ theo loại và điền dữ liệu
-    int rowNum = 2;
-    for (Meter meter : meters) {
-        if (meter.getMeterType().equals(meterType)) {
-            Row row = sheet.createRow(rowNum++);
-            
-            // Điền thông tin cố định
-            row.createCell(0).setCellValue(meter.getApartmentId());
-            row.getCell(0).setCellStyle(dataStyle);
-            
-            row.createCell(1).setCellValue(meter.getApartmentName());
-            row.getCell(1).setCellStyle(dataStyle);
-            
-            row.createCell(2).setCellValue(meter.getOwnerName());
-            row.getCell(2).setCellStyle(dataStyle);
-            
-            row.createCell(3).setCellValue(meter.getMeterNumber());
-            row.getCell(3).setCellStyle(dataStyle);
-            
-            // Các ô cần nhập liệu - Lấy chỉ số cũ (nếu có)
-            Cell previousReadingCell = row.createCell(4);
-            // Thay thế meter.getPreviousReading() với giá trị thích hợp
-            // Có thể sử dụng một giá trị mặc định hoặc lấy từ chỉ số đọc gần nhất
-            try {
-                // Lấy chỉ số đọc gần nhất cho đồng hồ này
-                MeterReadingDAO meterReadingDAO = new MeterReadingDAO();
-                MeterReading latestReading = meterReadingDAO.getLatestMeterReading(meter.getMeterId());
-                if (latestReading != null) {
-                    previousReadingCell.setCellValue(latestReading.getCurrentReading().doubleValue());
-                } else {
-                    previousReadingCell.setCellValue(0.0); // Giá trị mặc định nếu không có chỉ số trước đó
-                }
-            } catch (SQLException e) {
-                // Xử lý ngoại lệ, đặt giá trị mặc định
-                previousReadingCell.setCellValue(0.0);
-                e.printStackTrace();
-            }
-            previousReadingCell.setCellStyle(dataStyle);
-            
-            // Đặt DataValidation để tự động cập nhật ngày khi nhập chỉ số mới
-            Cell currentReadingCell = row.createCell(5);
-            currentReadingCell.setCellStyle(inputStyle);
-            
-            // Ô ngày giờ - trống ban đầu
-            Cell readingDateCell = row.createCell(6);
-            readingDateCell.setCellStyle(dateStyle);
-            
-            // Thêm một Worksheet Event để tự động cập nhật ngày khi chỉ số mới thay đổi
-            // Sử dụng SheetConditionalFormatting để tạo một quy tắc điều kiện
-            SheetConditionalFormatting sheetCF = sheet.getSheetConditionalFormatting();
-            
-            // Tạo quy tắc: Khi ô F thay đổi (không còn trống), tự động cập nhật ô G
-            ConditionalFormattingRule rule = sheetCF.createConditionalFormattingRule("ISBLANK(F" + (rowNum) + ")=FALSE");
-            
-            // Đặt công thức NOW() cho ô ngày giờ
-            readingDateCell.setCellFormula("IF(F" + (rowNum) + "<>\"\",NOW(),\"\")");
-        }
-    }
-    
-    // Thiết lập tính toán công thức tự động cho workbook
-    sheet.getWorkbook().setForceFormulaRecalculation(true);
-}
+//private static void createMeterSheet(Sheet sheet, String meterType, List<Meter> meters,
+//        CellStyle headerStyle, CellStyle dataStyle, CellStyle inputStyle, CellStyle dateStyle) {
+//    // Tạo tiêu đề
+//    Row titleRow = sheet.createRow(0);
+//    Cell titleCell = titleRow.createCell(0);
+//    titleCell.setCellValue("BẢNG GHI CHỈ SỐ " + (meterType.equals("Electricity") ? "Electricity" : "Water"));
+//    titleCell.setCellStyle(headerStyle);
+//    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+//    
+//    // Tạo hàng tiêu đề cột
+//    Row headerRow = sheet.createRow(1);
+//    String[] headers = {"Apartment ID", "Apartment Name", "Owner", "Meter ID", "Previous Reading", "Current Reading", "Reading Date"};
+//    for (int i = 0; i < headers.length; i++) {
+//        Cell cell = headerRow.createCell(i);
+//        cell.setCellValue(headers[i]);
+//        cell.setCellStyle(headerStyle);
+//    }
+//    
+//    // Lọc đồng hồ theo loại và điền dữ liệu
+//    int rowNum = 2;
+//    for (Meter meter : meters) {
+//        if (meter.getMeterType().equals(meterType)) {
+//            Row row = sheet.createRow(rowNum++);
+//            
+//            // Điền thông tin cố định
+//            row.createCell(0).setCellValue(meter.getApartmentId());
+//            row.getCell(0).setCellStyle(dataStyle);
+//            
+//            row.createCell(1).setCellValue(meter.getApartmentName());
+//            row.getCell(1).setCellStyle(dataStyle);
+//            
+//            row.createCell(2).setCellValue(meter.getOwnerName());
+//            row.getCell(2).setCellStyle(dataStyle);
+//            
+//            row.createCell(3).setCellValue(meter.getMeterNumber());
+//            row.getCell(3).setCellStyle(dataStyle);
+//            
+//            // Các ô cần nhập liệu - Lấy chỉ số cũ (nếu có)
+//            Cell previousReadingCell = row.createCell(4);
+//            // Thay thế meter.getPreviousReading() với giá trị thích hợp
+//            // Có thể sử dụng một giá trị mặc định hoặc lấy từ chỉ số đọc gần nhất
+//            try {
+//                // Lấy chỉ số đọc gần nhất cho đồng hồ này
+//                MeterReadingDAO meterReadingDAO = new MeterReadingDAO();
+//                MeterReading latestReading = meterReadingDAO.getLatestMeterReading(meter.getMeterId());
+//                if (latestReading != null) {
+//                    previousReadingCell.setCellValue(latestReading.getCurrentReading().doubleValue());
+//                } else {
+//                    previousReadingCell.setCellValue(0.0); // Giá trị mặc định nếu không có chỉ số trước đó
+//                }
+//            } catch (SQLException e) {
+//                // Xử lý ngoại lệ, đặt giá trị mặc định
+//                previousReadingCell.setCellValue(0.0);
+//                e.printStackTrace();
+//            }
+//            previousReadingCell.setCellStyle(dataStyle);
+//            
+//            // Đặt DataValidation để tự động cập nhật ngày khi nhập chỉ số mới
+//            Cell currentReadingCell = row.createCell(5);
+//            currentReadingCell.setCellStyle(inputStyle);
+//            
+//            // Ô ngày giờ - trống ban đầu
+//            Cell readingDateCell = row.createCell(6);
+//            readingDateCell.setCellStyle(dateStyle);
+//            
+//            // Thêm một Worksheet Event để tự động cập nhật ngày khi chỉ số mới thay đổi
+//            // Sử dụng SheetConditionalFormatting để tạo một quy tắc điều kiện
+//            SheetConditionalFormatting sheetCF = sheet.getSheetConditionalFormatting();
+//            
+//            // Tạo quy tắc: Khi ô F thay đổi (không còn trống), tự động cập nhật ô G
+//            ConditionalFormattingRule rule = sheetCF.createConditionalFormattingRule("ISBLANK(F" + (rowNum) + ")=FALSE");
+//            
+//            // Đặt công thức NOW() cho ô ngày giờ
+//            readingDateCell.setCellFormula("IF(F" + (rowNum) + "<>\"\",NOW(),\"\")");
+//        }
+//    }
+//    
+//    // Thiết lập tính toán công thức tự động cho workbook
+//    sheet.getWorkbook().setForceFormulaRecalculation(true);
+//}
 // Đọc dữ liệu từ file Excel đã nhập
 public static List<MeterReading> readMeterReadingsFromExcel(InputStream excelFile,
         Map<String, Integer> meterMap,

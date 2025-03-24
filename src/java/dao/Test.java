@@ -119,7 +119,10 @@ public class Test {
 //        residentDAO.insert(resident);
 //        Resident resident = new Resident("Nguyễn Kiểm", "kiem@12345", "0331477047", "3984136534764", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
 //        residentDAO.insert(resident);
+<<<<<<< HEAD
 
+=======
+>>>>>>> c62c1b1469ff17511bfd0d20230d598b409a8031
         //Resident resident = new Resident("Nguyễn Kiểm", "kiem@12345", "0331477047", "3984136534764", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
         //residentDAO.insert(resident);
         // Resident resident1 = new Resident("Nguyễn MH", "123", "0328674349", "3984136534776", "mh@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(6).build());
@@ -130,6 +133,7 @@ public class Test {
         residentDAO.insert(resident1);
         Resident resident2 = new Resident("Nguyễn Thị B", "123", "0333479047", "3984136534064", "b@gmail.com", LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
         residentDAO.insert(resident2);
+<<<<<<< HEAD
 
        //Resident resident = new Resident("Nguyễn Kiểm", "kiem@12345", "0331477047", "3984136534764", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
        //residentDAO.insert(resident);
@@ -148,6 +152,9 @@ public class Test {
 
 
 
+=======
+
+>>>>>>> c62c1b1469ff17511bfd0d20230d598b409a8031
 //        imageDAO.insert(image);
        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0931654542", "6634983361194", "nkien349@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(3).build());
         staffDAO.insert(staff);
@@ -164,6 +171,7 @@ public class Test {
 //        staffDAO.insert(staff);
         // Staff staff = new Staff("Nguyễn Kiểm Admin", "kiem@12345", "0336750744", "044567203453", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(1).build());
         // staffDAO.insert(staff); 
+<<<<<<< HEAD
 
 //        staffDAO.insert(staff); 
 
@@ -176,6 +184,8 @@ public class Test {
 //         staffDAO.insert(staff); 
 
 
+=======
+>>>>>>> c62c1b1469ff17511bfd0d20230d598b409a8031
 //        Feedback fb = new Feedback("Account not good", "Good", LocalDate.of(2025, 01, 10), 4, 2, 1);
 //        feedbackDAO.insert(fb);
 //         List list = feedbackDAO.getAllFeedbacksSortedByStaff();

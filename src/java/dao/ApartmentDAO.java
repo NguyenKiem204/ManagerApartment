@@ -121,9 +121,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
                     rs.getString("Block"),
                     rs.getString("Status"),
                     rs.getString("Type"),
-                    ownerId,
-                    ownerName
-                    
+                    ownerId
             );
             list.add(apartment);
         }
