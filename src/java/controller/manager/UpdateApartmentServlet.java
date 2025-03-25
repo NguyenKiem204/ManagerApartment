@@ -88,6 +88,11 @@ public class UpdateApartmentServlet extends HttpServlet {
                 response.getWriter().write("Apartment name already exists in this block");
                 return;
             }
+            if (ownerId != 0 && "available".equalsIgnoreCase(status.trim())) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("Status cannot be 'available' if apartment has an owner!");
+                return;
+            }
 
             Apartment updatedApartment = new Apartment(apartmentId, apartmentName, block, status, type, ownerId);
             System.out.println("Updating Apartment: ID = " + apartmentId + ", Name = " + apartmentName);

@@ -111,9 +111,15 @@ public class ManageApartmentServlet extends HttpServlet {
             }
 
             // Kiểm tra xem apartment đã tồn tại chưa
-            if (apartmentDAO.isApartmentExists(apartmentName, block)) {
+            if (apartmentDAO.isApartmentExists(normalizeString(apartmentName), block)) {
                 jsonResponse.put("success", false);
                 jsonResponse.put("message", "This apartment is dupplicated!");
+                out.write(jsonResponse.toString());
+                return;
+            }
+            if (ownerId != 0 && "available".equalsIgnoreCase(status)) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Status cannot be 'available' if apartment has an owner!");
                 out.write(jsonResponse.toString());
                 return;
             }

@@ -33,6 +33,7 @@ public class DeleteResidentServlet extends HttpServlet {
             msg = "Delete failed!";
         }
         request.setAttribute("mess", msg);
-        request.getRequestDispatcher("/manager/manageResident").forward(request, response);
+        //request.getRequestDispatcher("/manager/manageResident").forward(request, response);
+        response.sendRedirect("manageResident");
     }
 }

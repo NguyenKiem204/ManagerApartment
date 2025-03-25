@@ -632,4 +632,20 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return false;
     }
 
+    public boolean isResidentAnOwner(int residentId) {
+        String sql = "SELECT COUNT(*) FROM Apartment WHERE OwnerID = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, residentId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu có ít nhất 1 kết quả, tức là resident này là Owner
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
 }
