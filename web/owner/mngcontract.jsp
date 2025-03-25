@@ -35,7 +35,9 @@
                 overflow: hidden;
                 width: 100%;
             }
-
+            .ct{
+                margin-left: 350px;
+            }
             table {
                 border-collapse: collapse;
                 width: 100%;
@@ -307,8 +309,7 @@
         <%@include file="/manager/menumanager.jsp" %>
         <!--=============================CONTENT HERE=======================-->
         <div class="w-90" style="display: flex;">
-            <div class="col-3"></div>
-            <div  class="col-9">
+            <div  class="col-9 ct">
                 <h1>Tenant and Contract</h1>
                 <%-- Hiển thị thông báo nếu có --%>
                 <c:if test="${not empty mess}">
@@ -324,7 +325,7 @@
                     <div class="modal-content">
                         <span class="modal-close">&times;</span>
                         <h2 class="modal-title">Add Tenant</h2>
-                        <form id="insertTenantForm">
+                        <form id="insertTenantForm" enctype="multipart/form-data">
                             <div class="modal-grid">
                                 <div class="modal-column">
                                     <label for="fullName" class="modal-label">Full Name:</label>
@@ -362,6 +363,9 @@
 
                                     <label for="leaseEndDate" class="modal-label">Lease End Date:</label>
                                     <input type="text" id="leaseEndDate" name="leaseEndDate" class="modal-input" id="datePicker" placeholder="dd/MM/yyyy" required>
+
+                                    <label for="contractFile" class="modal-label">Upload Contract File:</label>
+                                    <input type="file" id="contractFile" name="contractFile" class="modal-input" accept=".pdf,.doc,.docx" required>
                                 </div>
                             </div>
                             <button type="button" id="submitTenantBtn" class="modal-button">Add</button>
@@ -565,13 +569,16 @@
                     }
                 });
 
-                // Gửi form bằng AJAX
                 $("#submitTenantBtn").click(function () {
-                    let formData = $("#insertTenantForm").serialize();
+                    let form = $("#insertTenantForm")[0]; // Lấy form DOM
+                    let formData = new FormData(form); // Tạo đối tượng FormData (bao gồm cả file)
+
                     $.ajax({
                         type: "POST",
-                        url: "manageContract", // Cập nhật URL phù hợp với Servlet thêm Tenant + Contract
+                        url: "manageContract", // URL Servlet
                         data: formData,
+                        processData: false, // Không xử lý dữ liệu (quan trọng)
+                        contentType: false, // Không đặt Content-Type, để trình duyệt tự xử lý
                         dataType: "json",
                         success: function (response) {
                             if (response.success) {
@@ -590,6 +597,7 @@
                         }
                     });
                 });
+
             });
         </script>
 

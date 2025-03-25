@@ -12,11 +12,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import model.Invoices;
+import model.Resident;
+import model.Staff;
 import model.TypeBill;
 
 /**
@@ -64,17 +67,32 @@ public class DetailInvoice extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Resident resident = (Resident) session.getAttribute("resident");
+        Staff staff = (Staff) session.getAttribute("staff");
+
         String idinv = request.getParameter("invoiceID");
+        if (idinv == null || idinv.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu invoiceID");
+            return;
+        }
+
         try {
             int id = Integer.parseInt(idinv);
             InvoiceDAO idao = new InvoiceDAO();
             Invoices inv = idao.selectById(id);
+
+            // Lấy danh sách loại hóa đơn
             List<TypeBill> lt = idao.getAllTypeBills();
 
+            // Đặt thông tin vào request để hiển thị trên JSP
             request.setAttribute("invoice", inv);
+            request.setAttribute("typeBills", lt);
             request.getRequestDispatcher("DetailInvoice.jsp").forward(request, response);
+
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi xử lý dữ liệu");
         }
     }
 

@@ -30,6 +30,7 @@ public class ExcelUtils {
    public static ByteArrayOutputStream createMeterReadingReport(List<MeterReading> meterReadings) throws IOException {
     try (Workbook workbook = new XSSFWorkbook()) {
         Sheet sheet = workbook.createSheet("Meter Readings Report");
+
         CellStyle headerStyle = workbook.createCellStyle();
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
@@ -107,9 +108,11 @@ public class ExcelUtils {
         return outputStream;
     }
 }
-  
+   
+// Tạo nội dung cho một sheet đồng hồ (điện hoặc nước)
 private static void createMeterSheet(Sheet sheet, String meterType, List<Meter> meters,
         CellStyle headerStyle, CellStyle dataStyle, CellStyle inputStyle) {
+
     Row titleRow = sheet.createRow(0);
     Cell titleCell = titleRow.createCell(0);
     titleCell.setCellValue("METER READING TABLE " + (meterType.equals("Electricity") ? "ELECTRICITY" : "Water"));
@@ -157,6 +160,7 @@ private static void createMeterSheet(Sheet sheet, String meterType, List<Meter> 
             readingDateCell.setCellStyle(dateStyle);
         }
     }
+
     sheet.getWorkbook().setForceFormulaRecalculation(true);
 }
     private static void createInstructionSheet(Sheet sheet, CellStyle headerStyle, CellStyle dataStyle) {
@@ -185,6 +189,7 @@ private static void createMeterSheet(Sheet sheet, String meterType, List<Meter> 
             instructionCell.setCellValue(instructions[i][1]);
             instructionCell.setCellStyle(dataStyle);
         }
+
         sheet.setColumnWidth(0, 1500);
         sheet.setColumnWidth(1, 15000);
     }
@@ -230,6 +235,7 @@ public static ByteArrayOutputStream createMeterReadingTemplate(List<Meter> meter
         createInstructionSheet(instructionSheet, headerStyle, dataStyle);
 
         createMeterSheet(electricitySheet, "Electricity", meters, headerStyle, dataStyle, inputStyle, dateStyle);
+
         createMeterSheet(waterSheet, "Water", meters, headerStyle, dataStyle, inputStyle, dateStyle);
 
         for (int i = 0; i < 7; i++) {
@@ -250,7 +256,7 @@ private static void createMeterSheet(Sheet sheet, String meterType, List<Meter> 
     titleCell.setCellValue("BẢNG GHI CHỈ SỐ " + (meterType.equals("Electricity") ? "Electricity" : "Water"));
     titleCell.setCellStyle(headerStyle);
     sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
-
+    
     Row headerRow = sheet.createRow(1);
     String[] headers = {"Apartment ID", "Apartment Name", "Owner", "Meter ID", "Previous Reading", "Current Reading", "Reading Date"};
     for (int i = 0; i < headers.length; i++) {
@@ -283,26 +289,27 @@ private static void createMeterSheet(Sheet sheet, String meterType, List<Meter> 
                 if (latestReading != null) {
                     previousReadingCell.setCellValue(latestReading.getCurrentReading().doubleValue());
                 } else {
-                    previousReadingCell.setCellValue(0.0); 
+                    previousReadingCell.setCellValue(0.0);
                 }
             } catch (SQLException e) {
                 previousReadingCell.setCellValue(0.0);
                 e.printStackTrace();
             }
             previousReadingCell.setCellStyle(dataStyle);
+            
             Cell currentReadingCell = row.createCell(5);
             currentReadingCell.setCellStyle(inputStyle);
-          
+            
             Cell readingDateCell = row.createCell(6);
             readingDateCell.setCellStyle(dateStyle);
             
             SheetConditionalFormatting sheetCF = sheet.getSheetConditionalFormatting();
-
+            
             ConditionalFormattingRule rule = sheetCF.createConditionalFormattingRule("ISBLANK(F" + (rowNum) + ")=FALSE");
+            
             readingDateCell.setCellFormula("IF(F" + (rowNum) + "<>\"\",NOW(),\"\")");
         }
     }
-   
     sheet.getWorkbook().setForceFormulaRecalculation(true);
 }
 public static List<MeterReading> readMeterReadingsFromExcel(InputStream excelFile,
@@ -317,6 +324,7 @@ public static List<MeterReading> readMeterReadingsFromExcel(InputStream excelFil
         if (electricitySheet != null) {
             readings.addAll(readMeterReadingsFromSheet(electricitySheet, meterMap, staffId, month, year));
         }
+
         Sheet waterSheet = workbook.getSheet("Water");
         if (waterSheet != null) {
             readings.addAll(readMeterReadingsFromSheet(waterSheet, meterMap, staffId, month, year));
@@ -332,6 +340,7 @@ private static List<MeterReading> readMeterReadingsFromSheet(Sheet sheet,
         int month,
         int year) {
     List<MeterReading> readings = new ArrayList<>();
+
     for (int i = 2; i <= sheet.getLastRowNum(); i++) {
         Row row = sheet.getRow(i);
         if (row == null) {
@@ -354,6 +363,7 @@ private static List<MeterReading> readMeterReadingsFromSheet(Sheet sheet,
         if (previousReading == null || currentReading == null) {
             continue;
         }
+        
         LocalDateTime readingDate = getDateTimeCellValue(row.getCell(6));
         if (readingDate == null) {
             readingDate = LocalDateTime.now();
@@ -405,7 +415,7 @@ private static BigDecimal getBigDecimalCellValue(Cell cell) {
 
         case FORMULA:
         try {
-            return BigDecimal.valueOf(cell.getNumericCellValue()); // Công thức trả về số
+            return BigDecimal.valueOf(cell.getNumericCellValue());
         } catch (IllegalStateException e) {
             return null;
         }
@@ -415,7 +425,6 @@ private static BigDecimal getBigDecimalCellValue(Cell cell) {
     }
 }
 
-// Lấy giá trị ngày giờ từ một ô
 private static LocalDateTime getDateTimeCellValue(Cell cell) {
     if (cell == null) {
         return null;
@@ -453,14 +462,12 @@ private static LocalDateTime getDateTimeCellValue(Cell cell) {
                 break;
         }
     } catch (Exception e) {
-        // Xử lý ngoại lệ
         System.err.println("Error parsing date: " + e.getMessage());
     }
     
     return null;
 }
 
-    // Lấy giá trị ngày từ một ô
     private static Date getDateCellValue(Cell cell) {
         if (cell == null) {
             return null;
@@ -482,12 +489,10 @@ private static LocalDateTime getDateTimeCellValue(Cell cell) {
         }
     }
 
-    // Tạo file Excel báo cáo tiêu thụ điện nước
     public static ByteArrayOutputStream createUtilityConsumptionReport(List<UtilityBill> bills,
             int month,
             int year) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
-            // Tạo style cho tiêu đề
             CellStyle headerStyle = workbook.createCellStyle();
             Font headerFont = workbook.createFont();
             headerFont.setBold(true);
@@ -501,14 +506,12 @@ private static LocalDateTime getDateTimeCellValue(Cell cell) {
             headerStyle.setBorderLeft(BorderStyle.THIN);
             headerStyle.setBorderRight(BorderStyle.THIN);
 
-            // Tạo style cho dữ liệu
             CellStyle dataStyle = workbook.createCellStyle();
             dataStyle.setBorderTop(BorderStyle.THIN);
             dataStyle.setBorderBottom(BorderStyle.THIN);
             dataStyle.setBorderLeft(BorderStyle.THIN);
             dataStyle.setBorderRight(BorderStyle.THIN);
 
-            // Tạo style cho số tiền
             CellStyle moneyStyle = workbook.createCellStyle();
             DataFormat format = workbook.createDataFormat();
             moneyStyle.setDataFormat(format.getFormat("#,##0"));
@@ -517,10 +520,8 @@ private static LocalDateTime getDateTimeCellValue(Cell cell) {
             moneyStyle.setBorderLeft(BorderStyle.THIN);
             moneyStyle.setBorderRight(BorderStyle.THIN);
 
-            // Tạo sheet báo cáo
             Sheet sheet = workbook.createSheet("Consumption Report");
 
-            // Tạo tiêu đề báo cáo
             Row titleRow1 = sheet.createRow(0);
             Cell titleCell1 = titleRow1.createCell(0);
             titleCell1.setCellValue("ELECTRICITY & WATER CONSUMPTION REPORT");
@@ -533,7 +534,6 @@ private static LocalDateTime getDateTimeCellValue(Cell cell) {
             titleCell2.setCellStyle(headerStyle);
             sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 8));
 
-            // Tạo hàng tiêu đề cột
             Row headerRow = sheet.createRow(3);
             String[] headers = {
                 "No.", "Apartment ID", "Apartment Name", "Owner", "Electricity Consumption (kWh)",
@@ -546,7 +546,6 @@ private static LocalDateTime getDateTimeCellValue(Cell cell) {
                 cell.setCellStyle(headerStyle);
             }
 
-            // Điền dữ liệu
             int rowNum = 4;
             int stt = 1;
             BigDecimal totalElectricityConsumption = BigDecimal.ZERO;
@@ -558,58 +557,48 @@ private static LocalDateTime getDateTimeCellValue(Cell cell) {
             for (UtilityBill bill : bills) {
                 Row row = sheet.createRow(rowNum++);
 
-                // STT
                 Cell sttCell = row.createCell(0);
                 sttCell.setCellValue(stt++);
                 sttCell.setCellStyle(dataStyle);
 
-                // Mã căn hộ
                 Cell apartmentIdCell = row.createCell(1);
                 apartmentIdCell.setCellValue(bill.getApartmentId());
                 apartmentIdCell.setCellStyle(dataStyle);
 
-                // Tên căn hộ
                 Cell apartmentNameCell = row.createCell(2);
                 apartmentNameCell.setCellValue(bill.getApartmentName());
                 apartmentNameCell.setCellStyle(dataStyle);
 
-                // Chủ hộ
                 Cell ownerNameCell = row.createCell(3);
                 ownerNameCell.setCellValue(bill.getOwnerName());
                 ownerNameCell.setCellStyle(dataStyle);
 
-                // Tiêu thụ điện
                 Cell elecConsumptionCell = row.createCell(4);
                 elecConsumptionCell.setCellValue(bill.getElectricityConsumption().doubleValue());
                 elecConsumptionCell.setCellStyle(dataStyle);
                 totalElectricityConsumption = totalElectricityConsumption.add(bill.getElectricityConsumption());
 
-                // Tiền điện
                 Cell elecCostCell = row.createCell(5);
                 elecCostCell.setCellValue(bill.getElectricityCost().doubleValue());
                 elecCostCell.setCellStyle(moneyStyle);
                 totalElectricityCost = totalElectricityCost.add(bill.getElectricityCost());
 
-                // Tiêu thụ nước
                 Cell waterConsumptionCell = row.createCell(6);
                 waterConsumptionCell.setCellValue(bill.getWaterConsumption().doubleValue());
                 waterConsumptionCell.setCellStyle(dataStyle);
                 totalWaterConsumption = totalWaterConsumption.add(bill.getWaterConsumption());
 
-                // Tiền nước
                 Cell waterCostCell = row.createCell(7);
                 waterCostCell.setCellValue(bill.getWaterCost().doubleValue());
                 waterCostCell.setCellStyle(moneyStyle);
                 totalWaterCost = totalWaterCost.add(bill.getWaterCost());
 
-                // Tổng tiền
                 Cell totalCell = row.createCell(8);
                 totalCell.setCellValue(bill.getTotalAmount().doubleValue());
                 totalCell.setCellStyle(moneyStyle);
                 totalAmount = totalAmount.add(bill.getTotalAmount());
             }
 
-            // Tạo hàng tổng cộng
             Row totalRow = sheet.createRow(rowNum);
 
             Cell totalLabelCell = totalRow.createCell(0);
@@ -637,12 +626,10 @@ private static LocalDateTime getDateTimeCellValue(Cell cell) {
             grandTotalCell.setCellValue(totalAmount.doubleValue());
             grandTotalCell.setCellStyle(headerStyle);
 
-            // Điều chỉnh chiều rộng cột
             for (int i = 0; i < 9; i++) {
                 sheet.autoSizeColumn(i);
             }
 
-            // Xuất workbook thành ByteArrayOutputStream
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             workbook.write(outputStream);
             return outputStream;

@@ -3,10 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller.tenant;
+package controller;
 
 import dao.RuleDAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,9 +21,9 @@ import validation.Validate;
  *
  * @author Hoang-Tran
  */
-@WebServlet(name="ResidentRegulationsTenant", urlPatterns={"/tenant/viewregulations"})
-public class ResidentRegulationsTenant extends HttpServlet {
-       @Override
+@WebServlet(name="ViewRegulations", urlPatterns={"/regulations"})
+public class ViewRegulations extends HttpServlet {
+   @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RuleDAO ruleDAO = new RuleDAO();
@@ -35,7 +36,7 @@ public class ResidentRegulationsTenant extends HttpServlet {
         request.setAttribute("rulesList", ruleList);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("pageNumber", pageNumber);
-        request.getRequestDispatcher("/tenant/view_regulations.jsp").forward(request, response);
+        request.getRequestDispatcher("view-regulations.jsp").forward(request, response);
     }
 
     @Override
@@ -65,6 +66,6 @@ public class ResidentRegulationsTenant extends HttpServlet {
         request.setAttribute("pageNumber", pageNumber);
         request.setAttribute("rulesList", ruleList);
         request.setAttribute("searchName", searchName);
-        request.getRequestDispatcher("/tenant/view_regulations.jsp").forward(request, response);
+        request.getRequestDispatcher("view-regulations.jsp").forward(request, response);
     }
 }

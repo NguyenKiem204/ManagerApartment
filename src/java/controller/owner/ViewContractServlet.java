@@ -5,6 +5,7 @@
 package controller.owner;
 
 import dao.ContractDAO;
+import dao.ResidentDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import model.Contract;
+import model.EmailUtil;
 import org.json.JSONObject;
 
 /**
@@ -25,7 +27,7 @@ import org.json.JSONObject;
  */
 @WebServlet(name = "ViewContractServlet", urlPatterns = {"/owner/viewContract"})
 public class ViewContractServlet extends HttpServlet {
-
+    ResidentDAO residentDAO = new ResidentDAO();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -74,7 +76,7 @@ public class ViewContractServlet extends HttpServlet {
                 LocalDate oldEndDate = contract.getLeaseEndDate();
 
                 // Kiểm tra ngày mới phải lớn hơn ngày cũ
-                if (newEndDate.isBefore(oldEndDate)) {
+                if (!newEndDate.isAfter(oldEndDate)) {
                     jsonResponse.put("success", false);
                     jsonResponse.put("message", "New end date must be after the current end date!");
                     out.write(jsonResponse.toString());
@@ -83,6 +85,13 @@ public class ViewContractServlet extends HttpServlet {
                 boolean success = contractDAO.renewContract(tenantId, newEndDate);
 
                 if (success) {
+                    String subject = "Your Contract has been Renewed!";
+                    String message = "Dear " + residentDAO.selectById(tenantId).getFullName() + ",\n\n"
+                        + "Your contract has been successfully renewed.\n"
+                        + "New End Date: " + newEndDate + "\n\n"
+                        + "Best regards,\nApartment Management System";
+
+                    EmailUtil.sendEmailRenewContract(residentDAO.selectById(tenantId).getEmail(), subject, message);
                     jsonResponse.put("success", true);
                     jsonResponse.put("message", "Contract renewed successfully!");
                 } else {

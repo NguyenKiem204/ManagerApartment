@@ -30,7 +30,7 @@
                 color: #566787;
                 background: #ffa384;
                 font-family: 'Varela Round', sans-serif;
-                font-size: 13px;
+                font-size: 20px;
             }
             .table-responsive {
                 margin: 30px 0;
@@ -179,7 +179,7 @@
             }
             .modal .modal-content {
                 border-radius: 15px;
-                font-size: 14px;
+                font-size: 20px;
             }
             .modal .modal-footer {
                 background: #ecf0f1;
@@ -257,7 +257,7 @@
                             <input type="hidden" name="_method" value="PUT"/>
 
                             <div class="modal-header">						
-                                <h4 id="editRuleTitle" class="modal-title">Edit Rule</h4>
+                                <h4 id="editRuleTitle" class="modal-title">Edit Regulations</h4>
                             </div>
                             <div class="modal-body">
                                 <c:if test="${not empty error}">
@@ -272,7 +272,7 @@
                                     value="${rule.ruleID}"
                                     />
                                 <div class="form-group">
-                                    <label>Rule Name</label>
+                                    <label>Regulations Name</label>
                                     <input type="text" 
                                            class="form-control"
                                            name="ruleName"
@@ -280,7 +280,7 @@
                                            required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Rule Description</label>
+                                    <label>Regulations Description</label>
                                     <textarea 
                                         id="ruleDescription" 
                                         name="ruleDescription" 
@@ -295,7 +295,7 @@
                                         type="text" 
                                         class="form-control" 
                                         name="publicDate"
-                                        id="publicDate" 
+                                        id="boughtOn" 
                                         placeholder="dd/MM/yyyy"
                                         value="${rule.formattedPublicDate}"
                                         required
@@ -304,7 +304,7 @@
                             </div>
                             <div class="modal-footer">
                                 <input type="submit" class="btn btn-info" value="Save"  >
-                                <a href="/ManagerApartment/manager/rule"
+                                <a href="/ManagerApartment/manager/regulations"
                                    class="btn btn-default"
                                    >Cancel</a>
                             </div>
@@ -336,14 +336,25 @@
                 placeholder: "Nhập nội dung bài viết..."
             });
         });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            flatpickr("#publicDate", {
-                dateFormat: "d/m/Y", // Định dạng hiển thị là DD/MM/YYYY
-                altInput: true,
-                altFormat: "d/m/Y", // Định dạng gửi đi là YYYY/MM/DD
-                allowInput: true
-            });
-        });
+//
+//        document.addEventListener("DOMContentLoaded", function () {
+//            flatpickr("#publicDate", {
+//                dateFormat: "d/m/Y", // Định dạng hiển thị là DD/MM/YYYY
+//                altInput: true,
+//                altFormat: "d/m/Y", // Định dạng gửi đi là YYYY/MM/DD
+//                allowInput: true
+//            });
+//        });
+         document.addEventListener("DOMContentLoaded", function () {
+    var modal = document.querySelector(".modal-dialog");
+    if (modal) {
+        modal.style.maxWidth = "100%";
+        modal.style.width = "100%";
+       modal.style.margin = "auto";
+        modal.style.top = "50%";
+       // modal.style.transform = "translate(15%)";
+    }
+});
+        
     </script>
 </html>

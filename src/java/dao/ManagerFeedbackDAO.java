@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -131,7 +132,7 @@ public class ManagerFeedbackDAO implements DAOInterface<ManagerFeedback, Integer
                               rs.getString("weaknesses"),
                               rs.getString("staffResponse"),
                               rs.getString("actionPlan"),
-                              rs.getDate("deadline").toLocalDate(),
+                              rs.getDate("deadline") != null ? rs.getDate("deadline").toLocalDate() : null, 
                               rs.getTimestamp("createdAt").toLocalDateTime(),
                               staff.selectById(rs.getInt("StaffID")
                               ));
@@ -155,6 +156,115 @@ public class ManagerFeedbackDAO implements DAOInterface<ManagerFeedback, Integer
             Logger.getLogger(ManagerFeedbackDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0; // Trả về 0 nếu không có dữ liệu
+    }
+
+    public List<ManagerFeedback> selectFirstPage(int staffId) {
+        List<ManagerFeedback> list = new ArrayList<>();
+        String sql = "SELECT * FROM ManagerFeedback WHERE StaffID = ? ORDER BY [ManagerFeedbackID] DESC OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                ManagerFeedback mf = new ManagerFeedback(
+                          rs.getInt("ManagerFeedbackID"),
+                          rs.getDate("monthYear").toLocalDate(),
+                          rs.getInt("totalFeedback"),
+                          rs.getDouble("avgRating"),
+                          rs.getInt("positivePercentage"),
+                          rs.getInt("negativePercentage"),
+                          rs.getString("strengths"),
+                          rs.getString("weaknesses"),
+                          rs.getString("staffResponse"),
+                          rs.getString("actionPlan"),
+                          rs.getDate("deadline") != null ? rs.getDate("deadline").toLocalDate() : null, 
+                          rs.getTimestamp("createdAt").toLocalDateTime(),
+                          staff.selectById(rs.getInt("StaffID")
+                          ));
+                list.add(mf);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerFeedbackDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public int selectAllToCount(int staffId) {
+        String sql = "SELECT count(*) FROM ManagerFeedback WHERE StaffID = ?";
+        int num = 0;
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                num = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerFeedbackDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return num;
+    }
+
+    public List<ManagerFeedback> getAllFeedbacksBySort(int keySort, int page, int pageSize, int staffId) {
+        List<ManagerFeedback> list = new ArrayList<>();
+        String sql = "SELECT * FROM ManagerFeedback WHERE StaffID = ? ";
+        List<Object> params = new ArrayList<>();
+        params.add(staffId);
+        try {
+//Xu ly search
+            
+            //Xu ly sort
+            if (keySort != 0) {
+                switch (keySort) {
+                    case 1 ->
+                        sql += " ORDER BY MonthYear DESC, ManagerFeedbackID DESC";
+                    case 2 ->
+                        sql += " ORDER BY MonthYear ASC, ManagerFeedbackID ASC";
+                    default ->
+                        throw new AssertionError();
+                }
+            } else {
+                sql += " ORDER BY MonthYear DESC, ManagerFeedbackID DESC";
+            }
+
+//xu ly phan trang
+            sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            int offset = (page - 1) * pageSize;
+            params.add(offset);
+            params.add(pageSize);
+
+        } catch (Exception e) {
+        }
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ManagerFeedback mf = new ManagerFeedback(
+                          rs.getInt("ManagerFeedbackID"),
+                          rs.getDate("monthYear").toLocalDate(),
+                          rs.getInt("totalFeedback"),
+                          rs.getDouble("avgRating"),
+                          rs.getInt("positivePercentage"),
+                          rs.getInt("negativePercentage"),
+                          rs.getString("strengths"),
+                          rs.getString("weaknesses"),
+                          rs.getString("staffResponse"),
+                          rs.getString("actionPlan"),
+                          rs.getDate("deadline") != null ? rs.getDate("deadline").toLocalDate() : null, 
+                          rs.getTimestamp("createdAt").toLocalDateTime(),
+                          staff.selectById(rs.getInt("StaffID")
+                          ));
+                list.add(mf);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerFeedbackDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 
 }

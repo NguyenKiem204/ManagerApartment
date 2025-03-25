@@ -121,6 +121,7 @@ public class UpdateAssetServlet extends HttpServlet {
             statusId = Integer.parseInt(statusId_raw);
             List<AssetCategory> listcategory = assetCategoryDAO.selectAll();
             List<StatusApartmentAssets> liststatus = statusApartmentAssetsDAO.selectAll();
+            ApartmentAssets currentAsset = apartmentAssetsDAO.selectById(assetId);
 
             ApartmentAssets apartmentAssets = apartmentAssetsDAO.selectById(assetId);
 
@@ -154,6 +155,16 @@ public class UpdateAssetServlet extends HttpServlet {
             if (!Validate.isValidTitle(assetName)) {
                 request.setAttribute("error", "Asset name contains invalid characters!");
 
+                request.setAttribute("asset", apartmentAssets);
+                request.setAttribute("listcategory", listcategory);
+                request.setAttribute("liststatus", liststatus);
+                request.getRequestDispatcher("updateasset.jsp").forward(request, response);
+                return;
+            }
+            //check asset duplicate 
+            if(!assetName.equalsIgnoreCase(currentAsset.getAssetName()) 
+                      && apartmentAssetsDAO.isAssetNameExists(assetName)){
+                request.setAttribute("error", "Asset name already exists!");
                 request.setAttribute("asset", apartmentAssets);
                 request.setAttribute("listcategory", listcategory);
                 request.setAttribute("liststatus", liststatus);

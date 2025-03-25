@@ -10,26 +10,118 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Trang chủ</title>
+        <title>Trang chủ Service</title>
 
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
-              rel="stylesheet" />
-        <link rel="stylesheet" href="assets/css/bootstrap.css" />
+        <style>
+            /*        body {
+                        background-color: #FFA07A;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        flex-direction: column;
+                        height: 100vh;
+                        margin: 0;
+                    }*/
 
-        <link rel="stylesheet" href="assets/vendors/iconly/bold.css" />
+            .chart-container {
+                width: 50%;
+                background-color: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                margin: 20px 0;
+                margin-left: 300px;
+            }
 
-        <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
-        <link rel="stylesheet" href="assets/css/pages/index.css">
-        <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css" />
-        <link rel="stylesheet" href="assets/css/app.css" />
-        <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer" />
+            canvas {
+                width: 90% !important;
+                height: 300px !important;
+            }
+        </style>
     </head>
 
     <body>
         <%@include file="/manager/menumanager.jsp" %>
+        <div id="main">
+            <div class="container">
+                <div class="chart-container">
+                    <h3>Request Statistics</h3>
+                    <canvas id="requestChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Feedback Statistics</h3>
+                    <canvas id="feedbackChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                let requestChart = null;
+                let feedbackChart = null;
+
+                function createChart(canvasId, data, label, color, chartRef) {
+                    let ctx = document.getElementById(canvasId).getContext("2d");
+
+                    // Hủy biểu đồ cũ nếu tồn tại
+                    if (chartRef) {
+                        chartRef.destroy();
+                    }
+
+                    let monthLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    let monthData = new Array(12).fill(0);
+
+                    // Điền dữ liệu vào đúng tháng
+                    data.forEach(d => {
+                        monthData[d.month - 1] = d.total;
+                    });
+
+                    return new Chart(ctx, {
+                        type: "bar",
+                        data: {
+                            labels: monthLabels,
+                            datasets: [{
+                                    label: label,
+                                    data: monthData,
+                                    backgroundColor: color
+                                }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 50,
+                                    ticks: {
+                                        stepSize: 10
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                function fetchChartData(url, canvasId, label, color, chartRef, callback) {
+                    $.getJSON(url, function (data) {
+                        console.log(label + " Data:", data);
+                        callback(createChart(canvasId, data, label, color, chartRef));
+                    }).fail(function () {
+                        console.error("Lỗi khi lấy dữ liệu từ " + url);
+                    });
+                }
+
+                // Gọi API để lấy dữ liệu và vẽ biểu đồ
+                fetchChartData("/ManagerApartment/request-stats", "requestChart", "Số lượng Request", "rgba(255, 99, 132, 0.7)", requestChart, function (chart) {
+                    requestChart = chart;
+                });
+
+                fetchChartData("/ManagerApartment/feedback-stats", "feedbackChart", "Số lượng Feedback", "rgba(54, 162, 235, 0.7)", feedbackChart, function (chart) {
+                    feedbackChart = chart;
+                });
+            });
+        </script>
+
     </body>
 </html>

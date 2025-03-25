@@ -93,6 +93,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                 + "    idt.Description AS DetailDescription, "
                 + "    idt.TypeBillID, "
                 + "    tb.TypeName AS BillType, "
+                + "    tb.TypeFundID AS FundID, "
                 + "    res.ResidentID, "
                 + "    res.FullName AS ResidentName, "
                 + "    res.PhoneNumber AS ResidentPhone, "
@@ -121,8 +122,8 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                         Resident resident = new Resident(
                                 rs.getInt("ResidentID"),
                                 rs.getString("ResidentName"),
-                                rs.getString("ResidentEmail"),
-                                rs.getString("ResidentPhone")
+                                rs.getString("ResidentPhone"),
+                                rs.getString("ResidentEmail")
                         );
 
                         // Tạo đối tượng Apartment
@@ -162,7 +163,8 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
                                 rs.getDouble("Amount"),
                                 rs.getString("DetailDescription"),
                                 rs.getInt("TypeBillID"),
-                                rs.getString("BillType")
+                                rs.getString("BillType"),
+                                rs.getInt("FundID")
                         );
                         invoice.addDetail(detail);
                     }
@@ -176,9 +178,28 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return invoice;
     }
 
+    public static void main(String[] args) {
+        InvoiceDAO invoiceDAO = new InvoiceDAO(); // Giả sử lớp này chứa phương thức selectById
+
+        // Thay đổi ID hóa đơn để test
+        int testInvoiceId = 7;
+
+        // Gọi phương thức selectById
+        Invoices invoice = invoiceDAO.selectById(testInvoiceId);
+
+        // Kiểm tra kết quả
+        if (invoice != null) {
+            System.out.println("Thông tin hóa đơn:");
+            System.out.println(invoice);
+            System.out.println(invoice.getResident().getEmail());
+        } else {
+            System.out.println("Không tìm thấy hóa đơn với ID: " + testInvoiceId);
+        }
+    }
+
     public List<TypeBill> getAllTypeBills() {
         List<TypeBill> typeBills = new ArrayList<>();
-        String sql = "SELECT * FROM TypeBill";
+        String sql = "SELECT TypeBillID, TypeName, TypeFundID FROM TypeBill";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -186,7 +207,8 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
             while (rs.next()) {
                 int id = rs.getInt("TypeBillID");
                 String name = rs.getString("TypeName");
-                typeBills.add(new TypeBill(id, name));
+                int fundID = rs.getInt("TypeFundID");
+                typeBills.add(new TypeBill(id, name, fundID));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -369,7 +391,7 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
             parameters.add(java.sql.Date.valueOf(dueDate));
         }
 
-        sql += " ORDER BY inv.InvoiceID";
+        sql += " ORDER BY inv.InvoiceID Desc";
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             for (int i = 0; i < parameters.size(); i++) {
@@ -622,4 +644,100 @@ public class InvoiceDAO implements DAOInterface<Invoices, Integer> {
         return num;
     }
 
+    public int getTypeFundIDByTypeBillID(int typeBillID) throws SQLException {
+        String sql = "SELECT TypeFundID FROM TypeBill WHERE TypeBillID = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, typeBillID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("TypeFundID");
+                }
+            }
+        }
+        return -1; // Trả về -1 nếu không tìm thấy
+    }
+
+   
+
+     public int countTotalInvoices(Integer day, Integer month, Integer year) {
+        int count = 0;
+        StringBuilder query = new StringBuilder(
+            "SELECT COUNT(DISTINCT i.InvoiceID) FROM Invoice i WHERE 1=1"
+        );
+        
+        if (day != null) {
+            query.append(" AND DAY(i.PublicDate) = ?");
+        }
+        if (month != null) {
+            query.append(" AND MONTH(i.PublicDate) = ?");
+        }
+        if (year != null) {
+            query.append(" AND YEAR(i.PublicDate) = ?");
+        }
+        
+        try (Connection connection = DBContext.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+            int paramIndex = 1;
+            
+            if (day != null) {
+                stmt.setInt(paramIndex++, day);
+            }
+            if (month != null) {
+                stmt.setInt(paramIndex++, month);
+            }
+            if (year != null) {
+                stmt.setInt(paramIndex++, year);
+            }
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ExpenseDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
+
+    public int countPaidInvoices(Integer day, Integer month, Integer year) {
+        int count = 0;
+        StringBuilder query = new StringBuilder(
+            "SELECT COUNT(DISTINCT i.InvoiceID) FROM Invoice i WHERE i.Status = 'Paid'"
+        );
+        
+        if (day != null) {
+            query.append(" AND DAY(i.PublicDate) = ?");
+        }
+        if (month != null) {
+            query.append(" AND MONTH(i.PublicDate) = ?");
+        }
+        if (year != null) {
+            query.append(" AND YEAR(i.PublicDate) = ?");
+        }
+        
+        try (Connection connection = DBContext.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+            int paramIndex = 1;
+            
+            if (day != null) {
+                stmt.setInt(paramIndex++, day);
+            }
+            if (month != null) {
+                stmt.setInt(paramIndex++, month);
+            }
+            if (year != null) {
+                stmt.setInt(paramIndex++, year);
+            }
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ExpenseDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
 }

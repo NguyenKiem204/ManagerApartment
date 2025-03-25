@@ -404,25 +404,31 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
 //}
     public List<Apartment> searchApartments(String name, int ownerId, String type, String status, String block, int page, int pageSize) {
         List<Apartment> apartments = new ArrayList<>();
-        String sql = "SELECT ApartmentID, ApartmentName, Block, Status, Type, OwnerID FROM Apartment WHERE 1=1";
+        String sql = """
+        SELECT a.ApartmentID, a.ApartmentName, a.Block, a.Status, a.Type, a.OwnerID, 
+               r.ResidentID, r.FullName, r.PhoneNumber, r.CCCD, r.Email, r.DOB, r.Sex, r.Status as ResidentStatus
+        FROM Apartment a
+        LEFT JOIN Resident r ON a.OwnerID = r.ResidentID
+        WHERE 1=1
+    """;
 
         if (name != null && !name.isEmpty()) {
-            sql += " AND ApartmentName LIKE ?";
+            sql += " AND a.ApartmentName LIKE ?";
         }
-        if (ownerId != -1) {
-            sql += " AND OwnerID = ?";
+        if (ownerId != 0) {
+            sql += " AND a.OwnerID = ?";
         }
         if (type != null && !type.isEmpty()) {
-            sql += " AND Type = ?";
+            sql += " AND a.Type = ?";
         }
         if (status != null && !status.isEmpty()) {
-            sql += " AND Status = ?";
+            sql += " AND a.Status = ?";
         }
         if (block != null && !block.isEmpty()) {
-            sql += " AND Block = ?";
+            sql += " AND a.Block = ?";
         }
 
-        sql += " ORDER BY ApartmentID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        sql += " ORDER BY a.ApartmentID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -430,7 +436,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             if (name != null && !name.isEmpty()) {
                 ps.setString(paramIndex++, "%" + name + "%");
             }
-            if (ownerId != -1) {
+            if (ownerId != 0) {
                 ps.setInt(paramIndex++, ownerId);
             }
             if (type != null && !type.isEmpty()) {
@@ -450,14 +456,27 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    // Tạo đối tượng Resident từ ResultSet
+                    Resident owner = new Resident();
+                    owner.setResidentId(rs.getInt("ResidentID"));
+                    owner.setFullName(rs.getString("FullName"));
+                    owner.setPhoneNumber(rs.getString("PhoneNumber"));
+                    owner.setCccd(rs.getString("CCCD"));
+                    owner.setEmail(rs.getString("Email"));
+                    //owner.setDob(rs.getDate("DOB").toLocalDate());
+                    owner.setSex(rs.getString("Sex"));
+                    owner.setStatus(rs.getString("Status"));
+
+                    // Tạo đối tượng Apartment và gán Owner
                     Apartment apt = new Apartment(
                             rs.getInt("ApartmentID"),
                             rs.getString("ApartmentName"),
                             rs.getString("Block"),
                             rs.getString("Status"),
                             rs.getString("Type"),
-                            rs.getInt("OwnerID")
+                            owner
                     );
+
                     apartments.add(apt);
                 }
             }
@@ -467,6 +486,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return apartments;
     }
 
+
     public int getTotalApartments(String name, int ownerId, String type, String status, String block) {
         int total = 0;
         String sql = "SELECT COUNT(*) FROM Apartment WHERE 1=1";
@@ -474,7 +494,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         if (name != null && !name.isEmpty()) {
             sql += " AND ApartmentName LIKE ?";
         }
-        if (ownerId != -1) {
+        if (ownerId != 0) {
             sql += " AND OwnerID = ?";
         }
         if (type != null && !type.isEmpty()) {
@@ -493,7 +513,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             if (name != null && !name.isEmpty()) {
                 ps.setString(paramIndex++, "%" + name + "%");
             }
-            if (ownerId != -1) {
+            if (ownerId != 0) {
                 ps.setInt(paramIndex++, ownerId);
             }
             if (type != null && !type.isEmpty()) {

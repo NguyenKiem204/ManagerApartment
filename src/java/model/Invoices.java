@@ -1,7 +1,10 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +22,7 @@ public class Invoices {
     private double muon;// muon =islate
     private LocalDate paydate;
 
-    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment,double muon, LocalDate paydate) {
+    public Invoices(int invoiceID, double totalAmount, LocalDate publicDate, String status, String description, LocalDate dueDate, Resident resident, Apartment apartment, double muon, LocalDate paydate) {
         this.invoiceID = invoiceID;
         this.totalAmount = totalAmount;
         this.publicDate = publicDate;
@@ -180,9 +183,6 @@ public class Invoices {
         this.muon = muon;
     }
 
-
-
-
     public LocalDate getPaydate() {
         return paydate;
     }
@@ -213,5 +213,75 @@ public class Invoices {
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return dueDate.format(formatter);
+    }
+
+    public String getPublicTime() {
+        return getTimeFormatted(publicDate);
+    }
+
+    public String getPayTime() {
+        return getTimeFormatted(paydate);
+    }
+
+    public String getDueTime() {
+        return getTimeFormatted(dueDate);
+    }
+
+    private String getTimeFormatted(LocalDate date) {
+        if (date == null) {
+            return "";
+        }
+        LocalTime defaultTime = LocalTime.MIDNIGHT; // Mặc định 00:00 vì LocalDate không có giờ
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return defaultTime.format(formatter);
+    }
+
+    public String getPublicDateTimeFormatted() {
+        return getDateTimeFormatted(publicDate);
+    }
+
+    public String getPayDateTimeFormatted() {
+        return getDateTimeFormatted(paydate);
+    }
+
+    public String getDueDateTimeFormatted() {
+        return getDateTimeFormatted(dueDate);
+    }
+
+    private String getDateTimeFormatted(LocalDate date) {
+        if (date == null) {
+            return "";
+        }
+        LocalTime defaultTime = LocalTime.MIDNIGHT;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return date.atTime(defaultTime).format(formatter);
+    }
+
+    public String getPublicDateElapsed() {
+        return getTimeElapsedSinceTransaction(publicDate);
+    }
+
+    public String getPayDateElapsed() {
+        return getTimeElapsedSinceTransaction(paydate);
+    }
+
+    public String getDueDateElapsed() {
+        return getTimeElapsedSinceTransaction(dueDate);
+    }
+
+    public String getTimeElapsedSinceTransaction(LocalDate transactionDate) {
+        if (transactionDate == null) {
+            return "Không có dữ liệu";
+        }
+
+        // Kết hợp LocalDate với 00:00 vì không có giờ cụ thể
+        LocalDateTime transactionDateTime = transactionDate.atTime(LocalTime.MIDNIGHT);
+        LocalDateTime now = LocalDateTime.now();
+
+        long days = ChronoUnit.DAYS.between(transactionDateTime, now);
+        long hours = ChronoUnit.HOURS.between(transactionDateTime, now) % 24;
+        long minutes = ChronoUnit.MINUTES.between(transactionDateTime, now) % 60;
+
+        return String.format("%d ngày, %d giờ, %d phút trước", days, hours, minutes);
     }
 }

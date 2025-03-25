@@ -75,6 +75,17 @@ public class RequestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
               throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Resident resident = (Resident) session.getAttribute("resident");
+        Staff staff = (Staff) session.getAttribute("staff");
+
+        // Kiểm tra quyền truy cập (chỉ cho phép resident)
+        if (resident == null || staff != null) {
+            request.setAttribute("errorCode", "403");
+            request.setAttribute("errorMessage", "You do not have permission to access!");
+            request.getRequestDispatcher("error-authorization.jsp").forward(request, response);
+            return;
+        }
         TypeRequestDAO typeRequestDAO = new TypeRequestDAO();
         List<TypeRequest> listrq = typeRequestDAO.selectAll();
         request.setAttribute("listtyperq", listrq);

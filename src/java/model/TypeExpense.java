@@ -13,6 +13,7 @@ public class TypeExpense {
     private int typeExpenseID;
     private String typeName;
     private boolean fixed; // 1 (true) là cố định, 0 (false) là không cố định
+    private int typeFundID;
 
     // Constructors
     public TypeExpense() {
@@ -24,7 +25,22 @@ public class TypeExpense {
         this.fixed = fixed;
     }
 
+    public TypeExpense(int typeExpenseID, String typeName, boolean fixed, int typeFundID) {
+        this.typeExpenseID = typeExpenseID;
+        this.typeName = typeName;
+        this.fixed = fixed;
+        this.typeFundID = typeFundID;
+    }
 
+    public int getTypeFundID() {
+        return typeFundID;
+    }
+
+    public void setTypeFundID(int typeFundID) {
+        this.typeFundID = typeFundID;
+    }
+
+   
     // Getters and Setters
     public int getTypeExpenseID() {
         return typeExpenseID;

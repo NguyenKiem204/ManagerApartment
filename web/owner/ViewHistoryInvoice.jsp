@@ -185,7 +185,7 @@
                             <tr>
                                 <td>${l.invoiceID}</td>
                                 <td>${l.description}</td>
-                                <td>${l.totalAmount + l.muon}</td>
+                                <td><fmt:formatNumber value="${l.totalAmount + l.muon}" pattern="#0.00"/></td>
                                 <td>${l.apartment.apartmentName}</td>
                                 <td>${l.publicDateft}</td>
                                 <td>${l.publicDateft}</td>
@@ -195,7 +195,7 @@
                                     </c:if>
                                 </td>
                                 <td style="width:50px">
-                                    <a href="<%= request.getContextPath() %>/owner/DetailInvoiceOwner?invoiceID=${l.invoiceID}&page=viewhistory" class="btn btn-info btn-sm">
+                                    <a href="<%= request.getContextPath() %>/owner/DetailInvoiceOwner?invoiceID=${l.invoiceID}&page1=viewhistory" class="btn btn-info btn-sm">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                 </td>
@@ -220,20 +220,20 @@
                             </c:if>
                         </c:if>
                         <c:if test="${requestScope.currentPage > 1}">
-                            <a href="/ownerViewHistoryInvoice?page=${requestScope.currentPage - 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="ViewHistoryInvoice?page=${requestScope.currentPage - 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
                                 &lt;
                             </a>
                         </c:if>
                         <c:forEach begin="${startPage}" end="${endPage}" var="page">
-                            <a href="/ownerViewHistoryInvoice?page=${page}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="ViewHistoryInvoice?page=${page}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;
                                <c:if test='${page == requestScope.currentPage}'> background-color: #007bff; color: white; </c:if>">
                                 ${page}
                             </a>
                         </c:forEach>
                         <c:if test="${requestScope.currentPage < requestScope.totalPage}">
-                            <a href="/ownerViewHistoryInvoice?page=${requestScope.currentPage + 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
+                            <a href="ViewHistoryInvoice?page=${requestScope.currentPage + 1}&search=${search}&FromDate=${selectedFromDate}&dueDate=${selectedDueDate}"
                                style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;">
                                 &gt;
                             </a>
@@ -254,7 +254,7 @@
 
 
 
-     
+
 
 
     </body>

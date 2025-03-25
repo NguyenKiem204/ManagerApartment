@@ -12,8 +12,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Invoices;
+import model.Resident;
+import model.Staff;
 import model.TypeBill;
 
 /**
@@ -32,47 +35,67 @@ public class DetailInvoiceOwner extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet DetailInvoiceOwner</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet DetailInvoiceOwner at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String page = request.getParameter("page");
+        HttpSession session = request.getSession();
+        Resident resident = (Resident) session.getAttribute("resident");
+        Staff staff = (Staff) session.getAttribute("staff");
+
+        // Kiểm tra nếu không có người dùng đăng nhập
+        if (resident == null && staff == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
         String idinv = request.getParameter("invoiceID");
+        if (idinv == null || idinv.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu invoiceID");
+            return;
+        }
+
         try {
             int id = Integer.parseInt(idinv);
             InvoiceDAO idao = new InvoiceDAO();
             Invoices inv = idao.selectById(id);
+
+            // Kiểm tra nếu hóa đơn không tồn tại
+            if (inv == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy hóa đơn");
+                return;
+            }
+
+            // Kiểm tra quyền truy cập
+            if (staff != null && staff.getRole().getRoleID() == 3) {
+                response.sendRedirect(request.getContextPath() + "/accountant/DetailInvoice?invoiceID=" + id);
+                return;
+            } else if (resident != null) {
+                if (inv.getResident().getResidentId() != resident.getResidentId()) {
+                    request.setAttribute("errorCode", "403");
+                    request.setAttribute("errorMessage", "Bạn không có quyền xem hóa đơn này!");
+                    request.getRequestDispatcher("/error-authorization.jsp").forward(request, response);
+                    return;
+                }
+            } else {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
+
+            // Lấy danh sách loại hóa đơn
             List<TypeBill> lt = idao.getAllTypeBills();
-            request.setAttribute("page", page);
+
+            // Đặt thông tin vào request
             request.setAttribute("invoice", inv);
-            request.getRequestDispatcher("DetailInvoiceOnwer.jsp").forward(request, response);
+            request.setAttribute("typeBills", lt);
+
+            // Kiểm tra phản hồi đã commit chưa trước khi forward
+            if (!response.isCommitted()) {
+                request.getRequestDispatcher("DetailInvoiceOnwer.jsp").forward(request, response);
+            }
+
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi xử lý dữ liệu");
         }
     }
 
@@ -87,7 +110,7 @@ public class DetailInvoiceOwner extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
     }
 
     /**

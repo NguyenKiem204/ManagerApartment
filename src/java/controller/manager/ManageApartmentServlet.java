@@ -29,12 +29,12 @@ public class ManageApartmentServlet extends HttpServlet {
         String name = (nameRaw != null) ? normalizeString(nameRaw) : "";
 
         String ownerIdraw = request.getParameter("ownerId");
-        int ownerId = -1; // Mặc định là -1 nếu không có giá trị hợp lệ
+        int ownerId = 0; // Mặc định là -1 nếu không có giá trị hợp lệ
         if (ownerIdraw != null && !ownerIdraw.trim().isEmpty()) {
             try {
                 ownerId = Integer.parseInt(ownerIdraw.trim());
             } catch (NumberFormatException e) {
-                ownerId = -1; // Nếu lỗi, đặt về -1 để không ảnh hưởng SQL
+                ownerId = 0; // Nếu lỗi, đặt về -1 để không ảnh hưởng SQL
             }
         }
 
@@ -88,21 +88,13 @@ public class ManageApartmentServlet extends HttpServlet {
             String apartmentName = request.getParameter("apartmentName");
 
             // Kiểm tra apartmentName không được null hoặc rỗng
-            if (apartmentName == null || apartmentName.trim().isEmpty()) {
+            if (apartmentName == null || apartmentName.trim().isEmpty() || !apartmentName.matches("^[A-Za-zÀ-ỹ0-9\\s]+$")) {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "Apartment name cannot be empty!");
+                jsonResponse.put("message", "Apartment name cannot be empty or contains special characters!");
                 out.write(jsonResponse.toString());
                 return;
             }
 
-            // Kiểm tra định dạng apartmentName (chỉ chứa chữ cái, số và khoảng trắng)
-            // Nếu bạn cho phép ký tự đặc biệt khác, hãy điều chỉnh regex cho phù hợp
-            if (!apartmentName.matches("^[a-zA-Z0-9\\s]+$")) {
-                jsonResponse.put("success", false);
-                jsonResponse.put("message", "Apartment name must contain only letters, numbers, and spaces!");
-                out.write(jsonResponse.toString());
-                return;
-            }
 
             String block = request.getParameter("block");
             String status = request.getParameter("status");

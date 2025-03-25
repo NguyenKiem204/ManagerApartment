@@ -3,8 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller.administrative;
+package controller.manager;
 
+import dao.ExpenseDAO;
+import dao.FundDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,13 +14,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import model.ExpenseDetail;
+import model.FundManagement;
 
 /**
  *
- * @author admin
+ * @author nguye
  */
-@WebServlet(name="HomeAdministrativeServlet", urlPatterns={"/administrative/home"})
-public class HomeAdministrativeServlet extends HttpServlet {
+@WebServlet(name="FundManager", urlPatterns={"/manager/FundManager"})
+public class FundManager extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +42,10 @@ public class HomeAdministrativeServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeAdministrativeServlet</title>");  
+            out.println("<title>Servlet FundManager</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeAdministrativeServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet FundManager at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,7 +62,16 @@ public class HomeAdministrativeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        FundDAO fdao= new FundDAO();
+        ExpenseDAO  eDAO= new ExpenseDAO();
+        List<FundManagement> lf= fdao.getAllFunds();
+        List<ExpenseDetail> lep= eDAO.getAllExpenseDetails();
+        
+        
+        
+        request.setAttribute("funds", lf);
+        request.setAttribute("expenseDetails", lep);
+        request.getRequestDispatcher("FundManager.jsp").forward(request, response);
     } 
 
     /** 

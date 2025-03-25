@@ -32,14 +32,14 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
     public int insert(Feedback fb) {
         int row = 0;
         String sqlInsert = "INSERT INTO [dbo].[Feedback]\n"
-                  + "           ([Title]\n"
-                  + "           ,[Description]\n"
-                  + "           ,[Date]\n"
-                  + "           ,[Rate]\n"
-                  + "           ,[StaffID]\n"
-                  + "           ,[ResidentID])\n"
-                  + "     VALUES\n"
-                  + "           (?, ?, ?, ?, ?, ?)";
+                + "           ([Title]\n"
+                + "           ,[Description]\n"
+                + "           ,[Date]\n"
+                + "           ,[Rate]\n"
+                + "           ,[StaffID]\n"
+                + "           ,[ResidentID])\n"
+                + "     VALUES\n"
+                + "           (?, ?, ?, ?, ?, ?)";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlInsert)) {
             ps.setString(1, fb.getTitle());
             ps.setString(2, fb.getDescription());
@@ -76,13 +76,13 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
-                          rs.getInt("FeedbackID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getDate("Date").toLocalDate(),
-                          rs.getInt("Rate"),
-                          staff.selectById(rs.getInt("StaffID")),
-                          resident.selectById(rs.getInt("ResidentID"))
+                        rs.getInt("FeedbackID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getDate("Date").toLocalDate(),
+                        rs.getInt("Rate"),
+                        staff.selectById(rs.getInt("StaffID")),
+                        resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -91,14 +91,14 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         }
         return list;
     }
-    
+
     public int selectAllToCount() {
         String sql = "SELECT count(*) FROM Feedback";
         int num = 0;
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
+            if (rs.next()) {
                 num = rs.getInt(1);
             }
         } catch (SQLException ex) {
@@ -115,13 +115,13 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Feedback f = new Feedback(
-                              rs.getInt("FeedbackID"),
-                              rs.getString("Title"),
-                              rs.getString("Description"),
-                              rs.getDate("Date").toLocalDate(),
-                              rs.getInt("Rate"),
-                              staff.selectById(rs.getInt("StaffID")),
-                              resident.selectById(rs.getInt("ResidentID"))
+                            rs.getInt("FeedbackID"),
+                            rs.getString("Title"),
+                            rs.getString("Description"),
+                            rs.getDate("Date").toLocalDate(),
+                            rs.getInt("Rate"),
+                            staff.selectById(rs.getInt("StaffID")),
+                            resident.selectById(rs.getInt("ResidentID"))
                     );
                     return f;
                 }
@@ -146,13 +146,13 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
-                          rs.getInt("FeedbackID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getDate("Date").toLocalDate(),
-                          rs.getInt("Rate"),
-                          staff.selectById(rs.getInt("StaffID")),
-                          resident.selectById(rs.getInt("ResidentID"))
+                        rs.getInt("FeedbackID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getDate("Date").toLocalDate(),
+                        rs.getInt("Rate"),
+                        staff.selectById(rs.getInt("StaffID")),
+                        resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -170,13 +170,13 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
-                          rs.getInt("FeedbackID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getDate("Date").toLocalDate(),
-                          rs.getInt("Rate"),
-                          staff.selectById(rs.getInt("StaffID")),
-                          resident.selectById(rs.getInt("ResidentID"))
+                        rs.getInt("FeedbackID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getDate("Date").toLocalDate(),
+                        rs.getInt("Rate"),
+                        staff.selectById(rs.getInt("StaffID")),
+                        resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -203,13 +203,13 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
-                          rs.getInt("FeedbackID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getDate("Date").toLocalDate(),
-                          rs.getInt("Rate"),
-                          staff.selectById(rs.getInt("StaffID")),
-                          resident.selectById(rs.getInt("ResidentID"))
+                        rs.getInt("FeedbackID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getDate("Date").toLocalDate(),
+                        rs.getInt("Rate"),
+                        staff.selectById(rs.getInt("StaffID")),
+                        resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -220,8 +220,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
     }
 
     public List<Feedback> getAllFeedbacksBySearchOrFilterOrSort(String keySearch,
-              int roleID, int rating, int keySort, int page,
-              int pageSize) {
+            int roleID, int rating, int keySort, int page,
+            int pageSize) {
         List<Feedback> list = new ArrayList<>();
         String sql = """
                      SELECT [FeedbackID]
@@ -301,13 +301,13 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
-                          rs.getInt("FeedbackID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getDate("Date").toLocalDate(),
-                          rs.getInt("Rate"),
-                          staff.selectById(rs.getInt("StaffID")),
-                          resident.selectById(rs.getInt("ResidentID"))
+                        rs.getInt("FeedbackID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getDate("Date").toLocalDate(),
+                        rs.getInt("Rate"),
+                        staff.selectById(rs.getInt("StaffID")),
+                        resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -318,7 +318,7 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
     }
 
     public int getNumberOfFeedbacksBySearchOrFilterOrSort(String keySearch,
-              int roleID, int rating) {
+            int roleID, int rating) {
         int num = 0;
         String sql = """
                      SELECT COUNT(*)
@@ -350,7 +350,6 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
                 params.add(rating);
             }
 
-
         } catch (Exception e) {
         }
 
@@ -360,8 +359,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             }
 
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                num =rs.getInt(1);
+            if (rs.next()) {
+                num = rs.getInt(1);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -400,13 +399,13 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback(
-                          rs.getInt("FeedbackID"),
-                          rs.getString("Title"),
-                          rs.getString("Description"),
-                          rs.getDate("Date").toLocalDate(),
-                          rs.getInt("Rate"),
-                          staff.selectById(rs.getInt("StaffID")),
-                          resident.selectById(rs.getInt("ResidentID"))
+                        rs.getInt("FeedbackID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getDate("Date").toLocalDate(),
+                        rs.getInt("Rate"),
+                        staff.selectById(rs.getInt("StaffID")),
+                        resident.selectById(rs.getInt("ResidentID"))
                 );
                 list.add(fb);
             }
@@ -482,8 +481,8 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
 
     public int countFeedbackByRole(int roleID, LocalDate monthYear) {
         String sql = "SELECT COUNT(*) FROM Feedback f "
-                  + "JOIN Staff s ON f.StaffID = s.StaffID "
-                  + "WHERE s.RoleID = ? AND s.Status = 'Active' AND FORMAT(f.Date, 'yyyy-MM') = ?";
+                + "JOIN Staff s ON f.StaffID = s.StaffID "
+                + "WHERE s.RoleID = ? AND s.Status = 'Active' AND FORMAT(f.Date, 'yyyy-MM') = ?";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, roleID);
             String formattedMonthYear = monthYear.format(DateTimeFormatter.ofPattern("yyyy-MM"));
@@ -501,10 +500,10 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
     public List<Feedback> selectFeedbackByPage(int roleID, int page, int pageSize, LocalDate monthYear) {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT f.* FROM Feedback f "
-                  + "JOIN Staff s ON f.StaffID = s.StaffID "
-                  + "WHERE s.RoleID = ? AND s.Status = 'Active' AND FORMAT(f.Date, 'yyyy-MM') = ? "
-                  + "ORDER BY f.FeedbackID "
-                  + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+                + "JOIN Staff s ON f.StaffID = s.StaffID "
+                + "WHERE s.RoleID = ? AND s.Status = 'Active' AND FORMAT(f.Date, 'yyyy-MM') = ? "
+                + "ORDER BY f.FeedbackID "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, roleID);
             String formattedMonthYear = monthYear.format(DateTimeFormatter.ofPattern("yyyy-MM"));
@@ -526,4 +525,59 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         }
         return list;
     }
+
+    ResidentDAO residentDAO = new ResidentDAO();
+    StaffDAO staffdao = new StaffDAO();
+
+    public List<Feedback> getLastestFeedback(int limit) {
+        List<Feedback> listFeedback = new ArrayList<>();
+        String query = "SELECT TOP " + limit + " [FeedbackID]\n"
+                + "      ,[Title]\n"
+                + "      ,[Description]\n"
+                + "      ,[Date]\n"
+                + "      ,[Rate]\n"
+                + "      ,[StaffID]\n"
+                + "      ,[ResidentID]\n"
+                + "  FROM [Feedback]\n"
+                + "  ORDER BY [FeedbackID] DESC";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback feedback = new Feedback(
+                        rs.getInt("FeedbackID"),
+                        rs.getString("Title"),
+                        rs.getString("Description"),
+                        rs.getTimestamp("Date").toLocalDateTime().toLocalDate(),
+                        rs.getInt("Rate"),
+                        staff.selectById(rs.getInt("StaffID")),
+                        resident.selectById(rs.getInt("ResidentID"))
+                );
+                listFeedback.add(feedback);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NewsDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(listFeedback);
+        return listFeedback;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static Map<Integer, Integer> getFeedbackCountsByMonth() {
+        Map<Integer, Integer> feedbackCounts = new HashMap<>();
+        String sql = "SELECT MONTH([Date]) AS Month, COUNT(*) AS Total FROM Feedback GROUP BY MONTH([Date])";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                feedbackCounts.put(rs.getInt("Month"), rs.getInt("Total"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return feedbackCounts;
+    }
 }
+

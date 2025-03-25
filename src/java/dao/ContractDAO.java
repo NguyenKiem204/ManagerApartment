@@ -40,6 +40,25 @@ public class ContractDAO implements DAOInterface<Contract, Integer> {
         return row;
     }
 
+    public int insert1(Contract contract) {
+        int row = 0;
+        String sql = "INSERT INTO Contract (ResidentID, ApartmentID, LeaseStartDate, LeaseEndDate, FilePath) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, contract.getResident().getResidentId());
+            ps.setInt(2, contract.getApartment().getApartmentId());
+            ps.setDate(3, Date.valueOf(contract.getLeaseStartDate()));
+            ps.setDate(4, Date.valueOf(contract.getLeaseEndDate()));
+            ps.setString(5, contract.getFilePath()); // Lưu đường dẫn file hợp đồng
+
+            row = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return row;
+    }
+
     public boolean isOverlappingContract(int apartmentId, LocalDate leaseStartDate, LocalDate leaseEndDate) {
         String query = "SELECT COUNT(*) FROM Contract WHERE ApartmentID = ? AND "
                 + "(LeaseStartDate <= ? AND LeaseEndDate >= ?)";
@@ -105,6 +124,7 @@ public class ContractDAO implements DAOInterface<Contract, Integer> {
                 contract.setApartment(apartment);
                 contract.setLeaseStartDate(rs.getDate("LeaseStartDate").toLocalDate());
                 contract.setLeaseEndDate(rs.getDate("LeaseEndDate").toLocalDate());
+                contract.setFilePath(rs.getString("FilePath"));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

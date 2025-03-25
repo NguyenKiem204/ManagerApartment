@@ -24,21 +24,25 @@
                 -ms-overflow-style: none;
                 scrollbar-width: none;
             }
+            .text-start {
+                text-align: left ; /* Căn trái văn bản */
+            }
         </style>
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-        <script>
-            // Hàm định dạng số thành XX.00
-            function formatDecimal(input) {
-                let value = input.value.replace(/[^0-9.]/g, '').trim(); // Chỉ giữ lại số và dấu chấm
-                let floatValue = parseFloat(value);
 
-                if (!isNaN(floatValue)) {
-                    input.value = floatValue.toFixed(2); // Hiển thị dạng XX.00
+        <script>
+
+            function formatCurrencyInput(input) {
+                let value = input.value.replace(/[^\d.]/g, ''); // Loại bỏ ký tự không phải số hoặc dấu chấm
+                let numericValue = parseFloat(value);
+
+                if (!isNaN(numericValue)) {
+                    input.value = numericValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 } else {
-                    input.value = "0.00"; // Nếu không hợp lệ, đặt thành 0.00
+                    input.value = '';
                 }
             }
 
@@ -86,10 +90,30 @@
                 });
             });
         </script>
+        <script>
+            function formatInput(input) {
+                // Chỉ giữ lại số và dấu '.'
+                input.value = input.value.replace(/[^0-9.]/g, '');
+            }
+
+            function formatNumber(input) {
+                let rawValue = input.value.replace(/,/g, ''); // Xóa dấu `,`
+                let numericValue = parseFloat(rawValue);
+
+                if (!isNaN(numericValue)) {
+                    // Format số theo dạng #,##0.00
+                    input.value = numericValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    document.getElementById('rawAmount').value = numericValue; // Lưu giá trị thực vào input ẩn
+                } else {
+                    input.value = '';
+                    document.getElementById('rawAmount').value = '';
+                }
+            }
+        </script>
     </head>
 
     <body>
-        <%@include file="menuaccountant.jsp" %>
+        <%@include file="/manager/menumanager.jsp" %>
         <div id="main">
 
             <main  id="content">
@@ -110,7 +134,6 @@
                             <label for="description">Description</label>
                             <input type="text" class="form-control" id="description" name="description" required>
                         </div>
-                        <!-- Hiển thị lỗi chung -->
 
 
                         <div class="form-group mb-3">
@@ -144,7 +167,9 @@
                                             <td>1</td>
                                             <td><input type="text" class="form-control" name="descriptionde" required></td>
                                             <td>
-                                                <input type="text" class="form-control" name="amount" required onblur="formatDecimal(this)" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+                                                <input type="text" class="form-control text-start" name="amountFormatted" required 
+                                                       id="formattedNumber" oninput="formatInput(this)" onblur="formatNumber(this)">
+                                                <input type="hidden" name="amount" id="rawAmount"> <!-- Input ẩn để gửi dữ liệu thực -->
                                             </td>
                                             <td>
                                                 <select name="typebills" class="form-select" required>

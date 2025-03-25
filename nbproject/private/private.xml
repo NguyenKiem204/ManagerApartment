@@ -3,18 +3,42 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/PR2/ManagerApartment/src/java/model/Apartment.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/model/ExcelUtils.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/GenerateUtilityBillsServlet.java</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/model/Resident.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/ImportLog.java</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/model/Meter.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/config/PasswordUtil.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/AssetMaintenance.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/AssetMaintenanceDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/validation/UrlUtils.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/Image.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/FeedbackDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/ImportLogDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/ExportLog.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/Request.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/StatusRequest.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/ExportLogDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/StatusApartmentAssets.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/FeedbackDetailStaffServlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/ChangeProfileStaffServlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/auth/LoginFilter.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/ChangePasswordServlet.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/RequestDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/UtilityBillDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/Staff.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/DAOInterface.java</file>
+            <file>file:/D:/PR2/ManagerApartment/web/WEB-INF/web.xml</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/AssetCategory.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/DBContext.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/ApartmentAssetsDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/UtilityRateDAO.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/controller/auth/BlockJspHtmlFilter.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/ApartmentAssets.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/ExcelUtils.java</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/model/MeterReading.java</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/dao/ApartmentDAO.java</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/controller/accountant/ManagerMeterReadingServlet.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/UtilityBillDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/config/EmailSender.java</file>
             <file>file:/D:/PR2/ManagerApartment/src/java/dao/MeterDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/src/java/dao/MeterReadingDAO.java</file>
-            <file>file:/D:/PR2/ManagerApartment/web/error-authorization.jsp</file>
+            <file>file:/D:/PR2/ManagerApartment/src/java/dao/ResidentDAO.java</file>
         </group>
     </open-files>
 </project-private>

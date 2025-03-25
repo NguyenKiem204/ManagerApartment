@@ -1,7 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
+
 package model;
 
 import java.math.BigDecimal;
@@ -30,8 +28,9 @@ public class Meter {
     String meterNumber;
     LocalDateTime installationDate;
     String status;
-
     String apartmentName;
     String ownerName;
     BigDecimal lastReading;
+
 }
+

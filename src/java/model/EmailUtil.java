@@ -121,6 +121,68 @@ public class EmailUtil {
         }
     }
 
+    public static void sendEmailRenewContract(String recipientEmail, String subject, String messageText) {
+        final String senderEmail = "dungnqhe186457@fpt.edu.vn"; // 
+        final String senderPassword = "y d w p z p n i c b e c b c l v";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(senderEmail));
+            message.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(recipientEmail));
+            message.setSubject(subject);
+            message.setText(messageText);
+
+            Transport.send(message);
+            System.out.println("Email sent successfully to " + recipientEmail);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendEmailRemindPay(String recipientEmail, String subject, String messageText) {
+        final String senderEmail = "dungnqhe186457@fpt.edu.vn"; // 
+        final String senderPassword = "y d w p z p n i c b e c b c l v";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(senderEmail));
+            message.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(recipientEmail));
+            message.setSubject(subject);
+            message.setText("You have an invoice that is due tomorrow, please check the invoice and pay online via the website or go to the payment counter in the lobby of the building to pay the invoice and get more details\n"
+                    + "(Note: the late invoice fee will be 1% of the total invoice per day\n"
+                    + "for example, an invoice of 1 million VND paid 5 days late, the penalty fee will be 1% * 1000000 * 5) ");
+
+            Transport.send(message);
+            System.out.println("Email sent successfully to " + recipientEmail);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean isValidEmail(String email) {
         // Biểu thức chính quy cho định dạng email
         String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$";
