@@ -219,32 +219,30 @@ public class ManagerMeterReadingServlet extends HttpServlet {
             displayMeterReadings(request, response);
             return;
         }
-        
-        // Modify this section to check for existing readings
         int createdCount = 0;
         int updatedCount = 0;
         
         for (MeterReading reading : readings) {
-            // Check if a reading already exists for this meter in this month/year
             MeterReading existingReading = meterReadingDAO.getMeterReadingByMeterAndMonthYear(
                 reading.getMeterId(), month, year);
             
             if (existingReading != null) {
-                // Update the existing reading
                 reading.setReadingId(existingReading.getReadingId()); // Set the ID of the existing reading
                 if (meterReadingDAO.updateMeterReading(reading) > 0) {
                     updatedCount++;
                 }
             } else {
-                // Create a new reading
                 if (meterReadingDAO.addMeterReading(reading) > 0) {
                     createdCount++;
                 }
             }
         }
+        if(createdCount==0 && updatedCount==0){
+            request.setAttribute("importError", "Data to duplicate, cannot insert");
+        }else{
+            request.setAttribute("importSuccess", "Data insert: " + createdCount+ ", data update: "+ updatedCount);
+        }
         
-        request.setAttribute("importSuccess", "Import complete: " + createdCount + 
-            " new readings created, " + updatedCount + " existing readings updated");
         displayMeterReadings(request, response);
     } catch (Exception e) {
         LOGGER.log(Level.SEVERE, "Error importing meter readings", e);

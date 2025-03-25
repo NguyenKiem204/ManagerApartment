@@ -61,7 +61,6 @@ public class MeterReadingDAO {
         }
     }
 
-    // Xóa chỉ số đồng hồ (hoặc đánh dấu không hợp lệ)
     public boolean deleteMeterReading(int readingId) throws SQLException {
         String sql = "UPDATE MeterReading SET Status = 'Invalid' WHERE ReadingID = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -69,7 +68,6 @@ public class MeterReadingDAO {
             return stmt.executeUpdate() > 0;
         }
     }
-    // Xóa hoàn toàn chỉ số đồng hồ
 public boolean deleteMeterReadingPermanently(int readingId) throws SQLException {
     String sql = "DELETE FROM MeterReading WHERE ReadingID = ?";
     try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -78,8 +76,6 @@ public boolean deleteMeterReadingPermanently(int readingId) throws SQLException 
     }
 }
 
-
-    // Lấy chỉ số đồng hồ theo ID
     public MeterReading getMeterReadingById(int readingId) throws SQLException {
         String sql = "SELECT mr.*, m.MeterNumber, m.MeterType, m.ApartmentID, "
                 + "a.ApartmentName, r.FullName AS OwnerName, s.FullName AS StaffName "
@@ -101,7 +97,6 @@ public boolean deleteMeterReadingPermanently(int readingId) throws SQLException 
         return null;
     }
 
-    // Lấy chỉ số đồng hồ theo tháng và năm
     public List<MeterReading> getMeterReadingsByMonth(int month, int year) throws SQLException {
         String sql = "SELECT mr.*, m.MeterNumber, m.MeterType, m.ApartmentID, "
                 + "a.ApartmentName, r.FullName AS OwnerName, s.FullName AS StaffName "
@@ -128,7 +123,6 @@ public boolean deleteMeterReadingPermanently(int readingId) throws SQLException 
         return readings;
     }
 
-    // Lấy chỉ số đồng hồ theo căn hộ, tháng và năm
     public List<MeterReading> getMeterReadingsByApartment(int apartmentId, int month, int year) throws SQLException {
         String sql = "SELECT mr.*, m.MeterNumber, m.MeterType, m.ApartmentID, "
                 + "a.ApartmentName, r.FullName AS OwnerName, s.FullName AS StaffName "

@@ -710,14 +710,14 @@
                                             );
                                 case "Request":
                                     return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
-                                case "Invoice":
-                                    return `#`;
+                                case "UtilityBill":
+                                    return baseUrl + `/utility-detail?utilityId=` + notif.referenceId;
                                 default:
                                     return "#"; // Nếu không xác định được loại, đặt về #
                             }
                         }
                     }
-                    
+
 
                     // Khi click vào thông báo, đổi màu và update trạng thái đọc
                     $("#notificationList").on("click", "li", function () {
