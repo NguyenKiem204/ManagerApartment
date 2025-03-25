@@ -66,7 +66,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="purchaseDate" class="form-label">Bought On:</label>
-                                <input type="text" class="form-control" id="boughtOn" name="boughtOn" placeholder="dd-MM-yyyy" required>
+                                <input type="text" class="form-control" id="boughtOn" name="boughtOn" placeholder="dd/MM/yyyy" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="statusId" class="form-label">Status:</label>

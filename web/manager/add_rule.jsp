@@ -21,9 +21,9 @@
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-       <!--<script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>-->
+        <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -33,7 +33,7 @@
                 background: #ffa384;
                 font-family: 'Varela Round', sans-serif;
                 font-size: 20px;
-               
+
             }
             .pagination {
                 float: right;
@@ -72,10 +72,11 @@
                 margin-top: 10px;
                 font-size: 13px;
             }
-            
+
             /* Modal styles */
-            .modal .modal-dialog {               
-                width: 100%;
+            .modal .modal-dialog {
+                max-width: 80%; /* Tăng kích thước modal */
+                width: 80%;
                 margin: auto;
             }
             .modal .modal-header, .modal .modal-body, .modal .modal-footer {
@@ -190,7 +191,7 @@
                                         type="text" 
                                         class="form-control" 
                                         name="publicDate"
-                                        id="publicDate" 
+                                        id="boughtOn" 
                                         placeholder="dd/MM/yyyy"
                                         required
                                         >
@@ -208,7 +209,7 @@
                 </div>
             </div>     
     </body>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!--    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>-->
     <script>
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -232,24 +233,24 @@
             });
         });
 
+//        document.addEventListener("DOMContentLoaded", function () {
+//            flatpickr("#publicDate", {
+//                dateFormat: "d/m/Y", // Định dạng hiển thị là DD-MM-YYYY
+//                altInput: true,
+//                altFormat: "d/m/Y", // Định dạng gửi đi là YYYY-MM-DD
+//                allowInput: true
+//            });
+//        });
+
         document.addEventListener("DOMContentLoaded", function () {
-            flatpickr("#publicDate", {
-                dateFormat: "d/m/Y", // Định dạng hiển thị là DD-MM-YYYY
-                altInput: true,
-                altFormat: "d/m/Y", // Định dạng gửi đi là YYYY-MM-DD
-                allowInput: true
-            });
+            var modal = document.querySelector(".modal-dialog");
+            if (modal) {
+                modal.style.maxWidth = "100%";
+                modal.style.width = "100%";
+                modal.style.margin = "auto";
+                modal.style.top = "50%";
+               // modal.style.transform = "translate(15%)";
+            }
         });
-        
-       document.addEventListener("DOMContentLoaded", function () {
-    var modal = document.querySelector(".modal-dialog");
-    if (modal) {
-        modal.style.maxWidth = "100%";
-        modal.style.width = "100%";
-       modal.style.margin = "auto";
-        modal.style.top = "50%";
-        modal.style.transform = "translate(15%)";
-    }
-});
     </script>
 </html>

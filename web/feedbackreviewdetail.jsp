@@ -103,7 +103,7 @@
                             <th>Submission Date</th>
                         </tr>
                         <c:forEach var="fb" items="${listFb}" varStatus="i">
-                            <tr>
+                            <tr  onclick="window.location.href='<%= request.getContextPath() %>/feedbackdetail?feedbackId=${fb.feedbackID}'" style="cursor: pointer;">
                                 <td>${i.index + 1}</td>
                                 <td>${fb.title}</td>
                                 <td>${fb.rate}</td>

@@ -47,12 +47,4 @@
         <filter-name>TenantFilter</filter-name>
         <filter-class>controller.auth.TenantFilter</filter-class>
     </filter>
-    <filter>
-        <filter-name>AdministrativeFilter</filter-name>
-        <filter-class>controller.auth.AdministrativeFilter</filter-class>
-    </filter>
-    <filter>
-        <filter-name>BlockJspHtmlFilter</filter-name>
-        <filter-class>controller.auth.BlockJspHtmlFilter</filter-class>
-    </filter>
 </web-app>

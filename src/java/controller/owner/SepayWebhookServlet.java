@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import model.Invoices;
 import org.json.JSONObject;
 
 /**
@@ -105,6 +106,13 @@ public class SepayWebhookServlet extends HttpServlet {
                 LOGGER.log(Level.WARNING, "Invoice not found for transaction ID: " + transactionId);
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().println("Invoice not found for transaction ID: " + transactionId);
+                return;
+            }
+            Invoices i= invoiceDAO.selectById(invoiceId);
+            if(transferAmount!=i.getTotalAmount()){
+                LOGGER.log(Level.WARNING, "không đủ số tiền  hoặc dư");
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().println("Transaction ID not found in database");
                 return;
             }
 

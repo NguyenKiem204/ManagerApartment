@@ -8,7 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Trang chủ</title>
     <style>
-        body {
+/*        body {
             background-color: #FFA07A;
             display: flex;
             justify-content: center;
@@ -16,7 +16,7 @@
             flex-direction: column;
             height: 100vh;
             margin: 0;
-        }
+        }*/
        
         .chart-container {
             width: 50%;
@@ -37,14 +37,18 @@
 
 <body>
     <%@include file="/manager/menumanager.jsp" %>
-        <div class="chart-container">
-            <h3>Request Statistics</h3>
-            <canvas id="requestChart"></canvas>
-        </div>
+        <div id="main">
+            <div class="container">
+                <div class="chart-container">
+                    <h3>Request Statistics</h3>
+                    <canvas id="requestChart"></canvas>
+                </div>
 
-        <div class="chart-container">
-            <h3>Feedback Statistics</h3>
-            <canvas id="feedbackChart"></canvas>
+                <div class="chart-container">
+                    <h3>Feedback Statistics</h3>
+                    <canvas id="feedbackChart"></canvas>
+                </div>
+            </div>
         </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

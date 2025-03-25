@@ -561,6 +561,10 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
         return listFeedback;
     }
 
+    /**
+     *
+     * @return
+     */
     public static Map<Integer, Integer> getFeedbackCountsByMonth() {
         Map<Integer, Integer> feedbackCounts = new HashMap<>();
         String sql = "SELECT MONTH([Date]) AS Month, COUNT(*) AS Total FROM Feedback GROUP BY MONTH([Date])";
@@ -574,6 +578,6 @@ public class FeedbackDAO implements DAOInterface<Feedback, Integer> {
             e.printStackTrace();
         }
         return feedbackCounts;
-
     }
 }
+

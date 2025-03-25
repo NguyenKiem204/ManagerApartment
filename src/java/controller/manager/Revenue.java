@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import model.ExpenseDetail;
 import model.FundManagement;
 import model.TransactionFund;
@@ -82,21 +83,26 @@ public class Revenue extends HttpServlet {
         for (FundManagement t : funds) {
             total += t.getCurrentBalance();
         }
-        double income = 0;
-        double spending = 0;
-//        for (TransactionFund f : transactions) {
-//            if (f.getTransactionType().equals("Income")) {
-//                income += f.getAmount();
-//            } else {
-//                spending += f.getAmount();
-//            }
-//        }
-        double balance =income-spending;
+         List<TransactionFund>trans= new ArrayList<>();
+        for(FundManagement f:funds){
+            List<TransactionFund> lt= f.getTransaction();
+            for(TransactionFund t:lt){
+                trans.add(t);
+            }
+        }
+        double income=0;
+        double spending=0;
+        for(TransactionFund t:trans){
+            if(t.getTransactionType().equals("Income")){
+                income+=t.getAmount();
+            }else{
+                spending+= t.getAmount();
+            }
+        }
+        double balance=income-spending;
         DecimalFormat df = new DecimalFormat("#,###.00");
 
-//        double income = fdao.getTotalAmountByTransactionType("Income", filterDate, filterMonth, filterYear);
-//        double spending = fdao.getTotalAmountByTransactionType("Expense", filterDate, filterMonth, filterYear);
-//        double balance = income - spending;
+
         Map<String, double[]> monthlyData = new HashMap<>();
         try {
             monthlyData = fdao.getMonthlyIncomeAndSpending(currentYear);
