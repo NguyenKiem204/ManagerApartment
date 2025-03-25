@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.List;
 import model.Invoices;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -48,6 +50,33 @@ public class PaymentTransactionDAO implements DAOInterface<Invoices, Integer> {
 
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(PaymentTransactionDAO.class.getName());
 
+    public boolean isValidTransaction(String transactionId) {
+        String query = "SELECT payment_date, status FROM PaymentTransaction WHERE transaction_id = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, transactionId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Timestamp paymentDate = rs.getTimestamp("payment_date");
+                String status = rs.getString("status");
+
+                // Kiểm tra trạng thái giao dịch
+                if (!"PENDING".equalsIgnoreCase(status)) {
+                    return false;
+                }
+
+                // Kiểm tra thời gian giao dịch (chỉ hợp lệ trong 10 phút)
+                Instant createdTime = paymentDate.toInstant();
+                Instant now = Instant.now();
+                return ChronoUnit.MINUTES.between(createdTime, now) <= 10;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     // Tạo giao dịch thanh toán
     public void createTransaction(String invoiceID, String transactionId, double amount, String method) {
         String sql = "INSERT INTO PaymentTransaction (transaction_id, invoice_id, amount, status, method) VALUES (?, ?, ?, 'Pending', ?)";
@@ -63,8 +92,6 @@ public class PaymentTransactionDAO implements DAOInterface<Invoices, Integer> {
             LOGGER.log(Level.SEVERE, "Lỗi khi tạo giao dịch thanh toán", e);
         }
     }
-
-    
 
     // Lấy invoice_id từ transaction_id (mã giao dịch)
     public int getInvoiceIdByTransactionId(String transactionId) {
