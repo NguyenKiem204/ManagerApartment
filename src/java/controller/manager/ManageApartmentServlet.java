@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Apartment;
+import model.Meter;
 import org.json.JSONObject;
 
 @WebServlet(name = "ManageApartmentServlet", urlPatterns = {"/manager/manageApartment"})
@@ -128,8 +129,11 @@ public class ManageApartmentServlet extends HttpServlet {
 
             // Thêm vào database
             int isAdded = apartmentDAO.insert(newApartment);
+            //Meter meter = new Meter
 
             if (isAdded != 0) {
+                Meter meter = new Meter(apartmentDAO.selectLastId(), "Electricity", apartmentName);
+                Meter meter1 = new Meter(apartmentDAO.selectLastId(), "Water", apartmentName);
                 jsonResponse.put("success", true);
                 jsonResponse.put("message", "Add apartment information successfully!");
 

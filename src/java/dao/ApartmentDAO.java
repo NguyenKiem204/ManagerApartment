@@ -641,5 +641,15 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return false;
     }
-
+    public int selectLastId() {
+        String sql = "SELECT MAX(ApartmentID) FROM Apartment;";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerFeedbackDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 }

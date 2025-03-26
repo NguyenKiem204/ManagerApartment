@@ -32,5 +32,12 @@ public class Meter {
     String ownerName;
     BigDecimal lastReading;
 
+    public Meter(int apartmentId, String meterType, String apartmentName) {
+        this.apartmentId = apartmentId;
+        this.meterType = meterType;
+        this.apartmentName = apartmentName;
+    }
+
+    
 }
 

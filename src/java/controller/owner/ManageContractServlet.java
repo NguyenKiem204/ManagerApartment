@@ -335,8 +335,8 @@ public class ManageContractServlet extends HttpServlet {
                 }
 
                 // Lưu file
-                //String uploadPath = getServletContext().getRealPath(UPLOAD_DIR);
-                String uploadPath = "E:\\ManagerApartment\\web\\assets\\contract"; // Đường dẫn tuyệt đối
+                String uploadPath = getServletContext().getRealPath(UPLOAD_DIR);
+                //String uploadPath = "E:\\ManagerApartment\\web\\assets\\contract"; // Đường dẫn tuyệt đối
                 File uploadDir = new File(uploadPath);
                 if (!uploadDir.exists()) {
                     uploadDir.mkdirs();
