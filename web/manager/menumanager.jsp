@@ -394,6 +394,12 @@
                                                     >Manager EW</a
                                                 >
                                             </li>
+                                            <li class="submenu-item managernews">
+                                                <a
+                                                    href="<%= request.getContextPath() %>/accountant/managermeter"
+                                                    >Manager Meter</a
+                                                >
+                                            </li>
                                         </c:if>
                                     </ul>
                                 </li>
