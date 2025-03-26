@@ -387,8 +387,8 @@
                                         <i class="fa-solid fa-envelope"></i>
                                         <span>Utility Management</span>
                                     </a>
+                                    </c:if>
                                     <ul class="submenu">
-<<<<<<< HEAD
                                         <c:if test="${sessionScope.staff.role.roleID == 3}">
                                             <li class="submenu-item managernews">
                                                 <a
@@ -516,8 +516,6 @@
                                                    >List Requests</a
                                                 >
                                             </li>
-=======
->>>>>>> 9cbea8140766e4610a4b75e5b817df303adaaae5
 
                                         <li class="submenu-item managernews">
                                             <a
