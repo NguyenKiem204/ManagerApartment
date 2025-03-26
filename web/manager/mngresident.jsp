@@ -374,9 +374,9 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tableBody">
                                 <c:forEach var="resident" items="${listResident}">
-                                    <tr>
+                                    <tr data-resident-id="${resident.residentId}">
                                         <td>${resident.residentId}</td>
                                         <td>${resident.fullName}</td>
                                         <td>${resident.phoneNumber}</td>
@@ -401,7 +401,11 @@
 
                                         <td>
                                             <div class="actions">
-                                                <a href="deleteResident?residentId=${resident.residentId}" onclick="return confirm('Are you sure to delete this resident?');">Delete</a>
+                                                <button style="background: red; color: white; padding: 8px 16px; border: none;
+                                                    cursor: pointer; border-radius: 5px; font-weight: bold;"
+                                                    onclick="confirmDelete('${resident.residentId}', '${resident.fullName}')">
+                                                Delete
+                                            </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -474,24 +478,61 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-                                                $(document).ready(function () {
-                                                    $(".status-toggle").change(function () {
-                                                        let residentId = $(this).data("id");
-                                                        let newStatus = $(this).is(":checked") ? "Active" : "Deactive";
+    $(document).ready(function () {
+    $(".status-toggle").change(function () {
+        let checkbox = $(this);
+        let residentId = checkbox.data("id");
+        let newStatus = checkbox.is(":checked") ? "Active" : "Deactive";
 
-                                                        $.ajax({
-                                                            url: "/ManagerApartment/manager/updateResidentStatus",
-                                                            type: "POST",
-                                                            data: {residentId: residentId, status: newStatus},
-                                                            success: function (response) {
-                                                                alert(response.message);
-                                                            },
-                                                            error: function () {
-                                                                alert("Lỗi khi cập nhật trạng thái.");
-                                                            }
-                                                        });
-                                                    });
-                                                });
+        $.ajax({
+            url: "/ManagerApartment/manager/updateResidentStatus",
+            type: "POST",
+            data: { residentId: residentId, status: newStatus },
+            dataType: "json",
+            success: function (response) {
+                if (!response.success) {
+                    alert(response.message);
+                    // Nếu không thành công, đặt lại trạng thái checkbox theo dữ liệu server
+                    checkbox.prop("checked", response.currentStatus === "Active");
+                } else {
+                    alert("Cập nhật trạng thái thành công!");
+                }
+            },
+            error: function () {
+                alert("Lỗi khi cập nhật trạng thái.");
+                checkbox.prop("checked", !checkbox.prop("checked")); // Hoàn tác thay đổi checkbox
+            }
+        });
+    });
+});
+
+        </script>
+        <script>
+            function confirmDelete(residentId, fullName) {
+                const confirmation = confirm(`Do you want to delete the resident: ` + fullName + `?`);
+                if (confirmation) {
+                    // Thực hiện hành động xóa ở đây
+                    window.location = 'deleteResident?residentId=' + residentId;
+
+                    // Bạn có thể gọi một hàm để xóa sản phẩm từ danh sách hoặc từ server
+                    // Sau khi xóa, chuyển hướng về trang home
+                    setTimeout(() => {
+                        window.location.href = 'manageResident'; // Đổi thành URL trang home của bạn
+                    }, 1000); // Chờ 1 giây để đảm bảo xóa xong
+                } else {
+                    console.log('Hành động xóa đã bị hủy.');
+                }
+            }
+            document.querySelectorAll("#tableBody tr").forEach(row => {
+                row.addEventListener("click", function () {
+                    // Kiểm tra nếu click vào button thì không mở trang chi tiết
+                    if (event.target.tagName.toLowerCase() === "button") {
+                        event.stopPropagation();
+                        return;
+                    }
+
+                });
+            });
         </script>
         <script>
             $(document).ready(function () {

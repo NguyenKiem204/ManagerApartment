@@ -34,6 +34,7 @@ public class DeleteStaffServlet extends HttpServlet {
             msg = "Delete failed!";
         }
         request.setAttribute("mess", msg);
-        request.getRequestDispatcher("/manager/manageStaff").forward(request, response);
+        //request.getRequestDispatcher("/manager/manageStaff").forward(request, response);
+        response.sendRedirect("manageStaff");
     }
 }

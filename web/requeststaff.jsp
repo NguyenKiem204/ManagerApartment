@@ -259,7 +259,6 @@
                             </select>
                         </div>
 
-                        <input type="date" id="dateFilter" class="date-filter" name="date" value="${param.date}">
                     </div>
                     <div style="padding-left: 10px">
                         <select id="sortBox" style="width: 100%">
@@ -482,7 +481,7 @@
                 const searchBox = document.getElementById("searchBox").value.trim();
                 const staffFilter = document.getElementById("staffFilter").value;
                 const statusFilter = document.getElementById("statusFilter").value;
-                const dateFilter = document.getElementById("dateFilter").value;
+//                const dateFilter = document.getElementById("dateFilter").value;
                 const sortBox = document.getElementById("sortBox").value;
                 const pageSize = document.getElementById("itemsPerPage").value;
 
@@ -504,11 +503,11 @@
                     params.delete("status");
                 }
 
-                if (dateFilter) {
-                    params.set("date", dateFilter);
-                } else {
-                    params.delete("date");
-                }
+//                if (dateFilter) {
+//                    params.set("date", dateFilter);
+//                } else {
+//                    params.delete("date");
+//                }
 
                 if (sortBox !== "0") {
                     params.set("sort", sortBox);
@@ -540,7 +539,7 @@
 
             document.getElementById("staffFilter").addEventListener("change", updateFilter);
             document.getElementById("statusFilter").addEventListener("change", updateFilter);
-            document.getElementById("dateFilter").addEventListener("change", updateFilter);
+//            document.getElementById("dateFilter").addEventListener("change", updateFilter);
             document.getElementById("sortBox").addEventListener("change", updateFilter);
             document.getElementById("itemsPerPage").addEventListener("change", updateFilter);
 

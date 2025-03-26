@@ -310,7 +310,7 @@
                                 <option value="Maintenance">Maintenance</option>
                             </select>
 
-                            <label for="type" class="modal-label">Block:</label>
+                            <label for="type" class="modal-label">Type:</label>
                             <select id="type" name="type" class="modal-select" required>
                                 <option value="1 Bedroom">1 Bedroom</option>
                                 <option value="2 Bedrooms">2 Bedrooms</option>

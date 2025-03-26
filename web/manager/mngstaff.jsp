@@ -375,9 +375,9 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tableBody">
                             <c:forEach var="staff" items="${listStaff}">
-                                <tr>
+                                <tr data-staff-id="${staff.staffId}">
                                     <td>${staff.staffId}</td>
                                     <td>${staff.fullName}</td>
                                     <td>${staff.phoneNumber}</td>
@@ -404,7 +404,11 @@
 
                                     <td>
                                         <div class="actions">
-                                            <a href="deleteStaff?staffId=${staff.staffId}" onclick="return confirm('Are you sure to delete this staff?');">Delete</a>
+                                            <button style="background: red; color: white; padding: 8px 16px; border: none;
+                                                    cursor: pointer; border-radius: 5px; font-weight: bold;"
+                                                    onclick="confirmDelete('${staff.staffId}', '${staff.fullName}')">
+                                                Delete
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -495,6 +499,33 @@
                                                         });
                                                     });
                                                 });
+        </script>
+        <script>
+            function confirmDelete(staffId, fullName) {
+                const confirmation = confirm(`Do you want to delete the staff: ` + fullName + `?`);
+                if (confirmation) {
+                    // Thực hiện hành động xóa ở đây
+                    window.location = 'deleteStaff?staffId=' + staffId;
+
+                    // Bạn có thể gọi một hàm để xóa sản phẩm từ danh sách hoặc từ server
+                    // Sau khi xóa, chuyển hướng về trang home
+                    setTimeout(() => {
+                        window.location.href = 'manageStaff'; // Đổi thành URL trang home của bạn
+                    }, 1000); // Chờ 1 giây để đảm bảo xóa xong
+                } else {
+                    console.log('Hành động xóa đã bị hủy.');
+                }
+            }
+            document.querySelectorAll("#tableBody tr").forEach(row => {
+                row.addEventListener("click", function () {
+                    // Kiểm tra nếu click vào button thì không mở trang chi tiết
+                    if (event.target.tagName.toLowerCase() === "button") {
+                        event.stopPropagation();
+                        return;
+                    }
+
+                });
+            });
         </script>
         <script>
             $(document).ready(function () {
