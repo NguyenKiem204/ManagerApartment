@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Apartment;
+import model.Meter;
 import org.json.JSONObject;
 
 @WebServlet(name = "ManageApartmentServlet", urlPatterns = {"/manager/manageApartment"})
@@ -111,9 +112,15 @@ public class ManageApartmentServlet extends HttpServlet {
             }
 
             // Kiểm tra xem apartment đã tồn tại chưa
-            if (apartmentDAO.isApartmentExists(apartmentName, block)) {
+            if (apartmentDAO.isApartmentExists(normalizeString(apartmentName), block)) {
                 jsonResponse.put("success", false);
                 jsonResponse.put("message", "This apartment is dupplicated!");
+                out.write(jsonResponse.toString());
+                return;
+            }
+            if (ownerId != 0 && "available".equalsIgnoreCase(status)) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Status cannot be 'available' if apartment has an owner!");
                 out.write(jsonResponse.toString());
                 return;
             }
@@ -122,8 +129,11 @@ public class ManageApartmentServlet extends HttpServlet {
 
             // Thêm vào database
             int isAdded = apartmentDAO.insert(newApartment);
+            //Meter meter = new Meter
 
             if (isAdded != 0) {
+                Meter meter = new Meter(apartmentDAO.selectLastId(), "Electricity", apartmentName);
+                Meter meter1 = new Meter(apartmentDAO.selectLastId(), "Water", apartmentName);
                 jsonResponse.put("success", true);
                 jsonResponse.put("message", "Add apartment information successfully!");
 

@@ -13,7 +13,6 @@ import model.ImportLog;
  * @author nkiem
  */
 public class ImportLogDAO {
-    // Tạo bản ghi nhập dữ liệu mới
     public int createImportLog(ImportLog importLog) throws SQLException {
         String sql = "INSERT INTO ImportLog (StaffID, FileName, RecordsCount, Status, ErrorLog) " +
                      "VALUES (?, ?, ?, ?, ?)";
@@ -35,7 +34,6 @@ public class ImportLogDAO {
         return 0;
     }
     
-    // Cập nhật trạng thái nhập dữ liệu
     public boolean updateImportLogStatus(int importId, String status, int recordsCount, String errorLog) throws SQLException {
         String sql = "UPDATE ImportLog SET Status = ?, RecordsCount = ?, ErrorLog = ? WHERE ImportID = ?";
         try (Connection conn = DBContext.getConnection();
@@ -48,7 +46,6 @@ public class ImportLogDAO {
         }
     }
     
-    // Lấy lịch sử nhập dữ liệu theo ID
     public ImportLog getImportLogById(int importId) throws SQLException {
         String sql = "SELECT l.*, s.FullName AS StaffName " +
                      "FROM ImportLog l " +
@@ -67,7 +64,6 @@ public class ImportLogDAO {
         return null;
     }
     
-    // Lấy danh sách lịch sử nhập dữ liệu
     public List<ImportLog> getAllImportLogs() throws SQLException {
         String sql = "SELECT l.*, s.FullName AS StaffName " +
                      "FROM ImportLog l " +

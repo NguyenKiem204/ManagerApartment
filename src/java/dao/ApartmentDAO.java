@@ -101,7 +101,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return row;
     }
 
-    @Override
+  @Override
     public List<Apartment> selectAll() {
     List<Apartment> list = new ArrayList<>();
     String sql = "SELECT * FROM Apartment";
@@ -113,7 +113,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         while (rs.next()) {
             int ownerId = rs.getInt("OwnerID");
             Resident owner = residentDAO.selectById(ownerId);
-            String ownerName = (owner != null) ? owner.getFullName() : "N/A"; // Nếu null thì dùng "N/A"
+            String ownerName = (owner != null) ? owner.getFullName() : "N/A";
             
             Apartment apartment = new Apartment(
                     rs.getInt("ApartmentID"),
@@ -208,13 +208,10 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
 
     public static void main(String[] args) {
         ApartmentDAO apartmentDAO = new ApartmentDAO();
-        int testApartmentId = 7; // Thay thế bằng ID thực tế trong DB
-
+        int testApartmentId = 7;
         Apartment apartment = apartmentDAO.selectById(testApartmentId);
-
         if (apartment != null) {
             System.out.println("Apartment Found:");
-
             System.out.println("Name: " + apartment.getApartmentName());
             System.out.println("Block: " + apartment.getBlock());
             System.out.println("Status: " + apartment.getStatus());
@@ -257,7 +254,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
             ps.setString(2, block);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) > 0; // Nếu COUNT > 0 nghĩa là đã tồn tại
+                return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -269,7 +266,6 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         Apartment apartment = null;
         String sql = "SELECT * FROM Apartment WHERE ApartmentID = ? ";
         System.out.println(sql);
-
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, apartmentId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -600,7 +596,7 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
 
     public List<String> getApartmentNames(String searchQuery) {
         List<String> apartments = new ArrayList<>();
-        String sql = "SELECT TOP 5 ApartmentName FROM Apartment WHERE ApartmentName LIKE ?"; // Giới hạn kết quả
+        String sql = "SELECT TOP 5 ApartmentName FROM Apartment WHERE ApartmentName LIKE ?";
 
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, "%" + searchQuery + "%");
@@ -630,4 +626,30 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return false;
     }
 
+    public boolean isResidentAnOwner(int residentId) {
+        String sql = "SELECT COUNT(*) FROM Apartment WHERE OwnerID = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, residentId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu có ít nhất 1 kết quả, tức là resident này là Owner
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    public int selectLastId() {
+        String sql = "SELECT MAX(ApartmentID) FROM Apartment;";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerFeedbackDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 }

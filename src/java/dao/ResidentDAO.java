@@ -19,7 +19,6 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
 
     @Override
     public int insert(Resident resident) {
-        //int insertImg = imageDAO.insert(new Image(null));
         int row = 0;
         String sqlInsert = "INSERT INTO Resident (FullName, Password, PhoneNumber, CCCD, Email, DOB, Sex, ImageID, Status, RoleID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -42,7 +41,7 @@ public class ResidentDAO implements DAOInterface<Resident, Integer> {
         return row;
     }
     public int insert1(Resident resident) {
-    int residentId = -1; // Nếu insert thất bại thì trả về -1
+    int residentId = -1;
     String sql = "INSERT INTO Resident (FullName, Password, PhoneNumber, CCCD, Email, DOB, Sex, ImageID, Status, RoleID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     try (Connection connection = DBContext.getConnection();
@@ -754,7 +753,7 @@ public int countTenantsByOwner(int ownerId, String keyword, String sex, String s
 }
 public boolean isOwnerResident(int ownerId) {
     boolean isValid = false;
-    String query = "SELECT COUNT(*) FROM Resident WHERE ResidentID = ? AND RoleID = 7";
+    String query = "SELECT COUNT(*) FROM Resident WHERE ResidentID = ? AND RoleID = 7 AND Status = 'Active'";
     
     try (Connection conn = DBContext.getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -845,6 +844,23 @@ public boolean updatePassword(int residentId, String newPassword) throws SQLExce
     }
 
     return tenants;
+}
+    public String getResidentStatus(int residentId) {
+    String status = null;
+    String sql = "SELECT Status FROM Resident WHERE ResidentID = ?";
+    
+    try (Connection connection = DBContext.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, residentId);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                status = rs.getString("Status");
+            }
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(ResidentDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return status;
 }
 
 }
