@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@include file="/manager/menumanager.jsp" %>
 <html lang="en">
     <head>
@@ -274,7 +275,15 @@
                     }
                 });
             });
-        </script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".edit-meter-btn").forEach(button => {
+                button.addEventListener("click", function () {
+                    document.getElementById("meterId").value = this.getAttribute("data-id");
+                    document.getElementById("status").value = this.getAttribute("data-status");
+                });
+            });
+        });
+    </script>
     </head>
     <body>
         <div class="container-xl">
@@ -284,9 +293,6 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <h2>Manage Meter</h2>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add Meter</span></a>						
                             </div>
                         </div>
                     </div>
@@ -307,10 +313,14 @@
                                     <td>${meter.apartmentName}</td>
                                     <td>${meter.meterType}</td>
                                     <td>${meter.meterNumber}</td>
-                                    <td>${meter.installationDate}</td>
+                                    <td>${meter.formatInstallationDate}</td>
                                     <td>${meter.status}</td>
                                     <td>
-                                       <a href="loadMeter=?${o.meterId}" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                                       <a href="#editMeterModal" class="edit edit-meter-btn"
+                                       data-id="${meter.meterId}"
+                                       data-status="${meter.status}"
+                                       data-toggle="modal" data-target="#editMeterModal">
+                                        <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -330,87 +340,26 @@
                 </div>
             </div>        
         </div>
+       
         <!-- Edit Modal HTML -->
-        <div id="addEmployeeModal" class="modal fade">
+        <div id="editMeterModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="/ManagerApartment/accountant/add-meter" method="POST">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Add Meter</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body">					
-                            <div class="form-group">
-                                <label>Apartment ID</label>
-                                <input name="apartmentId" type="number" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Meter Type</label>
-                                <input name="meterType" type="text" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Meter Number</label>
-                                <input name="meterNumber" type="text" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Installation Date</label>
-                                <input 
-                                    type="text" 
-                                    class="form-control" 
-                                    name="installationDate"
-                                    id="boughtOn" 
-                                    placeholder="dd/MM/yyyy"
-                                    required
-                                    >
-                            </div>                           
-                            <div class="form-group">
-                                <label>Status</label>
-                                <select class="form-control" name="status" required>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" class="btn btn-success" value="Add">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!-- Edit Modal HTML -->
-        <div id="editEmployeeModal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form>
+                    <form action = "<%= request.getContextPath() %>/accountant/update-meter" method="post">
                         <div class="modal-header">						
                             <h4 class="modal-title">Edit Meter</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">					
                             <div class="form-group">
-                                <label>Apartment ID</label>
-                                <input type="number" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Meter Type</label>
-                                <input type="email" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Meter Number</label>
-                                <textarea class="form-control" required></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Installation Date</label>
-                                <input type="text" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Status</label>
-                                <select class="form-control" name="status" required>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
+                                  <input type="hidden" id="meterId" name="meterId">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" id="status" name="status" required>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
                             </div>
                         </div>
                         <div class="modal-footer">

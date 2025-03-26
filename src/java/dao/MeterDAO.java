@@ -4,6 +4,10 @@
  */
 package dao;
 
+
+import com.itextpdf.text.log.Logger;
+import java.lang.System.Logger.Level;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +28,8 @@ public class MeterDAO {
             stmt.setInt(1, meter.getApartmentId());
             stmt.setString(2, meter.getMeterType());
             stmt.setString(3, meter.getMeterNumber());
+
+
             stmt.setTimestamp(4, Timestamp.valueOf(meter.getInstallationDate()));
             stmt.setString(5, meter.getStatus());
 
@@ -55,6 +61,20 @@ public class MeterDAO {
             return stmt.executeUpdate() > 0;
         }
     }
+
+    public boolean updateMeterStatus(int meterId, String status) {
+        String sql = "UPDATE Meter SET Status = ? WHERE MeterID = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setInt(2, meterId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
 
     public boolean deleteMeter(int meterId) throws SQLException {
         String sql = "UPDATE Meter SET Status = 'Inactive' WHERE MeterID = ?";
@@ -202,6 +222,7 @@ public class MeterDAO {
         meter.setApartmentId(rs.getInt("ApartmentID"));
         meter.setMeterType(rs.getString("MeterType"));
         meter.setMeterNumber(rs.getString("MeterNumber"));
+
         meter.setInstallationDate(rs.getTimestamp("InstallationDate").toLocalDateTime());
         meter.setStatus(rs.getString("Status"));
         meter.setApartmentName(rs.getString("ApartmentName"));
@@ -231,7 +252,9 @@ public class MeterDAO {
     }
 
       public int getTotalRecords() {
-        String sql = "SELECT COUNT(*) AS total FROM [Meter]";
+
+        String sql = "SELECT COUNT(*) AS total FROM [Meter] Where Status = 'Inactive'";
+
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
