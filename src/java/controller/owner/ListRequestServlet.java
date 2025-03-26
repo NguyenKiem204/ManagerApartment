@@ -128,7 +128,12 @@ public class ListRequestServlet extends HttpServlet {
             String keySearch_raw = request.getParameter("keySearch");
             String status_raw = request.getParameter("status");
             String typeRequestID_raw = request.getParameter("typeRequestID");
-            String date_raw = request.getParameter("date");
+//            String date_raw = request.getParameter("date");
+            System.out.println("key sort: " + keySort_raw );
+            System.out.println("key keySearch_raw: " + keySearch_raw );
+            System.out.println("key status_raw: " + status_raw );
+            System.out.println("key typeRequestID_raw: " + typeRequestID_raw );
+            
             String keySearch = (keySearch_raw != null) ? keySearch_raw.replaceAll("\\s+", " ").trim() : null;
             if (keySearch != null && keySearch.isEmpty()) {
                 keySearch = null;
@@ -138,12 +143,12 @@ public class ListRequestServlet extends HttpServlet {
             int status = (status_raw != null && !status_raw.isEmpty()) ? Integer.parseInt(status_raw) : 0;
             int typeRequestID = (typeRequestID_raw != null && !typeRequestID_raw.isEmpty()) ? Integer.parseInt(typeRequestID_raw) : 0;
             int keySort = (keySort_raw != null && !keySort_raw.isEmpty()) ? Integer.parseInt(keySort_raw) : 0;
-            LocalDate date = (date_raw != null && !date_raw.isEmpty()) ? LocalDate.parse(date_raw) : null;
+//            LocalDate date = (date_raw != null && !date_raw.isEmpty()) ? LocalDate.parse(date_raw) : null;
 
             // Nếu có tham số lọc, thực hiện tìm kiếm
-            if (keySearch_raw != null || status != 0 || typeRequestID != 0 || date != null || keySort != 0 || xpage != null) {
-                listFirstPage = requestDAO.getAllRequestsBySearchOrFilterOrSortOfResident(keySearch, typeRequestID, date, status, keySort, page, pageSize, ownerId);
-                int numberOfLine = requestDAO.getNumberOfRequestsBySearchOrFilterOrSortOfResident(keySearch, typeRequestID, date, status, keySort,ownerId);
+            if (keySearch_raw != null || status != 0 || typeRequestID != 0 || keySort != 0 || xpage != null) {
+                listFirstPage = requestDAO.getAllRequestsBySearchOrFilterOrSortOfResident(keySearch, typeRequestID, status, keySort, page, pageSize, ownerId);
+                int numberOfLine = requestDAO.getNumberOfRequestsBySearchOrFilterOrSortOfResident(keySearch, typeRequestID, status, keySort,ownerId);
                 num = (numberOfLine % pageSize == 0) ? (numberOfLine / pageSize) : (numberOfLine / pageSize + 1);
             }
         } catch (NumberFormatException e) {
