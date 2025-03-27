@@ -408,7 +408,7 @@
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="bi bi-grid-1x2-fill"></i>
-                                    <span>Feedback</span>
+                                    <span>Report</span>
                                 </a>
                                 <ul class="submenu">
                                     <c:if test="${sessionScope.staff.role.roleID == 1}">
@@ -523,122 +523,6 @@
                                                 >Manager EW</a
                                             >
                                         </li>
-
-                                    </ul>
-                                </li>
-                            </c:if>
-                            <li class="sidebar-item has-sub">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-grid-1x2-fill"></i>
-                                    <span>Feedback</span>
-                                </a>
-                                <ul class="submenu">
-                                    <c:if test="${sessionScope.staff.role.roleID == 1}">
-                                        <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/manager/feedback"
-                                               >Feedback</a
-                                            >
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/manager/request"
-                                               >Request</a
-                                            >
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a
-                                                href="<%= request.getContextPath() %>/manager/formfeedbackmanager"
-                                                >Feedback Statistics</a
-                                            >
-                                        </li>
-                                    </c:if>
-                                    <c:if test="${sessionScope.staff.role.roleID == 2}">
-                                        <li class="submenu-item">
-                                            <a
-                                                href="<%= request.getContextPath() %>/feedbackreview"
-                                                >Feedback</a
-                                            >
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a
-                                                href="<%= request.getContextPath() %>/requeststaff"
-                                                >Request</a
-                                            >
-                                        </li>
-                                    </c:if>
-                                    <c:if test="${sessionScope.staff.role.roleID == 3}">
-                                        <li class="submenu-item">
-                                            <a
-                                                href="<%= request.getContextPath() %>/feedbackreview"
-                                                >Feedback</a
-                                            >
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a
-                                                href="<%= request.getContextPath() %>/requeststaff"
-                                                >Request</a
-                                            >
-                                        </li>
-                                    </c:if>
-                                    <c:if test="${sessionScope.staff.role.roleID == 4}">
-                                        <li class="submenu-item">
-                                            <a
-                                                href="<%= request.getContextPath() %>/feedbackreview"
-                                                >Feedback</a
-                                            >
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a
-                                                href="<%= request.getContextPath() %>/requeststaff"
-                                                >Request</a
-                                            >
-                                        </li>
-                                    </c:if>
-                                    <c:if test="${sessionScope.staff.role.roleID == 5}">
-                                        <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/feedbackreview"
-                                               >Feedback</a
-                                            >
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/requeststaff"
-                                               >Request</a
-                                            >
-                                        </li>
-                                    </c:if>
-                                    <c:if test="${sessionScope.resident.role.roleID == 7}">
-                                        <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/feedback"
-                                               >Send Feedback</a
-                                            >
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/request"
-                                               >Send Request</a
-                                            >
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/listrequest"
-                                               >List Requests</a
-                                            >
-                                        </li>
-                                    </c:if>
-                                    <c:if test="${sessionScope.resident.role.roleID == 6}">
-                                        <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/feedback"
-                                               >Feedback</a
-                                            >
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/request"
-                                               >Request</a
-                                            >
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/listrequest"
-                                               >List Requests</a
-                                            >
-                                        </li>
-
                                     </c:if>
                                 </ul>
                             </li>
@@ -722,6 +606,7 @@
                             </li>
                         </ul>
                     </div>
+
                     <button class="sidebar-toggler btn x">
                         <i data-feather="x"></i>
                     </button>
