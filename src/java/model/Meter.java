@@ -1,10 +1,13 @@
 
+<<<<<<< HEAD
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
+=======
+>>>>>>> a1fcf3c0204f8e528f5c144d1d8dbb0e569a6043
 package model;
 
 import java.math.BigDecimal;
@@ -40,6 +43,15 @@ public class Meter {
     BigDecimal lastReading;
 
 
+<<<<<<< HEAD
+=======
+    public Meter(int apartmentId, String meterType, String apartmentName) {
+        this.apartmentId = apartmentId;
+        this.meterType = meterType;
+        this.apartmentName = apartmentName;
+    }
+
+>>>>>>> a1fcf3c0204f8e528f5c144d1d8dbb0e569a6043
     public Meter(int apartmentId, String meterType, String meterNumber, LocalDate installDateTime, String status) {
         this.apartmentId = apartmentId;
         this.meterType = meterType;

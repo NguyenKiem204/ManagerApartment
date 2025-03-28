@@ -387,6 +387,7 @@
                                         <i class="fa-solid fa-envelope"></i>
                                         <span>Utility Management</span>
                                     </a>
+<<<<<<< HEAD
                                     <ul class="submenu">
                                         
                                             <li class="submenu-item managernews">
@@ -516,20 +517,30 @@
                                                 >
                                             </li>
 
+=======
+                                </c:if>
+                                <ul class="submenu">
+                                    <c:if test="${sessionScope.staff.role.roleID == 3}">
+>>>>>>> a1fcf3c0204f8e528f5c144d1d8dbb0e569a6043
                                         <li class="submenu-item managernews">
                                             <a
                                                 href="<%= request.getContextPath() %>/accountant/manager-meter-reading"
                                                 >Manager EW</a
                                             >
                                         </li>
-
-                                    </ul>
-                                </li>
-                            </c:if>
+                                        <li class="submenu-item managernews">
+                                            <a
+                                                href="<%= request.getContextPath() %>/accountant/managermeter"
+                                                >Manager Meter</a
+                                            >
+                                        </li>
+                                    </c:if>
+                                </ul>
+                            </li>
                             <li class="sidebar-item has-sub">
                                 <a href="#" class="sidebar-link">
                                     <i class="bi bi-grid-1x2-fill"></i>
-                                    <span>Feedback</span>
+                                    <span>Report</span>
                                 </a>
                                 <ul class="submenu">
                                     <c:if test="${sessionScope.staff.role.roleID == 1}">
@@ -638,6 +649,12 @@
                                             >
                                         </li>
 
+                                        <li class="submenu-item managernews">
+                                            <a
+                                                href="<%= request.getContextPath() %>/accountant/manager-meter-reading"
+                                                >Manager EW</a
+                                            >
+                                        </li>
                                     </c:if>
                                 </ul>
                             </li>
@@ -737,6 +754,7 @@
                             </li>
                         </ul>
                     </div>
+
                     <button class="sidebar-toggler btn x">
                         <i data-feather="x"></i>
                     </button>

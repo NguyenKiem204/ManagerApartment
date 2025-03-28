@@ -631,27 +631,27 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
     }
 
     public List<Request> getAllRequestsBySearchOrFilterOrSortOfResident(String keySearch,
-              int typeRequestID, LocalDate date, int statusID, int keySort,
+              int typeRequestID, int statusID, int keySort,
               int page, int pageSize, int residentId) {
         List<Request> list = new ArrayList<>();
         String sql = """
                      SELECT [RequestID]
-                                                ,r.Description
-                                                ,[Title]
-                                                ,[Date]
-                                                ,r.ResidentID, CompletedAt, ViewedAt
-                                                ,res.FullName
-                                                ,r.TypeRqID
-                                                ,r.StatusID
-                                                ,a.ApartmentID
-                                                ,a.ApartmentName
-                                            FROM [ApartmentManagement].[dbo].[Request] r 
-                                                JOIN Apartment a ON r.ApartmentID = a.ApartmentID
-                                                JOIN Resident res ON r.ResidentID = res.ResidentID
-                        						Join TypeRequest tr on r.TypeRqID = tr.TypeRqID 
-                        						join role ro on tr.RoleID = ro.RoleID 
-                        						join Staff st on st.RoleID = ro.RoleID
-                                                WHERE 1 = 1""";
+                       ,r.Description
+                       ,[Title]
+                       ,[Date]
+                       ,r.ResidentID
+                       ,res.FullName
+                       ,r.TypeRqID
+                       ,r.StatusID
+                       ,a.ApartmentID
+                       ,a.ApartmentName
+                    FROM [ApartmentManagement].[dbo].[Request] r 
+                       JOIN Apartment a ON r.ApartmentID = a.ApartmentID
+                       JOIN Resident res ON r.ResidentID = res.ResidentID
+                       Join TypeRequest tr on r.TypeRqID = tr.TypeRqID 
+                       join role ro on tr.RoleID = ro.RoleID 
+                       join Staff st on st.RoleID = ro.RoleID
+                    WHERE 1 = 1""";
 
         List<Object> params = new ArrayList<>();
         try {
@@ -679,11 +679,6 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                 params.add(residentId);
             }
 
-            //check date is null or not
-            if (date != null) {
-                sql += " AND CAST([Date] AS DATE) = ?";
-                params.add(Date.valueOf(date));
-            }
 //------------------------------------------
 
             //Xu ly sort
@@ -897,7 +892,7 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
     }
     
     public int getNumberOfRequestsBySearchOrFilterOrSortOfResident(String keySearch,
-              int typeRequestID, LocalDate date, int statusID, int keySort, int residentId) {
+              int typeRequestID, int statusID, int keySort, int residentId) {
         String sql = """
                      SELECT COUNT(*)
                         FROM [ApartmentManagement].[dbo].[Request] r 
@@ -934,11 +929,6 @@ public class RequestDAO implements DAOInterface<Request, Integer> {
                 params.add(residentId);
             }
 
-            //check date is null or not
-            if (date != null) {
-                sql += " AND CAST([Date] AS DATE) = ?";
-                params.add(Date.valueOf(date));
-            }
 //------------------------------------------
 
             //Xu ly sort
