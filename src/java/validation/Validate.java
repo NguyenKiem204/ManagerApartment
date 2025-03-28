@@ -253,26 +253,6 @@ public class Validate {
         return ruleName.trim();
     }
 
-    public static String validateRuleDescription(String ruleDescription) throws Exception {
-        if (ruleDescription == null || ruleDescription.isBlank()) {
-            throw new Exception("Description cannot be empty.");
-        }
-        System.out.println("raw description:");
-        System.out.println(ruleDescription);
-        String description = Jsoup.parse(ruleDescription).text().trim(); // bỏ thẻ html của ckeditor
-        System.out.println("nomarlized description:");
-        System.out.println(description);
-        String regex = "[\\p{L}\\d\\s.,:;?!()\\-_\n]+";
-        /**
-         * \p{L}: các chữ cái của bất kì ngôn ngữ nào 
-         * \d: 0-9 
-         * \s: khoảng trắng
-         * .,:;?!()-_\n các kí tự được cho phép
-         */
-        if (!Pattern.matches(regex, description)) {
-            throw new Exception("Description cannot contains special characters.");
-        }
-        return description;
-    }
+    
 
 }

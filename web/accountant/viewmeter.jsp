@@ -275,25 +275,37 @@
                     }
                 });
             });
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".edit-meter-btn").forEach(button => {
-                button.addEventListener("click", function () {
-                    document.getElementById("meterId").value = this.getAttribute("data-id");
-                    document.getElementById("status").value = this.getAttribute("data-status");
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll(".edit-meter-btn").forEach(button => {
+                    button.addEventListener("click", function () {
+                        document.getElementById("meterId").value = this.getAttribute("data-id");
+                        document.getElementById("status").value = this.getAttribute("data-status");
+                        document.getElementById("meterNumber").value = this.getAttribute("data-meter-number");
+                    });
                 });
             });
-        });
-    </script>
+        </script>
     </head>
     <body>
         <div class="container-xl">
+            <div class="d-flex gap-2 justify-content-end">
+                <form action="" method="get" class="d-flex gap-2 flex-grow-1 justify-content-end">
+                    <input type="hidden" name="type" >
+                    <select name="meterType" id="statusFilter" class="form-select" style="width: 10%;">
+                        <option value="">AllMeterType</option>
+                        <option value="Electric" ${selectedStatus == 'Electric' ? 'selected' : ''}>Electric</option>
+                        <option value="Water" ${selectedStatus == 'Water' ? 'selected' : ''}>Water</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary" style="width: 10%;">Filter</button>
+                </form>
+            </div>
             <div class="table-responsive">
                 <div class="table-wrapper">
                     <div class="table-title">
                         <div class="row">
                             <div class="col-sm-6">
                                 <h2>Manage Meter</h2>
-                            </div>
+                            </div>                            
                         </div>
                     </div>
                     <table class="table table-striped table-hover">
@@ -316,18 +328,18 @@
                                     <td>${meter.formatInstallationDate}</td>
                                     <td>${meter.status}</td>
                                     <td>
-                                       <a href="#editMeterModal" class="edit edit-meter-btn"
-                                       data-id="${meter.meterId}"
-                                       data-status="${meter.status}"
-                                       data-toggle="modal" data-target="#editMeterModal">
-                                        <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
+                                        <a href="#editMeterModal" class="edit edit-meter-btn"
+                                           data-id="${meter.meterId}"
+                                           data-status="${meter.status}"
+                                           data-meter-number="${meter.meterNumber}"
+                                           data-toggle="modal" data-target="#editMeterModal">
+                                            <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
                                     </td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
                     <div class="clearfix">
-                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
                         <ul class="pagination">
                             <c:forEach begin="1" end="${endP}" var="i">
                                 <li class="page-item">
@@ -340,7 +352,7 @@
                 </div>
             </div>        
         </div>
-       
+
         <!-- Edit Modal HTML -->
         <div id="editMeterModal" class="modal fade">
             <div class="modal-dialog">
@@ -352,14 +364,18 @@
                         </div>
                         <div class="modal-body">					
                             <div class="form-group">
-                                  <input type="hidden" id="meterId" name="meterId">
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select class="form-control" id="status" name="status" required>
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
-                        </div>
+                                <input type="hidden" id="meterId" name="meterId">
+                                <div class="form-group">
+                                    <label>Meter Number</label>
+                                    <input name="meterNumber" id ="meterNumber" value="${meter.meterNumber}" type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select class="form-control" id="status" name="status" required>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -370,7 +386,7 @@
                 </div>
             </div>
         </div>
-<!-- Delete Modal HTML -->
+        <!-- Delete Modal HTML -->
 
-</body>
+    </body>
 </html>

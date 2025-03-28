@@ -26,8 +26,9 @@ public class UpdateMeterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-     String meterIdStr = request.getParameter("meterId");
+    String meterIdStr = request.getParameter("meterId");
     String status = request.getParameter("status");
+    String meterNumber = request.getParameter("meterNumber");
 
     System.out.println("Received meterId: " + meterIdStr); // Debug
     System.out.println("Received status: " + status);
@@ -40,7 +41,7 @@ public class UpdateMeterServlet extends HttpServlet {
     try {
         int meterId = Integer.parseInt(meterIdStr);
         MeterDAO meterDAO = new MeterDAO();
-        boolean updated = meterDAO.updateMeterStatus(meterId, status);
+        boolean updated = meterDAO.updateMeterInfo(meterId, meterNumber, status);
         response.sendRedirect("/ManagerApartment/accountant/managermeter");
     } catch (NumberFormatException e) {
         e.printStackTrace();

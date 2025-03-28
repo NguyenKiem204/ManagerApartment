@@ -1,15 +1,14 @@
 
-<<<<<<< HEAD
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-=======
 
->>>>>>> 9cbea8140766e4610a4b75e5b817df303adaaae5
 package model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
@@ -40,7 +39,7 @@ public class Meter {
     String ownerName;
     BigDecimal lastReading;
 
-<<<<<<< HEAD
+
     public Meter(int apartmentId, String meterType, String meterNumber, LocalDate installDateTime, String status) {
         this.apartmentId = apartmentId;
         this.meterType = meterType;
@@ -56,7 +55,5 @@ public class Meter {
         return installationDate.format(formatter);
     }
 }
-=======
-}
 
->>>>>>> 9cbea8140766e4610a4b75e5b817df303adaaae5
+
