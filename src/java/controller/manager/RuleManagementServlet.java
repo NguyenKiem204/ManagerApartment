@@ -53,20 +53,22 @@ public class RuleManagementServlet extends HttpServlet {
         } else { // create rule: method POST
             String ruleName = "";
             String errorMsg = "";
-            try {
-                ruleName = Validate.validateRuleDescription(request.getParameter("ruleName"));
-//                if (!Validate.isValidTitle(ruleName)) {
-//                    throw new Exception("Rule name contains invalid characters.");
-//                }
-            } catch (Exception ex) {
-                errorMsg += ex.getMessage() + "\n";
-            }
-            String description = "";
-            try {
-                description = Validate.validateRuleDescription(request.getParameter("ruleDescription"));
-            } catch (Exception ex) {
-                errorMsg += ex.getMessage() + "\n";
-            }
+//            try {
+//                ruleName = Validate.validateRuleDescription(request.getParameter("ruleName"));
+////                if (!Validate.isValidTitle(ruleName)) {
+////                    throw new Exception("Rule name contains invalid characters.");
+////                }
+//            } catch (Exception ex) {
+//                errorMsg += ex.getMessage() + "\n";
+//            }
+//            String description = "";
+//            try {
+//                description = Validate.validateRuleDescription(request.getParameter("ruleDescription"));
+//            } catch (Exception ex) {
+//                errorMsg += ex.getMessage() + "\n";
+//            }
+        
+            String description = request.getParameter("ruleDescription");
             if (ruleName.length() > 100) { //nên giới hạn độ dài title vì nó chỉ nên có độ dài nhất định
                 request.setAttribute(errorMsg, "Title must be <100 characters!");
                 //request.setAttribute("listrole",listrole);
@@ -144,7 +146,7 @@ public class RuleManagementServlet extends HttpServlet {
         }
         String description = "";
         try {
-            description = Validate.validateRuleDescription(request.getParameter("ruleDescription"));
+            description = request.getParameter("ruleDescription");
         } catch (Exception ex) {
             errorMsg += ex.getMessage() + "\n";
         }

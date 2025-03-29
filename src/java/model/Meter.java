@@ -1,4 +1,11 @@
 
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
+
 package model;
 
 import java.math.BigDecimal;
@@ -11,6 +18,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
 
 /**
  *
@@ -34,11 +42,13 @@ public class Meter {
     BigDecimal lastReading;
 
 
+
     public Meter(int apartmentId, String meterType, String apartmentName) {
         this.apartmentId = apartmentId;
         this.meterType = meterType;
         this.apartmentName = apartmentName;
     }
+
 
     public Meter(int apartmentId, String meterType, String meterNumber, LocalDate installDateTime, String status) {
         this.apartmentId = apartmentId;

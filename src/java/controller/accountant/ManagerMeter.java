@@ -26,7 +26,7 @@ public class ManagerMeter extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        MeterDAO meterDAO = new MeterDAO();
+         MeterDAO meterDAO = new MeterDAO();
 //         String indexPage = request.getParameter("index");
         String indexPage = request.getParameter("index");
         int index = (indexPage != null) ? Integer.parseInt(indexPage) : 1;
@@ -41,6 +41,37 @@ public class ManagerMeter extends HttpServlet {
         request.setAttribute("currentPage", index);
 // Chuyển hướng đến JSP
         request.getRequestDispatcher("viewmeter.jsp").forward(request, response);
+
+//MeterDAO meterDAO = new MeterDAO();
+//    
+//    // Nhận giá trị meterType từ request
+//    String meterType = request.getParameter("meterType");
+//
+//    int page = 1;
+//    int pageSize = 3; // Số bản ghi mỗi trang
+//
+//    // Nhận giá trị page từ request nếu có
+//    String pageStr = request.getParameter("page");
+//    if (pageStr != null && !pageStr.trim().isEmpty()) {
+//        try {
+//            page = Integer.parseInt(pageStr.trim());
+//        } catch (NumberFormatException e) {
+//            page = 1; // Nếu lỗi, đặt về trang 1
+//        }
+//    }
+//
+//    // Lấy danh sách đồng hồ đã lọc theo meterType
+//    List<Meter> meterList = meterDAO.searchMeters(meterType, page, pageSize);
+//    int totalRecords = meterDAO.getTotalMeters(meterType);
+//    int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+//
+//    // Đẩy dữ liệu về JSP
+//    request.setAttribute("meterList", meterList);
+//    request.setAttribute("selectedMeterType", meterType); // Lưu meterType đã chọn
+//    request.setAttribute("totalPages", totalPages);
+//    request.setAttribute("currentPage", page);
+//
+//    request.getRequestDispatcher("viewmeter.jsp").forward(request, response);
     }
 
     @Override
@@ -48,6 +79,7 @@ public class ManagerMeter extends HttpServlet {
             throws ServletException, IOException {
 
     }
+
     @Override
     public String getServletInfo() {
         return "Short description";

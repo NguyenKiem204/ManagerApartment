@@ -275,102 +275,139 @@
                     }
                 });
             });
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".edit-meter-btn").forEach(button => {
-                button.addEventListener("click", function () {
-                    document.getElementById("meterId").value = this.getAttribute("data-id");
-                    document.getElementById("status").value = this.getAttribute("data-status");
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll(".edit-meter-btn").forEach(button => {
+                    button.addEventListener("click", function () {
+                        document.getElementById("meterId").value = this.getAttribute("data-id");
+                        document.getElementById("status").value = this.getAttribute("data-status");
+                        document.getElementById("meterNumber").value = this.getAttribute("data-meter-number");
+                    });
                 });
             });
-        });
+
+//            document.addEventListener("DOMContentLoaded", function () {
+//                var errorMessage = "<%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : "" %>";
+//                if (errorMessage) {
+//                    $("#editMeterModal").modal("show"); // Hiển thị modal nếu có lỗi
+//                }
+//            });
+            // Nếu có lỗi, tự động hiển thị modal
+            <% if (request.getAttribute("errorMessage") != null) { %>
+            $(document).ready(function () {
+                $("#editMeterModal").modal("show");
+            });
+            <% } %>
+        </script>
+
     </script>
-    </head>
-    <body>
-        <div class="container-xl">
-            <div class="table-responsive">
-                <div class="table-wrapper">
-                    <div class="table-title">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <h2>Manage Meter</h2>
-                            </div>
-                        </div>
+</head>
+<body>
+    <div class="container-xl">
+        <div class="d-flex gap-2 justify-content-end">
+            <form action="" method="get" class="d-flex gap-2 flex-grow-1 justify-content-end">
+                <input type="hidden" name="type" >
+                <select name="meterType" id="statusFilter" class="form-select" style="width: 10%;">
+                    <option value="">AllMeterType</option>
+                    <option value="Electric" ${selectedStatus == 'Electric' ? 'selected' : ''}>Electric</option>
+                    <option value="Water" ${selectedStatus == 'Water' ? 'selected' : ''}>Water</option>
+                </select>
+                <button type="submit" class="btn btn-primary" style="width: 10%;">Filter</button>
+            </form>
+        </div>
+        <div class="table-responsive">
+            <div class="table-wrapper">
+                <div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h2>Manage Meter</h2>
+                        </div>                            
                     </div>
-                    <table class="table table-striped table-hover">
-                        <thead>
+                </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Apartment Name</th>
+                            <th>Meter Type</th>
+                            <th>Meter Number</th> 
+                            <th>Installation Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="meter" items="${meterList}" >
                             <tr>
-                                <th>Apartment Name</th>
-                                <th>Meter Type</th>
-                                <th>Meter Number</th> 
-                                <th>Installation Date</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="meter" items="${meterList}" >
-                                <tr>
-                                    <td>${meter.apartmentName}</td>
-                                    <td>${meter.meterType}</td>
-                                    <td>${meter.meterNumber}</td>
-                                    <td>${meter.formatInstallationDate}</td>
-                                    <td>${meter.status}</td>
-                                    <td>
-                                       <a href="#editMeterModal" class="edit edit-meter-btn"
+                                <td>${meter.apartmentName}</td>
+                                <td>${meter.meterType}</td>
+                                <td>${meter.meterNumber}</td>
+                                <td>${meter.formatInstallationDate}</td>
+                                <td>${meter.status}</td>
+                                <td>
+                                    <a href="#editMeterModal" class="edit edit-meter-btn"
                                        data-id="${meter.meterId}"
                                        data-status="${meter.status}"
+                                       data-meter-number="${meter.meterNumber}"
                                        data-toggle="modal" data-target="#editMeterModal">
                                         <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                    <div class="clearfix">
-                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                        <ul class="pagination">
-                            <c:forEach begin="1" end="${endP}" var="i">
-                                <li class="page-item">
-                                    <a class="${currentPage == i?"active":""}" href="<%= request.getContextPath() %>/accountant/managermeter?index=${i}" class="page-link">${i}</a>
-                                </li>
-                            </c:forEach>
-                        </ul>
-                    </div>
-
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+                <div class="clearfix">
+                    <ul class="pagination">
+                        <c:forEach begin="1" end="${endP}" var="i">
+                            <li class="page-item">
+                                <a class="${currentPage == i?"active":""}" href="<%= request.getContextPath() %>/accountant/managermeter?index=${i}" class="page-link">${i}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
                 </div>
-            </div>        
-        </div>
-       
-        <!-- Edit Modal HTML -->
-        <div id="editMeterModal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action = "<%= request.getContextPath() %>/accountant/update-meter" method="post">
-                        <div class="modal-header">						
-                            <h4 class="modal-title">Edit Meter</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+            </div>
+        </div>        
+    </div>
+
+    <!-- Edit Modal HTML -->
+    <div id="editMeterModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action = "<%= request.getContextPath() %>/accountant/update-meter" method="post">
+                    <div class="modal-header">						
+                        <h4 class="modal-title">Edit Meter</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Hiển thị thông báo lỗi -->
+                        <% if (request.getAttribute("errorMessage") != null) { %>
+                        <div class="alert alert-danger">
+                            <%= request.getAttribute("errorMessage") %>
                         </div>
-                        <div class="modal-body">					
-                            <div class="form-group">
-                                  <input type="hidden" id="meterId" name="meterId">
+                        <% } %>
                         <div class="form-group">
-                            <label>Status</label>
-                            <select class="form-control" id="status" name="status" required>
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
-                        </div>
+                            <input type="hidden" id="meterId" name="meterId">
+                            <div class="form-group">
+                                <label>Meter Number</label>
+                                <input name="meterNumber" id ="meterNumber" value="<%= request.getAttribute("meterNumber") != null ? request.getAttribute("meterNumber") : "" %>"  type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="form-control" id="status" name="status" required>
+                                    <option value="Active" <%= "Active".equals(request.getAttribute("status")) ? "selected" : "" %>>Active</option>
+                                    <option value="Inactive" <%= "Inactive".equals(request.getAttribute("status")) ? "selected" : "" %>>Inactive</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" class="btn btn-info" value="Save">
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                        <input type="submit" class="btn btn-info" value="Save">
+                    </div>
+                </form>
             </div>
         </div>
-<!-- Delete Modal HTML -->
+    </div>
+    <!-- Delete Modal HTML -->
 
 </body>
 </html>
