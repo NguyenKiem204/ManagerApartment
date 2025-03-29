@@ -11,7 +11,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.time.format.DateTimeFormatter;
 import model.Expense;
+import model.Staff;
 import model.TypeExpense;
 
 @WebServlet(name = "ImportExpense", urlPatterns = {"/accountant/ImportExpense"})
@@ -24,7 +27,7 @@ public class ImportExpense extends HttpServlet {
         LocalDate today = LocalDate.now();
         Expense todayExpense = expenseDAO.getExpenseByDate(today);
         List<TypeExpense> typeExpenses = expenseDAO.getAllTypeExpenses();
-
+        request.setAttribute("today", today);
         request.setAttribute("lte", typeExpenses);
         request.setAttribute("exptoday", todayExpense);
         request.getRequestDispatcher("ImportExpense.jsp").forward(request, response);
@@ -55,11 +58,13 @@ public class ImportExpense extends HttpServlet {
         FundDAO fundDAO = new FundDAO();
         LocalDate today = LocalDate.now();
         Expense todayExpense = expenseDAO.getExpenseByDate(today);
+        HttpSession session = request.getSession();
+        Staff st= (Staff) session.getAttribute("Staff");
 
         try {
-            // Nếu chưa có bản ghi chi tiêu hôm nay, tạo mới
+            
             if (todayExpense == null) {
-                expenseDAO.insertExpense(3, 0);
+                expenseDAO.insertExpense(st.getStaffId(), 0);
                 todayExpense = expenseDAO.getExpenseByDate(today);
                 if (todayExpense == null) {
                     request.setAttribute("errorMessage", "Lỗi khi tạo bản ghi chi tiêu.");
@@ -90,7 +95,12 @@ public class ImportExpense extends HttpServlet {
 
                 double currentBalance = fundDAO.getCurrentBalance(fundID);
                 if (currentBalance < amount) {
-                    request.setAttribute("errorMessage", "Không đủ số dư trong quỹ.");
+                    request.setAttribute("errorMessage", "Insufficient fund balance");
+                    doGet(request, response);
+                    return;
+                }
+                if (currentBalance < 0) {
+                    request.setAttribute("errorMessage", "Amount must >0.");
                     doGet(request, response);
                     return;
                 }

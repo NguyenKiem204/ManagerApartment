@@ -35,16 +35,6 @@
 
         <script>
 
-            function formatCurrencyInput(input) {
-                let value = input.value.replace(/[^\d.]/g, ''); // Loại bỏ ký tự không phải số hoặc dấu chấm
-                let numericValue = parseFloat(value);
-
-                if (!isNaN(numericValue)) {
-                    input.value = numericValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                } else {
-                    input.value = '';
-                }
-            }
 
             // Hàm thêm chi tiết hóa đơn
             function addInvoiceDetail() {
@@ -59,9 +49,12 @@
                 const cell5 = row.insertCell(4);
 
                 cell1.innerHTML = rowCount + 1;
-                cell2.innerHTML = '<input type="text" class="form-control" name="descriptionde" required>';
-                cell3.innerHTML = '<input type="text" class="form-control" name="amount" required oninput="this.value = this.value.replace(/[^0-9.]/g, \'\')" onblur="formatDecimal(this)">';
-
+                cell2.innerHTML = '<input type="text" class="form-control" name="descriptionde" placeholder="Invoice Description" required>';
+                cell3.innerHTML = `
+        <input type="text" class="form-control text-start" name="amountFormatted" required 
+               oninput="formatInput(this)" onblur="formatNumber(this)" placeholder="price đ">
+        <input type="hidden" name="amount[]" class="rawAmount">
+    `;
                 cell4.innerHTML = `
                     <select name="typebills" class="form-select" required>
             <c:forEach items="${listType}" var="o">
@@ -93,7 +86,7 @@
         <script>
             function formatInput(input) {
                 // Chỉ giữ lại số và dấu '.'
-                input.value = input.value.replace(/[^0-9.]/g, '');
+                input.value = input.value.replace(/[^0-9-.]/g, '');
             }
 
             function formatNumber(input) {
@@ -109,6 +102,38 @@
                     document.getElementById('rawAmount').value = '';
                 }
             }
+//        
+//            function formatInput(input) {
+//                // Chỉ giữ lại số, dấu '.' và dấu '-'
+//                input.value = input.value.replace(/[^0-9.-]/g, '');
+//
+//                // Đảm bảo dấu '-' chỉ xuất hiện ở đầu chuỗi
+//                if (input.value.includes('-')) {
+//                    input.value = '-' + input.value.replace(/-/g, '');
+//                }
+//            }
+//
+//            function formatNumber(input) {
+//                let rawValue = input.value.replace(/,/g, ''); // Xóa dấu `,`
+//
+//                // Kiểm tra dấu '-' ở đầu chuỗi
+//                let isNegative = rawValue.startsWith('-');
+//
+//                let numericValue = parseFloat(rawValue);
+//
+//                if (!isNaN(numericValue)) {
+//                    let formattedValue = numericValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+//
+//                    // Nếu là số âm, đảm bảo dấu '-' vẫn còn ở đầu chuỗi
+//                    input.value = isNegative ? formattedValue : formattedValue;
+//
+//                    document.getElementById('rawAmount').value = numericValue; // Lưu giá trị thực vào input ẩn
+//                } else {
+//                    input.value = '';
+//                    document.getElementById('rawAmount').value = '';
+//                }
+//            }
+
         </script>
     </head>
 
@@ -131,20 +156,25 @@
                             </select>
                         </div>  
                         <div class="form-group mb-3">
-                            <label for="description">Description</label>
-                            <input type="text" class="form-control" id="description" name="description" required>
+                            <label for="description">Title</label>
+                            <input type="text" class="form-control" id="description" name="description" placeholder="Title"   required>
                         </div>
 
 
                         <div class="form-group mb-3">
                             <label for="dueDate">Due Date</label>
-                            <input type="date" class="form-control" id="dueDate" name="dueDate" required>
+                            <input type="date" class="form-control" id="dueDate" name="dueDate" placeholder="dd/MM/yyyy" required>
 
                         </div>
                         <!-- Hiển thị lỗi Due Date -->
                         <c:if test="${not empty dueDateError}">
                             <div class="alert alert-danger" role="alert">
                                 ${dueDateError}
+                            </div>
+                        </c:if>
+                         <c:if test="${not empty Errorre}">
+                            <div class="alert alert-danger" role="alert">
+                                ${Errorre}
                             </div>
                         </c:if>
 
@@ -165,10 +195,10 @@
                                     <c:when test="${empty invoice.details}">
                                         <tr>
                                             <td>1</td>
-                                            <td><input type="text" class="form-control" name="descriptionde" required></td>
+                                            <td><input type="text" class="form-control" name="descriptionde" placeholder="Invoice Description" required></td>
                                             <td>
                                                 <input type="text" class="form-control text-start" name="amountFormatted" required 
-                                                       id="formattedNumber" oninput="formatInput(this)" onblur="formatNumber(this)">
+                                                       id="formattedNumber" oninput="formatInput(this)" onblur="formatNumber(this)" placeholder="price đ">
                                                 <input type="hidden" name="amount" id="rawAmount"> <!-- Input ẩn để gửi dữ liệu thực -->
                                             </td>
                                             <td>

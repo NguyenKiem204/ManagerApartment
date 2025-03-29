@@ -49,7 +49,7 @@ public class ResetOwnerServlet extends HttpServlet {
                 jsonResponse.put("message", "Reset owner successfully!");
             } else {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "Failed to reset owner!");
+                jsonResponse.put("message", "Failed to reset owner because apartment has an active contract!");
             }
 
         } catch (Exception e) {

@@ -15,7 +15,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Expense Manager</title>
+        <title>Expenses Management</title>
         <link rel="shortcut icon" href="assets/images/favicon/favicon.png" type="image/x-icon" /> 
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -112,6 +112,11 @@
             .tableinvoice th:nth-child(4), .tableinvoice td:nth-child(4) {
                 width: 40%; /* Cột Description rộng hơn */
             }
+            td.description {
+    max-width: 400px; /* Điều chỉnh độ rộng tùy ý */
+    word-wrap: break-word;
+    white-space: pre-wrap; /* Giữ khoảng trắng và xuống dòng tự động */
+}
 
 
         </style>
@@ -128,13 +133,13 @@
             <div class="container ">
 
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                    <h2>Invoices Manager</h2>
+                    <h2>Expenses Management</h2>
                     <div class="d-flex align-items-center gap-3">
                         <a href="<%= request.getContextPath() %>/accountant/ImportExpense" class="btn btn-success d-flex align-items-center">
                             <i class="bi bi-plus-lg me-1"></i> Import Expense
                         </a>
                         <a href="<%= request.getContextPath() %>/accountant/InvoicesManager" class="btn btn-success d-flex align-items-center">
-                            <i class="bi bi-plus-lg me-1"></i> Back Invoice Manager
+                            <i class="bi bi-plus-lg me-1"></i>Invoice Manager
                         </a>
                     </div>
                 </div>
@@ -175,16 +180,7 @@
                         </div>
 
 
-                        <div class="col-md-4">
-                            <form action="ViewExpense" method="get" class="d-flex gap-2">
-                                <input type="text" name="search" placeholder="Search by title.." value="${search}" class="form-control me-2">
-                                <input type="hidden" name="typeid" value="${typeexp}">
-                                <input type="hidden" name="status" value="${selectedStatus}">  
-                                <input type="hidden" name="FromDate" value="${selectedFromDate}">  
-                                <input type="hidden" name="dueDate" value="${selectedDueDate}"> 
-                                <button type="submit" class="btn btn-primary">Search</button>
-                            </form>
-                        </div>
+
                     </div>
 
 
@@ -231,7 +227,8 @@
                                         <tbody>
                                             <c:forEach items="${expense.expenseDetails}" var="detail">
                                                 <tr>
-                                                    <td>${detail.description}</td>
+                                                   <td class="description">${detail.description}</td>
+
                                                     <td>${detail.typeExpense.typeName}</td>
                                                     <td><fmt:formatNumber value="${detail.amount}" pattern="#,##0.00"/></td>
 

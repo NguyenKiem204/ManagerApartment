@@ -293,6 +293,7 @@
                                     </ul>
                                 </li>
                             </c:if>
+                            
                             <c:if test="${sessionScope.staff.role.roleID == 3}">
                                 <li class="sidebar-item">
                                     <a href="<%= request.getContextPath() %>/accountant/InvoicesManager"

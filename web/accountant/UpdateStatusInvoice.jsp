@@ -201,12 +201,15 @@
                         <c:forEach items="${sessionScope.ListInvoices}" var="l">
                             <tr>
                                 <td>${l.invoiceID}</td>
-                                <td>${l.description}</td>
-                                <td>${l.totalAmount}</td>
+                                <td style="max-width: 200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" title="${l.description}">
+                                    ${l.description}
+                                </td>
+
+                                <td><fmt:formatNumber value="${l.totalAmount + l.muon}" pattern="#,##0.00"/></td>
                                 <td>${l.apartment.apartmentName}</td>
                                 <td>${l.status}</td>
-                                <td>${l.dueDate}</td>
-                                <td>${l.publicDate}</td>
+                                <td>${l.publicDateft}</td>
+                                <td>${l.dueDateft}</td>
                                 <td>
                                     <c:if test="${l.muon == 1}">
                                         <p>Islate</p>
