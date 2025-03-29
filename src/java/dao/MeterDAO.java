@@ -4,15 +4,10 @@
  */
 package dao;
 
-<<<<<<< HEAD
 import com.itextpdf.text.log.Logger;
 import java.lang.System.Logger.Level;
-=======
-
 import com.itextpdf.text.log.Logger;
 import java.lang.System.Logger.Level;
-
->>>>>>> a1fcf3c0204f8e528f5c144d1d8dbb0e569a6043
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,14 +29,11 @@ public class MeterDAO {
             stmt.setString(2, meter.getMeterType());
             stmt.setString(3, meter.getMeterNumber());
 
-<<<<<<< HEAD
 //            stmt.setDate(4, Date.valueOf(meter.getInstallationDate()));
             stmt.setTimestamp(4, Timestamp.valueOf(meter.getInstallationDate()));
 
-=======
-
             stmt.setTimestamp(4, Timestamp.valueOf(meter.getInstallationDate()));
->>>>>>> a1fcf3c0204f8e528f5c144d1d8dbb0e569a6043
+
             stmt.setString(5, meter.getStatus());
 
             stmt.executeUpdate();
@@ -59,40 +51,30 @@ public class MeterDAO {
     public boolean updateMeterInfo(int meterId, String meterNumber, String status) {
         String sql = "UPDATE Meter SET MeterNumber = ?, Status = ? WHERE MeterID = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-<<<<<<< HEAD
+
             stmt.setString(1, meterNumber);
             stmt.setString(2, status);
             stmt.setInt(3, meterId);
-=======
 
-            stmt.setInt(1, meter.getApartmentId());
-            stmt.setString(2, meter.getMeterType());
-            stmt.setString(3, meter.getMeterNumber());
-            stmt.setTimestamp(4, Timestamp.valueOf(meter.getInstallationDate()));
-            stmt.setString(5, meter.getStatus());
-            stmt.setInt(6, meter.getMeterId());
-
-            return stmt.executeUpdate() > 0;
+            return stmt.executeUpdate() > 0; // Trả về true nếu có bản ghi được cập nhật
+        } catch (SQLException e) {
+            e.printStackTrace(); // In lỗi ra console
+            return false; // Trả về false nếu cập nhật thất bại
         }
     }
 
     public boolean updateMeterStatus(int meterId, String status) {
         String sql = "UPDATE Meter SET Status = ? WHERE MeterID = ?";
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setInt(2, meterId);
->>>>>>> a1fcf3c0204f8e528f5c144d1d8dbb0e569a6043
+
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
-<<<<<<< HEAD
-=======
-    
->>>>>>> a1fcf3c0204f8e528f5c144d1d8dbb0e569a6043
 
     public boolean deleteMeter(int meterId) throws SQLException {
         String sql = "UPDATE Meter SET Status = 'Inactive' WHERE MeterID = ?";
@@ -240,10 +222,6 @@ public class MeterDAO {
         meter.setApartmentId(rs.getInt("ApartmentID"));
         meter.setMeterType(rs.getString("MeterType"));
         meter.setMeterNumber(rs.getString("MeterNumber"));
-<<<<<<< HEAD
-=======
-
->>>>>>> a1fcf3c0204f8e528f5c144d1d8dbb0e569a6043
         meter.setInstallationDate(rs.getTimestamp("InstallationDate").toLocalDateTime());
         meter.setStatus(rs.getString("Status"));
         meter.setApartmentName(rs.getString("ApartmentName"));
@@ -256,15 +234,15 @@ public class MeterDAO {
                 + "FROM Meter m "
                 + "JOIN Apartment a ON m.ApartmentID = a.ApartmentID "
                 + "LEFT JOIN Resident r ON a.OwnerId = r.ResidentID "
-//                + "WHERE m.Status = 'Active' "
+                //                + "WHERE m.Status = 'Active' "
                 + "ORDER BY a.ApartmentName, m.MeterType "
                 + "OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY;";
         List<Meter> meters = new ArrayList<>();
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, (index - 1) * 3);  // Đặt giá trị trước khi executeQuery()
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                 meters.add(mapMeter(rs));
+            while (rs.next()) {
+                meters.add(mapMeter(rs));
             }
         } catch (SQLException ex) {
             //Logger.getLogger(MeterDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -272,14 +250,8 @@ public class MeterDAO {
         return meters;
     }
 
-      public int getTotalRecords() {
-
-<<<<<<< HEAD
+    public int getTotalRecords() {
         String sql = "SELECT COUNT(*) AS total FROM [Meter] ";
-=======
-        String sql = "SELECT COUNT(*) AS total FROM [Meter] Where Status = 'Inactive'";
->>>>>>> a1fcf3c0204f8e528f5c144d1d8dbb0e569a6043
-
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -360,5 +332,3 @@ public class MeterDAO {
 
 //    return totalRecords;
 }
-
-
