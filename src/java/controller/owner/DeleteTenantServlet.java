@@ -37,7 +37,8 @@ public class DeleteTenantServlet extends HttpServlet {
             msg = "Delete failed!";
         }
         request.setAttribute("mess", msg);
-        request.getRequestDispatcher("/owner/manageContract").forward(request, response);
+        //request.getRequestDispatcher("/owner/manageContract").forward(request, response);
+        response.sendRedirect("manageContract");
     } 
 
     @Override

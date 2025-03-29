@@ -40,6 +40,34 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return row;
     }
 
+    public int insert1(Apartment apartment) {
+        int row = 0;
+        String sqlInsert = "INSERT INTO Apartment (ApartmentName, Block, Status, Type, OwnerID) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlInsert)) {
+
+            ps.setString(1, apartment.getApartmentName());
+            ps.setString(2, apartment.getBlock());
+            ps.setString(3, apartment.getStatus());
+            ps.setString(4, apartment.getType());
+
+            // Nếu ownerId = 0, đặt giá trị NULL
+            if (apartment.getOwnerId() == 0) {
+                ps.setNull(5, Types.INTEGER);
+            } else {
+                ps.setInt(5, apartment.getOwnerId());
+            }
+
+            row = ps.executeUpdate();
+            System.out.println("(" + row + " row(s) affected)");
+        } catch (SQLException ex) {
+            ex.printStackTrace(); // In lỗi SQL ra console để dễ debug
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return row;
+    }
+
+
 //    @Override
 //    public int update(Apartment apartment) {
 //        int row = 0;
@@ -211,21 +239,6 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return apartment;
     }
 
-    public static void main(String[] args) {
-        ApartmentDAO apartmentDAO = new ApartmentDAO();
-        int testApartmentId = 7;
-        Apartment apartment = apartmentDAO.selectById(testApartmentId);
-        if (apartment != null) {
-            System.out.println("Apartment Found:");
-            System.out.println("Name: " + apartment.getApartmentName());
-            System.out.println("Block: " + apartment.getBlock());
-            System.out.println("Status: " + apartment.getStatus());
-            System.out.println("Type: " + apartment.getType());
-
-        } else {
-            System.out.println("No apartment found with ID: " + testApartmentId);
-        }
-    }
 
     public Apartment getApartmentByName(String apartmentName) {
         Apartment apartment = null;
@@ -314,99 +327,6 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return list;
     }
 
-//    public List<Apartment> searchApartments(String name, int ownerId, String type, String status, String block, int page, int pageSize) {
-//    List<Apartment> apartments = new ArrayList<>();
-//    String sql = "SELECT ApartmentID, ApartmentName, Block, Status, Type, OwnerID FROM Apartment WHERE 1=1";
-//
-//    // Xây dựng SQL động
-//    if (name != null && !name.isEmpty()) {
-//        sql += " AND ApartmentName LIKE ?";
-//    }
-////    if (ownerId != null && !ownerId.isEmpty()) {
-//        sql += " AND OwnerID = ?";
-////    }
-//    if (type != null && !type.isEmpty()) {
-//        sql += " AND Type = ?";
-//    }
-//    if (status != null && !status.isEmpty()) {
-//        sql += " AND Status = ?";
-//    }
-//    if (block != null && !block.isEmpty()) {
-//        sql += " AND Block = ?";
-//    }
-//    // Thêm ORDER BY và phân trang
-//    sql += " ORDER BY ApartmentID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-//    try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-//        int paramIndex = 1;
-//        if (name != null && !name.isEmpty()) {
-//            ps.setString(paramIndex++, "%" + name + "%"); // Tìm kiếm gần đúng
-//        }
-////        if (ownerId != null && !ownerId.isEmpty()) {
-//            ps.setInt(paramIndex++, ownerId);
-////        }
-//        if (type != null && !type.isEmpty()) {
-//            ps.setString(paramIndex++, type);
-//        }
-//        if (status != null && !status.isEmpty()) {
-//            ps.setString(paramIndex++, status);
-//        }
-//        if (block != null && !block.isEmpty()) {
-//            ps.setString(paramIndex++, block);
-//        }
-//        // Thiết lập OFFSET và FETCH NEXT cho phân trang
-//        int offset = (page - 1) * pageSize;
-//        ps.setInt(paramIndex++, offset);
-//        ps.setInt(paramIndex++, pageSize);
-//        try (ResultSet rs = ps.executeQuery()) {
-//            while (rs.next()) {
-//                Apartment apt = new Apartment(
-//                    rs.getInt("ApartmentID"),
-//                    rs.getString("ApartmentName"),
-//                    rs.getString("Block"),
-//                    rs.getString("Status"),
-//                    rs.getString("Type"),
-//                    rs.getInt("OwnerID")
-//                );
-//                apartments.add(apt);
-//            }
-//        }
-//    } catch (SQLException e) {
-//        e.printStackTrace();
-//    }
-//    return apartments;
-//}
-//public int getTotalApartments(String name, int ownerId, String type, String status, String block) {
-//    int total = 0;
-//    String sql = "SELECT COUNT(*) FROM Apartment a " +
-//                 "WHERE (a.ApartmentName LIKE ? OR ? IS NULL) " +
-//                 "AND (a.OwnerID = ? OR ? IS NULL) " +
-//                 "AND (a.Type = ? OR ? IS NULL) " +
-//                 "AND (a.Status = ? OR ? IS NULL) " +
-//                 "AND (a.Block = ? OR ? IS NULL)";
-//
-//    try (Connection conn = DBContext.getConnection();
-//         PreparedStatement ps = conn.prepareStatement(sql)) {
-//        
-//        ps.setString(1, name != null ? "%" + name + "%" : null);
-//        ps.setString(2, name);
-//        ps.setInt(3, ownerId);
-//        ps.setInt(4, ownerId);
-//        ps.setString(5, type);
-//        ps.setString(6, type);
-//        ps.setString(7, status);
-//        ps.setString(8, status);
-//        ps.setString(9, block);
-//        ps.setString(10, block);
-//
-//        ResultSet rs = ps.executeQuery();
-//        if (rs.next()) {
-//            total = rs.getInt(1);
-//        }
-//    } catch (SQLException e) {
-//        e.printStackTrace();
-//    }
-//    return total;
-//}
     public List<Apartment> searchApartments(String name, int ownerId, String type, String status, String block, int page, int pageSize) {
         List<Apartment> apartments = new ArrayList<>();
         String sql = """
@@ -630,6 +550,21 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return false;
     }
 
+    public boolean isResidentAnOwner(int residentId) {
+        String sql = "SELECT COUNT(*) FROM Apartment WHERE OwnerID = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, residentId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu có ít nhất 1 kết quả, tức là resident này là Owner
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
     public int selectLastId() {
         String sql = "SELECT MAX(ApartmentID) FROM Apartment;";
         try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -641,4 +576,20 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return 0;
     }
+    public boolean resetOwner(int apartmentId) {
+        String sqlUpdate = "UPDATE Apartment SET OwnerID = NULL, Status = 'Available' WHERE ApartmentID = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlUpdate)) {
+
+            ps.setInt(1, apartmentId);
+            int rowsAffected = ps.executeUpdate();
+
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
 }

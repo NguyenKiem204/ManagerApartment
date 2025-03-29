@@ -422,7 +422,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tableBody">
                             <c:forEach var="tenant" items="${listTenant}">
                                 <tr>
                                     <td>${tenant.residentId}</td>
@@ -442,7 +442,7 @@
 
                                     <td>
                                         <button class="action-btn" onclick="showContract(${tenant.residentId})">View Contract</button>
-                                        <button class="action-btn" onclick="return confirmDelete(${tenant.residentId})">Delete</button>
+                                        <button class="action-btn" onclick="confirmDelete('${tenant.residentId}', '${tenant.fullName}')">Delete</button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -543,11 +543,31 @@
             }
         </script>
         <script>
-            function confirmDelete(residentId) {
-                if (confirm("Are you sure to delete this tenant?")) {
-                    window.location.href = "deleteTenant?tenantId=" + residentId;
+            function confirmDelete(residentId, fullName) {
+                const confirmation = confirm(`Do you want to delete the tenant: ` + fullName + `?`);
+                if (confirmation) {
+                    // Thực hiện hành động xóa ở đây
+                    window.location = 'deleteTenant?tenantId=' + residentId;
+
+                    // Bạn có thể gọi một hàm để xóa sản phẩm từ danh sách hoặc từ server
+                    // Sau khi xóa, chuyển hướng về trang home
+                    setTimeout(() => {
+                        window.location.href = 'manageContract'; // Đổi thành URL trang home của bạn
+                    }, 1000); // Chờ 1 giây để đảm bảo xóa xong
+                } else {
+                    console.log('Hành động xóa đã bị hủy.');
                 }
             }
+            document.querySelectorAll("#tableBody tr").forEach(row => {
+                row.addEventListener("click", function () {
+                    // Kiểm tra nếu click vào button thì không mở trang chi tiết
+                    if (event.target.tagName.toLowerCase() === "button") {
+                        event.stopPropagation();
+                        return;
+                    }
+
+                });
+            });
         </script>
         <script>
             $(document).ready(function () {

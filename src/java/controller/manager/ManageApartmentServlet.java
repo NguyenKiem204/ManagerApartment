@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Apartment;
+import model.Meter;
 import org.json.JSONObject;
 
 @WebServlet(name = "ManageApartmentServlet", urlPatterns = {"/manager/manageApartment"})
@@ -99,11 +100,13 @@ public class ManageApartmentServlet extends HttpServlet {
             String block = request.getParameter("block");
             String status = request.getParameter("status");
             String type = request.getParameter("type");
-            int ownerId = Integer.parseInt(request.getParameter("ownerId"));
-
+            //int ownerId = Integer.parseInt(request.getParameter("ownerId"));
+            // Lấy ownerId, nếu không nhập thì gán = 0
+            String ownerIdStr = request.getParameter("ownerId");
+            int ownerId = (ownerIdStr == null || ownerIdStr.trim().isEmpty()) ? 0 : Integer.parseInt(ownerIdStr);
             //Kiểm tra ownerId có hợp lệ không
             ResidentDAO residentDAO = new ResidentDAO();
-            if (!residentDAO.isOwnerResident(ownerId)) {
+            if (ownerId != 0 && !residentDAO.isOwnerResident(ownerId)) {
                 jsonResponse.put("success", false);
                 jsonResponse.put("message", "Owner is not valid!");
                 out.write(jsonResponse.toString());
@@ -111,9 +114,21 @@ public class ManageApartmentServlet extends HttpServlet {
             }
 
             // Kiểm tra xem apartment đã tồn tại chưa
-            if (apartmentDAO.isApartmentExists(apartmentName, block)) {
+            if (apartmentDAO.isApartmentExists(normalizeString(apartmentName), block)) {
                 jsonResponse.put("success", false);
                 jsonResponse.put("message", "This apartment is dupplicated!");
+                out.write(jsonResponse.toString());
+                return;
+            }
+            if (ownerId != 0 && "available".equalsIgnoreCase(status)) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Status cannot be 'available' if apartment has an owner!");
+                out.write(jsonResponse.toString());
+                return;
+            }
+            if (ownerId == 0 && !"available".equalsIgnoreCase(status)) {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Status must be 'available' if apartment has an owner!");
                 out.write(jsonResponse.toString());
                 return;
             }
@@ -121,9 +136,12 @@ public class ManageApartmentServlet extends HttpServlet {
             Apartment newApartment = new Apartment(apartmentName, block, status, type, ownerId);
 
             // Thêm vào database
-            int isAdded = apartmentDAO.insert(newApartment);
+            int isAdded = apartmentDAO.insert1(newApartment);
+            //Meter meter = new Meter
 
             if (isAdded != 0) {
+                Meter meter = new Meter(apartmentDAO.selectLastId(), "Electricity", apartmentName);
+                Meter meter1 = new Meter(apartmentDAO.selectLastId(), "Water", apartmentName);
                 jsonResponse.put("success", true);
                 jsonResponse.put("message", "Add apartment information successfully!");
 

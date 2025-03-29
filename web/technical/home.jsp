@@ -19,13 +19,13 @@
         }*/
        
         .chart-container {
-            width: 50%;
+            width: 80%;
             background-color: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             margin: 20px 0;
-            margin-left: 300px;
+            margin-left: 100px;
         }
 
         canvas {

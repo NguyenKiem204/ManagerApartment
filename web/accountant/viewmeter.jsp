@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@include file="/manager/menumanager.jsp" %>
 <html lang="en">
     <head>
@@ -274,154 +275,139 @@
                     }
                 });
             });
-        </script>
-    </head>
-    <body>
-        <div class="container-xl">
-            <div class="table-responsive">
-                <div class="table-wrapper">
-                    <div class="table-title">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <h2>Manage Meter</h2>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add Meter</span></a>						
-                            </div>
-                        </div>
-                    </div>
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Apartment Name</th>
-                                <th>Meter Type</th>
-                                <th>Meter Number</th> 
-                                <th>Installation Date</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="meter" items="${meterList}" >
-                                <tr>
-                                    <td>${meter.apartmentName}</td>
-                                    <td>${meter.meterType}</td>
-                                    <td>${meter.meterNumber}</td>
-                                    <td>${meter.formatInstallationDate}</td>
-                                    <td>${meter.status}</td>
-                                    <td>
-                                       <a href="loadMeter=?${o.meterId}" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                    <div class="clearfix">
-                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                        <ul class="pagination">
-                            <c:forEach begin="1" end="${endP}" var="i">
-                                <li class="page-item">
-                                    <a class="${currentPage == i?"active":""}" href="<%= request.getContextPath() %>/accountant/managermeter?index=${i}" class="page-link">${i}</a>
-                                </li>
-                            </c:forEach>
-                        </ul>
-                    </div>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll(".edit-meter-btn").forEach(button => {
+                    button.addEventListener("click", function () {
+                        document.getElementById("meterId").value = this.getAttribute("data-id");
+                        document.getElementById("status").value = this.getAttribute("data-status");
+                        document.getElementById("meterNumber").value = this.getAttribute("data-meter-number");
+                    });
+                });
+            });
 
-                </div>
-            </div>        
+//            document.addEventListener("DOMContentLoaded", function () {
+//                var errorMessage = "<%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : "" %>";
+//                if (errorMessage) {
+//                    $("#editMeterModal").modal("show"); // Hiển thị modal nếu có lỗi
+//                }
+//            });
+            // Nếu có lỗi, tự động hiển thị modal
+            <% if (request.getAttribute("errorMessage") != null) { %>
+            $(document).ready(function () {
+                $("#editMeterModal").modal("show");
+            });
+            <% } %>
+        </script>
+
+    </script>
+</head>
+<body>
+    <div class="container-xl">
+        <div class="d-flex gap-2 justify-content-end">
+            <form action="" method="get" class="d-flex gap-2 flex-grow-1 justify-content-end">
+                <input type="hidden" name="type" >
+                <select name="meterType" id="statusFilter" class="form-select" style="width: 10%;">
+                    <option value="">AllMeterType</option>
+                    <option value="Electric" ${selectedStatus == 'Electric' ? 'selected' : ''}>Electric</option>
+                    <option value="Water" ${selectedStatus == 'Water' ? 'selected' : ''}>Water</option>
+                </select>
+                <button type="submit" class="btn btn-primary" style="width: 10%;">Filter</button>
+            </form>
         </div>
-        <!-- Edit Modal HTML -->
-        <div id="addEmployeeModal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="/ManagerApartment/accountant/add-meter" method="POST">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Add Meter</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div class="table-responsive">
+            <div class="table-wrapper">
+                <div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h2>Manage Meter</h2>
+                        </div>                            
+                    </div>
+                </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Apartment Name</th>
+                            <th>Meter Type</th>
+                            <th>Meter Number</th> 
+                            <th>Installation Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="meter" items="${meterList}" >
+                            <tr>
+                                <td>${meter.apartmentName}</td>
+                                <td>${meter.meterType}</td>
+                                <td>${meter.meterNumber}</td>
+                                <td>${meter.formatInstallationDate}</td>
+                                <td>${meter.status}</td>
+                                <td>
+                                    <a href="#editMeterModal" class="edit edit-meter-btn"
+                                       data-id="${meter.meterId}"
+                                       data-status="${meter.status}"
+                                       data-meter-number="${meter.meterNumber}"
+                                       data-toggle="modal" data-target="#editMeterModal">
+                                        <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+                <div class="clearfix">
+                    <ul class="pagination">
+                        <c:forEach begin="1" end="${endP}" var="i">
+                            <li class="page-item">
+                                <a class="${currentPage == i?"active":""}" href="<%= request.getContextPath() %>/accountant/managermeter?index=${i}" class="page-link">${i}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </div>
+
+            </div>
+        </div>        
+    </div>
+
+    <!-- Edit Modal HTML -->
+    <div id="editMeterModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action = "<%= request.getContextPath() %>/accountant/update-meter" method="post">
+                    <div class="modal-header">						
+                        <h4 class="modal-title">Edit Meter</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Hiển thị thông báo lỗi -->
+                        <% if (request.getAttribute("errorMessage") != null) { %>
+                        <div class="alert alert-danger">
+                            <%= request.getAttribute("errorMessage") %>
                         </div>
-                        <div class="modal-body">					
-                            <div class="form-group">
-                                <label>Apartment ID</label>
-                                <input name="apartmentId" type="number" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Meter Type</label>
-                                <input name="meterType" type="text" class="form-control" required>
-                            </div>
+                        <% } %>
+                        <div class="form-group">
+                            <input type="hidden" id="meterId" name="meterId">
                             <div class="form-group">
                                 <label>Meter Number</label>
-                                <input name="meterNumber" type="text" class="form-control" required>
+                                <input name="meterNumber" id ="meterNumber" value="<%= request.getAttribute("meterNumber") != null ? request.getAttribute("meterNumber") : "" %>"  type="text" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label>Installation Date</label>
-                                <input 
-                                    type="text" 
-                                    class="form-control" 
-                                    name="installationDate"
-                                    id="boughtOn" 
-                                    placeholder="dd/MM/yyyy"
-                                    required
-                                    >
-                            </div>                           
-                            <div class="form-group">
                                 <label>Status</label>
-                                <select class="form-control" name="status" required>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
+                                <select class="form-control" id="status" name="status" required>
+                                    <option value="Active" <%= "Active".equals(request.getAttribute("status")) ? "selected" : "" %>>Active</option>
+                                    <option value="Inactive" <%= "Inactive".equals(request.getAttribute("status")) ? "selected" : "" %>>Inactive</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" class="btn btn-success" value="Add">
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                        <input type="submit" class="btn btn-info" value="Save">
+                    </div>
+                </form>
             </div>
         </div>
-        <!-- Edit Modal HTML -->
-        <div id="editEmployeeModal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form>
-                        <div class="modal-header">						
-                            <h4 class="modal-title">Edit Meter</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body">					
-                            <div class="form-group">
-                                <label>Apartment ID</label>
-                                <input type="number" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Meter Type</label>
-                                <input type="email" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Meter Number</label>
-                                <textarea class="form-control" required></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Installation Date</label>
-                                <input type="text" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Status</label>
-                                <select class="form-control" name="status" required>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" class="btn btn-info" value="Save">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-<!-- Delete Modal HTML -->
+    </div>
+    <!-- Delete Modal HTML -->
 
 </body>
 </html>

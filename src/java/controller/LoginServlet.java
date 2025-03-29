@@ -158,7 +158,7 @@ public class LoginServlet extends HttpServlet {
 
                 // Kiểm tra nếu mật khẩu có đúng 5 ký tự (lần đầu đăng nhập)
                 if (password.length() == 5) {
-                    response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
+                    response.sendRedirect(request.getContextPath() + "/changePassword");
                     return;
                 }
 
@@ -172,7 +172,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("roleId", resident.getRole().getRoleID());
 
                 if (password.length() == 5) {
-                    response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
+                    response.sendRedirect(request.getContextPath() + "/changePassword");
                     return;
                 }
 

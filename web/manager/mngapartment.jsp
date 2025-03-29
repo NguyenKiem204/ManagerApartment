@@ -275,7 +275,7 @@
         <%@include file="menumanager.jsp" %>
         <!--=============================CONTENT HERE=======================-->
         <div class="w-100" style="display: flex;">
-            
+
             <div  class="col-9 ct">
                 <h1>Apartments List</h1>
                 <%-- Hiển thị thông báo nếu có --%>
@@ -310,7 +310,7 @@
                                 <option value="Maintenance">Maintenance</option>
                             </select>
 
-                            <label for="type" class="modal-label">Block:</label>
+                            <label for="type" class="modal-label">Type:</label>
                             <select id="type" name="type" class="modal-select" required>
                                 <option value="1 Bedroom">1 Bedroom</option>
                                 <option value="2 Bedrooms">2 Bedrooms</option>
@@ -363,7 +363,7 @@
                     <div class="col-md-5">
                         <form action="manageApartment" method="get" class="d-flex">
                             <input type="text" name="ownerId" value="${selectedOwnerId == 0 ? '' : selectedOwnerId}" 
-                                    placeholder="Enter an ownerId..." class="form-control me-2" style="width: 70%;">
+                                   placeholder="Enter an ownerId..." class="form-control me-2" style="width: 70%;">
                             <button type="submit" class="btn btn-primary" style="width: 30%;">Search</button>
                         </form>
                     </div>
@@ -397,6 +397,7 @@
                                     <td>${apartment.owner.fullName}</td>
                                     <td>
                                         <button class="btn btn-primary btn-edit" data-id="${apartment.apartmentId}">Edit</button>
+                                        <button class="btn btn-warning" onclick="resetOwner(${apartment.apartmentId})">Reset Owner</button>
                                     </td>
 
                                 </tr>
@@ -512,61 +513,61 @@
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            $(document).ready(function () {
-                $(".btn-edit").click(function () {
-                    var apartmentId = $(this).data("id");
+                                            $(document).ready(function () {
+                                                $(".btn-edit").click(function () {
+                                                    var apartmentId = $(this).data("id");
 
-                    $.ajax({
-                        url: "/ManagerApartment/manager/updateApartment",
-                        type: "GET",
-                        data: {apartmentId: apartmentId},
-                        success: function (data) {
-                            if (data.trim() === "") {
-                                alert("No data returned. Please check your server.");
-                            } else {
-                                $("#editModal .modal-body").html(data); // Hiển thị dữ liệu vào modal
-                                $("#editModal").modal("show"); // Mở modal
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("GET Error:", xhr.responseText);
-                            alert("Error loading apartment data: " + xhr.responseText);
-                        }
-                    });
-                });
+                                                    $.ajax({
+                                                        url: "/ManagerApartment/manager/updateApartment",
+                                                        type: "GET",
+                                                        data: {apartmentId: apartmentId},
+                                                        success: function (data) {
+                                                            if (data.trim() === "") {
+                                                                alert("No data returned. Please check your server.");
+                                                            } else {
+                                                                $("#editModal .modal-body").html(data); // Hiển thị dữ liệu vào modal
+                                                                $("#editModal").modal("show"); // Mở modal
+                                                            }
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            console.error("GET Error:", xhr.responseText);
+                                                            alert("Error loading apartment data: " + xhr.responseText);
+                                                        }
+                                                    });
+                                                });
 
 // Xử lý lưu cập nhật
-                $(document).on("click", "#saveUpdate", function () {
-                    var formData = $("#updateApartmentForm").serialize();
+                                                $(document).on("click", "#saveUpdate", function () {
+                                                    var formData = $("#updateApartmentForm").serialize();
 
-                    $.ajax({
-                        url: "/ManagerApartment/manager/updateApartment",
-                        type: "POST",
-                        data: formData,
-                        success: function (response) {
-                            $("#editModal").modal("hide"); // Đóng modal
-                            alert("Apartment updated successfully!"); // Thông báo thành công
-                            location.reload(); // Refresh danh sách
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("POST Error:", xhr.responseText);
-                            alert("Error updating apartment: " + xhr.responseText);
-                        }
-                    });
-                });
+                                                    $.ajax({
+                                                        url: "/ManagerApartment/manager/updateApartment",
+                                                        type: "POST",
+                                                        data: formData,
+                                                        success: function (response) {
+                                                            $("#editModal").modal("hide"); // Đóng modal
+                                                            alert("Apartment updated successfully!"); // Thông báo thành công
+                                                            location.reload(); // Refresh danh sách
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            console.error("POST Error:", xhr.responseText);
+                                                            alert("Error updating apartment: " + xhr.responseText);
+                                                        }
+                                                    });
+                                                });
 
 // Xử lý sự kiện bấm vào dấu "X"
-                $(document).on("click", ".close", function () {
-                    $("#editModal").modal("hide"); // Đóng modal khi bấm dấu "X"
-                });
+                                                $(document).on("click", ".close", function () {
+                                                    $("#editModal").modal("hide"); // Đóng modal khi bấm dấu "X"
+                                                });
 
 // Xử lý sự kiện bấm ra ngoài modal để đóng
-                $(document).on("click", function (event) {
-                    if ($(event.target).is("#editModal")) {
-                        $("#editModal").modal("hide"); // Đóng modal nếu bấm ra ngoài modal
-                    }
-                });
-            });
+                                                $(document).on("click", function (event) {
+                                                    if ($(event.target).is("#editModal")) {
+                                                        $("#editModal").modal("hide"); // Đóng modal nếu bấm ra ngoài modal
+                                                    }
+                                                });
+                                            });
 
         </script>
         <script>
@@ -615,6 +616,26 @@
                     });
                 });
             });
+        </script>
+        <script>
+            function resetOwner(apartmentId) {
+                if (!confirm("Are you sure you want to reset the owner?"))
+                    return;
+
+                fetch("/ManagerApartment/manager/resetOwner", {// Kiểm tra đường dẫn servlet
+                    method: "POST",
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                    body: "apartmentId=" + encodeURIComponent(apartmentId)
+                })
+                        .then(response => response.json())  // Nếu response không phải JSON sẽ gây lỗi
+                        .then(data => {
+                            alert(data.message);
+                            if (data.success)
+                                location.reload();
+                        })
+                        .catch(error => console.error("Fetch error:", error));
+            }
+
         </script>
     </body>
 

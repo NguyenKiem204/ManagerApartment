@@ -41,6 +41,7 @@ public class ManagerMeter extends HttpServlet {
         request.setAttribute("currentPage", index);
 // Chuyển hướng đến JSP
         request.getRequestDispatcher("viewmeter.jsp").forward(request, response);
+
     }
 
     @Override
@@ -48,9 +49,4 @@ public class ManagerMeter extends HttpServlet {
             throws ServletException, IOException {
 
     }
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

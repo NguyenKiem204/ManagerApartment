@@ -27,7 +27,7 @@
             .card {
                 border-radius: 12px;
                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-                background: #fff;
+                background: #fff;         
             }
 
             .card.border-cam {
@@ -43,12 +43,12 @@
 
             .table th {
                 background-color: #ff6f00;
-                color: white;
+                color: #333;
                 text-align: left;
             }
 
             .table tr:hover {
-                background-color: #f8f9fa;
+                background-color: #f4f6f9;
                 transition: 0.3s;
             }
 
@@ -137,6 +137,7 @@
                                             <tr onclick="goToRequestDetail(${r.requestID})" style="cursor: pointer;">
                                                 <td>${x.index + 1}</td>
                                                 <td>${r.title}</td>
+                                                <p>No recent requests found.</p>
                                                 <td><fmt:formatDate value="${r.formattedDate}" pattern="dd/MM/yyyy"></fmt:formatDate></td>
                                                 </tr>
                                         </c:forEach>
@@ -214,11 +215,11 @@
 
                     </div>
                 </section>
-                <div class="card-body" style="margin-top: -20px">
-                    <div class="container my-5" style="background: #fff;">
-                        <div class="row">
+                <div class="card-body" >
+                    <div div class="container-fluid my-5 px-4" style="background: #fff; max-width: 74%; border-radius: 12px;margin-left: -10px;">
+                        <div class="row" style="margin-left:0%">
                             <c:forEach var="news" items="${newsList}">
-                                <div class="col-md-4 news-card" style="padding-top: 15px;">
+                                <div class="col-md-6 news-card" style="padding-top: 15px;">
                                     <div class="card news-item" style="border: solid gray 1px">
                                         <img src="<%= request.getContextPath() %>/${news.image.imageURL}" class="card-img-top img-fluid" style="height: 300px" alt="News Image">
                                         <div class="card-body">

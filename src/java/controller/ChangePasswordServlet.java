@@ -25,6 +25,12 @@ import model.Staff;
  */
 @WebServlet(name="ChangePasswordServlet", urlPatterns={"/changePassword"})
 public class ChangePasswordServlet extends HttpServlet {
+    @Override
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    request.getRequestDispatcher("/changePassword.jsp").forward(request, response);
+}
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PasswordUtil passwordUtil = new PasswordUtil();
