@@ -40,6 +40,34 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return row;
     }
 
+    public int insert1(Apartment apartment) {
+        int row = 0;
+        String sqlInsert = "INSERT INTO Apartment (ApartmentName, Block, Status, Type, OwnerID) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlInsert)) {
+
+            ps.setString(1, apartment.getApartmentName());
+            ps.setString(2, apartment.getBlock());
+            ps.setString(3, apartment.getStatus());
+            ps.setString(4, apartment.getType());
+
+            // Nếu ownerId = 0, đặt giá trị NULL
+            if (apartment.getOwnerId() == 0) {
+                ps.setNull(5, Types.INTEGER);
+            } else {
+                ps.setInt(5, apartment.getOwnerId());
+            }
+
+            row = ps.executeUpdate();
+            System.out.println("(" + row + " row(s) affected)");
+        } catch (SQLException ex) {
+            ex.printStackTrace(); // In lỗi SQL ra console để dễ debug
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return row;
+    }
+
+
 //    @Override
 //    public int update(Apartment apartment) {
 //        int row = 0;
@@ -652,4 +680,20 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return 0;
     }
+    public boolean resetOwner(int apartmentId) {
+        String sqlUpdate = "UPDATE Apartment SET OwnerID = NULL, Status = 'Available' WHERE ApartmentID = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlUpdate)) {
+
+            ps.setInt(1, apartmentId);
+            int rowsAffected = ps.executeUpdate();
+
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
 }
