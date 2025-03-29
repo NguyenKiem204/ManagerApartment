@@ -4,6 +4,8 @@
 <html>
 <head>
     <link rel="stylesheet" href="assets/css/bootstrap.css" />
+     <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png"
+              type="image/x-icon" />
     <title>Thêm Nhân Viên</title>
     <style>
         body {

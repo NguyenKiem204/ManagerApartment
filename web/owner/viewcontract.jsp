@@ -17,6 +17,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Bootstrap CSS -->
+         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png"
+              type="image/x-icon" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
         <title>Thông Tin Hợp Đồng</title>
         <style>

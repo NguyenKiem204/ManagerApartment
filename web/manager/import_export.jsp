@@ -221,7 +221,7 @@
                     <div class="d-flex gap-2">
                         <form action="allport" method="get" class="d-flex gap-2 flex-grow-1">
                             <input type="hidden" name="type" value="import">
-                            <select name="status" id="statusFilter" class="form-select" style="width: 10%;">
+                            <select name="status" id="statusFilter" class="form-select" style="width: 15%;">
                                 
                                 <option value="">AllStatus</option>
                                 <option value="Success" ${selectedStatus == 'Success' ? 'selected' : ''}>Success</option>
@@ -246,7 +246,7 @@
                         <tbody>
                             <c:forEach var="o" items="${allImportLogs}">
                                 <tr>
-                                    <td>${o.importDate}</td>
+                                    <td>${o.formattedDate}</td>
                                     <td>${o.fileName}</td>
                                     <td>${o.recordsCount}</td>
                                     <td>${o.status}</td>
@@ -307,7 +307,7 @@
 <!--                     Cột bên trái: Bộ lọc (45%) -->
                     <div class="d-flex gap-2">
                         <form action="allport" method="get" class="d-flex gap-2 flex-grow-1">
-                            <select name="exportType" id="statusFilter" class="form-select" style="width: 10%;">
+                            <select name="exportType" id="statusFilter" class="form-select" style="width: 15%;">
                                 <option value="">AllExportType</option>
                                 <option value="Utility Bill" ${selectedStatus == 'Utility' ? 'selected' : ''}>Utility Bill</option>
                                  <option value="Orther" ${selectedStatus == 'Other' ? 'selected' : ''}>Orther</option>
@@ -331,7 +331,7 @@
                         <tbody>
                             <c:forEach var="o" items="${allExportLogs}">
                                 <tr>
-                                    <td>${o.exportDate}</td>
+                                    <td>${o.formattedDate}</td>
                                     <td>${o.fileName}</td>
                                     <td>${o.exportType}</td>
                                     <td>${o.recordsCount}</td>

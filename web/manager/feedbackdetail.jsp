@@ -7,6 +7,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Feedback Detail</title>
+         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png"
+              type="image/x-icon" />
         <style>
             #main {
                 margin-left: 300px;

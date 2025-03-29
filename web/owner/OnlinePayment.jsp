@@ -55,69 +55,70 @@
     </head>
     <body>
         <%@include file="/manager/menumanager.jsp" %>
-        <div class="main-content">
-            <h2 class="text-center mt-4">Online Payment</h2>
-            <div class="payment-container">
-                <div class="col-md-6 text-center">
+        <div id="main">
+            <div class="main-content">
+                <h2 class="text-center mt-4">Online Payment</h2>
+                <div class="payment-container">
+                    <div class="col-md-6 text-center">
 
-                    <c:if test="${not empty paymentUrl}">
-                        <img src="${paymentUrl}" alt="QR Code" class="img-fluid">
-                        
-                    </c:if>
-                    <c:if test="${empty paymentUrl}">
-                        <div class="alert alert-danger">Failed to generate payment URL.</div>
-                    </c:if>
-                    <p value=""><strong>Account bank number:</strong> 686868922004</p>
-                   
-                </div>
-                <div class="card invoice-details">
-                    <h3 class="text-center">Invoice Details</h3>
-                    <p><strong>Invoice Code:</strong> <c:out value="${invoice.invoiceID}" /></p>
-                    <p><strong>Apartment:</strong> <c:out value="${invoice.apartment.apartmentName}" /></p>
-                    <p><strong>Resident:</strong> <c:out value="${invoice.resident.fullName}" /></p>
-                    <p><strong>Description:</strong> <c:out value="${invoice.description}" /></p>
-                    <p><strong>Public Date:</strong> <c:out value="${invoice.publicDateft}" /></p>
-                    <p><strong>Due Date:</strong> <c:out value="${invoice.dueDateft}" /></p>
-                    <c:if test="${invoice.status eq 'Paid'}">
-                        <p><strong>Pay Date:</strong> <c:out value="${invoice.paydateft}" /></p>
-                    </c:if>
-                    <p><strong>Status:</strong> 
-                        <span class="badge bg-${invoice.status == 'Paid' ? 'success' : 'warning'}">
-                            <c:out value="${invoice.status}" />
-                        </span>
-                    </p>
-                    <h5 class="mt-4">Invoice Items</h5>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Description</th>
-                                <th>Amount</th>
-                                <th>Type Bill</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="detail" items="${invoice.details}" varStatus="loop">
+                        <c:if test="${not empty paymentUrl}">
+                            <img src="${paymentUrl}" alt="QR Code" class="img-fluid">
+
+                        </c:if>
+                        <c:if test="${empty paymentUrl}">
+                            <div class="alert alert-danger">Failed to generate payment URL.</div>
+                        </c:if>
+                        <p value=""><strong>Account bank number:</strong> 686868922004</p>
+
+                    </div>
+                    <div class="card invoice-details">
+                        <h3 class="text-center">Invoice Details</h3>
+                        <p><strong>Invoice Code:</strong> <c:out value="${invoice.invoiceID}" /></p>
+                        <p><strong>Apartment:</strong> <c:out value="${invoice.apartment.apartmentName}" /></p>
+                        <p><strong>Resident:</strong> <c:out value="${invoice.resident.fullName}" /></p>
+                        <p><strong>Description:</strong> <c:out value="${invoice.description}" /></p>
+                        <p><strong>Public Date:</strong> <c:out value="${invoice.publicDateft}" /></p>
+                        <p><strong>Due Date:</strong> <c:out value="${invoice.dueDateft}" /></p>
+                        <c:if test="${invoice.status eq 'Paid'}">
+                            <p><strong>Pay Date:</strong> <c:out value="${invoice.paydateft}" /></p>
+                        </c:if>
+                        <p><strong>Status:</strong> 
+                            <span class="badge bg-${invoice.status == 'Paid' ? 'success' : 'warning'}">
+                                <c:out value="${invoice.status}" />
+                            </span>
+                        </p>
+                        <h5 class="mt-4">Invoice Items</h5>
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td><c:out value="${loop.index + 1}" /></td>
-                                    <td><c:out value="${detail.description}" /></td>
-                                    <td><c:out value="${detail.amount}" /></td>
-                                    <td><c:out value="${detail.billType}" /></td>
+                                    <th>#</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <th>Type Bill</th>
                                 </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                    <p><strong>Late Bill Penalty:</strong> $<c:out value="${invoice.muon}" /></p>
-                    <p><strong>Total Amount:</strong> $<c:out value="${invoice.totalAmount}" /></p>
-                    <div class="d-flex justify-content-end mt-4">
-                        <a href="<%= request.getContextPath() %>/owner/ViewInvoice" class="btn btn-secondary">
-                            <i class="fa fa-arrow-left"></i> Cancel
-                        </a>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="detail" items="${invoice.details}" varStatus="loop">
+                                    <tr>
+                                        <td><c:out value="${loop.index + 1}" /></td>
+                                        <td><c:out value="${detail.description}" /></td>
+                                        <td><c:out value="${detail.amount}" /></td>
+                                        <td><c:out value="${detail.billType}" /></td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                        <p><strong>Late Bill Penalty:</strong> $<c:out value="${invoice.muon}" /></p>
+                        <p><strong>Total Amount:</strong> $<c:out value="${invoice.totalAmount}" /></p>
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="<%= request.getContextPath() %>/owner/ViewInvoice" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Cancel
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
 
         <div class="modal fade" id="transactionNotFoundModal" tabindex="-1" aria-labelledby="transactionNotFoundModalLabel" aria-hidden="true">
             <div class="modal-dialog">

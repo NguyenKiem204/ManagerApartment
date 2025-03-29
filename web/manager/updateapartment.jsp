@@ -6,6 +6,8 @@
 
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+ <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png"
+              type="image/x-icon" />
 <style>
     /* Căn chỉnh form */
     #updateApartmentForm {

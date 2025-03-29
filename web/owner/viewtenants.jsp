@@ -10,6 +10,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+     <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png"
+              type="image/x-icon" />
     <style>
         /* Tổng thể */
 body {

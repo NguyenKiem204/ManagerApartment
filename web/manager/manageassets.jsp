@@ -14,6 +14,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Manage Assets</title>
         <link href="css/responsive.css" rel="stylesheet" />
+         <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png"
+              type="image/x-icon" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/manageassets.css" />
     </head>
     <body>

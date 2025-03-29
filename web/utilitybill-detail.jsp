@@ -362,7 +362,6 @@
                 }
             }
 
-            /* Print styles for PDF export */
             @media print {
                 body {
                     background-color: white;
@@ -388,125 +387,127 @@
     </head>
     <body>
         <%@include file="/manager/menumanager.jsp" %>
-        <div class="container">
-            <div class="bill-container" id="bill-container">
-                <div class="bill-header">
-                    <div id="billStatus" class="bill-status status-unpaid">Unpaid</div>
-                    <div class="bill-logo">
-                        <i class="fas fa-building"></i> SMART LIVING
-                    </div>
-                    <div class="bill-meta">
-                        <div class="bill-meta-left">
-                            <h3>Utility Bill</h3>
-                            <h6>Billing Period: <span id="billingPeriod">Month ${utilityBill.billingMonth}/${utilityBill.billingYear}</span></h6>
+        <div id="main">
+            <div class="container">
+                <div class="bill-container" id="bill-container">
+                    <div class="bill-header">
+                        <div id="billStatus" class="bill-status status-unpaid">Unpaid</div>
+                        <div class="bill-logo">
+                            <i class="fas fa-building"></i> SMART LIVING
                         </div>
-                        <div class="bill-meta-right">
-                            <div>Bill ID: <strong id="billId">BL-${utilityBill.billId}</strong></div>
-                            <div>Issue Date: <span id="generatedDate">${utilityBill.formattedGeneratedDate}</span></div>
+                        <div class="bill-meta">
+                            <div class="bill-meta-left">
+                                <h3>Utility Bill</h3>
+                                <h6>Billing Period: <span id="billingPeriod">Month ${utilityBill.billingMonth}/${utilityBill.billingYear}</span></h6>
+                            </div>
+                            <div class="bill-meta-right">
+                                <div>Bill ID: <strong id="billId">BL-${utilityBill.billId}</strong></div>
+                                <div>Issue Date: <span id="generatedDate">${utilityBill.formattedGeneratedDate}</span></div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="bill-section">
-                    <h5 class="section-title"><i class="fas fa-user"></i> Customer Information</h5>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">Building</div>
-                            <div class="info-value" id="buildingName">Golden Heights</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Apartment</div>
-                            <div class="info-value" id="apartmentName">${utilityBill.apartment.apartmentName}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Owner</div>
-                            <div class="info-value" id="ownerName">${utilityBill.owner.fullName}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Apartment ID</div>
-                            <div class="info-value" id="apartmentId">${utilityBill.apartment.apartmentId}</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bill-section">
-                    <h5 class="section-title"><i class="fas fa-calendar-alt"></i> Billing Period</h5>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">Billing Period</div>
-                            <div class="info-value" id="billingMonthYear">Month ${utilityBill.billingMonth}/${utilityBill.billingYear}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">From Date</div>
-                            <div class="info-value" id="periodStart">${utilityBill.formattedBillingPeriodStart}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">To Date</div>
-                            <div class="info-value" id="periodEnd">${utilityBill.formattedBillingPeriodEnd}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Due Date</div>
-                            <div class="info-value" id="dueDate">${utilityBill.formattedDueDate}</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bill-section">
-                    <h5 class="section-title"><i class="fas fa-bolt"></i> Utility Consumption</h5>
-
-                    <h6 class="mt-4">Electricity Usage</h6>
-                    <div class="cost-breakdown">
-                        <div class="cost-label">Consumption</div>
-                        <div class="cost-value" id="electricityConsumption">${utilityBill.electricityConsumption} kWh</div>
-                    </div>
-                    <div class="cost-breakdown">
-                        <div class="cost-label">Rate</div>
-                        <div class="cost-value">${electricity.formattedUnitPrice}/kWh</div>
-                    </div>
-                    <div class="cost-breakdown">
-                        <div class="cost-label">Total Electricity Cost</div>
-                        <div class="cost-value" id="electricityCost">${utilityBill.formattedElectricityCost}</div>
                     </div>
 
-                    <h6 class="mt-4">Water Usage</h6>
-                    <div class="cost-breakdown">
-                        <div class="cost-label">Consumption</div>
-                        <div class="cost-value" id="waterConsumption">${utilityBill.waterConsumption} m³</div>
-                    </div>
-                    <div class="cost-breakdown">
-                        <div class="cost-label">Rate</div>
-                        <div class="cost-value">${water.formattedUnitPrice}/m³</div>
-                    </div>
-                    <div class="cost-breakdown">
-                        <div class="cost-label">Total Water Cost</div>
-                        <div class="cost-value" id="waterCost">${utilityBill.formattedWaterCost}</div>
-                    </div>
-                </div>
-
-                <div class="bill-section">
-                    <h5 class="section-title"><i class="fas fa-receipt"></i> Payment Summary</h5>
-                    <div class="cost-breakdown">
-                        <div class="cost-label">Electricity Cost</div>
-                        <div class="cost-value">${utilityBill.formattedElectricityCost}</div>
-                    </div>
-                    <div class="cost-breakdown">
-                        <div class="cost-label">Water Cost</div>
-                        <div class="cost-value">${utilityBill.formattedWaterCost}</div>
-                    </div>
-                    <div class="total-amount">
-                        <div class="total-amount-label">Total Amount Due</div>
-                        <div class="total-amount-value" id="totalAmount">${utilityBill.formattedTotalAmount}</div>
+                    <div class="bill-section">
+                        <h5 class="section-title"><i class="fas fa-user"></i> Customer Information</h5>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Building</div>
+                                <div class="info-value" id="buildingName">Golden Heights</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Apartment</div>
+                                <div class="info-value" id="apartmentName">${utilityBill.apartment.apartmentName}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Owner</div>
+                                <div class="info-value" id="ownerName">${utilityBill.owner.fullName}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Apartment ID</div>
+                                <div class="info-value" id="apartmentId">${utilityBill.apartment.apartmentId}</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="payment-actions">
-                        <button class="btn-action btn-primary" 
-                                data-id="${utilityBill.invoiceId}" 
-                                onclick="location.href = '<%= request.getContextPath() %>/owner/PaymentServlet?invoiceID=${utilityBill.invoiceId}'">
-                            <i class="fas fa-credit-card"></i> Pay Now
-                        </button>
+                    <div class="bill-section">
+                        <h5 class="section-title"><i class="fas fa-calendar-alt"></i> Billing Period</h5>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Billing Period</div>
+                                <div class="info-value" id="billingMonthYear">Month ${utilityBill.billingMonth}/${utilityBill.billingYear}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">From Date</div>
+                                <div class="info-value" id="periodStart">${utilityBill.formattedBillingPeriodStart}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">To Date</div>
+                                <div class="info-value" id="periodEnd">${utilityBill.formattedBillingPeriodEnd}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Due Date</div>
+                                <div class="info-value" id="dueDate">${utilityBill.formattedDueDate}</div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <button class="btn-action btn-outline">
-                            <i class="fas fa-history"></i> Payment History
+                    <div class="bill-section">
+                        <h5 class="section-title"><i class="fas fa-bolt"></i> Utility Consumption</h5>
+
+                        <h6 class="mt-4">Electricity Usage</h6>
+                        <div class="cost-breakdown">
+                            <div class="cost-label">Consumption</div>
+                            <div class="cost-value" id="electricityConsumption">${utilityBill.electricityConsumption} kWh</div>
+                        </div>
+                        <div class="cost-breakdown">
+                            <div class="cost-label">Rate</div>
+                            <div class="cost-value">${electricity.formattedUnitPrice}/kWh</div>
+                        </div>
+                        <div class="cost-breakdown">
+                            <div class="cost-label">Total Electricity Cost</div>
+                            <div class="cost-value" id="electricityCost">${utilityBill.formattedElectricityCost}</div>
+                        </div>
+
+                        <h6 class="mt-4">Water Usage</h6>
+                        <div class="cost-breakdown">
+                            <div class="cost-label">Consumption</div>
+                            <div class="cost-value" id="waterConsumption">${utilityBill.waterConsumption} m³</div>
+                        </div>
+                        <div class="cost-breakdown">
+                            <div class="cost-label">Rate</div>
+                            <div class="cost-value">${water.formattedUnitPrice}/m³</div>
+                        </div>
+                        <div class="cost-breakdown">
+                            <div class="cost-label">Total Water Cost</div>
+                            <div class="cost-value" id="waterCost">${utilityBill.formattedWaterCost}</div>
+                        </div>
+                    </div>
+
+                    <div class="bill-section">
+                        <h5 class="section-title"><i class="fas fa-receipt"></i> Payment Summary</h5>
+                        <div class="cost-breakdown">
+                            <div class="cost-label">Electricity Cost</div>
+                            <div class="cost-value">${utilityBill.formattedElectricityCost}</div>
+                        </div>
+                        <div class="cost-breakdown">
+                            <div class="cost-label">Water Cost</div>
+                            <div class="cost-value">${utilityBill.formattedWaterCost}</div>
+                        </div>
+                        <div class="total-amount">
+                            <div class="total-amount-label">Total Amount Due</div>
+                            <div class="total-amount-value" id="totalAmount">${utilityBill.formattedTotalAmount}</div>
+                        </div>
+
+                        <div class="payment-actions">
+                            <button class="btn-action btn-primary" 
+                                    data-id="${utilityBill.invoiceId}" 
+                                    onclick="location.href = '<%= request.getContextPath() %>/owner/PaymentServlet?invoiceID=${utilityBill.invoiceId}'">
+                                <i class="fas fa-credit-card"></i> Pay Now
+                            </button>
+
+                            <button class="btn-action btn-outline" 
+                                    onclick="location.href = '<%= request.getContextPath() %>/owner/ViewHistoryInvoice'">
+                                                <i class="fas fa-history"></i> Payment History
                         </button>
                     </div>
                 </div>
@@ -532,47 +533,47 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            // Update status color based on payment status
-            const status = "${utilityBill.status}";
-            const statusElement = document.getElementById('billStatus');
-
-            if (status === 'PAID') {
-                statusElement.className = 'bill-status status-paid';
-                statusElement.textContent = 'Paid';
-            } else if (status === 'PENDING') {
-                statusElement.className = 'bill-status status-pending';
-                statusElement.textContent = 'Pending';
-            } else {
-                statusElement.className = 'bill-status status-unpaid';
-                statusElement.textContent = 'Unpaid';
-            }
-
-            // Print functionality
-            document.querySelector('.action-button:nth-child(1)').addEventListener('click', function () {
-                window.print();
-            });
-
-            // Download PDF functionality
-            document.querySelector('.action-button:nth-child(2)').addEventListener('click', function () {
-                // This would typically trigger a server-side PDF generation
-                alert('PDF download functionality would be implemented here');
-            });
-
-            // Share functionality
-            document.querySelector('.action-button:nth-child(3)').addEventListener('click', function () {
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'My Utility Bill',
-                        text: 'Check out my utility bill for ${utilityBill.billingMonth}/${utilityBill.billingYear}',
-                        url: window.location.href,
-                    })
-                            .catch((error) => console.log('Error sharing', error));
-                } else {
-                    alert('Web Share API not supported in your browser');
-                }
-            });
-        </script>
-    </body>
+    </div>
+    <script>
+    // Update status color based on payment status
+        const status = "${utilityBill.status}";
+const statusElement = document.getElementById('billStatus');
+        
+if (status === 'PAID') {
+                                                statusElement.className = 'bill-status status-paid';
+                                        statusElement.textContent = 'Paid';
+                } else if (status === 'PENDING') {
+                                                statusElement.className = 'bill-status status-pending';
+                                        statusElement.textContent = 'Pending';
+} else {
+                                                statusElement.className = 'bill-status status-unpaid';
+                                        statusElement.textContent = 'Unpaid';
+}
+                
+// Print functionality
+document.querySelector('.action-button:nth-child(1)').addEventListener('click', function () {
+                                                window.print();
+});
+                
+// Download PDF functionality
+document.querySelector('.action-button:nth-child(2)').addEventListener('click', function () {
+                                                // This would typically trigger a server-side PDF generation
+                                                alert('PDF download functionality would be implemented here');
+});
+                
+// Share functionality
+document.querySelector('.action-button:nth-child(3)').addEventListener('click', function () {
+                                                if (navigator.share) {
+                                        navigator.share({
+                                        title: 'My Utility Bill',
+                                                text: 'Check out my utility bill for ${utilityBill.billingMonth}/${utilityBill.billingYear}',
+                                                url: window.location.href,
+                                        })
+                                                .catch((error) => console.log('Error sharing', error));
+                                        } else {
+                                        alert('Web Share API not supported in your browser');
+                                        }
+                });
+</script>
+</body>
 </html>

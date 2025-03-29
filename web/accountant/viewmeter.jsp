@@ -13,19 +13,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Bootstrap CRUD Data Table for Database with Modal Form</title>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
         <style>
             body {
-                color: #566787;
                 background: #ffa384;
-                font-family: 'Varela Round', sans-serif;
-                font-size: 15px;
             }
             .table-responsive {
                 margin: 30px 0;
@@ -302,72 +296,73 @@
     </script>
 </head>
 <body>
-    <div class="container-xl">
-        <div class="d-flex gap-2 justify-content-end">
-            <form action="" method="get" class="d-flex gap-2 flex-grow-1 justify-content-end">
-                <input type="hidden" name="type" >
-                <select name="meterType" id="statusFilter" class="form-select" style="width: 10%;">
-                    <option value="">AllMeterType</option>
-                    <option value="Electric" ${selectedStatus == 'Electric' ? 'selected' : ''}>Electric</option>
-                    <option value="Water" ${selectedStatus == 'Water' ? 'selected' : ''}>Water</option>
-                </select>
-                <button type="submit" class="btn btn-primary" style="width: 10%;">Filter</button>
-            </form>
-        </div>
-        <div class="table-responsive">
-            <div class="table-wrapper">
-                <div class="table-title">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <h2>Manage Meter</h2>
-                        </div>                            
-                    </div>
-                </div>
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Apartment Name</th>
-                            <th>Meter Type</th>
-                            <th>Meter Number</th> 
-                            <th>Installation Date</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="meter" items="${meterList}" >
-                            <tr>
-                                <td>${meter.apartmentName}</td>
-                                <td>${meter.meterType}</td>
-                                <td>${meter.meterNumber}</td>
-                                <td>${meter.formatInstallationDate}</td>
-                                <td>${meter.status}</td>
-                                <td>
-                                    <a href="#editMeterModal" class="edit edit-meter-btn"
-                                       data-id="${meter.meterId}"
-                                       data-status="${meter.status}"
-                                       data-meter-number="${meter.meterNumber}"
-                                       data-toggle="modal" data-target="#editMeterModal">
-                                        <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-                <div class="clearfix">
-                    <ul class="pagination">
-                        <c:forEach begin="1" end="${endP}" var="i">
-                            <li class="page-item">
-                                <a class="${currentPage == i?"active":""}" href="<%= request.getContextPath() %>/accountant/managermeter?index=${i}" class="page-link">${i}</a>
-                            </li>
-                        </c:forEach>
-                    </ul>
-                </div>
-
+    <div id="main" style="padding-left:0px !important">
+        <div class="container" >
+            <div class="d-flex">
+                <form action="" method="get" class="d-flex gap-2 flex-grow-1 justify-content-end">
+                    <input type="hidden" name="type" >
+                    <select name="meterType" id="statusFilter" class="form-select" style="width: 15%;">
+                        <option value="">AllMeterType</option>
+                        <option value="Electric" ${selectedStatus == 'Electric' ? 'selected' : ''}>Electric</option>
+                        <option value="Water" ${selectedStatus == 'Water' ? 'selected' : ''}>Water</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary" style="width: 10%;">Filter</button>
+                </form>
             </div>
-        </div>        
-    </div>
+            <div class="table-responsive">
+                <div class="table-wrapper">
+                    <div class="table-title">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h2>Manage Meter</h2>
+                            </div>                            
+                        </div>
+                    </div>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Apartment Name</th>
+                                <th>Meter Type</th>
+                                <th>Meter Number</th> 
+                                <th>Installation Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="meter" items="${meterList}" >
+                                <tr>
+                                    <td>${meter.apartmentName}</td>
+                                    <td>${meter.meterType}</td>
+                                    <td>${meter.meterNumber}</td>
+                                    <td>${meter.formatInstallationDate}</td>
+                                    <td>${meter.status}</td>
+                                    <td>
+                                        <a href="#editMeterModal" class="edit edit-meter-btn"
+                                           data-id="${meter.meterId}"
+                                           data-status="${meter.status}"
+                                           data-meter-number="${meter.meterNumber}"
+                                           data-toggle="modal" data-target="#editMeterModal">
+                                            <i class="material-icons" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen"></i></i>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                    <div class="clearfix">
+                        <ul class="pagination">
+                            <c:forEach begin="1" end="${endP}" var="i">
+                                <li class="page-item">
+                                    <a class="${currentPage == i?"active":""}" href="<%= request.getContextPath() %>/accountant/managermeter?index=${i}" class="page-link">${i}</a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </div>
 
+                </div>
+            </div>        
+        </div>
+    </div>
     <!-- Edit Modal HTML -->
     <div id="editMeterModal" class="modal fade">
         <div class="modal-dialog">

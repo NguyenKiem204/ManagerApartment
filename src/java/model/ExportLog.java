@@ -30,4 +30,8 @@ public class ExportLog {
     int recordsCount;
     
     String staffName;
+    public String getFormattedDate() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm");
+    return exportDate.format(formatter);
+}
 }
