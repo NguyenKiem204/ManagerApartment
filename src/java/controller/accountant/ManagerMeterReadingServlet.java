@@ -35,6 +35,7 @@ import model.ExcelUtils;
 import model.ExportLog;
 import model.Meter;
 import model.MeterReading;
+import model.Staff;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
@@ -325,9 +326,8 @@ public class ManagerMeterReadingServlet extends HttpServlet {
     
     
     private Integer getUserIdFromSession(HttpServletRequest request) {
-        // In a real application, this would come from the user's session
-        // For now, using a default value
-        return 1; // Default admin user
+        Staff staff = (Staff)request.getSession().getAttribute("staff");
+        return staff.getStaffId();
     }
     
     /**

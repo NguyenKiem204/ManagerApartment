@@ -101,36 +101,41 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return row;
     }
 
-  @Override
+    @Override
     public List<Apartment> selectAll() {
-    List<Apartment> list = new ArrayList<>();
-    String sql = "SELECT * FROM Apartment";
-    System.out.println(sql);
+        List<Apartment> list = new ArrayList<>();
+        String sql = """
+        SELECT a.ApartmentID, a.ApartmentName, a.Block, a.Status, a.Type, 
+               r.ResidentID, r.FullName, r.PhoneNumber, r.Email
+        FROM Apartment a
+        LEFT JOIN Resident r ON a.OwnerID = r.ResidentID
+    """;
 
-    try (Connection connection = DBContext.getConnection();
-         PreparedStatement ps = connection.prepareStatement(sql)) {
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            int ownerId = rs.getInt("OwnerID");
-            Resident owner = residentDAO.selectById(ownerId);
-            String ownerName = (owner != null) ? owner.getFullName() : "N/A";
-            
-            Apartment apartment = new Apartment(
-                    rs.getInt("ApartmentID"),
-                    rs.getString("ApartmentName"),
-                    rs.getString("Block"),
-                    rs.getString("Status"),
-                    rs.getString("Type"),
-                    ownerId
-            );
-            list.add(apartment);
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Resident owner = (rs.getInt("ResidentID") != 0) ? new Resident(
+                        rs.getInt("ResidentID"),
+                        rs.getString("FullName"),
+                        rs.getString("PhoneNumber"),
+                        rs.getString("Email")
+                ) : null;
+
+                Apartment apartment = new Apartment(
+                        rs.getInt("ApartmentID"),
+                        rs.getString("ApartmentName"),
+                        rs.getString("Block"),
+                        rs.getString("Status"),
+                        rs.getString("Type"),
+                        owner
+                );
+                list.add(apartment);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } catch (SQLException ex) {
-        Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        return list;
     }
-    return list;
-}
-
 
     public int numberApartment() {
         int count = 0;
@@ -486,7 +491,6 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return apartments;
     }
 
-
     public int getTotalApartments(String name, int ownerId, String type, String status, String block) {
         int total = 0;
         String sql = "SELECT COUNT(*) FROM Apartment WHERE 1=1";
@@ -626,4 +630,15 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         return false;
     }
 
+    public int selectLastId() {
+        String sql = "SELECT MAX(ApartmentID) FROM Apartment;";
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerFeedbackDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 }

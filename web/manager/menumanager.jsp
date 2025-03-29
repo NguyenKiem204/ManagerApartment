@@ -1,68 +1,46 @@
 <%-- Document : home1 Created on : Feb 11, 2025, 2:12:16 AM Author : nkiem --%>
-<%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem
---%> <%@page contentType="text/html" pageEncoding="UTF-8" %> 
+<%-- Document : menu.jsp Created on : Feb 8, 2025, 2:54:18 PM Author : nkiem --%>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
+
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Menu</title>
 
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
-            rel="stylesheet"
-            />
-        <link
-            rel="stylesheet"
-            href="<%= request.getContextPath() %>/assets/css/bootstrap.css"
-            />
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
+              rel="stylesheet" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/bootstrap.css" />
 
         <link rel="stylesheet" href="assets/vendors/iconly/bold.css" />
 
         <!-- <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css" /> -->
-        <link
-            rel="stylesheet"
-            href="<%= request.getContextPath() %>/assets/css/pages/index.css"
-            />
-        <link
-            rel="stylesheet"
-            href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css"
-            />
-        <link
-            rel="stylesheet"
-            href="<%= request.getContextPath() %>/assets/css/app.css"
-            />
-        <link
-            rel="shortcut icon"
-            href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png"
-            type="image/x-icon"
-            />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css"
-            />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-            />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-            integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-            />
-        <link
-            rel="stylesheet"
-            href="<%= request.getContextPath() %>/assets/css/menu.css"
-            />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/index.css" />
+        <link rel="stylesheet"
+              href="<%= request.getContextPath() %>/assets/vendors/bootstrap-icons/bootstrap-icons.css" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/app.css" />
+        <link rel="shortcut icon" href="<%= request.getContextPath() %>/assets/images/favicon/favicon.png"
+              type="image/x-icon" />
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css" />
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+              crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/menu.css" />
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css"
-            rel="stylesheet"
-            />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css"
+              rel="stylesheet" />
+        <!-- Thư viện CSS Select2 -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet">
+        <!-- Thư viện JavaScript Select2 -->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
         <style>
             #notificationContainer {
                 position: relative;
@@ -186,11 +164,8 @@
                     <!-- Navbar Links -->
                     <ul class="navbar-nav kiem_can_trai">
                         <li class="nav-item d-none d-md-block">
-                            <a
-                                href="<%= request.getContextPath() %>/redirect/home"
-                                class="nav-link"
-                                >Home</a
-                            >
+                            <a href="<%= request.getContextPath() %>/redirect/home"
+                               class="nav-link">Home</a>
                         </li>
                         <li class="nav-item d-none d-md-block">
                             <a href="#" class="nav-link">Contact</a>
@@ -212,44 +187,28 @@
                         </c:choose>
 
                         <li class="nav-item dropdown user-menu">
-                            <a
-                                href="#"
-                                class="nav-link dropdown-toggle"
-                                data-bs-toggle="dropdown"
-                                >
-                                <img
-                                    src="<%= request.getContextPath() %>/${user.image.imageURL}"
-                                    class="user-image rounded-circle shadow"
-                                    alt="User Image"
-                                    />
-                                <span class="d-none d-md-inline"
-                                      ><c:out value="${user.fullName}"></c:out
-                                    ></span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                                <li class="user-header text-bg-primary img-drop">
-                                    <img
-                                        src="<%= request.getContextPath() %>/${user.image.imageURL}"
-                                        class="rounded-circle shadow"
-                                        alt="User Image"
-                                        />
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <img src="<%= request.getContextPath() %>/${user.image.imageURL}"
+                                     class="user-image rounded-circle shadow" alt="User Image" />
+                                <span class="d-none d-md-inline">
+                                    <c:out value="${user.fullName}"></c:out>
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                                    <li class="user-header text-bg-primary img-drop">
+                                        <img src="<%= request.getContextPath() %>/${user.image.imageURL}"
+                                         class="rounded-circle shadow" alt="User Image" />
                                     <p>
                                         <c:out value="${user.fullName}"></c:out> - ${role}
                                             <small>Member since Nov. 2024</small>
                                         </p>
                                     </li>
                                     <li class="user-footer d-flex justify-content-between">
-                                        <a
-                                            href="<%= request.getContextPath() %>/profile-${role}"
-                                        class="btn btn-default btn-flat"
-                                        >Profile</a
-                                    >
+                                        <a href="<%= request.getContextPath() %>/profile-${role}"
+                                       class="btn btn-default btn-flat">Profile</a>
                                     <a href="#" class="btn btn-default btn-flat">Setting</a>
-                                    <a
-                                        href="<%= request.getContextPath() %>/logout"
-                                        class="btn btn-default btn-flat"
-                                        >Logout</a
-                                    >
+                                    <a href="<%= request.getContextPath() %>/logout"
+                                       class="btn btn-default btn-flat">Logout</a>
                                 </li>
                             </ul>
                         </li>
@@ -268,16 +227,13 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="logo">
-                                <a href="menumanager.jsp"
-                                   ><img
+                                <a href="menumanager.jsp"><img
                                         src="<%= request.getContextPath() %>/assets/images/logo/logo1.png"
-                                        alt="Logo"
-                                        /></a>
+                                        alt="Logo" /></a>
                             </div>
                             <div class="toggler">
-                                <a href="#" class="sidebar-hide d-xl-none d-block"
-                                   ><i class="bi bi-x bi-middle"></i
-                                    ></a>
+                                <a href="#" class="sidebar-hide d-xl-none d-block"><i
+                                        class="bi bi-x bi-middle"></i></a>
                             </div>
                         </div>
                     </div>
@@ -286,10 +242,8 @@
                             <li class="sidebar-title">Menu</li>
 
                             <li class="sidebar-item">
-                                <a
-                                    href="<%= request.getContextPath() %>/redirect/home"
-                                    class="sidebar-link"
-                                    >
+                                <a href="<%= request.getContextPath() %>/redirect/home"
+                                   class="sidebar-link">
                                     <i class="bi bi-grid-fill"></i>
                                     <span>Home</span>
                                 </a>
@@ -343,10 +297,8 @@
                             </c:if>
                             <c:if test="${sessionScope.staff.role.roleID == 3}">
                                 <li class="sidebar-item">
-                                    <a
-                                        href="<%= request.getContextPath() %>/accountant/InvoicesManager"
-                                        class="sidebar-link"
-                                        >
+                                    <a href="<%= request.getContextPath() %>/accountant/InvoicesManager"
+                                       class="sidebar-link">
                                         <i class="bi bi-receipt-cutoff"></i>
                                         <span>Financial Management</span>
                                     </a>
@@ -354,28 +306,22 @@
                             </c:if>
                             <c:if test="${sessionScope.resident.role.roleID == 7}">
                                 <li class="sidebar-item">
-                                    <a
-                                        href="<%= request.getContextPath() %>/owner/ViewInvoice"
-                                        class="sidebar-link"
-                                        >
+                                    <a href="<%= request.getContextPath() %>/owner/ViewInvoice"
+                                       class="sidebar-link">
                                         <i class="bi bi-receipt-cutoff"></i>
                                         <span>Invoice Management</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a
-                                        href="<%= request.getContextPath() %>/owner/manageContract"
-                                        class="sidebar-link"
-                                        >
+                                    <a href="<%= request.getContextPath() %>/owner/manageContract"
+                                       class="sidebar-link">
                                         <i class="fa-solid fa-user"></i>
                                         <span>Tenant and Contract</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a
-                                        href="<%= request.getContextPath() %>/owner/manageOwnerApartment"
-                                        class="sidebar-link"
-                                        >
+                                    <a href="<%= request.getContextPath() %>/owner/manageOwnerApartment"
+                                       class="sidebar-link">
                                         <i class="fa-solid fa-house"></i>
                                         <span>Apartment</span>
                                     </a>
@@ -391,9 +337,8 @@
 
                                         <li class="submenu-item managernews">
                                             <a
-                                                href="<%= request.getContextPath() %>/accountant/manager-meter-reading"
-                                                >Manager EW</a
-                                            >
+                                                href="<%= request.getContextPath() %>/accountant/manager-meter-reading">Manager
+                                                EW</a>
                                         </li>
 
                                     </ul>
@@ -407,108 +352,85 @@
                                 <ul class="submenu">
                                     <c:if test="${sessionScope.staff.role.roleID == 1}">
                                         <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/manager/feedback"
-                                               >Feedback</a
-                                            >
-                                        </li>
-                                        <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/manager/request"
-                                               >Request</a
-                                            >
+                                            <a
+                                                href="<%= request.getContextPath() %>/manager/feedback">Feedback</a>
                                         </li>
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/manager/formfeedbackmanager"
-                                                >Feedback Statistics</a
-                                            >
+                                                href="<%= request.getContextPath() %>/manager/request">Request</a>
+                                        </li>
+                                        <li class="submenu-item">
+                                            <a
+                                                href="<%= request.getContextPath() %>/manager/formfeedbackmanager">Feedback
+                                                Statistics</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 2}">
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/feedbackreview"
-                                                >Feedback</a
-                                            >
+                                                href="<%= request.getContextPath() %>/feedbackreview">Feedback</a>
                                         </li>
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/requeststaff"
-                                                >Request</a
-                                            >
+                                                href="<%= request.getContextPath() %>/requeststaff">Request</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 3}">
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/feedbackreview"
-                                                >Feedback</a
-                                            >
+                                                href="<%= request.getContextPath() %>/feedbackreview">Feedback</a>
                                         </li>
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/requeststaff"
-                                                >Request</a
-                                            >
+                                                href="<%= request.getContextPath() %>/requeststaff">Request</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 4}">
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/feedbackreview"
-                                                >Feedback</a
-                                            >
+                                                href="<%= request.getContextPath() %>/feedbackreview">Feedback</a>
                                         </li>
                                         <li class="submenu-item">
                                             <a
-                                                href="<%= request.getContextPath() %>/requeststaff"
-                                                >Request</a
-                                            >
+                                                href="<%= request.getContextPath() %>/requeststaff">Request</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.staff.role.roleID == 5}">
                                         <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/feedbackreview"
-                                               >Feedback</a
-                                            >
+                                            <a
+                                                href="<%= request.getContextPath() %>/feedbackreview">Feedback</a>
                                         </li>
                                         <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/requeststaff"
-                                               >Request</a
-                                            >
+                                            <a
+                                                href="<%= request.getContextPath() %>/requeststaff">Request</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.resident.role.roleID == 7}">
                                         <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/feedback"
-                                               >Send Feedback</a
-                                            >
+                                            <a href="<%= request.getContextPath() %>/owner/feedback">Send
+                                                Feedback</a>
                                         </li>
                                         <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/request"
-                                               >Send Request</a
-                                            >
+                                            <a href="<%= request.getContextPath() %>/owner/request">Send
+                                                Request</a>
                                         </li>
                                         <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/listrequest"
-                                               >List Requests</a
-                                            >
+                                            <a href="<%= request.getContextPath() %>/owner/listrequest">List
+                                                Requests</a>
                                         </li>
                                     </c:if>
                                     <c:if test="${sessionScope.resident.role.roleID == 6}">
                                         <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/feedback"
-                                               >Feedback</a
-                                            >
+                                            <a
+                                                href="<%= request.getContextPath() %>/owner/feedback">Feedback</a>
                                         </li>
                                         <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/request"
-                                               >Request</a
-                                            >
+                                            <a
+                                                href="<%= request.getContextPath() %>/owner/request">Request</a>
                                         </li>
                                         <li class="submenu-item">
-                                            <a href="<%= request.getContextPath() %>/owner/listrequest"
-                                               >List Requests</a
-                                            >
+                                            <a href="<%= request.getContextPath() %>/owner/listrequest">List
+                                                Requests</a>
                                         </li>
 
                                     </c:if>
@@ -523,15 +445,12 @@
                                 <ul id="news" class="submenu">
                                     <c:if test="${sessionScope.staff.role.roleID == 1}">
                                         <li class="submenu-item managernews">
-                                            <a
-                                                href="<%= request.getContextPath() %>/manager/managernews"
-                                                >Manager News</a
-                                            >
+                                            <a href="<%= request.getContextPath() %>/manager/managernews">Manager
+                                                News</a>
                                         </li>
                                         <li class="submenu-item addnews">
-                                            <a href="<%= request.getContextPath() %>/manager/addnews"
-                                               >Add News</a
-                                            >
+                                            <a href="<%= request.getContextPath() %>/manager/addnews">Add
+                                                News</a>
                                         </li>
                                     </c:if>
                                     <li class="submenu-item news-itemm">
@@ -541,10 +460,7 @@
                             </li>
 
                             <li class="sidebar-item">
-                                <a
-                                    href="<%= request.getContextPath() %>/chat"
-                                    class="sidebar-link"
-                                    >
+                                <a href="<%= request.getContextPath() %>/chat" class="sidebar-link">
                                     <i class="bi bi-chat-dots-fill"></i>
                                     <span>Messages</span>
                                 </a>
@@ -560,14 +476,13 @@
                                 <ul id="news" class="submenu">
                                     <c:if test="${sessionScope.staff.role.roleID == 1}">
                                         <li class="submenu-item managernews">
-                                            <a
-                                                href="<%= request.getContextPath() %>/manager/regulations"
-                                                >Manager Regulations</a
-                                            >
+                                            <a href="<%= request.getContextPath() %>/manager/regulations">Manager
+                                                Regulations</a>
                                         </li>
                                     </c:if>
                                     <li class="submenu-item news-itemm">
-                                        <a href="<%= request.getContextPath() %>/regulations">Regulations</a>
+                                        <a
+                                            href="<%= request.getContextPath() %>/regulations">Regulations</a>
                                     </li>
                                 </ul>
                             </li>
@@ -670,13 +585,13 @@
                                     `"><a href="` +
                                     notificationUrl +
                                     `">
-        <div class="notification-message">` +
+<div class="notification-message">` +
                                     notif.message +
                                     `</div>
-        <div class="notification-date">` +
+<div class="notification-date">` +
                                     formattedDate +
                                     `</div>
-    </a></li>`
+</a></li>`
                                     );
                         });
                         // Cập nhật số lượng thông báo chưa đọc
@@ -704,8 +619,8 @@
                                         );
                             case "Request":
                                 return baseUrl + `/requestdetail?requestId=` + notif.referenceId;
-                            case "Invoice":
-                                return `#`;
+                            case "UtilityBill":
+                                return baseUrl + `/utility-detail?utilityId=` + notif.referenceId;
                             default:
                                 return "#"; // Nếu không xác định được loại, đặt về #
                         }
@@ -742,6 +657,11 @@
                 flatpickr("#datePicker", {
                     ...datePickerConfig,
                     maxDate: null
+                });
+                flatpickr("#datePicker-future", {
+                    ...datePickerConfig,
+                    minDate: "today",
+                    enableTime: true
                 });
                 flatpickr("#dateRangePicker", {
                     ...datePickerConfig,
@@ -789,5 +709,5 @@
 
         <script src="<%= request.getContextPath() %>/assets/js/main.js"></script>
     </body>
-</html>
 
+</html>

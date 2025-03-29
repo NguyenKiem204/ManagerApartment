@@ -45,7 +45,7 @@ public class MeterReading {
     String staffName;
     
     public String getFormattedDate() {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     return readingDate.format(formatter);
 }
 }

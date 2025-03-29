@@ -252,7 +252,7 @@
                             <input type="hidden" name="action" value="add">
 
                             <div class="form-group">
-                                <label for="filterName">Tên Filter:</label>
+                                <label for="filterName">Filter Name:</label>
                                 <select id="filterName" name="filterName" required>
                                     <option value="ManagerFilter">ManagerFilter</option>
                                     <option value="AccountantFilter">AccountantFilter</option>

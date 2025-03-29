@@ -31,7 +31,7 @@
                         <div class="container mt-5">
                             <div class="text-center mb-4">
                                 <h1 class="text-primary" style="font-family: 'Playball', cursive; font-size: 36px">
-                                    <i class="fas fa-plus-circle"></i> Tạo mới bài viết
+                                    <i class="fas fa-plus-circle"></i> Create new post
                                 </h1>
                                 <hr class="w-25 mx-auto border-3 border-warning" />
                             </div>
@@ -52,35 +52,33 @@
                                             </div>
                                         </c:if>
                                         <div class="mb-3">
-                                            <label for="title" class="form-label"><i class="fas fa-heading"></i> Tên bài
-                                                viết</label>
+                                            <label for="title" class="form-label"><i class="fas fa-heading"></i> Title</label>
                                             <input type="text" name="title" id="title"
                                                 class="form-control border-orange" />
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="image" class="form-label">Chọn Ảnh</label>
+                                            <label for="image" class="form-label">Choose File</label>
                                             <div class="input-group">
                                                 <input type="file" name="imageURL" class="form-control" id="image" />
                                             </div>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="detail" class="form-label"><i class="fas fa-file-alt"></i> Chi
-                                                tiết</label>
+                                            <label for="detail" class="form-label"><i class="fas fa-file-alt"></i> Content</label>
                                             <textarea id="detail" name="description" class="form-control"></textarea>
                                         </div>
 
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-success px-4">
-                                                <i class="fas fa-save"></i> Tạo mới
+                                                <i class="fas fa-save"></i> Create
                                             </button>
                                         </div>
                                     </form>
 
                                     <div class="text-center mt-3">
                                         <a href="#" id="Index" class="btn btn-outline-danger"><i
-                                                class="fas fa-arrow-left"></i> Quay lại</a>
+                                                class="fas fa-arrow-left"></i> Previous</a>
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +97,7 @@
                                 $("#detail").summernote({
                                     height: 300,
                                     tabsize: 2,
-                                    placeholder: "Nhập nội dung bài viết...",
+                                    placeholder: "Enter article content...",
                                 });
                             });
                             var newsElement = document.querySelector("#news");

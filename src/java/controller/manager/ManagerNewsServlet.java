@@ -60,7 +60,7 @@ public class ManagerNewsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int pageSize = 2;
+        int pageSize = 5;
         int page = 1;
         String pageParam = request.getParameter("page");
         if (pageParam != null) {

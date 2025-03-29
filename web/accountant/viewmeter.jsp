@@ -307,7 +307,7 @@
                                     <td>${meter.apartmentName}</td>
                                     <td>${meter.meterType}</td>
                                     <td>${meter.meterNumber}</td>
-                                    <td>${meter.installationDate}</td>
+                                    <td>${meter.formatInstallationDate}</td>
                                     <td>${meter.status}</td>
                                     <td>
                                        <a href="loadMeter=?${o.meterId}" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>

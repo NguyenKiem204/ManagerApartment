@@ -80,7 +80,7 @@
                 </div>
             </c:if>
             <div class="d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="submit" id="btn-submit-change" class="btn btn-primary">Save Changes</button>
                 <button type="reset" class="btn btn-secondary">Cancel</button>
             </div>
         </form>

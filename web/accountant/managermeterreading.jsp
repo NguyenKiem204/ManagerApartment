@@ -53,6 +53,9 @@
                 padding: 0.5em 0.85em;
                 border-radius: 8px;
             }
+            .label-ew{
+                width: 81px;
+            }
             .actions-btn {
                 margin: 0 2px;
             }
@@ -65,6 +68,42 @@
             .highlight-row {
                 animation: highlight 2s ease-in-out;
             }
+            .select2-container--bootstrap-5 .select2-selection__arrow {
+                display: none !important;
+            }
+
+            .select2-container--bootstrap-5 .select2-selection {
+                position: relative;
+                min-height: calc(2.25rem + 2px) !important;
+                border: 1px solid #ced4da !important;
+                border-radius: 0.375rem !important;
+                background-color: #fff !important;
+                display: flex !important;
+                align-items: center !important;
+                padding: 0.375rem 1rem !important;
+            }
+
+            .select2-container--bootstrap-5 .select2-selection::after {
+                content: "\F282";
+                font-family: "Bootstrap-icons";
+                font-size: 1rem;
+                color: #6c757d;
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .select2-container--bootstrap-5 .select2-selection__rendered {
+                line-height: normal !important;
+                display: flex !important;
+                align-items: center !important;
+            }
+            .select2-container--bootstrap-5 .select2-dropdown {
+                max-height: 230px !important;
+                overflow-y: auto !important;
+            }
+
             @keyframes highlight {
                 0%, 100% {
                     background-color: transparent;
@@ -90,7 +129,7 @@
                                 <h2 class="card-title mb-0">
                                     <i class="bi bi-clipboard-data text-primary me-2"></i>Electricity and Water Meter Management
                                 </h2>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -212,134 +251,98 @@
 
 
                 <!-- Filter controls -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0"><i class="bi bi-funnel-fill me-2"></i>Filter</h5>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-funnel-fill me-2"></i> Filter & Data Management</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="get" action="manager-meter-reading" class="row g-3" id="filterForm">
+                            <div class="col-md-3">
+                                <label for="month" class="form-label">Month</label>
+                                <select class="form-select" id="month" name="month">
+                                    <c:forEach var="i" begin="1" end="12">
+                                        <option value="${i}" ${currentMonth == i ? 'selected' : ''}>${i}</option>
+                                    </c:forEach>
+                                </select>
                             </div>
-                            <div class="card-body">
-                                <form method="get" action="manager-meter-reading" class="row g-3" id="filterForm">
-                                    <div class="col-md-3">
-                                        <label for="month" class="form-label">Month</label>
-                                        <select class="form-select" id="month" name="month">
-                                            <c:forEach var="i" begin="1" end="12">
-                                                <option value="${i}" ${currentMonth == i ? 'selected' : ''}>${i}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="year" class="form-label">Year</label>
-                                        <select class="form-select" id="year" name="year">
-                                            <c:forEach var="i" begin="2020" end="2030">
-                                                <option value="${i}" ${currentYear == i ? 'selected' : ''}>${i}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="apartment" class="form-label">Apartment</label>
-                                        <select class="form-select" id="apartment" name="apartment">
-                                            <option value="">All Apartment</option>
-                                            <c:forEach var="apartment" items="${apartments}">
-                                                <option value="${apartment.apartmentId}" ${param.apartment == apartment.apartmentId ? 'selected' : ''}>
-                                                    ${apartment.apartmentName} - ${apartment.ownerName}
-                                                </option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 d-flex align-items-end">
-                                        <button type="submit" class="btn btn-primary w-100">
-                                            <i class="bi bi-search me-1"></i>Filter
+                            <div class="col-md-3">
+                                <label for="year" class="form-label">Year</label>
+                                <select class="form-select" id="year" name="year">
+                                    <c:forEach var="i" begin="2020" end="2030">
+                                        <option value="${i}" ${currentYear == i ? 'selected' : ''}>${i}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="apartment" class="form-label">Apartment</label>
+                                <select class="form-select" id="apartment" name="apartment">
+                                    <option value="" <c:if test="${empty param.apartment}">selected</c:if>>All Apartment</option>
+                                    <c:forEach var="apartment" items="${apartments}">
+                                        <option value="${apartment.apartmentId}" <c:if test="${param.apartment == apartment.apartmentId}">selected</c:if>>
+                                            ${apartment.apartmentName} - ${empty apartment.owner.fullName ? 'N/A' : apartment.owner.fullName}
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-search me-1"></i> Filter
+                                </button>
+                            </div>
+                        </form>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-6 d-flex flex-column">
+                                <form method="post" action="manager-meter-reading" enctype="multipart/form-data" id="importForm" class="d-flex flex-column h-100">
+                                    <input type="hidden" name="action" value="import">
+                                    <input type="hidden" name="importMonth" value="${currentMonth}">
+                                    <input type="hidden" name="importYear" value="${currentYear}">
+                                    <label for="excelFile" class="form-label">Select Excel File</label>
+                                    <input type="file" class="form-control mb-2" id="excelFile" name="excelFile" accept=".xlsx" required>
+                                    <div class="form-text">Only .xlsx files are supported</div>
+                                    <div class="mt-auto">
+                                        <button type="submit" class="btn btn-success w-100">
+                                            <i class="bi bi-cloud-upload me-1"></i> Import Data
                                         </button>
+                                        <a href="manager-meter-reading?action=template" class="btn btn-outline-primary w-100 mt-2">
+                                            <i class="bi bi-download me-1"></i> Download Template
+                                        </a>
                                     </div>
                                 </form>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Action buttons (Import/Export) -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0"><i class="bi bi-file-earmark-excel me-2"></i>Import/Export Data</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <!-- Import form -->
-                                    <div class="col-md-6">
-                                        <div class="card h-100 border-0 bg-light">
-                                            <div class="card-body">
-                                                <form method="post" action="manager-meter-reading" enctype="multipart/form-data" id="importForm">
-                                                    <input type="hidden" name="action" value="import">
-                                                    <input type="hidden" name="importMonth" id="importMonth" value="${currentMonth}">
-                                                    <input type="hidden" name="importYear" id="importYear" value="${currentYear}">
-
-                                                    <div class="mb-3">
-                                                        <label for="excelFile" class="form-label">Select Excel File</label>
-                                                        <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xlsx" required>
-                                                        <div class="form-text">Only .xlsx files are supported</div>
-                                                    </div>
-
-                                                    <div class="d-grid gap-2">
-                                                        <button type="submit" class="btn btn-success">
-                                                            <i class="bi bi-cloud-upload me-1"></i>Import Data
-                                                        </button>
-                                                        <a href="manager-meter-reading?action=template" class="btn btn-outline-primary">
-                                                            <i class="bi bi-download me-1"></i>Download Data Entry Template
-                                                        </a>
-                                                    </div>
-                                                </form>
-                                            </div>
+                            <div class="col-md-6 d-flex flex-column">
+                                <form method="get" action="manager-meter-reading" id="exportForm" class="d-flex flex-column h-100">
+                                    <input type="hidden" name="action" value="export">
+                                    <input type="hidden" name="month" value="${currentMonth}">
+                                    <input type="hidden" name="year" value="${currentYear}">
+                                    <input type="hidden" name="apartment" value="${param.apartment}">
+                                    <label class="form-label">Export Report</label>
+                                    <div class="form-text mb-3">
+                                        Export Monthly Electricity and Water Report ${currentMonth}/${currentYear}
+                                        <c:if test="${not empty param.apartment}"> for selected apartment</c:if>
                                         </div>
-                                    </div>
-
-                                    <!-- Export options -->
-                                    <div class="col-md-6">
-                                        <div class="card h-100 border-0 bg-light">
-                                            <div class="card-body">
-                                                <form method="get" action="manager-meter-reading" id="exportForm">
-                                                    <input type="hidden" name="action" value="export">
-                                                    <input type="hidden" name="month" id="exportMonth" value="${currentMonth}">
-                                                    <input type="hidden" name="year" id="exportYear" value="${currentYear}">
-                                                    <input type="hidden" name="apartment" id="exportApartment" value="${param.apartment}">
-
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Export Report</label>
-                                                        <div class="form-text mb-3">
-                                                            Export Monthly Electricity and Water Meter Report ${currentMonth}/${currentYear}
-                                                            <c:if test="${not empty param.apartment}">
-                                                                cho căn hộ đã chọn
-                                                            </c:if>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="d-grid gap-2">
-                                                        <button type="submit" class="btn btn-primary">
-                                                            <i class="bi bi-file-earmark-excel me-1"></i>Export to Excel
-                                                        </button>
-                                                        <button type="button" class="btn btn-outline-secondary" id="generateBillsBtn">
-                                                            <i class="bi bi-receipt me-1"></i>Generate Invoice
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                        <div class="mt-auto">
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                <i class="bi bi-file-earmark-excel me-1"></i> Export to Excel
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 mt-2" id="generateBillsBtn">
+                                                <i class="bi bi-receipt me-1"></i> Generate Invoice
+                                            </button>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Meter Readings Table -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">
-                                    <i class="bi bi-table me-2"></i>Monthly Electricity and Water Meter Reading ${currentMonth}/${currentYear}
+                    <!-- Meter Readings Table -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="bi bi-table me-2"></i>Monthly Electricity and Water Meter Reading ${currentMonth}/${currentYear}
                                 </h5>
                                 <span class="badge bg-primary">${meterReadings.size()} Meter Reading</span>
                             </div>
@@ -367,10 +370,10 @@
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${reading.meterType eq 'Electricity'}">
-                                                                <span class="badge bg-warning text-dark">Electricity</span>
+                                                                <span class="label-ew badge bg-warning text-dark">Electricity</span>
                                                             </c:when>
                                                             <c:when test="${reading.meterType eq 'Water'}">
-                                                                <span class="badge bg-info text-dark">Water</span>
+                                                                <span class="label-ew badge bg-info text-dark">Water</span>
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <span class="badge bg-secondary">${reading.meterType}</span>
@@ -466,12 +469,12 @@
 
                             <div class="alert alert-info">
                                 <i class="bi bi-info-circle me-2"></i>
-                               You are about to generate the electricity and water bill for the month <strong>${currentMonth}/${currentYear}</strong>
+                                You are about to generate the electricity and water bill for the month <strong>${currentMonth}/${currentYear}</strong>
                             </div>
 
                             <div class="mb-3">
                                 <label for="paymentDueDate" class="form-label">Payment Due Date</label>
-                                <input type="date" class="form-control" id="datePicker" name="paymentDueDate" placeholder="dd/MM/yyyy" required>
+                                <input type="date" class="form-control" id="datePicker-future" name="paymentDueDate" placeholder="dd/MM/yyyy" required>
                                 <div class="form-text">Customers must make payment before this date</div>
                             </div>
 
@@ -490,7 +493,12 @@
                                         <i class="bi bi-building me-1"></i>Selected Apartments Only
                                         <c:if test="${not empty param.apartment}">
                                             <span class="badge bg-primary ms-1">
-                                                ${apartments.stream().filter(a -> a.apartmentId.toString() eq param.apartment).findFirst().get().apartmentName}
+                                                <c:set var="apartmentId" value="${param.apartment}" />
+                                                <c:forEach var="a" items="${apartments}">
+                                                    <c:if test="${a.apartmentId eq apartmentId}">
+                                                        ${a.apartmentName}
+                                                    </c:if>
+                                                </c:forEach>
                                             </span>
                                         </c:if>
                                     </label>
@@ -518,53 +526,56 @@
             </div>
         </div>
         <script>
+            $(document).ready(function () {
+                $('#apartment').select2({
+                    placeholder: false,
+                    theme: 'bootstrap-5',
+                    allowClear: false,
+                    width: '100%',
+                    templateResult: function (state) {
+                        return $('<span>' + state.text + '</span>');
+                    },
+                    templateSelection: function (state) {
+                        return $('<span>' + state.text + '</span>');
+                    }
+                });
+            });
+
             document.addEventListener('DOMContentLoaded', function () {
-                // Set default payment due date to end of next month
                 function setDefaultDueDate() {
                     const today = new Date();
                     const nextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
 
-                    // Format date as YYYY-MM-DD for the date input
                     const yyyy = nextMonth.getFullYear();
                     const mm = String(nextMonth.getMonth() + 1).padStart(2, '0');
                     const dd = String(nextMonth.getDate()).padStart(2, '0');
                     const formattedDate = `${yyyy}-${mm}-${dd}`;
 
-                                // Set the value of the payment due date input
                                 const paymentDueDateInput = document.getElementById('paymentDueDate');
                                 if (paymentDueDateInput) {
                                     paymentDueDateInput.value = formattedDate;
-                                    paymentDueDateInput.min = formattedDate; // Ensure user can't select a date before today
+                                    paymentDueDateInput.min = formattedDate;
                                 }
                             }
-
-                            // Call the function to set default due date
                             setDefaultDueDate();
 
-                            // Handle form submission
                             const generateBillsForm = document.getElementById('generateBillsForm');
                             if (generateBillsForm) {
                                 generateBillsForm.addEventListener('submit', function (event) {
-                                    // Show loading spinner and disable submit button
                                     const submitButton = generateBillsForm.querySelector('button[type="submit"]');
                                     if (submitButton) {
                                         submitButton.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Generating Bill...';
                                         submitButton.disabled = true;
                                     }
-
-                                    // Optionally, you can add a small delay to show the loading state
                                     setTimeout(() => {
-                                        // Submit the form
                                         generateBillsForm.submit();
                                     }, 500);
                                 });
                             }
 
-                            // Handle modal show event
                             const generateBillsModal = document.getElementById('generateBillsModal');
                             if (generateBillsModal) {
                                 generateBillsModal.addEventListener('show.bs.modal', function () {
-                                    // Reset form state when modal is shown
                                     setDefaultDueDate();
                                     const submitButton = generateBillsForm.querySelector('button[type="submit"]');
                                     if (submitButton) {
@@ -576,13 +587,11 @@
                         });
 
                         document.addEventListener('DOMContentLoaded', function () {
-                            // Sync filter values with export form
                             document.getElementById('filterForm').addEventListener('submit', function () {
                                 document.getElementById('importMonth').value = document.getElementById('month').value;
                                 document.getElementById('importYear').value = document.getElementById('year').value;
                             });
 
-                            // Update export form when filter changes
                             document.getElementById('month').addEventListener('change', function () {
                                 document.getElementById('exportMonth').value = this.value;
                             });
@@ -600,7 +609,6 @@
 //                            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
 //                            document.getElementById('paymentDueDate').valueAsDate = nextMonth;
 
-                            // Handle delete button clicks
                             const deleteButtons = document.querySelectorAll('.delete-reading');
                             const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 
@@ -611,20 +619,14 @@
                                     deleteModal.show();
                                 });
                             });
-
-                            // Handle generate bills button
                             document.getElementById('generateBillsBtn').addEventListener('click', function () {
                                 const generateBillsModal = new bootstrap.Modal(document.getElementById('generateBillsModal'));
                                 generateBillsModal.show();
-
-                                // Set selected apartment value if filtering by apartment
                                 const apartmentValue = document.getElementById('apartment').value;
                                 if (apartmentValue) {
                                     document.getElementById('selectedApartment').checked = true;
                                 }
                             });
-
-                            // Show toast message function
                             window.showToast = function (message, type = 'success') {
                                 const toastContainer = document.getElementById('toast-container');
                                 const toastId = 'toast-' + Date.now();
@@ -646,14 +648,10 @@
                                 const toastElement = document.getElementById(toastId);
                                 const toast = new bootstrap.Toast(toastElement, {autohide: true, delay: 3000});
                                 toast.show();
-
-                                // Remove toast after hiding
                                 toastElement.addEventListener('hidden.bs.toast', function () {
                                     toastElement.remove();
                                 });
                             };
-
-                            // Show success message if present in URL parameters
                             const urlParams = new URLSearchParams(window.location.search);
                             const successMsg = urlParams.get('success');
                             const errorMsg = urlParams.get('error');
@@ -665,8 +663,6 @@
                             if (errorMsg) {
                                 window.showToast(decodeURIComponent(errorMsg), 'danger');
                             }
-
-                            // Highlight newly added/modified meter readings
                             const highlightReadingId = urlParams.get('highlight');
                             if (highlightReadingId) {
                                 const row = document.getElementById('reading-' + highlightReadingId);
