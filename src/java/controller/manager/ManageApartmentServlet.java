@@ -128,7 +128,7 @@ public class ManageApartmentServlet extends HttpServlet {
             }
             if (ownerId == 0 && !"available".equalsIgnoreCase(status)) {
                 jsonResponse.put("success", false);
-                jsonResponse.put("message", "Status must be 'available' if apartment has an owner!");
+                jsonResponse.put("message", "Status must be 'available' if apartment does not have owner!");
                 out.write(jsonResponse.toString());
                 return;
             }

@@ -576,19 +576,46 @@ public class ApartmentDAO implements DAOInterface<Apartment, Integer> {
         }
         return 0;
     }
-    public boolean resetOwner(int apartmentId) {
-        String sqlUpdate = "UPDATE Apartment SET OwnerID = NULL, Status = 'Available' WHERE ApartmentID = ?";
+//    public boolean resetOwner(int apartmentId) {
+//        String sqlUpdate = "UPDATE Apartment SET OwnerID = NULL, Status = 'Available' WHERE ApartmentID = ?";
+//
+//        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlUpdate)) {
+//
+//            ps.setInt(1, apartmentId);
+//            int rowsAffected = ps.executeUpdate();
+//
+//            return rowsAffected > 0;
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//            Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return false;
+//    }
+public boolean resetOwner(int apartmentId) {
+        String checkContractSQL = "SELECT COUNT(*) FROM Contract WHERE ApartmentID = ? AND LeaseEndDate >= CAST(GETDATE() AS DATE);";
+        String updateSQL = "UPDATE Apartment SET OwnerID = NULL, Status = 'Available' WHERE ApartmentID = ?";
 
-        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sqlUpdate)) {
+        try (Connection connection = DBContext.getConnection(); PreparedStatement checkStmt = connection.prepareStatement(checkContractSQL)) {
 
-            ps.setInt(1, apartmentId);
-            int rowsAffected = ps.executeUpdate();
+            checkStmt.setInt(1, apartmentId);
+            ResultSet rs = checkStmt.executeQuery();
 
-            return rowsAffected > 0;
+            if (rs.next() && rs.getInt(1) > 0) {
+                // Nếu có contract chưa hết hạn, không cho phép reset
+                return false;
+            }
+
+            // Nếu không có hợp đồng nào còn hiệu lực, tiếp tục reset Owner
+            try (PreparedStatement updateStmt = connection.prepareStatement(updateSQL)) {
+                updateStmt.setInt(1, apartmentId);
+                int rowsAffected = updateStmt.executeUpdate();
+                return rowsAffected > 0;
+            }
+
         } catch (SQLException ex) {
-            ex.printStackTrace();
             Logger.getLogger(ApartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return false;
     }
 
