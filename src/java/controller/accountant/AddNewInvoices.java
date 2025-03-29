@@ -6,6 +6,7 @@ package controller.accountant;
 
 import dao.ApartmentDAO;
 import dao.InvoiceDAO;
+import dao.NotificationDAO;
 import dao.ResidentDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,8 +15,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -24,7 +27,9 @@ import java.util.List;
 import model.Apartment;
 import model.InvoiceDetail;
 import model.Invoices;
+import model.Notification;
 import model.Resident;
+import model.Staff;
 import model.TypeBill;
 
 /**
@@ -234,6 +239,15 @@ public class AddNewInvoices extends HttpServlet {
             for (InvoiceDetail detail : details) {
                 iDAO.insertInvoiceDetail(newInvoiceId, detail);
             }
+            int idinv= iDAO.getLatestInvoiceID();
+            HttpSession session = request.getSession();
+            Staff staff= (Staff) session.getAttribute("staff");
+            NotificationDAO notificationDAO= new NotificationDAO();
+            Notification notification_staff = new Notification(staff.getStaffId(),
+                          "Staff",invoice.getDescription() +"have been created. Please check details in the system and pay first " +invoice.getDueDateft(), "Invoice",
+                          LocalDateTime.now(), false, idinv,
+                          "Invoice", null, resident);
+            notificationDAO.insert(notification_staff);
             response.sendRedirect("InvoicesManager");
 
         } catch (Exception e) {

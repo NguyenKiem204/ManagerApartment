@@ -61,10 +61,14 @@
             .text-start {
                 text-align: left ; /* Căn trái văn bản */
             }
+            td.description {
+                max-width: 400px; /* Điều chỉnh độ rộng tùy ý */
+                word-wrap: break-word;
+                white-space: pre-wrap; /* Giữ khoảng trắng và xuống dòng tự động */
+            }
         </style>
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 
         <script>
             function formatInput(input) {
@@ -138,7 +142,11 @@
                 </div>
 
                 <div class="card p-4 shadow-lg rounded-4" style="max-width: 1100px; margin: 10px auto;">
-                    <h4 class="text-center">Expense Detail on </h4>
+                    <%@ page import="java.text.SimpleDateFormat, java.util.Date" %>
+                    <%
+                        String today = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                    %>
+                    <h4 class="text-center">Expense Detail <%= today %> </h4>
                     <table class="tableinvoice mt-4">
                         <thead>
                             <tr>
@@ -154,13 +162,13 @@
                                 <c:when test="${not empty exptoday.expenseDetails}">
                                     <c:forEach items="${exptoday.expenseDetails}" var="detail">
                                         <tr>
-                                            <td>${detail.description}</td>
+                                            <td class="description">${detail.description}</td>
                                             <td>${detail.typeExpense.typeName}</td>
                                             <td>${detail.status}</td>
                                             <td>
 
 
-                                                <fmt:formatNumber value="${detail.amount}" pattern="#,##0.00" />
+                                                <fmt:formatNumber value="${detail.amount}" pattern="#,##0.00d" />
 
                                             </td>
                                         </tr>
@@ -179,7 +187,7 @@
                             <tr>
                                 <td colspan="3" style="text-align: right; font-weight: bold;">Total Amount:</td>
                                 <td style="font-weight: bold;">
-                                    <fmt:formatNumber value="${totalAmount}" pattern="#,##0.00" />
+                                    <fmt:formatNumber value="${totalAmount}" pattern="#,##0.00d" />
                                 </td>
                             </tr>
                         </tfoot>

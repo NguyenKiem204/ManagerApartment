@@ -189,7 +189,11 @@
             .total-amount span {
                 color: #dc3545;
             }
-           
+           .tableinvoice td:nth-child(2) {
+    max-width: 250px;
+    word-wrap: break-word;
+    white-space: normal;
+}
         </style>
     </head>
     <body>
