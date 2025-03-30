@@ -391,7 +391,11 @@
             <div class="container">
                 <div class="bill-container" id="bill-container">
                     <div class="bill-header">
-                        <div id="billStatus" class="bill-status status-unpaid">Unpaid</div>
+                        <div id="billStatus" class="bill-status"> 
+                        </div>
+
+
+
                         <div class="bill-logo">
                             <i class="fas fa-building"></i> SMART LIVING
                         </div>
@@ -499,81 +503,82 @@
                         </div>
 
                         <div class="payment-actions">
-                            <button class="btn-action btn-primary" 
-                                    data-id="${utilityBill.invoiceId}" 
-                                    onclick="location.href = '<%= request.getContextPath() %>/owner/PaymentServlet?invoiceID=${utilityBill.invoiceId}'">
-                                <i class="fas fa-credit-card"></i> Pay Now
-                            </button>
+                            <c:if test="${!status}">
+                                <button class="btn-action btn-primary" 
+                                        data-id="${utilityBill.invoiceId}" 
+                                        onclick="location.href = '<%= request.getContextPath() %>/owner/PaymentServlet?invoiceID=${utilityBill.invoiceId}'">
+                                    <i class="fas fa-credit-card"></i> Pay Now
+                                </button>
+                            </c:if>
+
 
                             <button class="btn-action btn-outline" 
                                     onclick="location.href = '<%= request.getContextPath() %>/owner/ViewHistoryInvoice'">
-                                                <i class="fas fa-history"></i> Payment History
-                        </button>
+                                <i class="fas fa-history"></i> Payment History
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bill-footer">
+                        <p>For any inquiries, please contact: building@gmail.com | Hotline: 1-800-123-4567</p>
+                        <p>© 2025 Smart Living - Intelligent Building Management System</p>
                     </div>
                 </div>
 
-                <div class="bill-footer">
-                    <p>For any inquiries, please contact: building@gmail.com | Hotline: 1-800-123-4567</p>
-                    <p>© 2025 Smart Living - Intelligent Building Management System</p>
-                </div>
-            </div>
-
-            <div class="bill-actions">
-                <div class="action-button">
-                    <i class="fas fa-print"></i>
-                    <span class="action-tooltip">Print Bill</span>
-                </div>
-                <div class="action-button">
-                    <i class="fas fa-download"></i>
-                    <span class="action-tooltip">Download PDF</span>
-                </div>
-                <div class="action-button">
-                    <i class="fas fa-share-alt"></i>
-                    <span class="action-tooltip">Share</span>
+                <div class="bill-actions">
+                    <div class="action-button">
+                        <i class="fas fa-print"></i>
+                        <span class="action-tooltip">Print Bill</span>
+                    </div>
+                    <div class="action-button">
+                        <i class="fas fa-download"></i>
+                        <span class="action-tooltip">Download PDF</span>
+                    </div>
+                    <div class="action-button">
+                        <i class="fas fa-share-alt"></i>
+                        <span class="action-tooltip">Share</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <script>
-    // Update status color based on payment status
-        const status = "${utilityBill.status}";
-const statusElement = document.getElementById('billStatus');
-        
-if (status === 'PAID') {
-                                                statusElement.className = 'bill-status status-paid';
-                                        statusElement.textContent = 'Paid';
-                } else if (status === 'PENDING') {
-                                                statusElement.className = 'bill-status status-pending';
-                                        statusElement.textContent = 'Pending';
-} else {
-                                                statusElement.className = 'bill-status status-unpaid';
-                                        statusElement.textContent = 'Unpaid';
-}
-                
-// Print functionality
-document.querySelector('.action-button:nth-child(1)').addEventListener('click', function () {
-                                                window.print();
-});
-                
-// Download PDF functionality
-document.querySelector('.action-button:nth-child(2)').addEventListener('click', function () {
-                                                // This would typically trigger a server-side PDF generation
-                                                alert('PDF download functionality would be implemented here');
-});
-                
-// Share functionality
-document.querySelector('.action-button:nth-child(3)').addEventListener('click', function () {
-                                                if (navigator.share) {
-                                        navigator.share({
-                                        title: 'My Utility Bill',
-                                                text: 'Check out my utility bill for ${utilityBill.billingMonth}/${utilityBill.billingYear}',
-                                                url: window.location.href,
-                                        })
-                                                .catch((error) => console.log('Error sharing', error));
-                                        } else {
-                                        alert('Web Share API not supported in your browser');
-                                        }
-                });
-</script>
-</body>
+        <script>
+            const status = ${status};
+            const statusElement = document.getElementById("billStatus");
+
+            if (status) {
+                statusElement.className = "bill-status status-paid";
+                statusElement.textContent = "Paid";
+            } else {
+                statusElement.className = "bill-status status-unpaid";
+                statusElement.textContent = "Unpaid";
+            }
+
+
+
+            // Print functionality
+            document.querySelector('.action-button:nth-child(1)').addEventListener('click', function () {
+                window.print();
+            });
+
+            // Download PDF functionality
+            document.querySelector('.action-button:nth-child(2)').addEventListener('click', function () {
+                // This would typically trigger a server-side PDF generation
+                alert('PDF download functionality would be implemented here');
+            });
+
+            // Share functionality
+            document.querySelector('.action-button:nth-child(3)').addEventListener('click', function () {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'My Utility Bill',
+                        text: 'Check out my utility bill for ${utilityBill.billingMonth}/${utilityBill.billingYear}',
+                        url: window.location.href,
+                    })
+                            .catch((error) => console.log('Error sharing', error));
+                } else {
+                    alert('Web Share API not supported in your browser');
+                }
+            });
+        </script>
+    </body>
 </html>

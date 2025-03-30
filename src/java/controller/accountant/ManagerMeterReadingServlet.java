@@ -39,7 +39,8 @@ import model.Staff;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
- * Servlet for managing meter readings including viewing, exporting, and importing data
+ * Servlet for managing meter readings including viewing, exporting, and
+ * importing data
  */
 @WebServlet(name = "ManagerMeterReadingServlet", urlPatterns = {"/accountant/manager-meter-reading"})
 @MultipartConfig
@@ -47,7 +48,7 @@ public class ManagerMeterReadingServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(ManagerMeterReadingServlet.class.getName());
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    
+
     private MeterReadingDAO meterReadingDAO;
     private MeterDAO meterDAO;
     private ExportLogDAO exportLogDAO;
@@ -137,7 +138,7 @@ public class ManagerMeterReadingServlet extends HttpServlet {
         int month = getValidatedMonth(request.getParameter("month"), now.getMonthValue());
         int year = getValidatedYear(request.getParameter("year"), now.getYear());
         String apartmentFilter = request.getParameter("apartment");
-        
+
         List<MeterReading> readings;
         if (apartmentFilter != null && !apartmentFilter.isEmpty()) {
             try {
@@ -172,9 +173,9 @@ public class ManagerMeterReadingServlet extends HttpServlet {
     private void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         List<Meter> meters = meterDAO.getAllMeters();
-        
+
         ByteArrayOutputStream templateStream = ExcelUtils.createMeterReadingTemplate(meters);
-        
+
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         String fileName = "meter_reading_template.xlsx";
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
@@ -183,94 +184,95 @@ public class ManagerMeterReadingServlet extends HttpServlet {
             outputStream.flush();
         }
     }
+
     private void importMeterReadings(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException, SQLException {
-    try {
-        Part filePart = request.getPart("excelFile");
-        if (filePart == null) {
-            request.setAttribute("importError", "No file selected");
-            displayMeterReadings(request, response);
-            return;
-        }
-        String fileName = filePart.getSubmittedFileName();
-        if (!fileName.toLowerCase().endsWith(".xlsx")) {
-            request.setAttribute("importError", "Only .xlsx files are supported");
-            displayMeterReadings(request, response);
-            return;
-        }
-        Calendar cal = Calendar.getInstance();
-        int month = getValidatedMonth(request.getParameter("importMonth"), cal.get(Calendar.MONTH) + 1);
-        int year = getValidatedYear(request.getParameter("importYear"), cal.get(Calendar.YEAR));
-        Integer staffId = getUserIdFromSession(request);
-        Map<String, Integer> meterMap = getMeterIdMap();
-        
-        List<MeterReading> readings;
-        try (InputStream inputStream = filePart.getInputStream()) {
-            readings = ExcelUtils.readMeterReadingsFromExcel(inputStream, meterMap, staffId, month, year);
-        } catch (InvalidFormatException e) {
-            request.setAttribute("importError", "Invalid Excel format: " + e.getMessage());
-            displayMeterReadings(request, response);
-            return;
-        }
-        
-        List<String> errors = validateReadings(readings);
-        if (!errors.isEmpty()) {
-            request.setAttribute("importErrors", errors);
-            displayMeterReadings(request, response);
-            return;
-        }
-        int createdCount = 0;
-        int updatedCount = 0;
-        
-        for (MeterReading reading : readings) {
-            MeterReading existingReading = meterReadingDAO.getMeterReadingByMeterAndMonthYear(
-                reading.getMeterId(), month, year);
-            
-            if (existingReading != null) {
-                reading.setReadingId(existingReading.getReadingId()); // Set the ID of the existing reading
-                if (meterReadingDAO.updateMeterReading(reading) > 0) {
-                    updatedCount++;
-                }
-            } else {
-                if (meterReadingDAO.addMeterReading(reading) > 0) {
-                    createdCount++;
+            throws ServletException, IOException, SQLException {
+        try {
+            Part filePart = request.getPart("excelFile");
+            if (filePart == null) {
+                request.setAttribute("importError", "No file selected");
+                displayMeterReadings(request, response);
+                return;
+            }
+            String fileName = filePart.getSubmittedFileName();
+            if (!fileName.toLowerCase().endsWith(".xlsx")) {
+                request.setAttribute("importError", "Only .xlsx files are supported");
+                displayMeterReadings(request, response);
+                return;
+            }
+            Calendar cal = Calendar.getInstance();
+            int month = getValidatedMonth(request.getParameter("importMonth"), cal.get(Calendar.MONTH) + 1);
+            int year = getValidatedYear(request.getParameter("importYear"), cal.get(Calendar.YEAR));
+            Integer staffId = getUserIdFromSession(request);
+            Map<String, Integer> meterMap = getMeterIdMap();
+
+            List<MeterReading> readings;
+            try (InputStream inputStream = filePart.getInputStream()) {
+                readings = ExcelUtils.readMeterReadingsFromExcel(inputStream, meterMap, staffId, month, year);
+            } catch (InvalidFormatException e) {
+                request.setAttribute("importError", "Invalid Excel format: " + e.getMessage());
+                displayMeterReadings(request, response);
+                return;
+            }
+
+            List<String> errors = validateReadings(readings);
+            if (!errors.isEmpty()) {
+                request.setAttribute("importErrors", errors);
+                displayMeterReadings(request, response);
+                return;
+            }
+            int createdCount = 0;
+            int updatedCount = 0;
+
+            for (MeterReading reading : readings) {
+                MeterReading existingReading = meterReadingDAO.getMeterReadingByMeterAndMonthYear(
+                        reading.getMeterId(), month, year);
+
+                if (existingReading != null) {
+                    reading.setReadingId(existingReading.getReadingId()); // Set the ID of the existing reading
+                    if (meterReadingDAO.updateMeterReading(reading) > 0) {
+                        updatedCount++;
+                    }
+                } else {
+                    if (meterReadingDAO.addMeterReading(reading) > 0) {
+                        createdCount++;
+                    }
                 }
             }
+            if (createdCount == 0 && updatedCount == 0) {
+                request.setAttribute("importError", "Data to duplicate, cannot insert");
+            } else {
+                request.setAttribute("importSuccess", "Data insert: " + createdCount + ", data update: " + updatedCount);
+            }
+
+            displayMeterReadings(request, response);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error importing meter readings", e);
+            request.setAttribute("importError", "Error importing meter readings: " + e.getMessage());
+            displayMeterReadings(request, response);
         }
-        if(createdCount==0 && updatedCount==0){
-            request.setAttribute("importError", "Data to duplicate, cannot insert");
-        }else{
-            request.setAttribute("importSuccess", "Data insert: " + createdCount+ ", data update: "+ updatedCount);
-        }
-        
-        displayMeterReadings(request, response);
-    } catch (Exception e) {
-        LOGGER.log(Level.SEVERE, "Error importing meter readings", e);
-        request.setAttribute("importError", "Error importing meter readings: " + e.getMessage());
-        displayMeterReadings(request, response);
     }
-}
-    
+
     /**
      * Get meter ID mapping (meter number -> meter ID)
      */
     private Map<String, Integer> getMeterIdMap() throws SQLException {
         List<Meter> meters = meterDAO.getAllMeters();
         Map<String, Integer> meterMap = new HashMap<>();
-        
+
         for (Meter meter : meters) {
             meterMap.put(meter.getMeterNumber(), meter.getMeterId());
         }
-        
+
         return meterMap;
     }
-    
+
     /**
      * Validate meter readings before saving
      */
     private List<String> validateReadings(List<MeterReading> readings) {
         List<String> errors = new ArrayList<>();
-        
+
         for (int i = 0; i < readings.size(); i++) {
             MeterReading reading = readings.get(i);
             if (reading.getConsumption().compareTo(BigDecimal.ZERO) < 0) {
@@ -283,17 +285,18 @@ public class ManagerMeterReadingServlet extends HttpServlet {
                 errors.add("Row " + (i + 1) + ": Reading date cannot be in the future");
             }
         }
-        
+
         return errors;
     }
+
     private Map<String, Object> calculateMeterReadingStats(List<MeterReading> readings) {
         Map<String, Object> stats = new HashMap<>();
-        
+
         BigDecimal totalElectricityConsumption = BigDecimal.ZERO;
         BigDecimal totalWaterConsumption = BigDecimal.ZERO;
         int electricityCount = 0;
         int waterCount = 0;
-        
+
         for (MeterReading reading : readings) {
             if ("Electricity".equals(reading.getMeterType())) {
                 totalElectricityConsumption = totalElectricityConsumption.add(reading.getConsumption());
@@ -303,33 +306,32 @@ public class ManagerMeterReadingServlet extends HttpServlet {
                 waterCount++;
             }
         }
-        
+
         stats.put("totalElectricityConsumption", totalElectricityConsumption);
         stats.put("totalWaterConsumption", totalWaterConsumption);
         stats.put("electricityCount", electricityCount);
         stats.put("waterCount", waterCount);
         stats.put("totalReadings", readings.size());
-        
-        BigDecimal avgElectricityConsumption = electricityCount > 0 
-                ? totalElectricityConsumption.divide(new BigDecimal(electricityCount), 2, BigDecimal.ROUND_HALF_UP) 
+
+        BigDecimal avgElectricityConsumption = electricityCount > 0
+                ? totalElectricityConsumption.divide(new BigDecimal(electricityCount), 2, BigDecimal.ROUND_HALF_UP)
                 : BigDecimal.ZERO;
-        
-        BigDecimal avgWaterConsumption = waterCount > 0 
-                ? totalWaterConsumption.divide(new BigDecimal(waterCount), 2, BigDecimal.ROUND_HALF_UP) 
+
+        BigDecimal avgWaterConsumption = waterCount > 0
+                ? totalWaterConsumption.divide(new BigDecimal(waterCount), 2, BigDecimal.ROUND_HALF_UP)
                 : BigDecimal.ZERO;
-        
+
         stats.put("avgElectricityConsumption", avgElectricityConsumption);
         stats.put("avgWaterConsumption", avgWaterConsumption);
-        
+
         return stats;
     }
-    
-    
+
     private Integer getUserIdFromSession(HttpServletRequest request) {
-        Staff staff = (Staff)request.getSession().getAttribute("staff");
+        Staff staff = (Staff) request.getSession().getAttribute("staff");
         return staff.getStaffId();
     }
-    
+
     /**
      * Validate month parameter
      */
@@ -341,7 +343,7 @@ public class ManagerMeterReadingServlet extends HttpServlet {
             return defaultMonth;
         }
     }
-    
+
     /**
      * Validate year parameter
      */

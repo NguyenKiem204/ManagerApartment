@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import model.Resident;
 import model.UtilityBill;
 import model.UtilityRate;
 
@@ -27,15 +28,6 @@ import model.UtilityRate;
 @WebServlet(name="UtilityBillDetailServlet", urlPatterns={"/utility-detail"})
 public class UtilityBillDetailServlet extends HttpServlet {
   
-   
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -43,12 +35,24 @@ public class UtilityBillDetailServlet extends HttpServlet {
         UtilityRateDAO utilityRateDAO = new UtilityRateDAO();
         UtilityRate electricity = utilityRateDAO.getCurrentUtilityRate("Electricity", LocalDateTime.now());
         UtilityRate water = utilityRateDAO.getCurrentUtilityRate("Water", LocalDateTime.now());
+        Resident resident = (Resident)request.getSession().getAttribute("resident");
         
         String utilityIdParam = request.getParameter("utilityId");
         Integer uilityId = null;
         if(utilityIdParam!=null){
             uilityId = Integer.parseInt(utilityIdParam);
             UtilityBill utilityBill = utilityBillDAO.getBillDetails(uilityId);
+            if(resident==null || resident.getResidentId() != utilityBill.getOwner().getResidentId()){
+                forwardToErrorPage(request, response, 403, "You do not have permission to access this resource.");
+                return;
+            }
+            System.out.println("Status của InvoiceID : " + utilityBillDAO.isInvoicePaid(utilityBill.getInvoiceId()));
+
+            if(utilityBillDAO.isInvoicePaid(utilityBill.getInvoiceId())){
+                request.setAttribute("status", true);
+            }else{
+                request.setAttribute("status", false);
+            }
             request.setAttribute("utilityBill", utilityBill);
         }
         System.out.println(water);
@@ -56,6 +60,11 @@ public class UtilityBillDetailServlet extends HttpServlet {
         request.setAttribute("water", water);
        request.getRequestDispatcher("utilitybill-detail.jsp").forward(request, response);
     } 
+    private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, int statusCode, String errorMessage) throws ServletException, IOException {
+        request.setAttribute("errorCode", statusCode);
+        request.setAttribute("errorMessage", errorMessage);
+        request.getRequestDispatcher("/error-exception.jsp").forward(request, response);
+    }
 
     /** 
      * Handles the HTTP <code>POST</code> method.
