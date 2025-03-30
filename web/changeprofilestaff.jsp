@@ -29,7 +29,7 @@
         <form action="update-profile-staff" method="POST" enctype="multipart/form-data">
             <div class="text-center mb-3">
                 <img id="preview-img" 
-                     src="<%= request.getContextPath() %>${staff.image.imageURL}" 
+                     src="<%= request.getContextPath() %>/${not empty staff.image.imageURL ? staff.image.imageURL : '/assets/images/avatar/original.jpg'}" 
                      alt="Profile Picture" class="profile-img rounded-circle" width="150" height="150">
                 <input type="file" class="form-control mt-2" name="imgURL" id="upload-photo" accept="image/*">
             </div>

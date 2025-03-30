@@ -28,7 +28,7 @@
                     <div class="row">
                         <c:set var="resident" value="${sessionScope.resident}"/>
                         <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
-                            <img src="<%= request.getContextPath() %><c:out value='${resident.image.imageURL}'/>"
+                            <img src="<%= request.getContextPath() %>/${not empty resident.image.imageURL ? resident.image.imageURL : '/assets/images/avatar/original.jpg'}"
                                  alt="Profile Picture" class="img-fluid rounded-circle profile-img"/>
                         </div>
                         <div class="col-md-8 d-flex flex-column justify-content-center">

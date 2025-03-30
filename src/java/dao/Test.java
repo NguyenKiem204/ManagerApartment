@@ -51,10 +51,10 @@ public class Test {
         InvoiceDAO invoiceDAO = new InvoiceDAO();
         CommentDAO commentDAO = new CommentDAO();
 
-        List<Request> list = requestDAO.getAllRequestsBySearchOrFilterOrSortOfResident(null, 0, 0, 0, 1, 5, 3);
-        for (Request request : list) {
-            System.out.println(request.toString());
-        }
+//        List<Request> list = requestDAO.getAllRequestsBySearchOrFilterOrSortOfResident(null, 0, 0, 0, 1, 5, 3);
+//        for (Request request : list) {
+//            System.out.println(request.toString());
+//        }
 //        Map<String, Integer> requestCounts = requestDAO.getRequestCountLast7Days();
 //
 //for (Map.Entry<String, Integer> entry : requestCounts.entrySet()) {
@@ -155,8 +155,8 @@ public class Test {
 //      Resident resident1 = new Resident("Nguyễn MH", "123", "0328674349", "3984136534776", "mh@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(6).build());
 //       residentDAO.insert(resident1);
 
-//        Resident resident = new Resident("Nguyễn Kiểm", "kiem@12345", "0331477047", "3984136534764", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
-//        residentDAO.insert(resident);
+        Resident resident = new Resident("Nguyễn Kiểm", "kiem@12345", "0331477047", "3984136534764", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
+        residentDAO.insert(resident);
 
 //      Resident resident = new Resident("Nguyễn MH", "123", "0328674344", "3984136534766", "nkiem347@gmail.com",  LocalDate.of(2004, 12, 3), "Female", "ACTIVE", new Image().builder().imageID(2).build(), new Role().builder().roleID(7).build());
 //       residentDAO.insert(resident);
@@ -182,6 +182,7 @@ public class Test {
 
 //        Staff staff1 = new Staff("Nguyễn Kiểm Admin", "kiem@12345", "0336750744", "044567203453", "kiemnvhe186025@fpt.edu.vn",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(1).build());
 //         staffDAO.insert(staff1); 
+    
 //        Staff staff = new Staff("Nguyễn Văn Kiểm", "kiem@12345", "0931654542", "6634983361194", "nkien349@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(3).build());
 //        staffDAO.insert(staff);
 //        Staff staff = new Staff("Nguyễn Văn a", "123", "0353215889", "001204040218", "aya@gmail.com",  LocalDate.of(2000, 6, 27), "Male", "Active", new Image().builder().imageID(1).build(), new Role().builder().roleID(4).build());
@@ -208,7 +209,8 @@ public class Test {
 //        List<Request> listrq = requestDAO.selectAll();
 //        for (Request request : listrq) {
 //            System.out.println(request.toString());
-    }
+
+    
 //        System.out.println(residentDAO.getResidentDetailByID(3));
 //        List<Staff> list = staffDAO.selectAll();
 //        for (Staff staff : list) {
@@ -216,4 +218,5 @@ public class Test {
 //        }
 //
 //    }
+    }
 }

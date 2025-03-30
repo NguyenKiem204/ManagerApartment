@@ -32,7 +32,7 @@
                             <div class="row">
                                 <c:set var="staff" value="${sessionScope.staff}" />
                                 <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
-                                    <img src="<%= request.getContextPath() %>${staff.image.imageURL}"
+                                    <img src="<%= request.getContextPath() %>/${not empty staff.image.imageURL ? staff.image.imageURL : '/assets/images/avatar/original.jpg'}"
                                          alt="Ảnh cá nhân" class="img-fluid rounded-circle profile-img" />
                                 </div>
                                 <div class="col-md-8 d-flex flex-column justify-content-center">

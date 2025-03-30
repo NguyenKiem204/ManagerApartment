@@ -52,7 +52,7 @@
                             <c:set var="user" value="${chatwith}" />
                             <div class="user-info">
                                 <img alt="Profile picture of <c:out value="${user.fullName}"></c:out> " height="40" 
-                                     src="<%= request.getContextPath() %>/${user.image.imageURL}" width="40" />
+                                     src="<%= request.getContextPath() %>/${not empty user.image.imageURL ? user.image.imageURL : '/assets/images/avatar/original.jpg'}" width="40" />
                                 <div>
                                     ${user.fullName} 
                                     <c:if test="${chatwithType == 'staff'}">(Staff)</c:if>

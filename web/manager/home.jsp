@@ -165,7 +165,7 @@
                                                             <td class="col-3">
                                                                 <div class="d-flex align-items-center">
                                                                     <div class="avatar avatar-md">
-                                                                        <img src="<%= request.getContextPath() %>/${comment.userAvatar}">
+                                                                        <img src="${pageContext.request.contextPath}/${not empty comment.userAvatar ? comment.userAvatar : 'assets/images/avatar/original.jpg'}">
                                                                     </div>
                                                                     <p class="font-bold ms-3 mb-0">${comment.lastName}</p>
                                                                 </div>
@@ -209,7 +209,7 @@
                             <div class="card-body py-4 px-5 border-cam">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-xl">
-                                        <img src="<%= request.getContextPath() %>/${staff.image.imageURL}" alt="<c:out value="${staff.fullName}"></c:out>">
+                                        <img src="<%= request.getContextPath() %>/${not empty staff.image.imageURL ? staff.image.imageURL : '/assets/images/avatar/original.jpg'}" alt="<c:out value="${staff.fullName}"></c:out>">
                                         </div>
                                         <div class="ms-3 name">
                                             <h5 class="font-bold">Admin</h5>
@@ -226,7 +226,7 @@
                                 <c:forEach var="user" items="${list}">
                                     <div class="recent-message d-flex px-4 py-3">
                                         <div class="avatar avatar-lg">
-                                            <img src="<%= request.getContextPath() %>/${user.image.imageURL}">
+                                            <img src="<%= request.getContextPath() %>/${not empty user.image.imageURL ? user.image.imageURL : '/assets/images/avatar/original.jpg'}">
                                         </div>
                                         <div class="name ms-4">
                                             <h5 class="mb-1 text-truncation"><c:out value="${user.fullName}"></c:out></h5>

@@ -188,15 +188,16 @@
 
                         <li class="nav-item dropdown user-menu">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img src="<%= request.getContextPath() %>/${user.image.imageURL}"
+                                <img src="<%= request.getContextPath() %>/${not empty user.image.imageURL ? user.image.imageURL : '/assets/images/avatar/original.jpg'}"
                                      class="user-image rounded-circle shadow" alt="User Image" />
+
                                 <span class="d-none d-md-inline">
                                     <c:out value="${user.fullName}"></c:out>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                                     <li class="user-header text-bg-primary img-drop">
-                                        <img src="<%= request.getContextPath() %>/${user.image.imageURL}"
+                                        <img src="<%= request.getContextPath() %>/${not empty user.image.imageURL ? user.image.imageURL : '/assets/images/avatar/original.jpg'}"
                                          class="rounded-circle shadow" alt="User Image" />
                                     <p>
                                         <c:out value="${user.fullName}"></c:out> - ${role}
@@ -293,7 +294,7 @@
                                     </ul>
                                 </li>
                             </c:if>
-                            
+
                             <c:if test="${sessionScope.staff.role.roleID == 3}">
                                 <li class="sidebar-item">
                                     <a href="<%= request.getContextPath() %>/accountant/InvoicesManager"
@@ -469,13 +470,13 @@
                             </li>
 
                             <c:if test="${sessionScope.staff.role.roleID == 1}">
-                                <li class="sidebar-item has-sub news-active">
+                                <li class="sidebar-item has-sub">
                                     <a href="#" class="sidebar-link">
                                         <i class="fa-solid fa-envelope"></i>
                                         <span>View Log</span>
                                     </a>
-                                    <ul id="news" class="submenu">
-                                        <li class="submenu-item managernews">
+                                    <ul class="submenu">
+                                        <li class="submenu-item">
                                             <a
                                                 href="<%= request.getContextPath() %>/manager/allport"
                                                 >View</a
@@ -541,6 +542,11 @@
                                     <span>Settings</span>
                                 </a>
                                 <ul class="submenu">
+                                    <c:if test="${sessionScope.staff.role.roleID == 1}">
+                                        <li class="submenu-item">
+                                            <a href="<%= request.getContextPath() %>/manager/manage-urls">Manager Filter</a>
+                                        </li>
+                                    </c:if>
                                     <li class="submenu-item">
                                         <a href="profile">Information</a>
                                     </li>
